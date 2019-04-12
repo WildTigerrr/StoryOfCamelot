@@ -1,0 +1,5 @@
+com\wildtigerrr\StoryOfCamelot\StoryOfCamelotApplication.class
+com\wildtigerrr\StoryOfCamelot\ServletInitializer.class
+com\wildtigerrr\StoryOfCamelot\SOCBotInitializer.class
+com\wildtigerrr\StoryOfCamelot\web\WebHookHandler.class
+com\wildtigerrr\StoryOfCamelot\SOCBotConfig.class
