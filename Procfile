@@ -1,1 +1,1 @@
-web: java -cp target/classes:target/dependency/* StoryOfCamelotApplication
+web: java -cp target/classes:target/dependency/* com.wildtigerrr.StoryOfCamelot.StoryOfCamelotApplication
