@@ -15,11 +15,13 @@ import org.springframework.stereotype.*;
 @SpringBootApplication
 public class StoryOfCamelotApplication {
 
+    static String helloText = "Hello World!";
+
     @RequestMapping("/")
     @ResponseBody
     String home() {
         System.out.println("Hey, I'll give you Hello World!");
-        return "Hello World!";
+        return helloText;
     }
 
     public static void main(String[] args) {
