@@ -15,6 +15,9 @@ import org.springframework.stereotype.*;
 @SpringBootApplication
 public class StoryOfCamelotApplication {
 
+    // Maven > Plugins > heroku > heroku:deploy to create dependencies
+    // heroku buildpacks:clear
+
     static String helloText = "Hello World!";
 
     @RequestMapping("/")
