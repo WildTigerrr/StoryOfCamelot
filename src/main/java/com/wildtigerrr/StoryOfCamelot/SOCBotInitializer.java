@@ -15,7 +15,7 @@ public class SOCBotInitializer implements CommandLineRunner {
         // My Logic
         StoryOfCamelotApplication.helloText = "It's working!";
         System.out.println("TEST DEBUG!!!");
-        System.out.println(args);
+//        System.out.println(args);
     }
 
 }

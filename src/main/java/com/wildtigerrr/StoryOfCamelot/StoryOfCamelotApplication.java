@@ -17,6 +17,7 @@ public class StoryOfCamelotApplication {
 
     // Maven > Plugins > heroku > heroku:deploy to create dependencies
     // heroku buildpacks:clear
+    // git push heroku master
 
     static String helloText = "Hello World!";
 
