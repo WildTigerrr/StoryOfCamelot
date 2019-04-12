@@ -19,13 +19,14 @@ public class StoryOfCamelotApplication {
     // heroku buildpacks:clear
     // git push heroku master
 
-    static String helloText = "Hello World!";
+//    static String helloText = "Hello World!";
 
     @RequestMapping("/")
     @ResponseBody
     String home() {
         System.out.println("Hey, I'll give you Hello World!");
-        return helloText;
+//        return helloText;
+        return "Hello world!";
     }
 
     public static void main(String[] args) {
