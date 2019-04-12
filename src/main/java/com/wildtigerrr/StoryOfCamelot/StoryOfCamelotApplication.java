@@ -18,6 +18,7 @@ public class StoryOfCamelotApplication {
     @RequestMapping("/")
     @ResponseBody
     String home() {
+        System.out.println("Hey, I'll give you Hello World!");
         return "Hello World!";
     }
 
