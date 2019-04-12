@@ -4,9 +4,9 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
 @Component
-public class SOCBotInitializer implements CommandLineRunner {
+public class SOCBotInitializer {//} implements CommandLineRunner {
 
-    @Override
+    /*@Override
     public void run(String... args) throws Exception {
         main(args);
     }
@@ -16,6 +16,6 @@ public class SOCBotInitializer implements CommandLineRunner {
 //        StoryOfCamelotApplication.helloText = "It's working!";
         System.out.println("TEST DEBUG!!!");
 //        System.out.println(args);
-    }
+    }*/
 
 }
