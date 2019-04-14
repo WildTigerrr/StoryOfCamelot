@@ -8,12 +8,12 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.stereotype.*;
 
-//@Configuration
-//@ComponentScan
-//@EnableAutoConfiguration
 @Controller
 @SpringBootApplication
 public class StoryOfCamelotApplication {
+    //@Configuration
+    //@ComponentScan
+    //@EnableAutoConfiguration
 
     // Maven > Plugins > heroku > heroku:deploy to create dependencies
     // heroku buildpacks:clear
@@ -25,7 +25,7 @@ public class StoryOfCamelotApplication {
     @RequestMapping("/")
     @ResponseBody
     String home() {
-        System.out.println("Hey, I'll give you Hello World!");
+//        System.out.println("Hey, I'll give you Hello World!");
 //        return helloText;
         return "Hello world!";
     }
