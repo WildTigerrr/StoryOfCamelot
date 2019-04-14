@@ -8,9 +8,9 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.stereotype.*;
 
-@Configuration
+//@Configuration
 //@ComponentScan
-@EnableAutoConfiguration
+//@EnableAutoConfiguration
 @Controller
 @SpringBootApplication
 public class StoryOfCamelotApplication {
