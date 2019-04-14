@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.stereotype.*;
 
 @Configuration
-@ComponentScan
+//@ComponentScan
 @EnableAutoConfiguration
 @Controller
 @SpringBootApplication
