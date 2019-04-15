@@ -54,12 +54,12 @@ public class WebHookHandler extends TelegramWebhookBot {
         String log = "New message, User:"
                 + (user.getFirstName() == null ? "" : " " + user.getFirstName())
                 + (user.getLastName() == null ? "" : " " + user.getLastName())
-                + "(" + user.getId().toString() + ")"
-                + (user.getUserName() == null ? "" : " " + user.getUserName())
+                + " (id" + user.getId().toString() + ")"
+                + (user.getUserName() == null ? "" : ", also known as" + user.getUserName())
                 + ", wrote a message: " + message;
         System.out.println(log);
 
-        if (user.getId().toString().equals(mainAdminId)) {
+        if (!user.getId().toString().equals(mainAdminId)) {
             SendMessage msg = new SendMessage();
             msg.setChatId(mainAdminId);
             msg.setText(log);
