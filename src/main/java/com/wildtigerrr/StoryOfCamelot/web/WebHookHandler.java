@@ -20,7 +20,7 @@ public class WebHookHandler extends TelegramWebhookBot {
             SendMessage sendMessage = new SendMessage();
             sendMessage.setChatId(update.getMessage().getChatId().toString());
             sendMessage.setText("You wrote me: " + update.getMessage().getText());
-            if (update.getMessage().getFrom().getUserName().equals("wildtigerrr")) {
+            if (update.getMessage().getFrom().getUserName().equals("WildTigerrr")) {
                 if (messagesToMe == null) {
                     messagesToMe = 1;
                     sendMessage.setText("RrrrRrrrRr");
