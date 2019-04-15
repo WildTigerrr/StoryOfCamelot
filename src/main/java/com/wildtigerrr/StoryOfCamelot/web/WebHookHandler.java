@@ -10,7 +10,9 @@ public class WebHookHandler extends TelegramWebhookBot {
 
     @Override
     public BotApiMethod onWebhookUpdateReceived(Update update) {
+        System.out.println("Whooo, I'm triggered");
         if (update.hasMessage() && update.getMessage().hasText()) {
+            System.out.println(update.getMessage());
             SendMessage sendMessage = new SendMessage();
             sendMessage.setChatId(update.getMessage().getChatId().toString());
             sendMessage.setText("Well, all information looks like noise until you break the code.");
