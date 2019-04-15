@@ -13,7 +13,7 @@ public class SOCBotInitializer implements CommandLineRunner {
 
     public static void main(String[] args) {
         // My Logic
-//        StoryOfCamelotApplication.helloText = "It's working!";
+        StoryOfCamelotApplication.helloText = "It's working!";
         System.out.println("TEST DEBUG!!!");
 //        System.out.println(args);
     }

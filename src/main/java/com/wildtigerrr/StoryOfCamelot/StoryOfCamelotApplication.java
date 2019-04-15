@@ -16,10 +16,12 @@ public class StoryOfCamelotApplication {
 //    @Autowired
 //    private DataSource dataSource;
 
+    static String helloText = "Hello World!";
+
     @RequestMapping("/")
     @ResponseBody
     String home() {
-        return "Hello World!";
+        return helloText;
     }
 
     public static void main(String[] args) throws Exception {
