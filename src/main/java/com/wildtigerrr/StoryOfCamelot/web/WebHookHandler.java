@@ -38,6 +38,7 @@ public class WebHookHandler extends TelegramWebhookBot {
                     sendMessage.setText("You wrote me: " + update.getMessage().getText() + ", that's my " + messagesToNastya + " message to you.");
                 }
             }
+            System.out.println("Answer: " + sendMessage.getText());
             try {
                 execute(sendMessage);
             } catch (TelegramApiException e) {
