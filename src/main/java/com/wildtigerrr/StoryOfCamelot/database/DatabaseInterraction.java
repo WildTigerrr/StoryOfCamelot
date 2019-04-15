@@ -52,14 +52,14 @@ public class DatabaseInterraction {
             connection.setAutoCommit(false);
             String dml = "CREATE TABLE IF NOT EXISTS BOT_USER (\n"
                     + " id integer PRIMARY KEY,\n"
-                    + " name text NOT NULL,\n"
+                    + " name text NOT NULL\n"
                     + ");";
             statement.execute(dml);
             dml = "CREATE TABLE IF NOT EXISTS WEAPON ("
                     + " id integer PRIMARY KEY,\n"
                     + " type text NOT NULL,\n"
                     + " damage integer,\n"
-                    + " price integer,\n"
+                    + " price integer\n"
                     + ");";
             statement.execute(dml);
             connection.commit();
