@@ -1,6 +1,7 @@
 package com.wildtigerrr.StoryOfCamelot.database;
 
 import com.wildtigerrr.StoryOfCamelot.web.BotResponseHandler;
+import org.postgresql.util.PSQLException;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -49,12 +50,12 @@ public class DatabaseInterraction {
             if (connection == null) return;
             Statement statement = connection.createStatement();
             connection.setAutoCommit(false);
-            String dml = "CREATE TABLE IF NOT EXIST USER (\n"
+            String dml = "CREATE TABLE IF NOT EXISTS USER (\n"
                     + " id integer PRIMARY KEY,\n"
                     + " name text NOT NULL,\n"
                     + ")";
             statement.execute(dml);
-            dml = "CREATE TABLE IF NOT EXIST WEAPON ("
+            dml = "CREATE TABLE IF NOT EXISTS WEAPON ("
                     + " id integer PRIMARY KEY,\n"
                     + " type text NOT NULL,\n"
                     + " damage integer,\n"
@@ -64,6 +65,10 @@ public class DatabaseInterraction {
             connection.commit();
             BotResponseHandler.sendMessageToAdmin("Database created");
         } catch (SQLException e) {
+            e.printStackTrace();
+            BotResponseHandler.sendMessageToAdmin(e.getMessage());
+        } catch (Exception e) {
+            System.out.println("Main exception");
             e.printStackTrace();
             BotResponseHandler.sendMessageToAdmin(e.getMessage());
         }
