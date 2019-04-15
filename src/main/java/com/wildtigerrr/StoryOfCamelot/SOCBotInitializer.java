@@ -38,11 +38,11 @@ public class SOCBotInitializer {
         return telegramBotsApi;
     }*/
 
-    @Autowired
     private WebHookHandler handler;
 
     @RequestMapping(value = "/webhook", method = RequestMethod.POST)
     public void webhook(@RequestBody Update update) {
+        if (handler == null) handler = new WebHookHandler();
         handler.onWebhookUpdateReceived(update);
     }
 
