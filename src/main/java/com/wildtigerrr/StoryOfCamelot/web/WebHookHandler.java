@@ -5,6 +5,7 @@ import org.telegram.telegrambots.bots.TelegramWebhookBot;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
+import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 public class WebHookHandler extends TelegramWebhookBot {
 
@@ -15,7 +16,12 @@ public class WebHookHandler extends TelegramWebhookBot {
             System.out.println(update.getMessage());
             SendMessage sendMessage = new SendMessage();
             sendMessage.setChatId(update.getMessage().getChatId().toString());
-            sendMessage.setText("Well, all information looks like noise until you break the code.");
+            sendMessage.setText("You wrote me: " + update.getMessage().getText());
+            try {
+                execute(sendMessage);
+            } catch (TelegramApiException e) {
+                e.printStackTrace();
+            }
             return sendMessage;
         }
         return null;
