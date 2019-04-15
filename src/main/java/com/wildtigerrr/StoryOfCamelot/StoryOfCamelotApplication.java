@@ -21,6 +21,7 @@ public class StoryOfCamelotApplication {
     @RequestMapping("/")
     @ResponseBody
     String home() {
+        System.out.println("Don't touch me!");
         return helloText;
     }
 
