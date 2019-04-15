@@ -9,6 +9,9 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 public class WebHookHandler extends TelegramWebhookBot {
 
+    Integer messagesToMe;
+    Integer messagesToNastya;
+
     @Override
     public BotApiMethod onWebhookUpdateReceived(Update update) {
         System.out.println("Whooo, I'm triggered");
@@ -17,6 +20,24 @@ public class WebHookHandler extends TelegramWebhookBot {
             SendMessage sendMessage = new SendMessage();
             sendMessage.setChatId(update.getMessage().getChatId().toString());
             sendMessage.setText("You wrote me: " + update.getMessage().getText());
+            if (update.getMessage().getFrom().getUserName().equals("wildtigerrr")) {
+                if (messagesToMe == null) {
+                    messagesToMe = 1;
+                    sendMessage.setText("RrrrRrrrRr");
+                } else {
+                    messagesToMe++;
+                    sendMessage.setText("You wrote me: " + update.getMessage().getText() + ", that's my " + messagesToMe + " message to you.");
+                }
+            }
+            if (update.getMessage().getFrom().getUserName().equals("nastassja_t")) {
+                if (messagesToNastya == null) {
+                    messagesToNastya = 1;
+                    sendMessage.setText("Привет, Солнышко =*");
+                } else {
+                    messagesToNastya++;
+                    sendMessage.setText("You wrote me: " + update.getMessage().getText() + ", that's my " + messagesToNastya + " message to you.");
+                }
+            }
             try {
                 execute(sendMessage);
             } catch (TelegramApiException e) {
