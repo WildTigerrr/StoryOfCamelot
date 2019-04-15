@@ -25,6 +25,8 @@ public class WebHookHandler extends TelegramWebhookBot {
         if (update.getMessage().getFrom().getId().toString().equals(mainAdminId)) {
             if (update.getMessage().getText().equals("/database create")) {
                 DatabaseInterraction.createDatabase();
+            } else if (update.getMessage().getText().equals("/database drop")) {
+                DatabaseInterraction.dropDatabase();
             }
         }
         String answer = "You wrote me: " + update.getMessage().getText();

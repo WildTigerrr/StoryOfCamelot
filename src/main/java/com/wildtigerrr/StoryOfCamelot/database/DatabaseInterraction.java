@@ -74,4 +74,25 @@ public class DatabaseInterraction {
         }
     }
 
+    public static void dropDatabase() {
+        try (Connection connection = getConnection()) {
+            if (connection == null) return;
+            Statement statement = connection.createStatement();
+            connection.setAutoCommit(false);
+            String dml = "DROP TABLE BOT_USER;";
+            statement.execute(dml);
+            dml = "DROP TABLE WEAPON;";
+            statement.execute(dml);
+            connection.commit();
+            BotResponseHandler.sendMessageToAdmin("Database destroyed");
+        } catch (SQLException e) {
+            e.printStackTrace();
+            BotResponseHandler.sendMessageToAdmin(e.getMessage());
+        } catch (Exception e) {
+            System.out.println("Main exception");
+            e.printStackTrace();
+            BotResponseHandler.sendMessageToAdmin(e.getMessage());
+        }
+    }
+
 }
