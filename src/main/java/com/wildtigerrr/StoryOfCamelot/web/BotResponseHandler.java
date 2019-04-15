@@ -7,7 +7,7 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 public class BotResponseHandler  {
 
     public static void sendMessage(String text, String userId) {
-        if (alreadyRedirected == null) alreadyRedirected = true;
+        if (alreadyRedirected == null || !alreadyRedirected) alreadyRedirected = true;
         else return;
 
         SendMessage sendMessage = new SendMessage();
@@ -15,6 +15,7 @@ public class BotResponseHandler  {
         sendMessage.setText(text);
         try {
             new WebHookHandler().execute(sendMessage);
+            alreadyRedirected = false;
         } catch (TelegramApiException e) {
             sendMessageWithoutLoop(e.getMessage());
         }
