@@ -1,27 +1,27 @@
 package com.wildtigerrr.StoryOfCamelot.database;
 
+import com.wildtigerrr.StoryOfCamelot.web.BotResponseHandler;
+
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.sql.*;
 
 public class DatabaseInterraction {
 
-    private static Connection connection;
     private static final String dBProperty = "JDBC_DATABASE_URL";
 
     private static Connection getConnection() {
-        if (connection == null) {
-            try {
-                String jDBCUrl = System.getenv(dBProperty);
-                if (jDBCUrl == null) {
-                    connection = getAlternativeConnection();
-                } else {
-                    connection = DriverManager.getConnection(jDBCUrl);
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
+        Connection connection;
+        try {
+            String jDBCUrl = System.getenv(dBProperty);
+            if (jDBCUrl == null) {
+                connection = getAlternativeConnection();
+            } else {
+                connection = DriverManager.getConnection(jDBCUrl);
             }
-
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
         }
         return connection;
     }
@@ -37,8 +37,36 @@ public class DatabaseInterraction {
     }
 
     public static ResultSet executeStatement() throws SQLException {
-        Statement statement = getConnection().createStatement();
+        try (Connection connection = getConnection()) {
+            if (connection == null) return null;
+            Statement statement = connection.createStatement();
+        }
         return null;
+    }
+
+    public static void createDatabase() {
+        try (Connection connection = getConnection()) {
+            if (connection == null) return;
+            Statement statement = connection.createStatement();
+            connection.setAutoCommit(false);
+            String dml = "CREATE TABLE IF NOT EXIST USER (\n"
+                    + " id integer PRIMARY KEY,\n"
+                    + " name text NOT NULL,\n"
+                    + ")";
+            statement.execute(dml);
+            dml = "CREATE TABLE IF NOT EXIST WEAPON ("
+                    + " id integer PRIMARY KEY,\n"
+                    + " type text NOT NULL,\n"
+                    + " damage integer,\n"
+                    + " price integer,\n"
+                    + ")";
+            statement.execute(dml);
+            connection.commit();
+            BotResponseHandler.sendMessageToAdmin("Database created");
+        } catch (SQLException e) {
+            e.printStackTrace();
+            BotResponseHandler.sendMessageToAdmin(e.getMessage());
+        }
     }
 
 }

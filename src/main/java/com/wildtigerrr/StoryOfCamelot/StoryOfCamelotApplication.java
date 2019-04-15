@@ -15,8 +15,6 @@ public class StoryOfCamelotApplication {
 //    @Autowired
 //    private DataSource dataSource;
 
-//    static String helloText = "Hello World!";
-//
 //    @RequestMapping("/")
 //    @ResponseBody
 //    String home() {
@@ -28,10 +26,6 @@ public class StoryOfCamelotApplication {
         BotResponseHandler.sendMessageToAdmin("Bot Started");
     }
 
-//    @RequestMapping("/")
-//    String index() {
-//        return "index";
-//    }
 
 //    @RequestMapping("/db")
 //    String db(Map<String, Object> model) {

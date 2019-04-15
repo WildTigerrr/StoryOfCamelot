@@ -1,6 +1,7 @@
 package com.wildtigerrr.StoryOfCamelot.web;
 
 import com.wildtigerrr.StoryOfCamelot.SOCBotConfig;
+import com.wildtigerrr.StoryOfCamelot.database.DatabaseInterraction;
 import org.telegram.telegrambots.bots.TelegramWebhookBot;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.objects.Update;
@@ -21,6 +22,11 @@ public class WebHookHandler extends TelegramWebhookBot {
     private void handleMessage(Update update) {
 //        System.out.println(update.getMessage());
         logSender(update.getMessage().getFrom(), update.getMessage().getText());
+        if (update.getMessage().getFrom().getId().toString().equals(mainAdminId)) {
+            if (update.getMessage().getText().equals("/database create")) {
+                DatabaseInterraction.createDatabase();
+            }
+        }
         String answer = "You wrote me: " + update.getMessage().getText();
         System.out.println("Answer: " + answer);
         BotResponseHandler.sendMessage(answer, update.getMessage().getChatId().toString());
