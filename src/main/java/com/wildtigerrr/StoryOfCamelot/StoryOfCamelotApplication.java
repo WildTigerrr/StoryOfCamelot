@@ -16,14 +16,13 @@ public class StoryOfCamelotApplication {
 //    @Autowired
 //    private DataSource dataSource;
 
-    static String helloText = "Hello World!";
-
-    @RequestMapping("/")
-    @ResponseBody
-    String home() {
-        System.out.println("Don't touch me!");
-        return helloText;
-    }
+//    static String helloText = "Hello World!";
+//
+//    @RequestMapping("/")
+//    @ResponseBody
+//    String home() {
+//        return helloText;
+//    }
 
     public static void main(String[] args) throws Exception {
         SpringApplication.run(StoryOfCamelotApplication.class, args);

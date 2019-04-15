@@ -8,10 +8,9 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.User;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
-public class WebHookHandler extends TelegramWebhookBot {
+import static com.wildtigerrr.StoryOfCamelot.SOCBotConfig.mainAdminId;
 
-    Integer messagesToMe;
-    Integer messagesToNastya;
+public class WebHookHandler extends TelegramWebhookBot {
 
     @Override
     public BotApiMethod onWebhookUpdateReceived(Update update) {
@@ -52,16 +51,17 @@ public class WebHookHandler extends TelegramWebhookBot {
     }
 
     private void logSender(User user, String message) {
-        String log = "New message, User: " + user.getFirstName() + " " + user.getLastName();
-        if (user.getUserName() != null) {
-            log = log + ", also known as " + user.getUserName();
-        }
-        log = log + ", wrote a message: " + message;
+        String log = "New message, User:"
+                + (user.getFirstName() == null ? "" : " " + user.getFirstName())
+                + (user.getLastName() == null ? "" : " " + user.getLastName())
+                + "(" + user.getId().toString() + ")"
+                + (user.getUserName() == null ? "" : " " + user.getUserName())
+                + ", wrote a message: " + message;
         System.out.println(log);
 
-        if (!user.getId().toString().equals("413316947")) {
+        if (user.getId().toString().equals(mainAdminId)) {
             SendMessage msg = new SendMessage();
-            msg.setChatId("413316947");
+            msg.setChatId(mainAdminId);
             msg.setText(log);
             try {
                 execute(msg);
