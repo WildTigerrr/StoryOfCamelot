@@ -50,7 +50,7 @@ public class DatabaseInterraction {
             if (connection == null) return;
             Statement statement = connection.createStatement();
             connection.setAutoCommit(false);
-            String dml = "CREATE TABLE IF NOT EXISTS USER (\n"
+            String dml = "CREATE TABLE IF NOT EXISTS BOT_USER (\n"
                     + " id integer PRIMARY KEY,\n"
                     + " name text NOT NULL,\n"
                     + ")";
