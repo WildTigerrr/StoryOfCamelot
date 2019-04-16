@@ -133,7 +133,7 @@ public class DatabaseInterraction {
                     "\t\"quantity\" integer NOT NULL,\n" +
                     "\t\"status\" varchar(25),\n" +
                     "\t\"isDeleted\" BOOLEAN NOT NULL DEFAULT 'false',\n" +
-                    "\t\"deletedDate\" DATETIME NOT NULL\n" +
+                    "\t\"deletedDate\" TIMESTAMP NOT NULL\n" +
                     ") WITH (\n" +
                     "  OIDS=FALSE\n" +
                     ");\n" +
