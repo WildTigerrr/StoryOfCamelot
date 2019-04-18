@@ -22,6 +22,9 @@ public class DatabaseInteraction {
     @Autowired
     private PlayerDaoInterface playerDao;
 
+    @Autowired
+    private BotResponseHandler responseHandler;
+
 //    @Resource
 //    private EntityManagerFactory emf;
 //    protected EntityManager em;
@@ -35,9 +38,19 @@ public class DatabaseInteraction {
         }
     }
 
-    private static final String dBProperty = "JDBC_DATABASE_URL";
+    public String testGetPlayer(String externalId) {
+        try {
+            Player player = playerDao.getByExternalId(externalId);
+            return player.getNickname();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return e.getMessage();
+        }
+    }
 
-    private static Connection getConnection() {
+//    private static final String dBProperty = "JDBC_DATABASE_URL";
+
+    /*private Connection getConnection() {
         Connection connection;
         try {
             String jDBCUrl = System.getenv(dBProperty);
@@ -51,8 +64,8 @@ public class DatabaseInteraction {
             return null;
         }
         return connection;
-    }
-
+    }*/
+/*
     private static Connection getAlternativeConnection() throws URISyntaxException, SQLException{
         URI dbUri = new URI(System.getenv("DATABASE_URL"));
 
@@ -63,7 +76,7 @@ public class DatabaseInteraction {
         return DriverManager.getConnection(dbUrl, username, password);
     }
 
-    public static ResultSet executeStatement() throws SQLException {
+    public ResultSet executeStatement() throws SQLException {
         try (Connection connection = getConnection()) {
             if (connection == null) return null;
             Statement statement = connection.createStatement();
@@ -71,7 +84,7 @@ public class DatabaseInteraction {
         return null;
     }
 
-    public static void createDatabase() {
+    public void createDatabase() {
         try (Connection connection = getConnection()) {
             if (connection == null) return;
             Statement statement = connection.createStatement();
@@ -79,18 +92,18 @@ public class DatabaseInteraction {
             String dml = creationDml;
             statement.execute(dml);
             connection.commit();
-            BotResponseHandler.sendMessageToAdmin("Database created");
+            responseHandler.sendMessageToAdmin("Database created");
         } catch (SQLException e) {
             e.printStackTrace();
-            BotResponseHandler.sendMessageToAdmin(e.getMessage());
+            responseHandler.sendMessageToAdmin(e.getMessage());
         } catch (Exception e) {
             System.out.println("Main exception");
             e.printStackTrace();
-            BotResponseHandler.sendMessageToAdmin(e.getMessage());
+            responseHandler.sendMessageToAdmin(e.getMessage());
         }
     }
 
-    public static void dropDatabase() {
+    public void dropDatabase() {
         try (Connection connection = getConnection()) {
             if (connection == null) return;
             Statement statement = connection.createStatement();
@@ -98,18 +111,18 @@ public class DatabaseInteraction {
             String dml = destroyDml;
             statement.execute(dml);
             connection.commit();
-            BotResponseHandler.sendMessageToAdmin("Database destroyed");
+            responseHandler.sendMessageToAdmin("Database destroyed");
         } catch (SQLException e) {
             e.printStackTrace();
-            BotResponseHandler.sendMessageToAdmin(e.getMessage());
+            responseHandler.sendMessageToAdmin(e.getMessage());
         } catch (Exception e) {
             System.out.println("Main exception");
             e.printStackTrace();
-            BotResponseHandler.sendMessageToAdmin(e.getMessage());
+            responseHandler.sendMessageToAdmin(e.getMessage());
         }
     }
-
-    private static String creationDml = "CREATE TABLE \"PLAYER\" (\n" +
+*/
+    /*private String creationDml = "CREATE TABLE \"PLAYER\" (\n" +
             "\t\"id\" serial NOT NULL,\n" +
             "\t\"external_id\" varchar(15) NOT NULL,\n" +
             "\t\"nickname\" varchar(30) NOT NULL UNIQUE,\n" +
@@ -318,7 +331,7 @@ public class DatabaseInteraction {
             "ALTER TABLE \"STORE_LOCATION\" ADD CONSTRAINT \"STORE_LOCATION_fk1\" FOREIGN KEY (\"location_id\") REFERENCES \"LOCATION\"(\"id\");\n" +
             "\n";
 
-    private static String destroyDml = "ALTER TABLE \"PLAYER\" DROP CONSTRAINT IF EXISTS \"PLAYER_fk0\";\n" +
+    private String destroyDml = "ALTER TABLE \"PLAYER\" DROP CONSTRAINT IF EXISTS \"PLAYER_fk0\";\n" +
             "\n" +
             "ALTER TABLE \"WEAPON\" DROP CONSTRAINT IF EXISTS \"WEAPON_fk0\";\n" +
             "\n" +
@@ -380,5 +393,5 @@ public class DatabaseInteraction {
             "\n" +
             "DROP TABLE IF EXISTS \"STORE_LOCATION\";\n" +
             "\n" +
-            "DROP TABLE IF EXISTS \"FILE_LINK\";\n";
+            "DROP TABLE IF EXISTS \"FILE_LINK\";\n";*/
 }

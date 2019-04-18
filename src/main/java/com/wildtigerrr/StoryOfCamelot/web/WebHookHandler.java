@@ -17,6 +17,9 @@ public class WebHookHandler extends TelegramWebhookBot {
     @Autowired
     private DatabaseInteraction dbService;
 
+    @Autowired
+    private BotResponseHandler responseHandler;
+
     @Override
     public BotApiMethod onWebhookUpdateReceived(Update update) {
         if (update.hasMessage() && update.getMessage().hasText()) {
@@ -29,17 +32,16 @@ public class WebHookHandler extends TelegramWebhookBot {
 //        System.out.println(update.getMessage());
         logSender(update.getMessage().getFrom(), update.getMessage().getText());
         if (update.getMessage().getFrom().getId().toString().equals(mainAdminId)) {
-            if (update.getMessage().getText().equals("/database create")) {
-                DatabaseInteraction.createDatabase();
-            } else if (update.getMessage().getText().equals("/database drop")) {
-                DatabaseInteraction.dropDatabase();
-            } else if (update.getMessage().getText().equals("/database test")) {
+            String message = update.getMessage().getText();
+            if (message.equals("/database test")) {
                dbService.testSavePlayer(update.getMessage().getFrom().getId().toString());
+            } else if (message.equals("/me")) {
+
             }
         }
         String answer = "You wrote me: " + update.getMessage().getText();
         System.out.println("Answer: " + answer);
-        BotResponseHandler.sendMessage(answer, update.getMessage().getChatId().toString());
+        responseHandler.sendMessage(answer, update.getMessage().getChatId().toString());
     }
 
     private void logSender(User user, String message) {
@@ -52,7 +54,7 @@ public class WebHookHandler extends TelegramWebhookBot {
         System.out.println(log);
 
         if (!user.getId().toString().equals(mainAdminId)) {
-            BotResponseHandler.sendMessage(log, mainAdminId);
+            responseHandler.sendMessage(log, mainAdminId);
         }
     }
 

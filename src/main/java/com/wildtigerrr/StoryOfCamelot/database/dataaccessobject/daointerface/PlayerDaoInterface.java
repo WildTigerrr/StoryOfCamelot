@@ -8,16 +8,16 @@ import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
-public interface PlayerDaoInterface extends CrudRepository<Player, Long> {
+public interface PlayerDaoInterface extends CrudRepository<Player, Integer> {
     /*    @Query("SELECT p FROM Player p WHERE p.external_id = :external_id")
     Player findByExternalId(@Param("external_id") int externalId);
 
     @Query("SELECT p FROM Player p WHERE p.nickname = :nickname")
     Player findByNickname(@Param("nickname") String nickname);*//*
     Player addPlayer(Player player);
-    void delete(int id);
-    Player getByExternalId(int externalId);
-    Player getById(int playerId);
+    void delete(int id);*/
+    Player getByExternalId(String externalId);
+    /*Player getById(int playerId);
     Player getByNickname(String nickname);
     Player editPlayer(Player player);
     List<Player> getAll();*/
