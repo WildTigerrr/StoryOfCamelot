@@ -12,8 +12,7 @@ public class Player {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
 
-    @Column(name = "external_id")
-    private String externalId;
+    private String external_id;
 
     private String nickname;
 
@@ -21,7 +20,7 @@ public class Player {
     }
 
     public Player(String externalId, String nickname) {
-        this.externalId = externalId;
+        this.external_id = externalId;
         this.nickname = nickname;
     }
 
@@ -30,11 +29,11 @@ public class Player {
     }
 
     public String getExternalId() {
-        return externalId;
+        return external_id;
     }
 
     public void setExternalId(String externalId) {
-        this.externalId = externalId;
+        this.external_id = externalId;
     }
 
     public String getNickname() {
