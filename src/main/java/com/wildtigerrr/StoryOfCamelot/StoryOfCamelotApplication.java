@@ -14,13 +14,10 @@ public class StoryOfCamelotApplication {
     public static void main(String[] args) throws Exception {
         SpringApplication.run(StoryOfCamelotApplication.class, args);
         new BotResponseHandler().sendMessageToAdmin("Bot Started");
-        Runtime.getRuntime().addShutdownHook(new Thread() {
-            @Override
-            public void run() {
-                new BotResponseHandler().sendMessageToAdmin("Bot Shutting Down");
-                System.out.println("Shutdown Hook Added");
-            }
-        });
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            new BotResponseHandler().sendMessageToAdmin("Bot Shutting Down");
+            System.out.println("Shutdown Hook Added");
+        }));
     }
 
 }
