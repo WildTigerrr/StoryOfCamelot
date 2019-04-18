@@ -30,18 +30,18 @@ public class WebHookHandler extends TelegramWebhookBot {
 
     private void handleMessage(Update update) {
         logSender(update.getMessage().getFrom(), update.getMessage().getText());
+        String message = update.getMessage().getText();
+        String userId = update.getMessage().getFrom().getId().toString();
         if (update.getMessage().getFrom().getId().toString().equals(mainAdminId)) {
-            String message = update.getMessage().getText();
-            String userId = update.getMessage().getFrom().getId().toString();
             if (message.equals("/database test")) {
                dbService.testSavePlayer(userId);
             } else if (message.equals("/me")) {
                 responseHandler.sendMessage(dbService.testGetPlayer(userId), userId);
             }
         }
-        String answer = "You wrote me: " + update.getMessage().getText();
+        String answer = "You wrote me: " + message;
         System.out.println("Answer: " + answer);
-        responseHandler.sendMessage(answer, update.getMessage().getChatId().toString());
+        responseHandler.sendMessage(answer, userId);
     }
 
     private void logSender(User user, String message) {
