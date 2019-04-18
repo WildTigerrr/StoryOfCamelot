@@ -12,13 +12,13 @@ import org.springframework.stereotype.Controller;
 
 @Controller
 @SpringBootApplication
-/*@ComponentScan({
+@ComponentScan({
         "com.wildtigerrr.StoryOfCamelot.web"
         , "com.wildtigerrr.StoryOfCamelot"
         , "com.wildtigerrr.StoryOfCamelot.database.schema"
         , "com.wildtigerrr.StoryOfCamelot.service"
 })
-@EnableJpaRepositories("com.wildtigerrr.StoryOfCamelot.database.dataaccessobject.daointerface")*/
+@EnableJpaRepositories("com.wildtigerrr.StoryOfCamelot.database.dataaccessobject.daointerface")
 @EnableAutoConfiguration
 public class StoryOfCamelotApplication {
 
