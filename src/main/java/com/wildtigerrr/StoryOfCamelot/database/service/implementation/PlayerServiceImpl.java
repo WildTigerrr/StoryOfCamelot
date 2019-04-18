@@ -1,6 +1,7 @@
 package com.wildtigerrr.StoryOfCamelot.database.service.implementation;
 
 import com.wildtigerrr.StoryOfCamelot.database.dataaccessobject.PlayerDao;
+import com.wildtigerrr.StoryOfCamelot.database.dataaccessobject.daointerface.PlayerDaoInterface;
 import com.wildtigerrr.StoryOfCamelot.database.schema.Player;
 import com.wildtigerrr.StoryOfCamelot.database.service.PlayerService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +13,7 @@ import java.util.List;
 public class PlayerServiceImpl implements PlayerService {
 
     @Autowired
-    private PlayerDao playerDao;
+    private PlayerDaoInterface playerDao;
 
     @Override
     public synchronized Player addPlayer(Player player) {
