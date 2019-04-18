@@ -37,7 +37,7 @@ public class WebHookHandler extends TelegramWebhookBot {
             if (message.equals("/database test")) {
                dbService.testSavePlayer(userId);
             } else if (message.equals("/me")) {
-                dbService.testGetPlayer(userId);
+                responseHandler.sendMessage(dbService.testGetPlayer(userId), userId);
             }
         }
         String answer = "You wrote me: " + update.getMessage().getText();
