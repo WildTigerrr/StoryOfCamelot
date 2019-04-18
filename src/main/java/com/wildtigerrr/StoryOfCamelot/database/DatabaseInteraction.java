@@ -12,7 +12,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.sql.*;
 
-public class DatabaseInterraction {
+public class DatabaseInteraction {
 
     @Resource
     private EntityManagerFactory emf;

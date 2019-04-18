@@ -1,7 +1,7 @@
 package com.wildtigerrr.StoryOfCamelot.web;
 
 import com.wildtigerrr.StoryOfCamelot.SOCBotConfig;
-import com.wildtigerrr.StoryOfCamelot.database.DatabaseInterraction;
+import com.wildtigerrr.StoryOfCamelot.database.DatabaseInteraction;
 import org.telegram.telegrambots.bots.TelegramWebhookBot;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.objects.Update;
@@ -24,11 +24,11 @@ public class WebHookHandler extends TelegramWebhookBot {
         logSender(update.getMessage().getFrom(), update.getMessage().getText());
         if (update.getMessage().getFrom().getId().toString().equals(mainAdminId)) {
             if (update.getMessage().getText().equals("/database create")) {
-                DatabaseInterraction.createDatabase();
+                DatabaseInteraction.createDatabase();
             } else if (update.getMessage().getText().equals("/database drop")) {
-                DatabaseInterraction.dropDatabase();
+                DatabaseInteraction.dropDatabase();
             } else if (update.getMessage().getText().equals("/database test")) {
-                DatabaseInterraction.dropDatabase();
+                DatabaseInteraction.dropDatabase();
             }
         }
         String answer = "You wrote me: " + update.getMessage().getText();
