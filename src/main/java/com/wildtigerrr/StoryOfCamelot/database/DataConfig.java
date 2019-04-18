@@ -1,6 +1,7 @@
 package com.wildtigerrr.StoryOfCamelot.database;
 
 import org.apache.commons.dbcp2.BasicDataSource;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -14,14 +15,14 @@ import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import javax.annotation.Resource;
-import javax.sql.DataSource;
 import java.net.URISyntaxException;
 import java.util.Properties;
 
 
-@Configuration
+/*@Configuration
 @EnableTransactionManagement
-@ComponentScan("com.devcolibri.dataexam")
+@ComponentScan("com.devcolibri.dataexam")*/
+@SpringBootApplication
 @PropertySource("classpath:application.properties")
 @EnableJpaRepositories("com.wildtigerrr.StoryOfCamelot.database.dataaccessobject")
 public class DataConfig {
@@ -30,6 +31,7 @@ public class DataConfig {
     private static final String PROP_HIBERNATE_SHOW_SQL = "db.hibernate.show_sql";
     private static final String PROP_ENTITYMANAGER_PACKAGES_TO_SCAN = "db.entitymanager.packages.to.scan";
     private static final String PROP_HIBERNATE_HBM2DDL_AUTO = "db.hibernate.hbm2ddl.auto";
+    private static final String PROP_JAVAX_CREATE_SCHEMAS = "javax.persistence.create-database-schemas";
 
     @Resource
     private Environment env;
@@ -70,13 +72,10 @@ public class DataConfig {
 
     private Properties getHibernateProperties() {
         Properties properties = new Properties();
-        System.out.println(PROP_HIBERNATE_DIALECT + " > " + env.getRequiredProperty(PROP_HIBERNATE_DIALECT));
-        System.out.println(PROP_HIBERNATE_SHOW_SQL + " > " + env.getRequiredProperty(PROP_HIBERNATE_SHOW_SQL));
-        System.out.println(PROP_HIBERNATE_HBM2DDL_AUTO + " > " + env.getRequiredProperty(PROP_HIBERNATE_HBM2DDL_AUTO));
         properties.put(PROP_HIBERNATE_DIALECT, env.getRequiredProperty(PROP_HIBERNATE_DIALECT));
         properties.put(PROP_HIBERNATE_SHOW_SQL, env.getRequiredProperty(PROP_HIBERNATE_SHOW_SQL));
         properties.put(PROP_HIBERNATE_HBM2DDL_AUTO, env.getRequiredProperty(PROP_HIBERNATE_HBM2DDL_AUTO));
-        properties.put("javax.persistence.create-database-schemas", true);
+        properties.put(PROP_JAVAX_CREATE_SCHEMAS, env.getRequiredProperty(PROP_JAVAX_CREATE_SCHEMAS));
 
         return properties;
     }
