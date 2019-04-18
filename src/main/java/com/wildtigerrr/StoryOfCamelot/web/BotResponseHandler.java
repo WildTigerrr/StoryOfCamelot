@@ -26,6 +26,8 @@ public class BotResponseHandler  {
         try {
             webHook.execute(sendMessage);
             alreadyRedirected = false;
+        } catch (NullPointerException e) {
+            System.out.println("WebHook Startup Error");
         } catch (TelegramApiException e) {
             sendMessageWithoutLoop(e.getMessage());
         }
