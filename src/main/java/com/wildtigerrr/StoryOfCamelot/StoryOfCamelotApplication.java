@@ -6,16 +6,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.stereotype.Controller;
 
 @Controller
 @SpringBootApplication
-@ComponentScan(basePackages = {
-        "com.wildtigerrr.StoryOfCamelot.database.schema"
+@ComponentScan({
+        "com.wildtigerrr.StoryOfCamelot.web"
         , "com.wildtigerrr.StoryOfCamelot"
-        , "com.wildtigerrr.StoryOfCamelot.web"
+        , "com.wildtigerrr.StoryOfCamelot.database.schema"
         , "com.wildtigerrr.StoryOfCamelot.service"
 })
+@EnableJpaRepositories("com.wildtigerrr.StoryOfCamelot.database.dataaccessobject.daointerface")
 public class StoryOfCamelotApplication {
 
     public static void main(String[] args) throws Exception {
