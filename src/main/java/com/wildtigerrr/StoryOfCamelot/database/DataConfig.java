@@ -50,10 +50,16 @@ public class DataConfig {
 
     @Bean
     public LocalContainerEntityManagerFactoryBean entityManagerFactory() throws URISyntaxException {
+        System.out.println("EMF Start");
         LocalContainerEntityManagerFactoryBean entityManagerFactoryBean = new LocalContainerEntityManagerFactoryBean();
+        System.out.println("EMF Bean: " + entityManagerFactoryBean);
+        System.out.println("EMF DataSource: " + dataSource());
         entityManagerFactoryBean.setDataSource(dataSource());
+        System.out.println("EMF Persistence: " + HibernatePersistence.class);
         entityManagerFactoryBean.setPersistenceProviderClass(HibernatePersistence.class);
+        System.out.println("EMF Packages: " + env.getRequiredProperty(PROP_ENTITYMANAGER_PACKAGES_TO_SCAN));
         entityManagerFactoryBean.setPackagesToScan(env.getRequiredProperty(PROP_ENTITYMANAGER_PACKAGES_TO_SCAN));
+        System.out.println("EMF Properties: " + getHibernateProperties());
 
         entityManagerFactoryBean.setJpaProperties(getHibernateProperties());
 
