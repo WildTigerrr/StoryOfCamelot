@@ -22,12 +22,9 @@ public class DatabaseInteraction {
     @Autowired
     private PlayerDaoInterface playerDao;
 
-    @Resource
-    private EntityManagerFactory emf;
-    protected EntityManager em;
-
-    @Resource
-    private PlayerService playerService;
+//    @Resource
+//    private EntityManagerFactory emf;
+//    protected EntityManager em;
 
     public void testSavePlayer(String externalId) {
         Player player = new Player(externalId, "WildTigerrr");
