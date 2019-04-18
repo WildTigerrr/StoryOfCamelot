@@ -10,7 +10,7 @@ import org.springframework.stereotype.Controller;
 
 @Controller
 @SpringBootApplication
-//@ComponentScan("com.wildtigerrr.StoryOfCamelot.database.schema")
+@ComponentScan(basePackages = {"com.wildtigerrr.StoryOfCamelot.database.schema","com.wildtigerrr.StoryOfCamelot"})
 public class StoryOfCamelotApplication {
 
     public static void main(String[] args) throws Exception {
