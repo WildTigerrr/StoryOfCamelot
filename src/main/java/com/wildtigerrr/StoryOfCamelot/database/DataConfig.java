@@ -22,7 +22,7 @@ import java.util.Properties;
 @Configuration
 @EnableTransactionManagement
 @ComponentScan("com.devcolibri.dataexam")
-@PropertySource("classpath:app.properties")
+@PropertySource("classpath:application.properties")
 @EnableJpaRepositories("com.wildtigerrr.StoryOfCamelot.repository")
 public class DataConfig {
 
