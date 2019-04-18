@@ -24,7 +24,15 @@ public class StoryOfCamelotApplication {
     public static void main(String[] args) throws Exception {
         SpringApplication.run(StoryOfCamelotApplication.class, args);
         BotResponseHandler.sendMessageToAdmin("Bot Started");
+        Runtime.getRuntime().addShutdownHook(new Thread() {
+            @Override
+            public void run() {
+                BotResponseHandler.sendMessageToAdmin("Bot Shutting Down");
+                System.out.println("Shutdown Hook Added");
+            }
+        });
     }
+
 
 
 //    @RequestMapping("/db")
