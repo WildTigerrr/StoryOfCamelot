@@ -12,15 +12,16 @@ public class Player {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
 
-    private String external_id;
+    @Column(name = "external_id")
+    private String externalId;
 
     private String nickname;
 
     protected Player() {
     }
 
-    public Player(String external_id, String nickname) {
-        this.external_id = external_id;
+    public Player(String externalId, String nickname) {
+        this.externalId = externalId;
         this.nickname = nickname;
     }
 
@@ -28,12 +29,12 @@ public class Player {
         return id;
     }
 
-    public String getExternal_id() {
-        return external_id;
+    public String getExternalId() {
+        return externalId;
     }
 
-    public void setExternal_id(String external_id) {
-        this.external_id = external_id;
+    public void setExternalId(String externalId) {
+        this.externalId = externalId;
     }
 
     public String getNickname() {

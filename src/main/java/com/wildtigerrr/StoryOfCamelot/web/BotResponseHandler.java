@@ -8,6 +8,10 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 @Service
 public class BotResponseHandler  {
 
+    public void handleMessage() {
+
+    }
+
     public void sendMessage(String text, String userId) {
         if (alreadyRedirected == null || !alreadyRedirected) alreadyRedirected = true;
         else return;

@@ -15,8 +15,13 @@ public class PlayerServiceImpl implements PlayerService {
     private PlayerDao playerDao;
 
     @Override
-    public Player create(Player player) {
-        return playerDao.save(player);
+    public synchronized Player create(Player player) {
+        Player existingPlayer = playerDao.findByExternalId(player.getExternalId());
+        if (existingPlayer != null) {
+            return existingPlayer;
+        } else {
+            return playerDao.save(player);
+        }
     }
 
     @Override
@@ -35,7 +40,7 @@ public class PlayerServiceImpl implements PlayerService {
     }
 
     @Override
-    public Player update(Player player) {
+    public synchronized Player update(Player player) {
         return playerDao.save(player);
     }
 
