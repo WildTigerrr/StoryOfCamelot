@@ -3,6 +3,7 @@ package com.wildtigerrr.StoryOfCamelot.web;
 import com.wildtigerrr.StoryOfCamelot.SOCBotConfig;
 import com.wildtigerrr.StoryOfCamelot.database.DatabaseInteraction;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.bots.TelegramWebhookBot;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.objects.Update;
@@ -10,6 +11,7 @@ import org.telegram.telegrambots.meta.api.objects.User;
 
 import static com.wildtigerrr.StoryOfCamelot.SOCBotConfig.mainAdminId;
 
+@Service
 public class WebHookHandler extends TelegramWebhookBot {
 
     @Autowired
