@@ -13,12 +13,12 @@ public interface PlayerDaoInterface extends CrudRepository<Player, Long> {
     Player findByExternalId(@Param("external_id") int externalId);
 
     @Query("SELECT p FROM Player p WHERE p.nickname = :nickname")
-    Player findByNickname(@Param("nickname") String nickname);*/
+    Player findByNickname(@Param("nickname") String nickname);*//*
     Player addPlayer(Player player);
     void delete(int id);
     Player getByExternalId(int externalId);
     Player getById(int playerId);
     Player getByNickname(String nickname);
     Player editPlayer(Player player);
-    List<Player> getAll();
+    List<Player> getAll();*/
 }
