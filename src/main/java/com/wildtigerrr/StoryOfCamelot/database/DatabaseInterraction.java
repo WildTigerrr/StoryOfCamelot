@@ -1,13 +1,32 @@
 package com.wildtigerrr.StoryOfCamelot.database;
 
+import com.wildtigerrr.StoryOfCamelot.database.schema.Player;
+import com.wildtigerrr.StoryOfCamelot.database.service.PlayerService;
 import com.wildtigerrr.StoryOfCamelot.web.BotResponseHandler;
 import org.postgresql.util.PSQLException;
 
+import javax.annotation.Resource;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.sql.*;
 
 public class DatabaseInterraction {
+
+    @Resource
+    private EntityManagerFactory emf;
+    protected EntityManager em;
+
+    @Resource
+    private PlayerService playerService;
+
+    public void testSavePlayer(String externalId) {
+        Player player = new Player();
+        player.setExternal_id(externalId);
+        player.setNickname("WildTigerrr");
+        playerService.addPlayer(player);
+    }
 
     private static final String dBProperty = "JDBC_DATABASE_URL";
 
