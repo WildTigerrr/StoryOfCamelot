@@ -14,6 +14,7 @@ public class SOCBotInitializer {
 
     @RequestMapping(value = "/webhook", method = RequestMethod.POST)
     public void webhook(@RequestBody Update update) {
+        System.out.println("----------------HANDLER-----------------");
         if (handler == null) handler = new WebHookHandler();
         handler.onWebhookUpdateReceived(update);
     }
