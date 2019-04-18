@@ -1,4 +1,4 @@
-package com.wildtigerrr.StoryOfCamelot.database.dataaccessobjects;
+package com.wildtigerrr.StoryOfCamelot.database.dataaccessobject;
 
 import com.wildtigerrr.StoryOfCamelot.database.schema.Player;
 import org.springframework.data.jpa.repository.JpaRepository;

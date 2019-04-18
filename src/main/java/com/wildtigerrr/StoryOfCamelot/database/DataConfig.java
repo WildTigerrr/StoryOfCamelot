@@ -23,7 +23,7 @@ import java.util.Properties;
 @EnableTransactionManagement
 @ComponentScan("com.devcolibri.dataexam")
 @PropertySource("classpath:application.properties")
-@EnableJpaRepositories("com.wildtigerrr.StoryOfCamelot.repository")
+@EnableJpaRepositories("com.wildtigerrr.StoryOfCamelot.database.dataaccessobject")
 public class DataConfig {
 
     private static final String PROP_HIBERNATE_DIALECT = "db.hibernate.dialect";
