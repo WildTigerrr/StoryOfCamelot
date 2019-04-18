@@ -28,6 +28,12 @@ public class BotResponseHandler  {
             alreadyRedirected = false;
         } catch (NullPointerException e) {
             System.out.println("WebHook Startup Error");
+            try {
+                new WebHookHandler().execute(sendMessage);
+            } catch (TelegramApiException ex) {
+                sendMessageWithoutLoop(e.getMessage());
+                ex.printStackTrace();
+            }
         } catch (TelegramApiException e) {
             sendMessageWithoutLoop(e.getMessage());
         }
