@@ -40,7 +40,7 @@ public class DatabaseInteraction {
 
     public String testGetPlayer(String externalId) {
         try {
-            Player player = playerDao.getByExternalId(externalId);
+            Player player = playerDao.findByExternalId(externalId);
             return player.getNickname();
         } catch (Exception e) {
             e.printStackTrace();
