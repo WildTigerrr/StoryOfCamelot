@@ -19,10 +19,10 @@ import java.net.URISyntaxException;
 import java.util.Properties;
 
 
-/*@Configuration
+@Configuration
 @EnableTransactionManagement
-@ComponentScan("com.devcolibri.dataexam")*/
-@SpringBootApplication
+@ComponentScan("com.devcolibri.dataexam")
+//@SpringBootApplication
 @PropertySource("classpath:application.properties")
 @EnableJpaRepositories("com.wildtigerrr.StoryOfCamelot.database.dataaccessobject")
 public class DataConfig {
