@@ -28,7 +28,11 @@ public class DatabaseInteraction {
 
     public void testSavePlayer(String externalId) {
         Player player = new Player(externalId, "WildTigerrr");
-        playerDao.save(player);
+        try {
+            playerDao.save(player);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private static final String dBProperty = "JDBC_DATABASE_URL";
