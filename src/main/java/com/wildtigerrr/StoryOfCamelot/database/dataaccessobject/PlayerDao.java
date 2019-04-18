@@ -7,7 +7,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.util.List;
 
-public class PlayerDao implements PlayerDaoInterface {
+public class PlayerDao {/*} implements PlayerDaoInterface {
 
     @PersistenceContext
     private EntityManager entityManager;
@@ -62,5 +62,5 @@ public class PlayerDao implements PlayerDaoInterface {
     public List<Player> getAll() {
         String query = "FROM Player AS p ORDER BY p.Id";
         return (List<Player>) entityManager.createQuery(query).getResultList();
-    }
+    }*/
 }

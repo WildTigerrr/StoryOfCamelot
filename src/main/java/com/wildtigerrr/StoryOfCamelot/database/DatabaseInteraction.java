@@ -1,9 +1,12 @@
 package com.wildtigerrr.StoryOfCamelot.database;
 
+import com.wildtigerrr.StoryOfCamelot.StoryOfCamelotApplication;
+import com.wildtigerrr.StoryOfCamelot.database.dataaccessobject.daointerface.PlayerDaoInterface;
 import com.wildtigerrr.StoryOfCamelot.database.schema.Player;
 import com.wildtigerrr.StoryOfCamelot.database.service.PlayerService;
 import com.wildtigerrr.StoryOfCamelot.web.BotResponseHandler;
 import org.postgresql.util.PSQLException;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.annotation.Resource;
 import javax.persistence.EntityManager;
@@ -14,6 +17,9 @@ import java.sql.*;
 
 public class DatabaseInteraction {
 
+    @Autowired
+    private PlayerDaoInterface playerDao;
+
     @Resource
     private EntityManagerFactory emf;
     protected EntityManager em;
@@ -22,10 +28,8 @@ public class DatabaseInteraction {
     private PlayerService playerService;
 
     public void testSavePlayer(String externalId) {
-        Player player = new Player();
-        player.setExternal_id(externalId);
-        player.setNickname("WildTigerrr");
-        playerService.addPlayer(player);
+        Player player = new Player(externalId, "WildTigerrr");
+        playerDao.save(player);
     }
 
     private static final String dBProperty = "JDBC_DATABASE_URL";

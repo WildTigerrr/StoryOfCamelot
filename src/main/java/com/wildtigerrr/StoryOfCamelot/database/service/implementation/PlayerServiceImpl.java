@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class PlayerServiceImpl implements PlayerService {
+public class PlayerServiceImpl { /*} implements PlayerService {
 
     @Autowired
     private PlayerDaoInterface playerDao;
@@ -43,5 +43,5 @@ public class PlayerServiceImpl implements PlayerService {
     @Override
     public List<Player> getAll() {
         return playerDao.getAll();
-    }
+    }*/
 }

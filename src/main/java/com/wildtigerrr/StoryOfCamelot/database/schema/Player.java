@@ -1,6 +1,7 @@
 package com.wildtigerrr.StoryOfCamelot.database.schema;
 
 import org.hibernate.annotations.GenericGenerator;
+
 import javax.persistence.*;
 
 @Entity
@@ -8,32 +9,23 @@ import javax.persistence.*;
 public class Player {
 
     @Id
-    @GeneratedValue(generator = "increment")
-    @GenericGenerator(name= "increment", strategy= "increment")
-    @Column(name = "id", length = 9, nullable = false)
-    private int id;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Integer id;
 
-    @Column(name = "external_id")
     private String external_id;
 
-    @Column(name = "nickname")
     private String nickname;
 
-    public Player() {
+    protected Player() {
     }
 
-    public Player(int id, String external_id, String nickname) {
-        this.id = id;
+    public Player(String external_id, String nickname) {
         this.external_id = external_id;
         this.nickname = nickname;
     }
 
     public int getId() {
         return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     public String getExternal_id() {
