@@ -1,14 +1,66 @@
 package com.wildtigerrr.StoryOfCamelot.database.dataaccessobject;
 
+import com.wildtigerrr.StoryOfCamelot.database.dataaccessobject.daointerface.PlayerDaoInterface;
 import com.wildtigerrr.StoryOfCamelot.database.schema.Player;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 
-public interface PlayerDao extends JpaRepository<Player, Integer> {
-    @Query("SELECT p FROM Player p WHERE p.external_id = :external_id")
-    Player findByExternalId(@Param("external_id") int externalId);
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import java.util.List;
 
-    @Query("SELECT p FROM Player p WHERE p.nickname = :nickname")
-    Player findByNickname(@Param("nickname") String nickname);
+public class PlayerDao implements PlayerDaoInterface {
+
+    @PersistenceContext
+    private EntityManager entityManager;
+
+    @Override
+    public Player addPlayer(Player player) {
+        entityManager.persist(player);
+        return player;
+    }
+
+    @Override
+    public void delete(int id) {
+        entityManager.remove(getById(id));
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public Player getByExternalId(int externalId) {
+        String query = "FROM Player AS p WHERE p.external_id = ?";
+        List<Player> players = entityManager.createQuery(query).setParameter(1, externalId).getResultList();
+        if (!players.isEmpty()) {
+            return players.get(0);
+        } else {
+            return null;
+        }
+    }
+
+    @Override
+    public Player getById(int playerId) {
+        return entityManager.find(Player.class, playerId);
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public Player getByNickname(String nickname) {
+        String query = "FROM Player AS p WHERE p.nickname = ?";
+        List<Player> players = entityManager.createQuery(query).setParameter(1, nickname).getResultList();
+        if (!players.isEmpty()) {
+            return players.get(0);
+        } else {
+            return null;
+        }
+    }
+
+    @Override
+    public Player editPlayer(Player playerUpdate) {
+        return entityManager.merge(playerUpdate);
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public List<Player> getAll() {
+        String query = "FROM Player AS p ORDER BY p.Id";
+        return (List<Player>) entityManager.createQuery(query).getResultList();
+    }
 }

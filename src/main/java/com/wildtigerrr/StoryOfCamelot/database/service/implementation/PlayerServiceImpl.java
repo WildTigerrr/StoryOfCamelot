@@ -15,32 +15,32 @@ public class PlayerServiceImpl implements PlayerService {
     private PlayerDao playerDao;
 
     @Override
-    public Player addPlayer(Player player) {
-        return playerDao.saveAndFlush(player);
+    public synchronized Player addPlayer(Player player) {
+        return playerDao.addPlayer(player);
     }
 
     @Override
     public void delete(int id) {
-        playerDao.deleteById(id);
+        playerDao.delete(id);
     }
 
     @Override
     public Player getByExternalId(int externalId) {
-        return playerDao.findByExternalId(externalId);
+        return playerDao.getByExternalId(externalId);
     }
 
     @Override
     public Player getByNickname(String nickname) {
-        return playerDao.findByNickname(nickname);
+        return playerDao.getByNickname(nickname);
     }
 
     @Override
     public Player editPlayer(Player player) {
-        return playerDao.saveAndFlush(player);
+        return playerDao.editPlayer(player);
     }
 
     @Override
     public List<Player> getAll() {
-        return playerDao.findAll();
+        return playerDao.getAll();
     }
 }

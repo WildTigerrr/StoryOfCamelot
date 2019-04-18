@@ -4,6 +4,7 @@ import org.hibernate.annotations.GenericGenerator;
 import javax.persistence.*;
 
 @Entity
+@Table(name = "player")
 public class Player {
 
     @Id
@@ -27,7 +28,7 @@ public class Player {
         this.nickname = nickname;
     }
 
-    public long getId() {
+    public int getId() {
         return id;
     }
 
