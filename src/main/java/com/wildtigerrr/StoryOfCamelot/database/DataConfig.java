@@ -18,15 +18,15 @@ import javax.annotation.Resource;
 import java.net.URISyntaxException;
 import java.util.Properties;
 
-
+/*
 @Configuration
 @EnableTransactionManagement
 @ComponentScan("com.devcolibri.dataexam")
 //@SpringBootApplication
 @PropertySource("classpath:application.properties")
-@EnableJpaRepositories("com.wildtigerrr.StoryOfCamelot.database.dataaccessobject")
+@EnableJpaRepositories("com.wildtigerrr.StoryOfCamelot.database.dataaccessobject")*/
 public class DataConfig {
-
+/*
     private static final String PROP_HIBERNATE_DIALECT = "db.hibernate.dialect";
     private static final String PROP_HIBERNATE_SHOW_SQL = "db.hibernate.show_sql";
     private static final String PROP_ENTITYMANAGER_PACKAGES_TO_SCAN = "db.entitymanager.packages.to.scan";
@@ -49,7 +49,7 @@ public class DataConfig {
 
         return basicDataSource;
     }
-
+/*
     @Bean
     public LocalContainerEntityManagerFactoryBean entityManagerFactory() throws URISyntaxException {
         LocalContainerEntityManagerFactoryBean entityManagerFactoryBean = new LocalContainerEntityManagerFactoryBean();
@@ -57,11 +57,11 @@ public class DataConfig {
         entityManagerFactoryBean.setPackagesToScan(env.getRequiredProperty(PROP_ENTITYMANAGER_PACKAGES_TO_SCAN));
         JpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
         entityManagerFactoryBean.setJpaVendorAdapter(vendorAdapter);
-//        entityManagerFactoryBean.setJpaProperties(getHibernateProperties());
+        entityManagerFactoryBean.setJpaProperties(getHibernateProperties());
 
         return entityManagerFactoryBean;
     }
-
+*//*
     @Bean
     public JpaTransactionManager transactionManager() throws URISyntaxException {
         JpaTransactionManager transactionManager = new JpaTransactionManager();
@@ -69,7 +69,7 @@ public class DataConfig {
 
         return transactionManager;
     }
-
+*//*
     private Properties getHibernateProperties() {
         Properties properties = new Properties();
 //        properties.put(PROP_HIBERNATE_DIALECT, env.getRequiredProperty(PROP_HIBERNATE_DIALECT));
@@ -79,5 +79,5 @@ public class DataConfig {
 
         return properties;
     }
-
+*/
 }
