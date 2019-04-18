@@ -3,10 +3,12 @@ package com.wildtigerrr.StoryOfCamelot;
 import com.wildtigerrr.StoryOfCamelot.web.BotResponseHandler;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.stereotype.Controller;
 
 @Controller
 @SpringBootApplication
+@ComponentScan("com.wildtigerrr.StoryOfCamelot.database.schema") //to scan packages mentioned
 public class StoryOfCamelotApplication {
 
 //    @Value("${spring.datasource.url}")
