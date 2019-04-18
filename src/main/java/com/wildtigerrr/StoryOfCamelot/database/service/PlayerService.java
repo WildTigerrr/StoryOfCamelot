@@ -4,11 +4,11 @@ import com.wildtigerrr.StoryOfCamelot.database.schema.Player;
 
 import java.util.List;
 
-public interface PlayerService {/*
-    Player addPlayer(Player player);
+public interface PlayerService {
+    Player create(Player player);
     void delete(int id);
-    Player getByExternalId(int externalId);
-    Player getByNickname(String nickname);
-    Player editPlayer(Player player);
-    List<Player> getAll();*/
+    Player findByExternalId(String externalId);
+    Player findByNickname(String nickname);
+    Player update(Player player);
+    List<Player> getAll();
 }

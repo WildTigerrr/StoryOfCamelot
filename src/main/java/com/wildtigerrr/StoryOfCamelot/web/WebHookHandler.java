@@ -29,7 +29,6 @@ public class WebHookHandler extends TelegramWebhookBot {
     }
 
     private void handleMessage(Update update) {
-//        System.out.println(update.getMessage());
         logSender(update.getMessage().getFrom(), update.getMessage().getText());
         if (update.getMessage().getFrom().getId().toString().equals(mainAdminId)) {
             String message = update.getMessage().getText();
