@@ -1,12 +1,16 @@
 package com.wildtigerrr.StoryOfCamelot.web;
 
 import com.wildtigerrr.StoryOfCamelot.SOCBotConfig;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 @Service
 public class BotResponseHandler  {
+
+    @Autowired
+    private WebHookHandler webHook;
 
     public void handleMessage() {
 
@@ -20,7 +24,7 @@ public class BotResponseHandler  {
         sendMessage.setChatId(userId);
         sendMessage.setText(text);
         try {
-            new WebHookHandler().execute(sendMessage);
+            webHook.execute(sendMessage);
             alreadyRedirected = false;
         } catch (TelegramApiException e) {
             sendMessageWithoutLoop(e.getMessage());
