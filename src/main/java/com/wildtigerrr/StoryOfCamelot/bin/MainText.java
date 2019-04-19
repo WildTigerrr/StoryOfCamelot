@@ -38,7 +38,7 @@ public enum MainText {
     NICKNAME_CHANGED {
         @Override
         public String text() {
-            return "Вы смогли переписать историю. Теперей вас будут помнить как ";
+            return "Вы смогли переписать историю. Теперь вас будут помнить как *";
         }
     },
     PLAYER_NOT_EXIST {

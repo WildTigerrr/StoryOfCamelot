@@ -100,7 +100,7 @@ public class ResponseHandler {
         System.out.println("New nickname would be: " + newName);
         player.setNickname(newName);
         playerDao.update(player);
-        sendMessage(MainText.NICKNAME_CHANGED.text() + player.getNickname(), player.getExternalId(), false);
+        sendMessage(MainText.NICKNAME_CHANGED.text() + player.getNickname() + "*", player.getExternalId(), true);
     }
 
     private Boolean alreadyRedirected;
