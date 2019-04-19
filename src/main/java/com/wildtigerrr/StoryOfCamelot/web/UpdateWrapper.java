@@ -40,6 +40,7 @@ public class UpdateWrapper {
             }
         } catch (NullPointerException e) {
             System.out.println(e.getMessage());
+            System.out.println("Null pointer");
         }
 
         this.player = player;
