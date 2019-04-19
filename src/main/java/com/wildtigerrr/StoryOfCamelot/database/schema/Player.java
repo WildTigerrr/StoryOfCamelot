@@ -61,6 +61,6 @@ public class Player {
     }
 
     private String removeSpecialCharacters(String nickname) {
-        return nickname.replaceAll("\\W", "");
+        return nickname.replaceAll("[^a-zA-Z0-9\\s]", "");
     }
 }
