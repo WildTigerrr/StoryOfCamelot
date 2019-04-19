@@ -31,16 +31,17 @@ public class UpdateWrapper {
         System.out.println(playerDao);
         System.out.println(this);
         System.out.println(this.userId);
+        Player player = null;
         try {
-            Player player = playerDao.findByExternalId(this.userId);
+             player = playerDao.findByExternalId(this.userId);
+            if (player == null) {
+                player = new Player(this.userId, this.userId);
+                player = playerDao.create(player);
+            }
         } catch (NullPointerException e) {
             System.out.println(e.getMessage());
         }
 
-        if (player == null) {
-            player = new Player(this.userId, this.userId);
-            player = playerDao.create(player);
-        }
         this.player = player;
     }
 
