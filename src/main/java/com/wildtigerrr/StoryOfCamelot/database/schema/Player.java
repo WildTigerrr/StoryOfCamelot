@@ -51,12 +51,16 @@ public class Player {
     }
 
     public void setNickname(String nickname) {
-        this.nickname = nickname;
+        this.nickname = removeSpecialCharacters(nickname);
     }
 
     public String toString() {
         return "Если память тебя не подводит, то:"
                 + "\n*" + this.nickname + "*, " + this.level + " уровень"
                 + "\n\n_Что же ещё известно?_";
+    }
+
+    private String removeSpecialCharacters(String nickname) {
+        return nickname.replaceAll("\\W", "");
     }
 }

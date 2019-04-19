@@ -27,33 +27,14 @@ public class ResponseHandler {
     public void handleMessage(UpdateWrapper message) {
         logSender(message);
         message.setPlayer(getPlayer(message.getUserId()));
-        Player player = message.getPlayer();
         if (message.getText().startsWith("/")) {
-            String commandParts[] = message.getText().split(" ", 3);
-            Command command;
-            try {
-                command = Command.valueOf(commandParts[0].substring(1).toUpperCase());
-            } catch (IllegalArgumentException e) {
-                sendMessage(MainText.UNKNOWN_COMMAND.text(), message.getUserId());
-                return;
-            }
-            switch (command) {
-                case ME:
-                    sendMessage(dbService.testGetPlayer(message.getUserId()), message.getUserId());
-                    break;
-                case NICKNAME:
-                    if (commandParts.length > 1) {
-                        setNickname(player, commandParts[1]);
-                    } else {
-                        sendMessage("*Безымянный, да? Нет, так не пойдёт.*", message.getUserId());
-                    }
-                    break;
-                default:
-                    sendMessage("Слушай, я о чем-то таком слышал, но почему-то не знаю что делать", message.getUserId());
-            }
+            performCommand(message);
+            return;
         }
+        Player player = message.getPlayer();
         if (message.getPlayer().isNew()) {
             player.setup();
+            playerDao.update(player);
             sendMessage(MainText.MEET_NEW_PLAYER.text(), message.getUserId());
         } else if (player.getExternalId().equals(player.getNickname())) {
 
@@ -79,6 +60,31 @@ public class ResponseHandler {
 
         if (!message.getUserId().equals(WEBHOOK_ADMIN_ID)) {
             sendMessage(log, WEBHOOK_ADMIN_ID);
+        }
+    }
+
+    private void performCommand(UpdateWrapper message) {
+        String commandParts[] = message.getText().split(" ", 3);
+        Command command;
+        try {
+            command = Command.valueOf(commandParts[0].substring(1).toUpperCase());
+        } catch (IllegalArgumentException e) {
+            sendMessage(MainText.UNKNOWN_COMMAND.text(), message.getUserId());
+            return;
+        }
+        switch (command) {
+            case ME:
+                sendMessage(dbService.testGetPlayer(message.getUserId()), message.getUserId());
+                break;
+            case NICKNAME:
+                if (commandParts.length > 1) {
+                    setNickname(message.getPlayer(), commandParts[1]);
+                } else {
+                    sendMessage("*Безымянный, да? Нет, так не пойдёт.*", message.getUserId());
+                }
+                break;
+            default:
+                sendMessage("Слушай, я о чем-то таком слышал, но почему-то не знаю что делать", message.getUserId());
         }
     }
 
