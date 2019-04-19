@@ -1,17 +1,10 @@
 package com.wildtigerrr.StoryOfCamelot.web;
 
 import com.wildtigerrr.StoryOfCamelot.database.schema.Player;
-import com.wildtigerrr.StoryOfCamelot.database.service.implementation.PlayerServiceImpl;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.User;
 
-@Component
 public class UpdateWrapper {
-
-    @Autowired
-    private PlayerServiceImpl playerDao;
 
     private String message;
     private String userId;
@@ -22,10 +15,6 @@ public class UpdateWrapper {
     private Player player;
 
     public UpdateWrapper(Update update) {
-        if (update.getUpdateId() == null) {
-            System.out.println("UpdateWrapper Bean initialization");
-            return;
-        }
         User user = update.getMessage().getFrom();
         this.message = update.getMessage().getText();
         this.userId = user.getId().toString();
@@ -33,23 +22,6 @@ public class UpdateWrapper {
         this.lastName = user.getLastName();
         this.username = user.getUserName();
         this.language = user.getLanguageCode();
-
-        System.out.println(playerDao);
-        System.out.println(this);
-        System.out.println(this.userId);
-        Player player = null;
-        try {
-             player = playerDao.findByExternalId(this.userId);
-            if (player == null) {
-                player = new Player(this.userId, this.userId);
-                player = playerDao.create(player);
-            }
-        } catch (NullPointerException e) {
-            System.out.println(e.getMessage());
-            System.out.println("Null pointer");
-        }
-
-        this.player = player;
     }
 
     public String getText() {
@@ -74,6 +46,10 @@ public class UpdateWrapper {
 
     public String getLanguage() {
         return language;
+    }
+
+    public void setPlayer(Player player) {
+        this.player = player;
     }
 
     public Player getPlayer() {

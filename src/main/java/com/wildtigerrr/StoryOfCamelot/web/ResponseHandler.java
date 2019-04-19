@@ -2,6 +2,8 @@ package com.wildtigerrr.StoryOfCamelot.web;
 
 import com.wildtigerrr.StoryOfCamelot.bin.MainText;
 import com.wildtigerrr.StoryOfCamelot.database.DatabaseInteraction;
+import com.wildtigerrr.StoryOfCamelot.database.schema.Player;
+import com.wildtigerrr.StoryOfCamelot.database.service.implementation.PlayerServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -18,8 +20,12 @@ public class ResponseHandler {
     @Autowired
     private DatabaseInteraction dbService;
 
+    @Autowired
+    private PlayerServiceImpl playerDao;
+
     public void handleMessage(UpdateWrapper message) {
         logSender(message);
+        message.setPlayer(getPlayer(message.getUserId()));
         if (message.getPlayer() != null && message.getPlayer().isNew()) {
             sendMessage(MainText.MEET_NEW_PLAYER.text(), message.getUserId());
         }
@@ -47,6 +53,16 @@ public class ResponseHandler {
         if (!message.getUserId().equals(WEBHOOK_ADMIN_ID)) {
             sendMessage(log, WEBHOOK_ADMIN_ID);
         }
+    }
+
+    private Player getPlayer(String externalId) {
+        Player player = null;
+        player = playerDao.findByExternalId(externalId);
+        if (player == null) {
+            player = new Player(externalId, externalId);
+            player = playerDao.create(player);
+        }
+        return player;
     }
 
     public void sendMessage(String text, String userId) {
