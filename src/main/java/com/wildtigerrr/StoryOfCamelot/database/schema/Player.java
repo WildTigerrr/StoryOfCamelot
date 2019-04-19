@@ -13,8 +13,8 @@ public class Player {
     private Integer id;
 
     private String external_id;
-
     private String nickname;
+    private Boolean isNew;
 
     protected Player() {
     }
@@ -22,6 +22,11 @@ public class Player {
     public Player(String externalId, String nickname) {
         this.external_id = externalId;
         this.nickname = nickname;
+        this.isNew = externalId.equals(nickname);
+    }
+
+    public Boolean isNew() {
+        return isNew;
     }
 
     public Integer getId() {

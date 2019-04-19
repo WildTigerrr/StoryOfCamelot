@@ -1,8 +1,8 @@
 package com.wildtigerrr.StoryOfCamelot.database;
 
-import com.wildtigerrr.StoryOfCamelot.database.dataaccessobject.PlayerDao;
 import com.wildtigerrr.StoryOfCamelot.database.schema.Player;
-import com.wildtigerrr.StoryOfCamelot.web.BotResponseHandler;
+import com.wildtigerrr.StoryOfCamelot.database.service.implementation.PlayerServiceImpl;
+import com.wildtigerrr.StoryOfCamelot.web.ResponseHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -10,18 +10,14 @@ import org.springframework.stereotype.Service;
 public class DatabaseInteraction {
 
     @Autowired
-    private PlayerDao playerDao;
+    private PlayerServiceImpl playerDao;
 
     @Autowired
-    private BotResponseHandler responseHandler;
+    private ResponseHandler responseHandler;
 
     public void testSavePlayer(String externalId) {
         Player player = new Player(externalId, "WildTigerrr");
-        try {
-            playerDao.save(player);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        playerDao.create(player);
     }
 
     public String testGetPlayer(String externalId) {
