@@ -25,6 +25,7 @@ public class ResponseHandler {
     private PlayerServiceImpl playerDao;
 
     public void handleMessage(UpdateWrapper message) {
+        System.out.println("Working with message: " + message);
         logSender(message);
         message.setPlayer(getPlayer(message.getUserId()));
         if (message.getText().startsWith("/")) {
@@ -33,15 +34,16 @@ public class ResponseHandler {
         }
         Player player = message.getPlayer();
         if (message.getPlayer().isNew()) {
+            System.out.println("New player");
             player.setup();
             playerDao.update(player);
             sendMessage(MainText.MEET_NEW_PLAYER.text(), message.getUserId());
         } else if (player.getExternalId().equals(player.getNickname())) {
-
+            System.out.println("Here should be nickname set");
         }
         if (message.getUserId().equals(WEBHOOK_ADMIN_ID)) {
             if (message.getText().equals("/database test")) {
-                dbService.testSavePlayer(message.getUserId());
+                // Some admin actions
             }
         }
         String answer = "You wrote me: " + message.getText();
@@ -64,7 +66,7 @@ public class ResponseHandler {
     }
 
     private void performCommand(UpdateWrapper message) {
-        String commandParts[] = message.getText().split(" ", 3);
+        String commandParts[] = message.getText().split(" ", 2);
         Command command;
         try {
             command = Command.valueOf(commandParts[0].substring(1).toUpperCase());
@@ -74,22 +76,22 @@ public class ResponseHandler {
         }
         switch (command) {
             case ME:
-                sendMessage(dbService.testGetPlayer(message.getUserId()), message.getUserId());
+                sendMessage(playerDao.getPlayerInfo(message.getUserId()), message.getUserId());
                 break;
             case NICKNAME:
                 if (commandParts.length > 1) {
                     setNickname(message.getPlayer(), commandParts[1]);
                 } else {
-                    sendMessage("*Безымянный, да? Нет, так не пойдёт.*", message.getUserId());
+                    sendMessage(MainText.EMPTY_NICKNAME.text(), message.getUserId());
                 }
                 break;
             default:
-                sendMessage("Слушай, я о чем-то таком слышал, но почему-то не знаю что делать", message.getUserId());
+                sendMessage(MainText.COMMAND_NOT_DEFINED.text(), message.getUserId());
         }
     }
 
     private Player getPlayer(String externalId) {
-        Player player = null;
+        Player player;
         player = playerDao.findByExternalId(externalId);
         if (player == null) {
             player = new Player(externalId, externalId);
@@ -99,9 +101,10 @@ public class ResponseHandler {
     }
 
     private void setNickname(Player player, String newName) {
+        System.out.println("New nickname would be: " + newName);
         player.setNickname(newName);
         playerDao.update(player);
-        sendMessage("Вы смогли переписать историю. Теперей вас будут помнить как " + newName, player.getExternalId());
+        sendMessage(MainText.NICKNAME_CHANGED.text() + newName, player.getExternalId());
     }
 
     private Boolean alreadyRedirected;
@@ -109,6 +112,7 @@ public class ResponseHandler {
     public void sendMessage(String text, String userId) {
         if (alreadyRedirected == null || !alreadyRedirected) alreadyRedirected = true;
         else return;
+        System.out.println("Message text: " + text);
 
         SendMessage sendMessage = new SendMessage();
         sendMessage.enableMarkdown(true);

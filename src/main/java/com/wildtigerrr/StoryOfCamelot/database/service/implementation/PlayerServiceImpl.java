@@ -1,5 +1,6 @@
 package com.wildtigerrr.StoryOfCamelot.database.service.implementation;
 
+import com.wildtigerrr.StoryOfCamelot.bin.MainText;
 import com.wildtigerrr.StoryOfCamelot.database.dataaccessobject.PlayerDao;
 import com.wildtigerrr.StoryOfCamelot.database.schema.Player;
 import com.wildtigerrr.StoryOfCamelot.database.service.PlayerService;
@@ -47,5 +48,15 @@ public class PlayerServiceImpl implements PlayerService {
     @Override
     public List<Player> getAll() {
         return (List<Player>) playerDao.findAll();
+    }
+
+    @Override
+    public String getPlayerInfo(String externalId) {
+        Player player = findByExternalId(externalId);
+        if (player != null) {
+            return player.toString();
+        } else {
+            return MainText.PLAYER_NOT_EXIST.text();
+        }
     }
 }

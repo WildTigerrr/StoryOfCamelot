@@ -22,6 +22,30 @@ public enum MainText {
         public String text() {
             return "Я не знаю что мне делать с этою бедой...";
         }
+    },
+    EMPTY_NICKNAME {
+        @Override
+        public String text() {
+            return "*Безымянный, да? Нет, так не пойдёт.*";
+        }
+    },
+    COMMAND_NOT_DEFINED {
+        @Override
+        public String text() {
+            return "Слушай, я о чем-то таком слышал, но почему-то не знаю что делать";
+        }
+    },
+    NICKNAME_CHANGED {
+        @Override
+        public String text() {
+            return "Вы смогли переписать историю. Теперей вас будут помнить как ";
+        }
+    },
+    PLAYER_NOT_EXIST {
+        @Override
+        public String text() {
+            return "You don't have a player yet.";
+        }
     };
     abstract public String text();
 }

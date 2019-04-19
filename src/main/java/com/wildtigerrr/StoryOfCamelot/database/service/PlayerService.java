@@ -11,4 +11,5 @@ public interface PlayerService {
     Player findByNickname(String nickname);
     Player update(Player player);
     List<Player> getAll();
+    String getPlayerInfo(String externalId);
 }
