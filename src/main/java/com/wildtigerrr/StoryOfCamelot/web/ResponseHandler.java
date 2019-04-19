@@ -130,6 +130,7 @@ public class ResponseHandler {
                 ex.printStackTrace();
             }
         } catch (TelegramApiException e) {
+            e.printStackTrace();
             sendMessageToAdmin(e.getMessage());
         }
     }
