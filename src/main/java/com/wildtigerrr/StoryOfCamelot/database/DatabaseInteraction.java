@@ -24,7 +24,7 @@ public class DatabaseInteraction {
         try {
             Player player = playerDao.findByExternalId(externalId);
             if (player != null) {
-                return player.getNickname();
+                return player.toString();
             } else {
                 return "You don't have a player yet.";
             }

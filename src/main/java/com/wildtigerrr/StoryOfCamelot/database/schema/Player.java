@@ -15,6 +15,7 @@ public class Player {
     private String external_id;
     private String nickname;
     private Boolean isNew;
+    private Integer level;
 
     protected Player() {
     }
@@ -22,6 +23,7 @@ public class Player {
     public Player(String externalId, String nickname) {
         this.external_id = externalId;
         this.nickname = nickname;
+        this.level = 1;
         this.isNew = externalId.equals(nickname);
     }
 
@@ -47,5 +49,11 @@ public class Player {
 
     public void setNickname(String nickname) {
         this.nickname = nickname;
+    }
+
+    public String toString() {
+        return "Если память тебя не подводит, то:"
+                + "\n*" + this.nickname + "*, " + this.level + " уровень"
+                + "\n\n_Что же ещё известно?_";
     }
 }

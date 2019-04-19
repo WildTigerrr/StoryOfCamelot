@@ -65,6 +65,7 @@ public class ResponseHandler {
         return player;
     }
 
+    private Boolean alreadyRedirected;
     public void sendMessage(String text, String userId) {
         if (alreadyRedirected == null || !alreadyRedirected) alreadyRedirected = true;
         else return;
@@ -81,21 +82,16 @@ public class ResponseHandler {
             try {
                 new WebHookHandler().execute(sendMessage);
             } catch (TelegramApiException ex) {
-                sendMessageWithoutLoop(e.getMessage());
+                sendMessageToAdmin(e.getMessage());
                 ex.printStackTrace();
             }
         } catch (TelegramApiException e) {
-            sendMessageWithoutLoop(e.getMessage());
+            sendMessageToAdmin(e.getMessage());
         }
     }
 
     public void sendMessageToAdmin(String text) {
         sendMessage(text, BotConfig.WEBHOOK_ADMIN_ID);
-    }
-
-    private Boolean alreadyRedirected;
-    private void sendMessageWithoutLoop(String text) {
-        sendMessageToAdmin(text);
     }
 
 }
