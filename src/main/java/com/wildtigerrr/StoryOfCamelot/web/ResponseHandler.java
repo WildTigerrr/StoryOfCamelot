@@ -20,7 +20,7 @@ public class ResponseHandler {
 
     public void handleMessage(UpdateWrapper message) {
         logSender(message);
-        if (message.getPlayer().isNew()) {
+        if (message.getPlayer() != null && message.getPlayer().isNew()) {
             sendMessage(MainText.MEET_NEW_PLAYER.text(), message.getUserId());
         }
         if (message.getUserId().equals(WEBHOOK_ADMIN_ID)) {
