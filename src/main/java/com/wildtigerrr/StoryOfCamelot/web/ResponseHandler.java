@@ -39,7 +39,7 @@ public class ResponseHandler {
             }
             switch (command) {
                 case ME: sendMessage(dbService.testGetPlayer(message.getUserId()), message.getUserId()); break;
-                case NICKNAME: setNickname(player, commandParts[2]); break;
+                case NICKNAME: setNickname(player, commandParts[1]); break;
                 default: sendMessage("Слушай, я о чем-то таком слышал, но почему-то не знаю что делать", message.getUserId());
             }
         }
