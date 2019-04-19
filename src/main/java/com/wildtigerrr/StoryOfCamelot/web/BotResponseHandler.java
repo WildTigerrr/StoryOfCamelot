@@ -27,7 +27,7 @@ public class BotResponseHandler  {
             webHook.execute(sendMessage);
             alreadyRedirected = false;
         } catch (NullPointerException e) {
-            System.out.println("WebHook Startup Error");
+            System.out.println("Spring Startup Error (Autowired Services not initialized)");
             try {
                 new WebHookHandler().execute(sendMessage);
             } catch (TelegramApiException ex) {
