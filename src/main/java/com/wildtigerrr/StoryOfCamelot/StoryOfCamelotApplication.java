@@ -7,7 +7,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.stereotype.Controller;
 
 @Controller
-@SpringBootApplication(scanBasePackages = {"com.wildtigerrr.StoryOfCamelot","org.telegram.telegrambots.meta.api.objects"})
+@SpringBootApplication
 @EnableAutoConfiguration
 public class StoryOfCamelotApplication {
 
