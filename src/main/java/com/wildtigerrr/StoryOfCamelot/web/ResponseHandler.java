@@ -2,7 +2,6 @@ package com.wildtigerrr.StoryOfCamelot.web;
 
 import com.wildtigerrr.StoryOfCamelot.bin.Command;
 import com.wildtigerrr.StoryOfCamelot.bin.MainText;
-import com.wildtigerrr.StoryOfCamelot.database.DatabaseInteraction;
 import com.wildtigerrr.StoryOfCamelot.database.schema.Player;
 import com.wildtigerrr.StoryOfCamelot.database.service.implementation.PlayerServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,9 +16,6 @@ public class ResponseHandler {
 
     @Autowired
     private WebHookHandler webHook;
-
-    @Autowired
-    private DatabaseInteraction dbService;
 
     @Autowired
     private PlayerServiceImpl playerDao;
@@ -37,7 +33,7 @@ public class ResponseHandler {
             System.out.println("New player");
             player.setup();
             playerDao.update(player);
-            sendMessage(MainText.MEET_NEW_PLAYER.text(), message.getUserId());
+            sendMessage(MainText.MEET_NEW_PLAYER.text(), message.getUserId(), true);
         } else if (player.getExternalId().equals(player.getNickname())) {
             System.out.println("Here should be nickname set");
         }
@@ -48,7 +44,7 @@ public class ResponseHandler {
         }
         String answer = "You wrote me: " + message.getText();
         System.out.println("Answer: " + answer);
-        sendMessage(answer, message.getUserId());
+        sendMessage(answer, message.getUserId(), false);
     }
 
     private void logSender(UpdateWrapper message) {
@@ -61,7 +57,7 @@ public class ResponseHandler {
         System.out.println(log);
 
         if (!message.getUserId().equals(WEBHOOK_ADMIN_ID)) {
-            sendMessage(log, WEBHOOK_ADMIN_ID);
+            sendMessage(log, WEBHOOK_ADMIN_ID, false);
         }
     }
 
@@ -71,22 +67,22 @@ public class ResponseHandler {
         try {
             command = Command.valueOf(commandParts[0].substring(1).toUpperCase());
         } catch (IllegalArgumentException e) {
-            sendMessage(MainText.UNKNOWN_COMMAND.text(), message.getUserId());
+            sendMessage(MainText.UNKNOWN_COMMAND.text(), message.getUserId(), true);
             return;
         }
         switch (command) {
             case ME:
-                sendMessage(playerDao.getPlayerInfo(message.getUserId()), message.getUserId());
+                sendMessage(playerDao.getPlayerInfo(message.getUserId()), message.getUserId(), true);
                 break;
             case NICKNAME:
                 if (commandParts.length > 1) {
                     setNickname(message.getPlayer(), commandParts[1]);
                 } else {
-                    sendMessage(MainText.EMPTY_NICKNAME.text(), message.getUserId());
+                    sendMessage(MainText.EMPTY_NICKNAME.text(), message.getUserId(), true);
                 }
                 break;
             default:
-                sendMessage(MainText.COMMAND_NOT_DEFINED.text(), message.getUserId());
+                sendMessage(MainText.COMMAND_NOT_DEFINED.text(), message.getUserId(), true);
         }
     }
 
@@ -104,18 +100,18 @@ public class ResponseHandler {
         System.out.println("New nickname would be: " + newName);
         player.setNickname(newName);
         playerDao.update(player);
-        sendMessage(MainText.NICKNAME_CHANGED.text() + newName, player.getExternalId());
+        sendMessage(MainText.NICKNAME_CHANGED.text() + newName, player.getExternalId(), false);
     }
 
     private Boolean alreadyRedirected;
 
-    public void sendMessage(String text, String userId) {
+    public void sendMessage(String text, String userId, Boolean useMarkdown) {
         if (alreadyRedirected == null || !alreadyRedirected) alreadyRedirected = true;
         else return;
         System.out.println("Message text: " + text);
 
         SendMessage sendMessage = new SendMessage();
-        sendMessage.enableMarkdown(true);
+        sendMessage.enableMarkdown(useMarkdown);
         sendMessage.setChatId(userId);
         sendMessage.setText(text);
         try {
@@ -136,7 +132,7 @@ public class ResponseHandler {
     }
 
     public void sendMessageToAdmin(String text) {
-        sendMessage(text, BotConfig.WEBHOOK_ADMIN_ID);
+        sendMessage(text, BotConfig.WEBHOOK_ADMIN_ID, false);
     }
 
 }
