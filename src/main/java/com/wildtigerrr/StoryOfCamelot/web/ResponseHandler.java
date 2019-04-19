@@ -29,7 +29,7 @@ public class ResponseHandler {
         message.setPlayer(getPlayer(message.getUserId()));
         Player player = message.getPlayer();
         if (message.getText().startsWith("/")) {
-            String commandParts[] = message.getText().split(" ", 2);
+            String commandParts[] = message.getText().split(" ", 3);
             Command command;
             try {
                 command = Command.valueOf(commandParts[0].substring(1).toUpperCase());
@@ -38,9 +38,18 @@ public class ResponseHandler {
                 return;
             }
             switch (command) {
-                case ME: sendMessage(dbService.testGetPlayer(message.getUserId()), message.getUserId()); break;
-                case NICKNAME: setNickname(player, commandParts[1]); break;
-                default: sendMessage("Слушай, я о чем-то таком слышал, но почему-то не знаю что делать", message.getUserId());
+                case ME:
+                    sendMessage(dbService.testGetPlayer(message.getUserId()), message.getUserId());
+                    break;
+                case NICKNAME:
+                    if (commandParts.length > 1) {
+                        setNickname(player, commandParts[1]);
+                    } else {
+                        sendMessage("*Безымянный, да? Нет, так не пойдёт.*", message.getUserId());
+                    }
+                    break;
+                default:
+                    sendMessage("Слушай, я о чем-то таком слышал, но почему-то не знаю что делать", message.getUserId());
             }
         }
         if (message.getPlayer().isNew()) {
@@ -90,6 +99,7 @@ public class ResponseHandler {
     }
 
     private Boolean alreadyRedirected;
+
     public void sendMessage(String text, String userId) {
         if (alreadyRedirected == null || !alreadyRedirected) alreadyRedirected = true;
         else return;
