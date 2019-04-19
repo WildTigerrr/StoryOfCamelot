@@ -22,6 +22,11 @@ public class UpdateWrapper {
     private Player player;
 
     public UpdateWrapper(Update update) {
+        System.out.println("UpdateWrapper Construct");
+        System.out.println(update);
+        System.out.println(update.getMessage());
+        System.out.println(update.getMessage().getFrom());
+        System.out.println(update.getMessage().getFrom());
         User user = update.getMessage().getFrom();
         this.message = update.getMessage().getText();
         this.userId = user.getId().toString();
