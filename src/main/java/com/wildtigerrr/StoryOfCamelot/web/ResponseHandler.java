@@ -31,7 +31,7 @@ public class ResponseHandler {
         if (message.getText().startsWith("/")) {
             Command command;
             try {
-                command = Command.valueOf(message.getText().substring(1));
+                command = Command.valueOf(message.getText().substring(1).toUpperCase());
             } catch (IllegalArgumentException e) {
                 sendMessage(MainText.UNKNOWN_COMMAND.text(), message.getUserId());
                 return;
