@@ -28,7 +28,15 @@ public class UpdateWrapper {
         this.username = user.getUserName();
         this.language = user.getLanguageCode();
 
-        Player player = playerDao.findByExternalId(this.userId);
+        System.out.println(playerDao);
+        System.out.println(this);
+        System.out.println(this.userId);
+        try {
+            Player player = playerDao.findByExternalId(this.userId);
+        } catch (NullPointerException e) {
+            System.out.println(e.getMessage());
+        }
+
         if (player == null) {
             player = new Player(this.userId, this.userId);
             player = playerDao.create(player);
