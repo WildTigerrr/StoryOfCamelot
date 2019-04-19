@@ -1,5 +1,6 @@
 package com.wildtigerrr.StoryOfCamelot.web;
 
+import com.wildtigerrr.StoryOfCamelot.bin.Command;
 import com.wildtigerrr.StoryOfCamelot.bin.MainText;
 import com.wildtigerrr.StoryOfCamelot.database.DatabaseInteraction;
 import com.wildtigerrr.StoryOfCamelot.database.schema.Player;
@@ -26,14 +27,30 @@ public class ResponseHandler {
     public void handleMessage(UpdateWrapper message) {
         logSender(message);
         message.setPlayer(getPlayer(message.getUserId()));
-        if (message.getPlayer() != null && message.getPlayer().isNew()) {
+        Player player = message.getPlayer();
+        if (message.getText().startsWith("/")) {
+            Command command;
+            try {
+                command = Command.valueOf(message.getText().substring(1));
+            } catch (IllegalArgumentException e) {
+                sendMessage(MainText.UNKNOWN_COMMAND.text(), message.getUserId());
+                return;
+            }
+            switch (command) {
+                case ME: sendMessage(dbService.testGetPlayer(message.getUserId()), message.getUserId()); break;
+                case NICKNAME: sendMessage("Я это ещё не умею =(", message.getUserId()); break;
+                default: sendMessage("Слушай, я о чем-то таком слышал, но почему-то не знаю что делать", message.getUserId());
+            }
+        }
+        if (message.getPlayer().isNew()) {
+            player.setup();
             sendMessage(MainText.MEET_NEW_PLAYER.text(), message.getUserId());
+        } else if (player.getExternalId().equals(player.getNickname())) {
+
         }
         if (message.getUserId().equals(WEBHOOK_ADMIN_ID)) {
             if (message.getText().equals("/database test")) {
                 dbService.testSavePlayer(message.getUserId());
-            } else if (message.getText().equals("/me")) {
-                sendMessage(dbService.testGetPlayer(message.getUserId()), message.getUserId());
             }
         }
         String answer = "You wrote me: " + message.getText();

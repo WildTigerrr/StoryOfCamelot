@@ -23,12 +23,15 @@ public class Player {
     public Player(String externalId, String nickname) {
         this.external_id = externalId;
         this.nickname = nickname;
-        this.level = 1;
         this.isNew = externalId.equals(nickname);
     }
 
     public Boolean isNew() {
         return isNew;
+    }
+    public void setup() {
+        this.isNew = false;
+        this.level = 1;
     }
 
     public Integer getId() {

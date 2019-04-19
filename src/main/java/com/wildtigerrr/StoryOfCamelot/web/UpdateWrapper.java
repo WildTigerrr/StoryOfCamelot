@@ -16,7 +16,7 @@ public class UpdateWrapper {
 
     public UpdateWrapper(Update update) {
         User user = update.getMessage().getFrom();
-        this.message = update.getMessage().getText();
+        this.message = update.getMessage().getText().trim();
         this.userId = user.getId().toString();
         this.firstName = user.getFirstName();
         this.lastName = user.getLastName();
