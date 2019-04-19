@@ -70,6 +70,7 @@ public class ResponseHandler {
         else return;
 
         SendMessage sendMessage = new SendMessage();
+        sendMessage.enableMarkdown(true);
         sendMessage.setChatId(userId);
         sendMessage.setText(text);
         try {
