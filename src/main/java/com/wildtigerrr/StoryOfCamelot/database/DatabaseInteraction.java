@@ -34,4 +34,8 @@ public class DatabaseInteraction {
         }
     }
 
+    public void updatePlayer(Player player) {
+        playerDao.update(player);
+    }
+
 }
