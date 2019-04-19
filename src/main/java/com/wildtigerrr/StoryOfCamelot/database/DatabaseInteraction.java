@@ -27,7 +27,11 @@ public class DatabaseInteraction {
     public String testGetPlayer(String externalId) {
         try {
             Player player = playerDao.findByExternalId(externalId);
-            return player.getNickname();
+            if (player != null) {
+                return player.getNickname();
+            } else {
+                return "You don't have a player yet.";
+            }
         } catch (Exception e) {
             e.printStackTrace();
             return e.getMessage();
