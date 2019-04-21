@@ -7,7 +7,7 @@ import org.springframework.data.repository.query.Param;
 
 public interface PlayerDao extends CrudRepository<Player, Integer> {
 
-    @Query("SELECT p FROM PLAYER p WHERE p.external_id = :external_id")
+    @Query("SELECT p FROM Player p WHERE p.external_id = :external_id")
     Player findByExternalId(@Param("external_id") String externalId);
 
     Player findByNickname(String nickname);
