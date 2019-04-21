@@ -28,10 +28,10 @@ public class AmazonClient {
 
     @PostConstruct
     private void initializeAmazon() {
-        AWSCredentials creds = new BasicAWSCredentials(System.getenv(accessKey), System.getenv(secretKey));
+        AWSCredentials credentials = new BasicAWSCredentials(System.getenv(accessKey), System.getenv(secretKey));
         this.s3client = AmazonS3ClientBuilder.standard()
                 .withRegion(Regions.EU_CENTRAL_1)
-                .withCredentials(new AWSStaticCredentialsProvider(creds))
+                .withCredentials(new AWSStaticCredentialsProvider(credentials))
                 .build();
     }
 
