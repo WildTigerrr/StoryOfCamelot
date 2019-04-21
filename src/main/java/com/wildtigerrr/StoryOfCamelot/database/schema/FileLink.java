@@ -3,7 +3,7 @@ package com.wildtigerrr.StoryOfCamelot.database.schema;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "FILE_LINK")
+@Table(name = "file_link")
 public class FileLink {
 
     @Id

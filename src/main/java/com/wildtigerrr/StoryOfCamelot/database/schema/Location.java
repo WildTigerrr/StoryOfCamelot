@@ -3,7 +3,7 @@ package com.wildtigerrr.StoryOfCamelot.database.schema;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "LOCATION")
+@Table(name = "location")
 public class Location {
 
     @Id
@@ -11,7 +11,7 @@ public class Location {
     private Integer id;
 
     @ManyToOne(optional = true)
-    @JoinColumn(name = "FILE_LINK_id")
+    @JoinColumn(name = "file_link_id")
     private FileLink image_link;
     private Boolean has_stores;
 
