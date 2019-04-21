@@ -20,7 +20,7 @@ public class DatabaseInteraction {
     @PostConstruct
     public void init() {
         System.out.println("DB fill");
-        insertFileLinks();
+        insertInitialData();
     }
 
     @Autowired
