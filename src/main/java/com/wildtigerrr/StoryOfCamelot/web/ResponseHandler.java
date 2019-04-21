@@ -14,6 +14,7 @@ import com.wildtigerrr.StoryOfCamelot.database.schema.Player;
 import com.wildtigerrr.StoryOfCamelot.database.service.implementation.FileLinkServiceImpl;
 import com.wildtigerrr.StoryOfCamelot.database.service.implementation.LocationServiceImpl;
 import com.wildtigerrr.StoryOfCamelot.database.service.implementation.PlayerServiceImpl;
+import com.wildtigerrr.StoryOfCamelot.web.service.AmazonClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -42,6 +43,13 @@ public class ResponseHandler {
     @Autowired
     private LocationServiceImpl locationService;
 
+    private AmazonClient amazonClient;
+
+    @Autowired
+    ResponseHandler(AmazonClient amazonClient) {
+        this.amazonClient = amazonClient;
+    }
+
     public void handleMessage(UpdateWrapper message) {
         System.out.println("Working with message: " + message);
         logSender(message);
@@ -49,19 +57,15 @@ public class ResponseHandler {
         if (message.getUserId().equals(WEBHOOK_ADMIN_ID)) {
             if (message.getText().equals("database test")) {
                 // Some admin actions
-                Location newLocation = locationService.findByName("Test Forest");
+                String locationName = "Test Forest";
+                Location newLocation = locationService.findByName(locationName);
+
                 if (newLocation != null) {
                     sendMessage(newLocation.toString(), message.getUserId());
                 } else {
+                    sendMessageToAdmin("Searched location didn't found: " + locationName);
                     System.out.println("No such location");
                 }
-                StringBuilder loc = new StringBuilder();
-                loc.append("Here're they: ");
-                for (Location location : locationService.getAll()) {
-                    loc.append(location.toString());
-                }
-                sendMessage(loc.toString(), message.getUserId());
-                return;
             } else if (message.getText().equals("image test")) {
                 sendTestImage(message.getUserId());
                 return;
@@ -86,10 +90,10 @@ public class ResponseHandler {
     }
 
     private void sendTestImage(String userId) {
-        AmazonS3 client = getClient();
+//        AmazonS3 client = getClient();
         InputStream result = overlayImages(
-                getImage(client, "images/locations/forest-test.png"),
-                getImage(client, "images/items/weapons/swords/sword-test.png")
+                amazonClient.getObject("images/locations/forest-test.png"),
+                amazonClient.getObject("images/items/weapons/swords/sword-test.png")
         );
         SendPhoto newMessage = new SendPhoto().setPhoto("Test Name", result);
         newMessage.setChatId(userId);
@@ -119,7 +123,7 @@ public class ResponseHandler {
             ImageIO.write(imageBack, "png", os);
             return new ByteArrayInputStream(os.toByteArray());
         } catch (IOException e) {
-            sendMessage(e.getMessage(), WEBHOOK_ADMIN_ID);
+            sendMessageToAdmin(e.getMessage());
             e.printStackTrace();
         }
         return null;

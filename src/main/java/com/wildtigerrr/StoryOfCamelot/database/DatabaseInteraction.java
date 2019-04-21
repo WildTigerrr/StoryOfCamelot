@@ -32,7 +32,7 @@ public class DatabaseInteraction {
     @Autowired
     private LocationServiceImpl locationService;
 
-    public void insertInitialData() {
+    private void insertInitialData() {
         insertFileLinks();
         List<FileLink> fileLinks = fileLinkService.getAll();
         HashMap<String, FileLink> filesMap = new HashMap<>();
