@@ -11,7 +11,7 @@ public class Location {
     private Integer id;
 
     @ManyToOne(optional = true)
-    @JoinColumn(name = "file_link_id")
+    @JoinColumn(name = "filelink_id")
     private FileLink image_link;
     private Boolean has_stores;
 
