@@ -23,9 +23,10 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStream;
+import javax.imageio.ImageIO;
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.*;
 
 import static com.wildtigerrr.StoryOfCamelot.web.BotConfig.WEBHOOK_ADMIN_ID;
 
@@ -71,16 +72,23 @@ public class ResponseHandler {
                 Location newLocation = locationkDao.findById(location.getId());
                 sendMessage(newLocation.toString(), message.getUserId());
             } else if (message.getText().equals("image test")) {
-                BasicAWSCredentials creds = new BasicAWSCredentials(System.getenv("AWS_S3_ID"), System.getenv("AWS_S3_KEY"));
-                AmazonS3 client = AmazonS3ClientBuilder.standard()
-                        .withRegion(Regions.EU_CENTRAL_1)
-                        .withCredentials(new AWSStaticCredentialsProvider(creds))
-                        .build();
-                S3Object object = client.getObject(new GetObjectRequest(
-                        "storyofcameloteu",
-                        "images/items/weapons/swords/sword-test.png"
-                ));
-                InputStream input = object.getObjectContent();
+                AmazonS3 client = getClient();
+                BufferedImage forestImage = getImage(client, "images/locations/forest-test.png");
+                BufferedImage swordImage = getImage(client, "images/items/weapons/swords/sword-test.png");
+                Graphics2D g = forestImage.createGraphics();
+                g.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
+                        RenderingHints.VALUE_ANTIALIAS_ON);
+                g.drawImage(forestImage, 0, 0, null);
+                g.drawImage(swordImage, 0, 0, null);
+                g.dispose();
+                ByteArrayOutputStream os = new ByteArrayOutputStream();
+                try {
+                    ImageIO.write(forestImage, "png", os);
+                } catch (IOException e) {
+                    sendMessage(e.getMessage(), message.getUserId());
+                    e.printStackTrace();
+                }
+                InputStream input = new ByteArrayInputStream(os.toByteArray());
                 SendPhoto newMessage = new SendPhoto().setPhoto("Test Name", input);
                 newMessage.setChatId(message.getUserId());
                 try {
@@ -94,6 +102,30 @@ public class ResponseHandler {
         String answer = "You wrote me: " + message.getText();
         System.out.println("Answer: " + answer);
         sendMessage(answer, message.getUserId(), false);
+    }
+
+    private BufferedImage getImage(AmazonS3 client, String key) {
+        S3Object object = client.getObject(new GetObjectRequest(
+                "storyofcameloteu",
+                key
+        ));
+        InputStream input = object.getObjectContent();
+        try {
+            return ImageIO.read(input);
+        } catch (IOException e) {
+            sendMessage(e.getMessage(), WEBHOOK_ADMIN_ID);
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    private AmazonS3 getClient() {
+        BasicAWSCredentials creds = new BasicAWSCredentials(System.getenv("AWS_S3_ID"), System.getenv("AWS_S3_KEY"));
+        AmazonS3 client = AmazonS3ClientBuilder.standard()
+                .withRegion(Regions.EU_CENTRAL_1)
+                .withCredentials(new AWSStaticCredentialsProvider(creds))
+                .build();
+        return client;
     }
 
     private void logSender(UpdateWrapper message) {

@@ -25,8 +25,8 @@ public class DatabaseInteraction {
     private void insertFileLinks() {
         ArrayList<FileLink> initialFileLinks = new ArrayList<>(
                 Arrays.asList(
-                        new FileLink("forest-test", "/locations/forest-test.png")
-                        , new FileLink("sword-test", "/items/weapons/swords/sword-test.png")
+                        new FileLink("forest-test", "images/locations/forest-test.png")
+                        , new FileLink("sword-test", "images/items/weapons/swords/sword-test.png")
                 )
         );
         fileLinkService.create(initialFileLinks);
