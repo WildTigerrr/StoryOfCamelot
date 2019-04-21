@@ -17,11 +17,12 @@ public class LocationServiceImpl implements LocationService {
 
     @Override
     public synchronized Location create(Location location) {
-        // TODO if Id == null
-        Optional object = locationDao.findById(location.getId());
-        Location existingLocation;
-        if (object.isPresent()) {
-            existingLocation = (Location) object.get();
+        Location existingLocation = null;
+        if (location.getId() != null) {
+            Optional object = locationDao.findById(location.getId());
+            if (object.isPresent()) {
+                existingLocation = (Location) object.get();
+            }
         } else {
             existingLocation = locationDao.save(location);
         }

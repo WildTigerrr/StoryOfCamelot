@@ -17,7 +17,6 @@ public class PlayerServiceImpl implements PlayerService {
 
     @Override
     public synchronized Player create(Player player) {
-        // TODO if id == null
         Player existingPlayer = playerDao.findByExternalId(player.getExternalId());
         if (existingPlayer != null) {
             return existingPlayer;

@@ -2,7 +2,6 @@ package com.wildtigerrr.StoryOfCamelot.database.service.implementation;
 
 import com.wildtigerrr.StoryOfCamelot.database.dataaccessobject.FileLinkDao;
 import com.wildtigerrr.StoryOfCamelot.database.schema.FileLink;
-import com.wildtigerrr.StoryOfCamelot.database.schema.Location;
 import com.wildtigerrr.StoryOfCamelot.database.service.template.FileLinkService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,16 +16,17 @@ public class FileLinkServiceImpl implements FileLinkService {
     private FileLinkDao fileLinkDao;
 
     @Override
-    public FileLink create(FileLink fileLink) {
-        // TODO if id == null
-        Optional object = fileLinkDao.findById(fileLink.getId());
-        FileLink existingFileLink;
-        if (object.isPresent()) {
-            existingFileLink = (FileLink) object.get();
+    public FileLink create(FileLink newLink) {
+        FileLink fileLink = null;
+        if (newLink.getId() != null) {
+            Optional object = fileLinkDao.findById(newLink.getId());
+            if (object.isPresent()) {
+                fileLink = (FileLink) object.get();
+            }
         } else {
-            existingFileLink = fileLinkDao.save(fileLink);
+            fileLink = fileLinkDao.save(newLink);
         }
-        return existingFileLink;
+        return fileLink;
     }
 
     @Override
