@@ -3,7 +3,7 @@ package com.wildtigerrr.StoryOfCamelot.database.service.implementation;
 import com.wildtigerrr.StoryOfCamelot.bin.MainText;
 import com.wildtigerrr.StoryOfCamelot.database.dataaccessobject.PlayerDao;
 import com.wildtigerrr.StoryOfCamelot.database.schema.Player;
-import com.wildtigerrr.StoryOfCamelot.database.service.PlayerService;
+import com.wildtigerrr.StoryOfCamelot.database.service.template.PlayerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

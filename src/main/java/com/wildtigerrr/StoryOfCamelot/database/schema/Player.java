@@ -5,7 +5,7 @@ import org.hibernate.annotations.GenericGenerator;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "player")
+@Table(name = "PLAYER")
 public class Player {
 
     @Id
@@ -14,8 +14,15 @@ public class Player {
 
     private String external_id;
     private String nickname;
-    private Boolean isNew;
     private Integer level;
+    private Integer experience;
+    private Integer hitpoints;
+    private Integer hitpoints_max;
+    private Integer damage;
+    private Integer agility;
+    private String status;
+    private Integer speed;
+    private Boolean is_new;
 
     protected Player() {
     }
@@ -23,14 +30,14 @@ public class Player {
     public Player(String externalId, String nickname) {
         this.external_id = externalId;
         this.nickname = nickname;
-        this.isNew = externalId.equals(nickname);
+        this.is_new = externalId.equals(nickname);
     }
 
     public Boolean isNew() {
-        return isNew;
+        return is_new;
     }
     public void setup() {
-        this.isNew = false;
+        this.is_new = false;
         this.level = 1;
     }
 
@@ -42,6 +49,7 @@ public class Player {
         return external_id;
     }
 
+    // TODO admin method for setting
     public void setExternalId(String externalId) {
         this.external_id = externalId;
     }
