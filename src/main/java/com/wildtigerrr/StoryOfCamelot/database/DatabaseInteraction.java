@@ -6,11 +6,18 @@ import com.wildtigerrr.StoryOfCamelot.database.service.implementation.PlayerServ
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.Arrays;
 
 @Service
 public class DatabaseInteraction {
+
+    @PostConstruct
+    public void init() {
+        System.out.println("DB fill attempt");
+        insertFileLinks();
+    }
 
     @Autowired
     private PlayerServiceImpl playerService;
