@@ -45,7 +45,7 @@ public class ResponseHandler {
 
     private AmazonClient amazonClient;
 
-    ResponseHandler() {}
+    public ResponseHandler() {}
 
     @Autowired
     ResponseHandler(AmazonClient amazonClient) {
