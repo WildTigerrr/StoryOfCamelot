@@ -72,31 +72,7 @@ public class ResponseHandler {
                 Location newLocation = locationkDao.findById(location.getId());
                 sendMessage(newLocation.toString(), message.getUserId());
             } else if (message.getText().equals("image test")) {
-                AmazonS3 client = getClient();
-                BufferedImage forestImage = getImage(client, "images/locations/forest-test.png");
-                BufferedImage swordImage = getImage(client, "images/items/weapons/swords/sword-test.png");
-                Graphics2D g = forestImage.createGraphics();
-                g.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
-                        RenderingHints.VALUE_ANTIALIAS_ON);
-                g.drawImage(forestImage, 0, 0, null);
-                g.drawImage(swordImage, 0, 0, null);
-                g.dispose();
-                ByteArrayOutputStream os = new ByteArrayOutputStream();
-                try {
-                    ImageIO.write(forestImage, "png", os);
-                } catch (IOException e) {
-                    sendMessage(e.getMessage(), message.getUserId());
-                    e.printStackTrace();
-                }
-                InputStream input = new ByteArrayInputStream(os.toByteArray());
-                SendPhoto newMessage = new SendPhoto().setPhoto("Test Name", input);
-                newMessage.setChatId(message.getUserId());
-                try {
-                    new WebHookHandler().execute(newMessage);
-                } catch (TelegramApiException e) {
-                    sendMessage(e.getMessage(), message.getUserId());
-                    e.printStackTrace();
-                }
+                sendTestImage(message.getUserId());
             }
         }
         String answer = "You wrote me: " + message.getText();
@@ -104,19 +80,52 @@ public class ResponseHandler {
         sendMessage(answer, message.getUserId(), false);
     }
 
-    private BufferedImage getImage(AmazonS3 client, String key) {
-        S3Object object = client.getObject(new GetObjectRequest(
-                "storyofcameloteu",
-                key
-        ));
-        InputStream input = object.getObjectContent();
+    private void sendTestImage(String userId) {
+        AmazonS3 client = getClient();
+        InputStream result = overlayImages(
+                getImage(client, "images/locations/forest-test.png"),
+                getImage(client, "images/items/weapons/swords/sword-test.png")
+        );
+        SendPhoto newMessage = new SendPhoto().setPhoto("Test Name", result);
+        newMessage.setChatId(userId);
         try {
-            return ImageIO.read(input);
+            new WebHookHandler().execute(newMessage);
+        } catch (TelegramApiException e) {
+            sendMessage(e.getMessage(), userId);
+            e.printStackTrace();
+        }
+    }
+
+    private InputStream overlayImages(InputStream inputBack, InputStream inputFront) {
+        BufferedImage imageBack;
+        BufferedImage imageFront;
+        try {
+            imageBack = ImageIO.read(inputBack);
+            imageFront = ImageIO.read(inputFront);
+            Graphics2D g = imageBack.createGraphics();
+            g.setRenderingHint(
+                    RenderingHints.KEY_ANTIALIASING,
+                    RenderingHints.VALUE_ANTIALIAS_ON
+            );
+            g.drawImage(imageBack, 0, 0, null);
+            g.drawImage(imageFront, 0, 0, null);
+            g.dispose();
+            ByteArrayOutputStream os = new ByteArrayOutputStream();
+            ImageIO.write(imageBack, "png", os);
+            return new ByteArrayInputStream(os.toByteArray());
         } catch (IOException e) {
             sendMessage(e.getMessage(), WEBHOOK_ADMIN_ID);
             e.printStackTrace();
         }
         return null;
+    }
+
+    private InputStream getImage(AmazonS3 client, String key) {
+        S3Object object = client.getObject(new GetObjectRequest(
+                "storyofcameloteu",
+                key
+        ));
+        return object.getObjectContent();
     }
 
     private AmazonS3 getClient() {
