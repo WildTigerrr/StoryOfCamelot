@@ -56,6 +56,7 @@ public class ResponseHandler {
                     System.out.println("No such location");
                 }
                 StringBuilder loc = new StringBuilder();
+                loc.append("Here're they: ");
                 for (Location location : locationService.getAll()) {
                     loc.append(location.toString());
                 }
