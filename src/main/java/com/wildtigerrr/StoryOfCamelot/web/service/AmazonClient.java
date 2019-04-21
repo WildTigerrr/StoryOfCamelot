@@ -19,16 +19,9 @@ public class AmazonClient {
 
     private AmazonS3 s3client;
 
-    @Value("${amazonProperties.bucketName}")
-    private String bucketName;
-    @Value("${amazonProperties.accessKey}")
-    private String accessKey;
-    @Value("${amazonProperties.secretKey}")
-    private String secretKey;
-
     @PostConstruct
     private void initializeAmazon() {
-        AWSCredentials credentials = new BasicAWSCredentials(System.getenv(accessKey), System.getenv(secretKey));
+        AWSCredentials credentials = new BasicAWSCredentials(System.getenv("AWS_S3_ID"), System.getenv("AWS_S3_KEY"));
         this.s3client = AmazonS3ClientBuilder.standard()
                 .withRegion(Regions.EU_CENTRAL_1)
                 .withCredentials(new AWSStaticCredentialsProvider(credentials))
@@ -37,7 +30,7 @@ public class AmazonClient {
 
     public InputStream getObject(String filePath) {
         S3Object object = s3client.getObject(new GetObjectRequest(
-                bucketName,
+                "storyofcameloteu",
                 filePath
         ));
         return object.getObjectContent();
