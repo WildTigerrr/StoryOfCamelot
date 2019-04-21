@@ -6,6 +6,7 @@ import com.wildtigerrr.StoryOfCamelot.database.service.template.FileLinkService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -27,6 +28,11 @@ public class FileLinkServiceImpl implements FileLinkService {
             fileLink = fileLinkDao.save(newLink);
         }
         return fileLink;
+    }
+
+    @Override
+    public void create(ArrayList<FileLink> fileLinks) {
+        fileLinkDao.saveAll(fileLinks);
     }
 
     @Override

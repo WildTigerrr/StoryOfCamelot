@@ -1,5 +1,13 @@
 package com.wildtigerrr.StoryOfCamelot.web;
 
+import com.amazonaws.auth.AWSCredentials;
+import com.amazonaws.auth.AWSStaticCredentialsProvider;
+import com.amazonaws.auth.BasicAWSCredentials;
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.AmazonS3Client;
+import com.amazonaws.services.s3.AmazonS3ClientBuilder;
+import com.amazonaws.services.s3.model.GetObjectRequest;
+import com.amazonaws.services.s3.model.S3Object;
 import com.wildtigerrr.StoryOfCamelot.bin.Command;
 import com.wildtigerrr.StoryOfCamelot.bin.MainText;
 import com.wildtigerrr.StoryOfCamelot.database.schema.FileLink;
@@ -11,7 +19,12 @@ import com.wildtigerrr.StoryOfCamelot.database.service.implementation.PlayerServ
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
 
 import static com.wildtigerrr.StoryOfCamelot.web.BotConfig.WEBHOOK_ADMIN_ID;
 
@@ -50,12 +63,28 @@ public class ResponseHandler {
         if (message.getUserId().equals(WEBHOOK_ADMIN_ID)) {
             if (message.getText().equals("database test")) {
                 // Some admin actions
-                FileLink link = new FileLink("test location");
+                FileLink link = new FileLink("test name", "test location");
                 link = fileLinkDao.create(link);
                 Location location = new Location(link);
                 location = locationkDao.create(location);
                 Location newLocation = locationkDao.findById(location.getId());
                 sendMessage(newLocation.toString(), message.getUserId());
+            } else if (message.getText().equals("image test")) {
+                BasicAWSCredentials creds = new BasicAWSCredentials(System.getenv("AWS_S3_ID"), System.getenv("AWS_S3_KEY"));
+                AmazonS3 client = AmazonS3ClientBuilder.standard().withCredentials(new AWSStaticCredentialsProvider(creds)).build();
+                S3Object object = client.getObject(new GetObjectRequest(
+                        "storyofcameloteu",
+                        "images/items/weapons/swords/sword-test.png"
+                ));
+                InputStream input = object.getObjectContent();
+                SendPhoto newMessage = new SendPhoto().setPhoto("Test Name", input);
+                newMessage.setChatId(message.getUserId());
+                try {
+                    new WebHookHandler().execute(newMessage);
+                } catch (TelegramApiException e) {
+                    sendMessage(e.getMessage(), message.getUserId());
+                    e.printStackTrace();
+                }
             }
         }
         String answer = "You wrote me: " + message.getText();

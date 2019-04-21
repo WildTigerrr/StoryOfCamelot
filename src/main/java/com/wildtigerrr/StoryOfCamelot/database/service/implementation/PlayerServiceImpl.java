@@ -7,6 +7,7 @@ import com.wildtigerrr.StoryOfCamelot.database.service.template.PlayerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -23,6 +24,11 @@ public class PlayerServiceImpl implements PlayerService {
         } else {
             return playerDao.save(player);
         }
+    }
+
+    @Override
+    public void create(ArrayList<Player> players) {
+        playerDao.saveAll(players);
     }
 
     @Override

@@ -1,11 +1,13 @@
 package com.wildtigerrr.StoryOfCamelot.database.service.implementation;
 
 import com.wildtigerrr.StoryOfCamelot.database.dataaccessobject.LocationDao;
+import com.wildtigerrr.StoryOfCamelot.database.schema.FileLink;
 import com.wildtigerrr.StoryOfCamelot.database.schema.Location;
 import com.wildtigerrr.StoryOfCamelot.database.service.template.LocationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -27,6 +29,11 @@ public class LocationServiceImpl implements LocationService {
             existingLocation = locationDao.save(location);
         }
         return existingLocation;
+    }
+
+    @Override
+    public void create(ArrayList<Location> locations) {
+        locationDao.saveAll(locations);
     }
 
     @Override

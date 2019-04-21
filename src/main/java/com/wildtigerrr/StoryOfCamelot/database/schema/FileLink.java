@@ -10,12 +10,14 @@ public class FileLink {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
 
+    private String file_name;
     private String location;
 
     protected FileLink() {
     }
 
-    public FileLink(String location) {
+    public FileLink(String fileName, String location) {
+        this.file_name = fileName;
         this.location = location;
     }
 
@@ -29,6 +31,14 @@ public class FileLink {
 
     public void setLocation(String location) {
         this.location = location;
+    }
+
+    public String getFileName() {
+        return file_name;
+    }
+
+    public void setFileName(String fileName) {
+        this.file_name = fileName;
     }
 
     @Override
