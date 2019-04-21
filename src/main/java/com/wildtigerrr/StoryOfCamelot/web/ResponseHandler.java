@@ -17,6 +17,7 @@ import com.wildtigerrr.StoryOfCamelot.database.service.implementation.PlayerServ
 import com.wildtigerrr.StoryOfCamelot.web.service.AmazonClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.telegram.telegrambots.meta.api.methods.send.SendDocument;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
@@ -31,18 +32,10 @@ import static com.wildtigerrr.StoryOfCamelot.web.BotConfig.WEBHOOK_ADMIN_ID;
 @Service
 public class ResponseHandler {
 
-    @Autowired
-    private WebHookHandler webHook;
-
-    @Autowired
-    private PlayerServiceImpl playerService;
-
-    @Autowired
-    private FileLinkServiceImpl fileLinkService;
-
-    @Autowired
-    private LocationServiceImpl locationService;
-
+    @Autowired private WebHookHandler webHook;
+    @Autowired private PlayerServiceImpl playerService;
+    @Autowired private FileLinkServiceImpl fileLinkService;
+    @Autowired private LocationServiceImpl locationService;
     private AmazonClient amazonClient;
 
     public ResponseHandler() {}
@@ -61,7 +54,6 @@ public class ResponseHandler {
                 // Some admin actions
                 String locationName = "Test Forest";
                 Location newLocation = locationService.findByName(locationName);
-
                 if (newLocation != null) {
                     sendMessage(newLocation.toString(), message.getUserId());
                 } else {
@@ -97,7 +89,8 @@ public class ResponseHandler {
                 amazonClient.getObject("images/locations/forest-test.png"),
                 amazonClient.getObject("images/items/weapons/swords/sword-test.png")
         );
-        SendPhoto newMessage = new SendPhoto().setPhoto("Test Name", result);
+//        SendPhoto newMessage = new SendPhoto().setPhoto("Test Name", result);
+        SendDocument newMessage = new SendDocument().setDocument("Test Name", result);
         newMessage.setChatId(userId);
         try {
             new WebHookHandler().execute(newMessage);
