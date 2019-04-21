@@ -15,6 +15,7 @@ import com.wildtigerrr.StoryOfCamelot.database.service.implementation.FileLinkSe
 import com.wildtigerrr.StoryOfCamelot.database.service.implementation.LocationServiceImpl;
 import com.wildtigerrr.StoryOfCamelot.database.service.implementation.PlayerServiceImpl;
 import com.wildtigerrr.StoryOfCamelot.web.service.AmazonClient;
+import jdk.nashorn.internal.runtime.options.Options;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.send.SendDocument;
@@ -61,7 +62,16 @@ public class ResponseHandler {
                     System.out.println("No such location");
                 }
             } else if (message.getText().equals("image test")) {
-                sendTestImage(message.getUserId());
+//                sendTestImage(message.getUserId());
+                InputStream stream = amazonClient.getObject("images/items/weapons/swords/sword-test.png");
+                SendDocument newMessage = new SendDocument().setDocument("Test Name", stream);
+                newMessage.setChatId(message.getUserId());
+                try {
+                    new WebHookHandler().execute(newMessage);
+                } catch (TelegramApiException e) {
+                    sendMessageToAdmin(e.getMessage());
+                    e.printStackTrace();
+                }
                 return;
             }
         }
