@@ -55,11 +55,11 @@ public class ResponseHandler {
                 } else {
                     System.out.println("No such location");
                 }
-                String loc;
+                StringBuilder loc = new StringBuilder();
                 for (Location location : locationService.getAll()) {
-                    loc = loc + location.toString();
+                    loc.append(location.toString());
                 }
-                sendMessage(loc, message.getUserId());
+                sendMessage(loc.toString(), message.getUserId());
                 return;
             } else if (message.getText().equals("image test")) {
                 sendTestImage(message.getUserId());
