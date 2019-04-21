@@ -3,6 +3,7 @@ package com.wildtigerrr.StoryOfCamelot.web;
 import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;
+import com.amazonaws.regions.Regions;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
@@ -71,7 +72,10 @@ public class ResponseHandler {
                 sendMessage(newLocation.toString(), message.getUserId());
             } else if (message.getText().equals("image test")) {
                 BasicAWSCredentials creds = new BasicAWSCredentials(System.getenv("AWS_S3_ID"), System.getenv("AWS_S3_KEY"));
-                AmazonS3 client = AmazonS3ClientBuilder.standard().withCredentials(new AWSStaticCredentialsProvider(creds)).build();
+                AmazonS3 client = AmazonS3ClientBuilder.standard()
+                        .withRegion(Regions.EU_CENTRAL_1)
+                        .withCredentials(new AWSStaticCredentialsProvider(creds))
+                        .build();
                 S3Object object = client.getObject(new GetObjectRequest(
                         "storyofcameloteu",
                         "images/items/weapons/swords/sword-test.png"
