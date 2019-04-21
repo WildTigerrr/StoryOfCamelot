@@ -65,11 +65,7 @@ public class ResponseHandler {
         if (message.getUserId().equals(WEBHOOK_ADMIN_ID)) {
             if (message.getText().equals("database test")) {
                 // Some admin actions
-                FileLink link = new FileLink("test name", "test location");
-                link = fileLinkDao.create(link);
-                Location location = new Location(link);
-                location = locationkDao.create(location);
-                Location newLocation = locationkDao.findById(location.getId());
+                Location newLocation = locationkDao.findByName("Test Forest");
                 sendMessage(newLocation.toString(), message.getUserId());
             } else if (message.getText().equals("image test")) {
                 sendTestImage(message.getUserId());

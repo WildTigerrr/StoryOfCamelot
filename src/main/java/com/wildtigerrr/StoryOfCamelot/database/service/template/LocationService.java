@@ -11,6 +11,7 @@ public interface LocationService {
     void create(ArrayList<Location> locations);
     void delete(int id);
     Location findById(int id);
+    Location findByName(String locationName);
     Location update(Location location);
     List<Location> getAll();
 }
