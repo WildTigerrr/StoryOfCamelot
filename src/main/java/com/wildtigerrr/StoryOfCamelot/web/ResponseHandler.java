@@ -45,6 +45,8 @@ public class ResponseHandler {
 
     private AmazonClient amazonClient;
 
+    protected ResponseHandler() {}
+
     @Autowired
     ResponseHandler(AmazonClient amazonClient) {
         this.amazonClient = amazonClient;
