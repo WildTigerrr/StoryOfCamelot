@@ -18,6 +18,7 @@ public class FileLinkServiceImpl implements FileLinkService {
 
     @Override
     public FileLink create(FileLink fileLink) {
+        // TODO if id == null
         Optional object = fileLinkDao.findById(fileLink.getId());
         FileLink existingFileLink;
         if (object.isPresent()) {

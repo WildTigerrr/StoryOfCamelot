@@ -2,7 +2,11 @@ package com.wildtigerrr.StoryOfCamelot.web;
 
 import com.wildtigerrr.StoryOfCamelot.bin.Command;
 import com.wildtigerrr.StoryOfCamelot.bin.MainText;
+import com.wildtigerrr.StoryOfCamelot.database.schema.FileLink;
+import com.wildtigerrr.StoryOfCamelot.database.schema.Location;
 import com.wildtigerrr.StoryOfCamelot.database.schema.Player;
+import com.wildtigerrr.StoryOfCamelot.database.service.implementation.FileLinkServiceImpl;
+import com.wildtigerrr.StoryOfCamelot.database.service.implementation.LocationServiceImpl;
 import com.wildtigerrr.StoryOfCamelot.database.service.implementation.PlayerServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,6 +23,12 @@ public class ResponseHandler {
 
     @Autowired
     private PlayerServiceImpl playerDao;
+
+    @Autowired
+    private FileLinkServiceImpl fileLinkDao;
+
+    @Autowired
+    private LocationServiceImpl locationkDao;
 
     public void handleMessage(UpdateWrapper message) {
         System.out.println("Working with message: " + message);
@@ -38,8 +48,14 @@ public class ResponseHandler {
             System.out.println("Here should be nickname set");
         }
         if (message.getUserId().equals(WEBHOOK_ADMIN_ID)) {
-            if (message.getText().equals("/database test")) {
+            if (message.getText().equals("database test")) {
                 // Some admin actions
+                FileLink link = new FileLink("test location");
+                link = fileLinkDao.create(link);
+                Location location = new Location(link);
+                location = locationkDao.create(location);
+                Location newLocation = locationkDao.findById(location.getId());
+                sendMessage(newLocation.toString(), message.getUserId());
             }
         }
         String answer = "You wrote me: " + message.getText();
@@ -57,7 +73,7 @@ public class ResponseHandler {
         System.out.println(log);
 
         if (!message.getUserId().equals(WEBHOOK_ADMIN_ID)) {
-            sendMessage(log, WEBHOOK_ADMIN_ID, false);
+            sendMessage(log, WEBHOOK_ADMIN_ID);
         }
     }
 
@@ -105,6 +121,7 @@ public class ResponseHandler {
 
     private Boolean alreadyRedirected;
 
+    public void sendMessage(String text, String userId) {sendMessage(text, userId, false);}
     public void sendMessage(String text, String userId, Boolean useMarkdown) {
         if (alreadyRedirected == null || !alreadyRedirected) alreadyRedirected = true;
         else return;

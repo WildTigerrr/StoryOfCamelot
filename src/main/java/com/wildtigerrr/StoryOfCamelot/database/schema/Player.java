@@ -62,6 +62,7 @@ public class Player {
         this.nickname = removeSpecialCharacters(nickname);
     }
 
+    @Override
     public String toString() {
         return "Если память тебя не подводит, то:"
                 + "\n*" + this.nickname + "*, " + this.level + " уровень"

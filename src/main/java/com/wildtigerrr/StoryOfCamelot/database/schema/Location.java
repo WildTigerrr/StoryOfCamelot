@@ -15,6 +15,9 @@ public class Location {
     private FileLink image_link;
     private Boolean has_stores;
 
+    protected Location() {
+    }
+
     public Location(FileLink image_link) {
         this.image_link = image_link;
         this.has_stores = false;
@@ -43,5 +46,14 @@ public class Location {
 
     public void setHasStores(Boolean has_stores) {
         this.has_stores = has_stores;
+    }
+
+    @Override
+    public String toString() {
+        return "Location{" +
+                "id=" + id +
+                ", image_link=" + image_link.toString() +
+                ", has_stores=" + has_stores +
+                '}';
     }
 }

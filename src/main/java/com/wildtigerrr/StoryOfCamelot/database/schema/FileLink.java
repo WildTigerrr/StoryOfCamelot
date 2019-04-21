@@ -12,6 +12,9 @@ public class FileLink {
 
     private String location;
 
+    protected FileLink() {
+    }
+
     public FileLink(String location) {
         this.location = location;
     }
@@ -26,5 +29,13 @@ public class FileLink {
 
     public void setLocation(String location) {
         this.location = location;
+    }
+
+    @Override
+    public String toString() {
+        return "FileLink{" +
+                "id=" + id +
+                ", location='" + location + '\'' +
+                '}';
     }
 }

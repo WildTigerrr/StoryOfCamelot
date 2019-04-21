@@ -2,7 +2,6 @@ package com.wildtigerrr.StoryOfCamelot.database.service.implementation;
 
 import com.wildtigerrr.StoryOfCamelot.database.dataaccessobject.LocationDao;
 import com.wildtigerrr.StoryOfCamelot.database.schema.Location;
-import com.wildtigerrr.StoryOfCamelot.database.schema.Player;
 import com.wildtigerrr.StoryOfCamelot.database.service.template.LocationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,6 +17,7 @@ public class LocationServiceImpl implements LocationService {
 
     @Override
     public synchronized Location create(Location location) {
+        // TODO if Id == null
         Optional object = locationDao.findById(location.getId());
         Location existingLocation;
         if (object.isPresent()) {
@@ -31,6 +31,15 @@ public class LocationServiceImpl implements LocationService {
     @Override
     public void delete(int id) {
         locationDao.findById(id).ifPresent(location -> locationDao.delete(location));
+    }
+
+    @Override
+    public Location findById(int id) {
+        Optional object = locationDao.findById(id);
+        if (object.isPresent()) {
+            return  (Location) object.get();
+        }
+        return null;
     }
 
     @Override
