@@ -3,6 +3,7 @@ package com.wildtigerrr.StoryOfCamelot.database;
 import com.wildtigerrr.StoryOfCamelot.database.schema.FileLink;
 import com.wildtigerrr.StoryOfCamelot.database.schema.Location;
 import com.wildtigerrr.StoryOfCamelot.database.service.implementation.FileLinkServiceImpl;
+import com.wildtigerrr.StoryOfCamelot.database.service.implementation.LocationServiceImpl;
 import com.wildtigerrr.StoryOfCamelot.database.service.implementation.PlayerServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -28,6 +29,9 @@ public class DatabaseInteraction {
     @Autowired
     private FileLinkServiceImpl fileLinkService;
 
+    @Autowired
+    private LocationServiceImpl locationService;
+
     public void insertInitialData() {
         insertFileLinks();
         List<FileLink> fileLinks = fileLinkService.getAll();
@@ -52,7 +56,7 @@ public class DatabaseInteraction {
                         new Location("Test Forest", filesMap.get("forest-test"))
                 )
         );
-
+        locationService.create(initialLocations);
     }
 
 }
