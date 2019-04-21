@@ -1,17 +1,14 @@
 package com.wildtigerrr.StoryOfCamelot.web;
 
-import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.regions.Regions;
 import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.services.s3.model.GetObjectRequest;
 import com.amazonaws.services.s3.model.S3Object;
 import com.wildtigerrr.StoryOfCamelot.bin.Command;
 import com.wildtigerrr.StoryOfCamelot.bin.MainText;
-import com.wildtigerrr.StoryOfCamelot.database.schema.FileLink;
 import com.wildtigerrr.StoryOfCamelot.database.schema.Location;
 import com.wildtigerrr.StoryOfCamelot.database.schema.Player;
 import com.wildtigerrr.StoryOfCamelot.database.service.implementation.FileLinkServiceImpl;
@@ -37,18 +34,38 @@ public class ResponseHandler {
     private WebHookHandler webHook;
 
     @Autowired
-    private PlayerServiceImpl playerDao;
+    private PlayerServiceImpl playerService;
 
     @Autowired
-    private FileLinkServiceImpl fileLinkDao;
+    private FileLinkServiceImpl fileLinkService;
 
     @Autowired
-    private LocationServiceImpl locationkDao;
+    private LocationServiceImpl locationService;
 
     public void handleMessage(UpdateWrapper message) {
         System.out.println("Working with message: " + message);
         logSender(message);
         message.setPlayer(getPlayer(message.getUserId()));
+        if (message.getUserId().equals(WEBHOOK_ADMIN_ID)) {
+            if (message.getText().equals("database test")) {
+                // Some admin actions
+                Location newLocation = locationService.findByName("Test Forest");
+                if (newLocation != null) {
+                    sendMessage(newLocation.toString(), message.getUserId());
+                } else {
+                    System.out.println("No such location");
+                }
+                String loc;
+                for (Location location : locationService.getAll()) {
+                    loc = loc + location.toString();
+                }
+                sendMessage(loc, message.getUserId());
+                return;
+            } else if (message.getText().equals("image test")) {
+                sendTestImage(message.getUserId());
+                return;
+            }
+        }
         if (message.getText().startsWith("/")) {
             performCommand(message);
             return;
@@ -57,21 +74,10 @@ public class ResponseHandler {
         if (message.getPlayer().isNew()) {
             System.out.println("New player");
             player.setup();
-            playerDao.update(player);
+            playerService.update(player);
             sendMessage(MainText.MEET_NEW_PLAYER.text(), message.getUserId(), true);
         } else if (player.getExternalId().equals(player.getNickname())) {
             System.out.println("Here should be nickname set");
-        }
-        if (message.getUserId().equals(WEBHOOK_ADMIN_ID)) {
-            if (message.getText().equals("database test")) {
-                // Some admin actions
-                Location newLocation = locationkDao.findByName("Test Forest");
-                if (newLocation != null) {
-                    sendMessage(newLocation.toString(), message.getUserId());
-                }
-            } else if (message.getText().equals("image test")) {
-                sendTestImage(message.getUserId());
-            }
         }
         String answer = "You wrote me: " + message.getText();
         System.out.println("Answer: " + answer);
@@ -160,7 +166,7 @@ public class ResponseHandler {
         }
         switch (command) {
             case ME:
-                sendMessage(playerDao.getPlayerInfo(message.getUserId()), message.getUserId(), true);
+                sendMessage(playerService.getPlayerInfo(message.getUserId()), message.getUserId(), true);
                 break;
             case NICKNAME:
                 if (commandParts.length > 1) {
@@ -176,10 +182,10 @@ public class ResponseHandler {
 
     private Player getPlayer(String externalId) {
         Player player;
-        player = playerDao.findByExternalId(externalId);
+        player = playerService.findByExternalId(externalId);
         if (player == null) {
             player = new Player(externalId, externalId);
-            player = playerDao.create(player);
+            player = playerService.create(player);
         }
         return player;
     }
@@ -187,13 +193,16 @@ public class ResponseHandler {
     private void setNickname(Player player, String newName) {
         System.out.println("New nickname would be: " + newName);
         player.setNickname(newName);
-        playerDao.update(player);
+        playerService.update(player);
         sendMessage(MainText.NICKNAME_CHANGED.text() + player.getNickname() + "*", player.getExternalId(), true);
     }
 
     private Boolean alreadyRedirected;
 
-    public void sendMessage(String text, String userId) {sendMessage(text, userId, false);}
+    public void sendMessage(String text, String userId) {
+        sendMessage(text, userId, false);
+    }
+
     public void sendMessage(String text, String userId, Boolean useMarkdown) {
         if (alreadyRedirected == null || !alreadyRedirected) alreadyRedirected = true;
         else return;
