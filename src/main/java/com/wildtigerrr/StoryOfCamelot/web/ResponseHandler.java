@@ -66,7 +66,9 @@ public class ResponseHandler {
             if (message.getText().equals("database test")) {
                 // Some admin actions
                 Location newLocation = locationkDao.findByName("Test Forest");
-                sendMessage(newLocation.toString(), message.getUserId());
+                if (newLocation != null) {
+                    sendMessage(newLocation.toString(), message.getUserId());
+                }
             } else if (message.getText().equals("image test")) {
                 sendTestImage(message.getUserId());
             }
