@@ -1,12 +1,5 @@
 package com.wildtigerrr.StoryOfCamelot.web;
 
-import com.amazonaws.auth.AWSStaticCredentialsProvider;
-import com.amazonaws.auth.BasicAWSCredentials;
-import com.amazonaws.regions.Regions;
-import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.AmazonS3ClientBuilder;
-import com.amazonaws.services.s3.model.GetObjectRequest;
-import com.amazonaws.services.s3.model.S3Object;
 import com.wildtigerrr.StoryOfCamelot.bin.Command;
 import com.wildtigerrr.StoryOfCamelot.bin.MainText;
 import com.wildtigerrr.StoryOfCamelot.database.schema.Location;
@@ -15,16 +8,10 @@ import com.wildtigerrr.StoryOfCamelot.database.service.implementation.FileLinkSe
 import com.wildtigerrr.StoryOfCamelot.database.service.implementation.LocationServiceImpl;
 import com.wildtigerrr.StoryOfCamelot.database.service.implementation.PlayerServiceImpl;
 import com.wildtigerrr.StoryOfCamelot.web.service.AmazonClient;
-import jdk.nashorn.internal.runtime.options.Options;
-import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.commons.CommonsMultipartFile;
 import org.telegram.telegrambots.meta.api.methods.send.SendDocument;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
-import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 import javax.imageio.ImageIO;
@@ -84,7 +71,7 @@ public class ResponseHandler {
 //                SendPhoto newPhotoMessage = new SendPhoto().setPhoto("Test", stream);
 //                newDocMessage.setChatId(message.getUserId());
 //                newPhotoMessage.setChatId(message.getUserId());
-//                newPhotoMessage.setCaption("Test");
+//
 //                try {
 //                    new WebHookHandler().execute(newDocMessage);
 //                    new WebHookHandler().execute(newPhotoMessage);
@@ -146,6 +133,7 @@ public class ResponseHandler {
                 amazonClient.getObject("images/items/weapons/swords/sword-test.png")
         );
 //        SendPhoto newMessage = new SendPhoto().setPhoto("Test Name", result);
+//        newMessage.setCaption("Test");
         SendDocument newMessage;
         File file = inputStreamToFile(result, docName);
         if (file != null) {
