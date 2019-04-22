@@ -83,7 +83,8 @@ public class ResponseHandler {
                     sendMessageToAdmin(e.getMessage());
                     e.printStackTrace();
                 }
-                SendDocument newMessage = new SendDocument().setDocument(path.toFile());
+//                SendDocument newMessage = new SendDocument().setDocument(path.toFile());
+                SendPhoto newMessage = new SendPhoto().setPhoto(path.toFile());
                 newMessage.setChatId(message.getUserId());
                 try {
                     new WebHookHandler().execute(newMessage);
