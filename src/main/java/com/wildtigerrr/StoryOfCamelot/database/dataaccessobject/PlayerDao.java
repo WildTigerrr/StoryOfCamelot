@@ -12,7 +12,4 @@ public interface PlayerDao extends CrudRepository<Player, Integer> {
 
     Player findByNickname(String nickname);
 
-/*    @Query("SELECT p FROM Player p WHERE p.nickname = :nickname")
-    Player findByNickname(@Param("nickname") String nickname);*/
-
 }

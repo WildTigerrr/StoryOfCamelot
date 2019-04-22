@@ -4,9 +4,7 @@ import com.wildtigerrr.StoryOfCamelot.bin.Command;
 import com.wildtigerrr.StoryOfCamelot.bin.MainText;
 import com.wildtigerrr.StoryOfCamelot.database.schema.Location;
 import com.wildtigerrr.StoryOfCamelot.database.schema.Player;
-import com.wildtigerrr.StoryOfCamelot.database.service.implementation.FileLinkServiceImpl;
-import com.wildtigerrr.StoryOfCamelot.database.service.implementation.LocationServiceImpl;
-import com.wildtigerrr.StoryOfCamelot.database.service.implementation.PlayerServiceImpl;
+import com.wildtigerrr.StoryOfCamelot.database.service.implementation.*;
 import com.wildtigerrr.StoryOfCamelot.web.service.AmazonClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -34,12 +32,13 @@ public class ResponseHandler {
 
     public ResponseHandler() {}
 
+    @SuppressWarnings("unused")
     @Autowired
     ResponseHandler(AmazonClient amazonClient) {
         this.amazonClient = amazonClient;
     }
 
-    public void handleMessage(UpdateWrapper message) {
+    void handleMessage(UpdateWrapper message) {
         System.out.println("Working with message: " + message);
         logSender(message);
         message.setPlayer(getPlayer(message.getUserId()));

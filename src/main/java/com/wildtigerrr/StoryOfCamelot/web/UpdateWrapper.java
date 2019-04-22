@@ -14,7 +14,7 @@ public class UpdateWrapper {
     private String language;
     private Player player;
 
-    public UpdateWrapper(Update update) {
+    UpdateWrapper(Update update) {
         User user = update.getMessage().getFrom();
         this.message = update.getMessage().getText().trim();
         this.userId = user.getId().toString();
@@ -24,35 +24,35 @@ public class UpdateWrapper {
         this.language = user.getLanguageCode();
     }
 
-    public String getText() {
+    String getText() {
         return message;
     }
 
-    public String getUserId() {
+    String getUserId() {
         return userId;
     }
 
-    public String getFirstName() {
+    String getFirstName() {
         return firstName;
     }
 
-    public String getLastName() {
+    String getLastName() {
         return lastName;
     }
 
-    public String getUsername() {
+    String getUsername() {
         return username;
     }
 
-    public String getLanguage() {
+    String getLanguage() {
         return language;
     }
 
-    public void setPlayer(Player player) {
+    void setPlayer(Player player) {
         this.player = player;
     }
 
-    public Player getPlayer() {
+    Player getPlayer() {
         return player;
     }
 }

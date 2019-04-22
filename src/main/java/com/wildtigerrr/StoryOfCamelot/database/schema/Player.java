@@ -3,6 +3,8 @@ package com.wildtigerrr.StoryOfCamelot.database.schema;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "player")
@@ -12,32 +14,41 @@ public class Player {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
 
-    private String external_id;
+    private String externalId;
     private String nickname;
     private Integer level;
     private Integer experience;
     private Integer hitpoints;
-    private Integer hitpoints_max;
+    private Integer hitpointsMax;
     private Integer damage;
     private Integer agility;
     private String status;
     private Integer speed;
-    private Boolean is_new;
+    private Boolean isNew;
+
+    @OneToMany(
+            cascade = {CascadeType.ALL},
+            mappedBy = "backpack"
+    )
+    private List<Backpack> backpacks = new ArrayList<>();
+    @ManyToOne
+    @JoinColumn(name = "filelink_id")
+    private FileLink imageLink;
 
     protected Player() {
     }
 
     public Player(String externalId, String nickname) {
-        this.external_id = externalId;
+        this.externalId = externalId;
         this.nickname = nickname;
-        this.is_new = externalId.equals(nickname);
+        this.isNew = externalId.equals(nickname);
     }
 
     public Boolean isNew() {
-        return is_new;
+        return isNew;
     }
     public void setup() {
-        this.is_new = false;
+        this.isNew = false;
         this.level = 1;
     }
 
@@ -46,12 +57,12 @@ public class Player {
     }
 
     public String getExternalId() {
-        return external_id;
+        return externalId;
     }
 
     // TODO admin method for setting
     public void setExternalId(String externalId) {
-        this.external_id = externalId;
+        this.externalId = externalId;
     }
 
     public String getNickname() {
@@ -60,6 +71,95 @@ public class Player {
 
     public void setNickname(String nickname) {
         this.nickname = removeSpecialCharacters(nickname);
+    }
+
+    public Integer getLevel() {
+        return level;
+    }
+
+    public void setLevel(Integer level) {
+        this.level = level;
+    }
+
+    public Integer getExperience() {
+        return experience;
+    }
+
+    public void setExperience(Integer experience) {
+        this.experience = experience;
+    }
+
+    public Integer getHitpoints() {
+        return hitpoints;
+    }
+
+    public void setHitpoints(Integer hitpoints) {
+        this.hitpoints = hitpoints;
+    }
+
+    public Integer getHitpointsMax() {
+        return hitpointsMax;
+    }
+
+    public void setHitpointsMax(Integer hitpointsMax) {
+        this.hitpointsMax = hitpointsMax;
+    }
+
+    public Integer getDamage() {
+        return damage;
+    }
+
+    public void setDamage(Integer damage) {
+        this.damage = damage;
+    }
+
+    public Integer getAgility() {
+        return agility;
+    }
+
+    public void setAgility(Integer agility) {
+        this.agility = agility;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public Integer getSpeed() {
+        return speed;
+    }
+
+    public void setSpeed(Integer speed) {
+        this.speed = speed;
+    }
+
+    public List<Backpack> getBackpacks() {
+        return backpacks;
+    }
+
+    public void setBackpacks(List<Backpack> backpacks) {
+        this.backpacks = backpacks;
+    }
+
+    public void addBackpack(Backpack backpack) {
+        backpacks.add(backpack);
+        backpack.setPlayer(this);
+    }
+
+    public void removeBackpack(Backpack backpack) {
+        this.backpacks.remove(backpack);
+    }
+
+    public FileLink getImageLink() {
+        return imageLink;
+    }
+
+    public void setImage_link(FileLink imageLink) {
+        this.imageLink = imageLink;
     }
 
     @Override

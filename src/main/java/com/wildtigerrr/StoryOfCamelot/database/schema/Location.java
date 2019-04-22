@@ -10,25 +10,25 @@ public class Location {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
     private String name;
-    private Boolean has_stores;
+    private Boolean hasStores;
 
     @ManyToOne(optional = true)
     @JoinColumn(name = "filelink_id")
-    private FileLink image_link;
+    private FileLink imageLink;
 
     protected Location() {
     }
 
-    public Location(String locationName, FileLink image_link) {
+    public Location(String locationName, FileLink imageLink) {
         this.name = locationName;
-        this.image_link = image_link;
-        this.has_stores = false;
+        this.imageLink = imageLink;
+        this.hasStores = false;
     }
 
-    public Location(String locationName, FileLink image_link, Boolean has_stores) {
+    public Location(String locationName, FileLink imageLink, Boolean hasStores) {
         this.name = locationName;
-        this.image_link = image_link;
-        this.has_stores = has_stores;
+        this.imageLink = imageLink;
+        this.hasStores = hasStores;
     }
 
     public Integer getId() {
@@ -44,19 +44,19 @@ public class Location {
     }
 
     public FileLink getImageLink() {
-        return image_link;
+        return imageLink;
     }
 
-    public void setImageLink(FileLink image_link) {
-        this.image_link = image_link;
+    public void setImageLink(FileLink imageLink) {
+        this.imageLink = imageLink;
     }
 
     public Boolean getHasStores() {
-        return has_stores;
+        return hasStores;
     }
 
-    public void setHasStores(Boolean has_stores) {
-        this.has_stores = has_stores;
+    public void setHasStores(Boolean hasStores) {
+        this.hasStores = hasStores;
     }
 
     @Override
@@ -64,8 +64,8 @@ public class Location {
         return "Location{" +
                 "id=" + id +
                 ", name=" + name +
-                ", image_link=" + image_link.toString() +
-                ", has_stores=" + has_stores +
+                ", imageLink=" + imageLink.toString() +
+                ", hasStores=" + hasStores +
                 '}';
     }
 }
