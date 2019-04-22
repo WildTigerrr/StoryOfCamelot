@@ -16,8 +16,12 @@ import com.wildtigerrr.StoryOfCamelot.database.service.implementation.LocationSe
 import com.wildtigerrr.StoryOfCamelot.database.service.implementation.PlayerServiceImpl;
 import com.wildtigerrr.StoryOfCamelot.web.service.AmazonClient;
 import jdk.nashorn.internal.runtime.options.Options;
+import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.commons.CommonsMultipartFile;
 import org.telegram.telegrambots.meta.api.methods.send.SendDocument;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
@@ -83,11 +87,22 @@ public class ResponseHandler {
                     sendMessageToAdmin(e.getMessage());
                     e.printStackTrace();
                 }
-//                SendDocument newMessage = new SendDocument().setDocument(path.toFile());
-                SendPhoto newMessage = new SendPhoto().setPhoto(path.toFile());
-                newMessage.setChatId(message.getUserId());
+
+//                MultipartFile multi = null;
+//                try {
+//                    multi = new MockMultipartFile("Test File", "Test File", "", stream);
+//                } catch (IOException e) {
+//                    sendMessageToAdmin(e.getMessage());
+//                    e.printStackTrace();
+//                }
+                SendDocument newDocMessage = new SendDocument().setDocument(path.toFile());
+                SendPhoto newPhotoMessage = new SendPhoto().setPhoto(path.toFile());
+                newDocMessage.setChatId(message.getUserId());
+                newPhotoMessage.setChatId(message.getUserId());
+                newPhotoMessage.setCaption("Test");
                 try {
-                    new WebHookHandler().execute(newMessage);
+                    new WebHookHandler().execute(newDocMessage);
+                    new WebHookHandler().execute(newPhotoMessage);
                 } catch (TelegramApiException e) {
                     sendMessageToAdmin(e.getMessage());
                     e.printStackTrace();
