@@ -68,8 +68,8 @@ public class ResponseHandler {
                     System.out.println("No such location");
                 }
             } else if (message.getText().equals("image test")) {
-//                sendTestImage(message.getUserId());
-                InputStream stream = amazonClient.getObject("images/items/weapons/swords/sword-test.png");
+                sendTestImage(message.getUserId());
+//                InputStream stream = amazonClient.getObject("images/items/weapons/swords/sword-test.png");
 //                Path path = null;
 //                try {
 //                    path = Files.createTempFile("Test File", ".png");
@@ -97,17 +97,17 @@ public class ResponseHandler {
 //                }
 //                SendDocument newDocMessage = new SendDocument().setDocument(path.toFile());
 //                SendPhoto newPhotoMessage = new SendPhoto().setPhoto(path.toFile());
-                SendPhoto newPhotoMessage = new SendPhoto().setPhoto("Test", stream);
+//                SendPhoto newPhotoMessage = new SendPhoto().setPhoto("Test", stream);
 //                newDocMessage.setChatId(message.getUserId());
-                newPhotoMessage.setChatId(message.getUserId());
-                newPhotoMessage.setCaption("Test");
-                try {
+//                newPhotoMessage.setChatId(message.getUserId());
+//                newPhotoMessage.setCaption("Test");
+//                try {
 //                    new WebHookHandler().execute(newDocMessage);
-                    new WebHookHandler().execute(newPhotoMessage);
-                } catch (TelegramApiException e) {
-                    sendMessageToAdmin(e.getMessage());
-                    e.printStackTrace();
-                }
+//                    new WebHookHandler().execute(newPhotoMessage);
+//                } catch (TelegramApiException e) {
+//                    sendMessageToAdmin(e.getMessage());
+//                    e.printStackTrace();
+//                }
                 return;
             }
         }
@@ -130,19 +130,24 @@ public class ResponseHandler {
     }
 
     private void sendTestImage(String userId) {
-//        AmazonS3 client = getClient();
+        String docName = "Test name";
         InputStream result = overlayImages(
                 amazonClient.getObject("images/locations/forest-test.png"),
                 amazonClient.getObject("images/items/weapons/swords/sword-test.png")
         );
 //        SendPhoto newMessage = new SendPhoto().setPhoto("Test Name", result);
-        SendDocument newMessage = new SendDocument().setDocument("Test Name", result);
-        newMessage.setChatId(userId);
-        try {
-            new WebHookHandler().execute(newMessage);
-        } catch (TelegramApiException e) {
-            sendMessage(e.getMessage(), userId);
-            e.printStackTrace();
+        SendDocument newMessage;
+        if (result != null) {
+            newMessage = new SendDocument().setDocument(docName, result);
+            newMessage.setChatId(userId);
+            try {
+                new WebHookHandler().execute(newMessage);
+            } catch (TelegramApiException e) {
+                sendMessage(e.getMessage(), userId);
+                e.printStackTrace();
+            }
+        } else {
+            sendMessageToAdmin("Message wasn't found: " + docName);
         }
     }
 
@@ -170,23 +175,6 @@ public class ResponseHandler {
         return null;
     }
 
-    private InputStream getImage(AmazonS3 client, String key) {
-        S3Object object = client.getObject(new GetObjectRequest(
-                "storyofcameloteu",
-                key
-        ));
-        return object.getObjectContent();
-    }
-
-    private AmazonS3 getClient() {
-        BasicAWSCredentials creds = new BasicAWSCredentials(System.getenv("AWS_S3_ID"), System.getenv("AWS_S3_KEY"));
-        AmazonS3 client = AmazonS3ClientBuilder.standard()
-                .withRegion(Regions.EU_CENTRAL_1)
-                .withCredentials(new AWSStaticCredentialsProvider(creds))
-                .build();
-        return client;
-    }
-
     private void logSender(UpdateWrapper message) {
         String log = "New message, User:"
                 + (message.getFirstName() == null ? "" : " " + message.getFirstName())
@@ -202,7 +190,7 @@ public class ResponseHandler {
     }
 
     private void performCommand(UpdateWrapper message) {
-        String commandParts[] = message.getText().split(" ", 2);
+        String[] commandParts = message.getText().split(" ", 2);
         Command command;
         try {
             command = Command.valueOf(commandParts[0].substring(1).toUpperCase());
@@ -245,11 +233,11 @@ public class ResponseHandler {
 
     private Boolean alreadyRedirected;
 
-    public void sendMessage(String text, String userId) {
+    private void sendMessage(String text, String userId) {
         sendMessage(text, userId, false);
     }
 
-    public void sendMessage(String text, String userId, Boolean useMarkdown) {
+    private void sendMessage(String text, String userId, Boolean useMarkdown) {
         if (alreadyRedirected == null || !alreadyRedirected) alreadyRedirected = true;
         else return;
         System.out.println("Message text: " + text);
@@ -270,8 +258,8 @@ public class ResponseHandler {
                 ex.printStackTrace();
             }
         } catch (TelegramApiException e) {
-            e.printStackTrace();
             sendMessageToAdmin(e.getMessage());
+            e.printStackTrace();
         }
     }
 
