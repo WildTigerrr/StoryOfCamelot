@@ -139,6 +139,7 @@ public class ResponseHandler {
     }
 
     private void sendTestImage(String userId) {
+        sendMessage("Нужно бы забраться повыше и осмотреться...", userId);
         String docName = "Test name";
         InputStream result = overlayImages(
                 amazonClient.getObject("images/locations/forest-test.png"),
