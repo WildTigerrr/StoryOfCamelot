@@ -70,23 +70,23 @@ public class ResponseHandler {
             } else if (message.getText().equals("image test")) {
 //                sendTestImage(message.getUserId());
                 InputStream stream = amazonClient.getObject("images/items/weapons/swords/sword-test.png");
-                Path path = null;
-                try {
-                    path = Files.createTempFile("Test File", ".png");
-                } catch (IOException e) {
-                    sendMessageToAdmin(e.getMessage());
-                    e.printStackTrace();
-                }
-                try (FileOutputStream out = new FileOutputStream(path.toFile())) {
-                    byte[] buffer = new byte[1024];
-                    int len;
-                    while ((len = stream.read(buffer)) != -1) {
-                        out.write(buffer, 0, len);
-                    }
-                } catch (Exception e) {
-                    sendMessageToAdmin(e.getMessage());
-                    e.printStackTrace();
-                }
+//                Path path = null;
+//                try {
+//                    path = Files.createTempFile("Test File", ".png");
+//                } catch (IOException e) {
+//                    sendMessageToAdmin(e.getMessage());
+//                    e.printStackTrace();
+//                }
+//                try (FileOutputStream out = new FileOutputStream(path.toFile())) {
+//                    byte[] buffer = new byte[1024];
+//                    int len;
+//                    while ((len = stream.read(buffer)) != -1) {
+//                        out.write(buffer, 0, len);
+//                    }
+//                } catch (Exception e) {
+//                    sendMessageToAdmin(e.getMessage());
+//                    e.printStackTrace();
+//                }
 
 //                MultipartFile multi = null;
 //                try {
