@@ -1,6 +1,5 @@
 package com.wildtigerrr.StoryOfCamelot;
 
-import com.wildtigerrr.StoryOfCamelot.database.DatabaseInteraction;
 import com.wildtigerrr.StoryOfCamelot.web.ResponseHandler;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;

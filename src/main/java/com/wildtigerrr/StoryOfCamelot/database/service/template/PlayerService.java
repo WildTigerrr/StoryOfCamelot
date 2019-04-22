@@ -1,6 +1,5 @@
 package com.wildtigerrr.StoryOfCamelot.database.service.template;
 
-import com.wildtigerrr.StoryOfCamelot.database.schema.FileLink;
 import com.wildtigerrr.StoryOfCamelot.database.schema.Player;
 
 import java.util.ArrayList;
