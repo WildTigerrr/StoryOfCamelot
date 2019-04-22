@@ -95,13 +95,14 @@ public class ResponseHandler {
 //                    sendMessageToAdmin(e.getMessage());
 //                    e.printStackTrace();
 //                }
-                SendDocument newDocMessage = new SendDocument().setDocument(path.toFile());
-                SendPhoto newPhotoMessage = new SendPhoto().setPhoto(path.toFile());
-                newDocMessage.setChatId(message.getUserId());
+//                SendDocument newDocMessage = new SendDocument().setDocument(path.toFile());
+//                SendPhoto newPhotoMessage = new SendPhoto().setPhoto(path.toFile());
+                SendPhoto newPhotoMessage = new SendPhoto().setPhoto("Test", stream);
+//                newDocMessage.setChatId(message.getUserId());
                 newPhotoMessage.setChatId(message.getUserId());
                 newPhotoMessage.setCaption("Test");
                 try {
-                    new WebHookHandler().execute(newDocMessage);
+//                    new WebHookHandler().execute(newDocMessage);
                     new WebHookHandler().execute(newPhotoMessage);
                 } catch (TelegramApiException e) {
                     sendMessageToAdmin(e.getMessage());
