@@ -27,6 +27,8 @@ import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 import static com.wildtigerrr.StoryOfCamelot.web.BotConfig.WEBHOOK_ADMIN_ID;
 
@@ -64,7 +66,24 @@ public class ResponseHandler {
             } else if (message.getText().equals("image test")) {
 //                sendTestImage(message.getUserId());
                 InputStream stream = amazonClient.getObject("images/items/weapons/swords/sword-test.png");
-                SendDocument newMessage = new SendDocument().setDocument("Test Name", stream);
+                Path path = null;
+                try {
+                    path = Files.createTempFile("Test File", ".png");
+                } catch (IOException e) {
+                    sendMessageToAdmin(e.getMessage());
+                    e.printStackTrace();
+                }
+                try (FileOutputStream out = new FileOutputStream(path.toFile())) {
+                    byte[] buffer = new byte[1024];
+                    int len;
+                    while ((len = stream.read(buffer)) != -1) {
+                        out.write(buffer, 0, len);
+                    }
+                } catch (Exception e) {
+                    sendMessageToAdmin(e.getMessage());
+                    e.printStackTrace();
+                }
+                SendDocument newMessage = new SendDocument().setDocument(path.toFile());
                 newMessage.setChatId(message.getUserId());
                 try {
                     new WebHookHandler().execute(newMessage);
