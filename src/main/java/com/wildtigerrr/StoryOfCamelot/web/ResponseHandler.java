@@ -70,23 +70,7 @@ public class ResponseHandler {
             } else if (message.getText().equals("image test")) {
                 sendTestImage(message.getUserId());
 //                InputStream stream = amazonClient.getObject("images/items/weapons/swords/sword-test.png");
-//                Path path = null;
-//                try {
-//                    path = Files.createTempFile("Test File", ".png");
-//                } catch (IOException e) {
-//                    sendMessageToAdmin(e.getMessage());
-//                    e.printStackTrace();
-//                }
-//                try (FileOutputStream out = new FileOutputStream(path.toFile())) {
-//                    byte[] buffer = new byte[1024];
-//                    int len;
-//                    while ((len = stream.read(buffer)) != -1) {
-//                        out.write(buffer, 0, len);
-//                    }
-//                } catch (Exception e) {
-//                    sendMessageToAdmin(e.getMessage());
-//                    e.printStackTrace();
-//                }
+//                File file = inputStreamToFile(stream);
 
 //                MultipartFile multi = null;
 //                try {
@@ -95,8 +79,8 @@ public class ResponseHandler {
 //                    sendMessageToAdmin(e.getMessage());
 //                    e.printStackTrace();
 //                }
-//                SendDocument newDocMessage = new SendDocument().setDocument(path.toFile());
-//                SendPhoto newPhotoMessage = new SendPhoto().setPhoto(path.toFile());
+//                SendDocument newDocMessage = new SendDocument().setDocument(file);
+//                SendPhoto newPhotoMessage = new SendPhoto().setPhoto(file);
 //                SendPhoto newPhotoMessage = new SendPhoto().setPhoto("Test", stream);
 //                newDocMessage.setChatId(message.getUserId());
 //                newPhotoMessage.setChatId(message.getUserId());
@@ -129,6 +113,31 @@ public class ResponseHandler {
         sendMessage(answer, message.getUserId(), false);
     }
 
+    private File inputStreamToFile(InputStream stream, String name) {
+        if (stream == null) return null;
+        Path path = null;
+        try {
+            path = Files.createTempFile(name, ".png");
+        } catch (IOException e) {
+            sendMessageToAdmin(e.getMessage());
+            e.printStackTrace();
+        }
+        if (path != null) {
+            try (FileOutputStream out = new FileOutputStream(path.toFile())) {
+                byte[] buffer = new byte[1024];
+                int len;
+                while ((len = stream.read(buffer)) != -1) {
+                    out.write(buffer, 0, len);
+                }
+            } catch (Exception e) {
+                sendMessageToAdmin(e.getMessage());
+                e.printStackTrace();
+            }
+            return path.toFile();
+        }
+        return null;
+    }
+
     private void sendTestImage(String userId) {
         String docName = "Test name";
         InputStream result = overlayImages(
@@ -137,8 +146,9 @@ public class ResponseHandler {
         );
 //        SendPhoto newMessage = new SendPhoto().setPhoto("Test Name", result);
         SendDocument newMessage;
-        if (result != null) {
-            newMessage = new SendDocument().setDocument(docName, result);
+        File file = inputStreamToFile(result, docName);
+        if (file != null) {
+            newMessage = new SendDocument().setDocument(file);
             newMessage.setChatId(userId);
             try {
                 new WebHookHandler().execute(newMessage);
@@ -147,7 +157,7 @@ public class ResponseHandler {
                 e.printStackTrace();
             }
         } else {
-            sendMessageToAdmin("Message wasn't found: " + docName);
+            sendMessageToAdmin("Image wasn't found: " + docName);
         }
     }
 
