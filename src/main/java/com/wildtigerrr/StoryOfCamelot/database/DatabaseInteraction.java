@@ -100,7 +100,7 @@ public class DatabaseInteraction {
                 );
             }
         }
-        return mobService.create((ArrayList<Mob>) initialMobsMap.values());
+        return mobService.create(new ArrayList<Mob>(initialMobsMap.values()));
     }
 
     private HashMap<String, ArrayList<String>> getPossibleLocationsMapping() {
