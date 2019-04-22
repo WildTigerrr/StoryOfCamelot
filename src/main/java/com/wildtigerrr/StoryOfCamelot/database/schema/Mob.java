@@ -20,7 +20,7 @@ public class Mob {
 
     @OneToMany(
             cascade = {CascadeType.ALL},
-            mappedBy = "location"
+            mappedBy = "mob"
     )
     private List<PossibleLocations> possibleLocations = new ArrayList<>();
     @ManyToOne(optional = true)

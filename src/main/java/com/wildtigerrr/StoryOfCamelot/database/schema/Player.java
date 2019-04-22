@@ -28,7 +28,7 @@ public class Player {
 
     @OneToMany(
             cascade = {CascadeType.ALL},
-            mappedBy = "backpack"
+            mappedBy = "player"
     )
     private List<Backpack> backpacks = new ArrayList<>();
     @ManyToOne
