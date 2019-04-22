@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
@@ -31,8 +32,11 @@ public class LocationServiceImpl implements LocationService {
     }
 
     @Override
-    public void create(ArrayList<Location> locations) {
-        locationDao.saveAll(locations);
+    public HashMap<String, Location> create(ArrayList<Location> locations) {
+        List<Location> newLocations = (List<Location>) locationDao.saveAll(locations);
+        HashMap<String, Location> locationsMap = new HashMap<>();
+        for (Location loc : newLocations) locationsMap.put(loc.getName(), loc);
+        return locationsMap;
     }
 
     @Override

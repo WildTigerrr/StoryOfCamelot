@@ -3,11 +3,12 @@ package com.wildtigerrr.StoryOfCamelot.database.service.template;
 import com.wildtigerrr.StoryOfCamelot.database.schema.Location;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public interface LocationService {
     Location create(Location location);
-    void create(ArrayList<Location> locations);
+    HashMap<String, Location> create(ArrayList<Location> locations);
     void delete(int id);
     Location findById(int id);
     Location findByName(String locationName);

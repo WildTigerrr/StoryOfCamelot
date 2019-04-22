@@ -22,7 +22,7 @@ public class Mob {
             cascade = {CascadeType.ALL},
             mappedBy = "mob"
     )
-    private List<PossibleLocations> possibleLocations = new ArrayList<>();
+    private List<PossibleLocation> possibleLocations = new ArrayList<>();
     @ManyToOne(optional = true)
     @JoinColumn(name = "filelink_id")
     private FileLink imageLink;
@@ -38,6 +38,10 @@ public class Mob {
         this.defence = defence;
         this.agility = agility;
         this.imageLink = imageLink;
+    }
+
+    public Integer getId() {
+        return id;
     }
 
     public String getName() {
@@ -88,19 +92,20 @@ public class Mob {
         this.agility = agility;
     }
 
-    public List<PossibleLocations> getLocations() {
+    public List<PossibleLocation> getPossibleLocations() {
         return possibleLocations;
     }
 
-    public void setLocations(List<PossibleLocations> locations) {
-        this.possibleLocations = locations;
+    public void setPossibleLocations(List<PossibleLocation> possibleLocations) {
+        this.possibleLocations = possibleLocations;
     }
 
-    public void addPossibleLocation(PossibleLocations possibleLocation) {
+    public Mob addPossibleLocation(PossibleLocation possibleLocation) {
         this.possibleLocations.add(possibleLocation);
+        return this;
     }
 
-    public void removePossibleLocation(PossibleLocations possibleLocation) {
+    public void removePossibleLocation(PossibleLocation possibleLocation) {
         this.possibleLocations.remove(possibleLocation);
     }
 

@@ -1,8 +1,7 @@
 package com.wildtigerrr.StoryOfCamelot.database.schema;
 
 import com.wildtigerrr.StoryOfCamelot.database.schema.enums.ItemQuality;
-import com.wildtigerrr.StoryOfCamelot.database.schema.enums.ItemType;
-import software.amazon.ion.Decimal;
+import com.wildtigerrr.StoryOfCamelot.database.schema.enums.ItemSubType;
 
 import javax.persistence.*;
 
@@ -13,13 +12,13 @@ public class Item {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
-    private Decimal value; // Defence, Damage, Speed etc
+    private Double value; // Defence, Damage, Speed etc
     private Integer durability;
-    private Decimal price;
+    private Double price;
     private Boolean isStackable;
 
     @Enumerated(EnumType.STRING)
-    private ItemType type;
+    private ItemSubType type;
     @Enumerated(EnumType.STRING)
     private ItemQuality quality;
     @ManyToOne(optional = true)
@@ -29,7 +28,7 @@ public class Item {
     protected Item() {
     }
 
-    public Item(Decimal value, Integer durability, Decimal price, ItemType type, ItemQuality quality) {
+    public Item(Double value, Integer durability, Double price, ItemSubType type, ItemQuality quality) {
         this.value = value;
         this.durability = durability;
         this.price = price;
@@ -37,7 +36,7 @@ public class Item {
         this.quality = quality;
     }
 
-    public Item(Decimal value, Integer durability, Decimal price, ItemType type, ItemQuality quality, FileLink imageLink) {
+    public Item(Double value, Integer durability, Double price, ItemSubType type, ItemQuality quality, FileLink imageLink) {
         this.value = value;
         this.durability = durability;
         this.price = price;
@@ -50,11 +49,11 @@ public class Item {
         return id;
     }
 
-    public Decimal getValue() {
+    public Double getValue() {
         return value;
     }
 
-    public void setValue(Decimal value) {
+    public void setValue(Double value) {
         this.value = value;
     }
 
@@ -66,11 +65,11 @@ public class Item {
         this.durability = durability;
     }
 
-    public Decimal getPrice() {
+    public Double getPrice() {
         return price;
     }
 
-    public void setPrice(Decimal price) {
+    public void setPrice(Double price) {
         this.price = price;
     }
 
@@ -82,11 +81,11 @@ public class Item {
         isStackable = stackable;
     }
 
-    public ItemType getType() {
+    public ItemSubType getType() {
         return type;
     }
 
-    public void setType(ItemType type) {
+    public void setType(ItemSubType type) {
         this.type = type;
     }
 

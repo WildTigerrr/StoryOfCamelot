@@ -3,8 +3,8 @@ package com.wildtigerrr.StoryOfCamelot.database.schema;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "possible_locations")
-public class PossibleLocations {
+@Table(name = "possible_location")
+public class PossibleLocation {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -16,12 +16,16 @@ public class PossibleLocations {
     @JoinColumn(name = "location_id")
     private Location location;
 
-    protected PossibleLocations() {
+    protected PossibleLocation() {
     }
 
-    public PossibleLocations(Mob mob, Location location) {
+    public PossibleLocation(Mob mob, Location location) {
         this.mob = mob;
         this.location = location;
+    }
+
+    public Integer getId() {
+        return id;
     }
 
     public Mob getMob() {

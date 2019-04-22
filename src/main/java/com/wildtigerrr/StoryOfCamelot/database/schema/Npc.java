@@ -9,4 +9,8 @@ public class Npc {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
+
+    public Integer getId() {
+        return id;
+    }
 }

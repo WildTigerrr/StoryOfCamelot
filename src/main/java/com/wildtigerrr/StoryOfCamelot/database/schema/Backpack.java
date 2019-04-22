@@ -33,6 +33,10 @@ public class Backpack {
         this.status = status;
     }
 
+    public Integer getId() {
+        return id;
+    }
+
     public Player getPlayer() {
         return player;
     }
