@@ -92,7 +92,7 @@ public class Player {
     }
 
     private Integer getStatsToNextLevelUp() {
-        return 5 * level - (unassignedPoints - (20 + (5 * level)));
+        return 5 * level * (level + 1) / 2 - (unassignedPoints - (20 + (5 * level)));
     }
 
     // ------------------- LEVEL UP MECHANIC ------------------------------------------------------------------------ //
