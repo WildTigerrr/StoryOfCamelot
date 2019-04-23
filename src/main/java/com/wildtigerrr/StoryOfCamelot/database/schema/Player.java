@@ -30,7 +30,7 @@ public class Player {
         return externalId;
     }
 
-    // TODO admin method for setting
+    // TODO Admin method for setting another external Id
     public void setExternalId(String externalId) {
         this.externalId = externalId;
     }
@@ -92,7 +92,7 @@ public class Player {
     }
 
     private Integer getStatsToNextLevelUp() {
-        return 5 * level;
+        return 5 * level - (unassignedPoints - (20 + (5 * level)));
     }
 
     // ------------------- LEVEL UP MECHANIC ------------------------------------------------------------------------ //
@@ -137,7 +137,11 @@ public class Player {
     }
 
     private Boolean isLevelUp() {
-        return (strength + agility + intelligence + endurance + luck) >= getStatsToNextLevelUp();
+        return getTotalStats() >= getStatsToNextLevelUp();
+    }
+
+    private Integer getTotalStats() {
+        return strength + agility + intelligence + endurance + luck;
     }
 
     // ------------------- GETTERS AND SETTERS ---------------------------------------------------------------------- //
@@ -218,7 +222,7 @@ public class Player {
     private Integer damage;
     private Integer speed;
 
-    // TODO
+    // TODO Battle stats methods
 
     // ============================================== END BATTLE STATS ============================================== //
 
@@ -228,7 +232,7 @@ public class Player {
     private Integer gold;
     private Integer diamonds;
 
-    // TODO
+    // TODO Finance methods
 
     // ================================================= END FINANCE ================================================ //
 
@@ -324,8 +328,8 @@ public class Player {
     @Override
     public String toString() {
         return "Если память тебя не подводит, то:"
-                + "\n*" + this.nickname + "*, " + this.level + " уровень"
-                    + (getUnassignedPoints() > 0 ? " (+" + getUnassignedPoints() + ")" : "")
+                + "\n*" + this.nickname + "*, " + this.level + " уровень (" + getTotalStats() + "/" + getStatsToNextLevelUp() +")"
+                + (getUnassignedPoints() > 0 ? " (+" + getUnassignedPoints() + ")" : "")
                 + "\n*Сила:* " + this.strength + " (" + this.strengthExp + "/" + getExpToNextStatUp(this.strength) + ")"
                 + "\n*Ловкость:* " + this.agility + " (" + this.agilityExp + "/" + getExpToNextStatUp(this.agility) + ")"
                 + "\n*Интеллект:* " + this.intelligence + " (" + this.intelligenceExp + "/" + getExpToNextStatUp(this.intelligence) + ")"
