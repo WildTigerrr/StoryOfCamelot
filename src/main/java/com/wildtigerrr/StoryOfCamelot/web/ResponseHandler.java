@@ -218,7 +218,7 @@ public class ResponseHandler {
                                 Integer.valueOf(values[1]),
                                 Stats.valueOf(values[0].toUpperCase())
                         );
-                        if (eventList != null) {
+                        if (eventList != null && !eventList.isEmpty()) {
                             for (String event : eventList) {
                                 if (event != null && !event.equals("")) {
                                     sendMessage(event, message.getUserId());

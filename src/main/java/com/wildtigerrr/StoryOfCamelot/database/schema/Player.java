@@ -138,47 +138,51 @@ public class Player {
     public ArrayList<String> addStatExp(Integer exp, Stats stat) throws SOCInvalidDataException {
         ArrayList<String> events = new ArrayList<>();
         String temp;
-        if (isStatUp(stat, exp)) {
+        Boolean up = isStatUp(stat, exp);
+        while (up) {
+//            if (isStatUp(stat, exp)) {
             switch (stat) {
                 case STRENGTH:
-                    while (strengthExp >= getExpToNextStatUp(strength)) {
+//                    while (strengthExp >= getExpToNextStatUp(strength)) {
                         strengthExp -= getExpToNextStatUp(strength);
                         strength++;
                         events.add(MainText.STAT_UP_START.text() + Stats.STRENGTH.which() + MainText.STAT_UP_END.text() + strength);
-                    }
+//                    }
                     break;
                 case AGILITY:
-                    while (agilityExp >= getExpToNextStatUp(agility)) {
+//                    while (agilityExp >= getExpToNextStatUp(agility)) {
                         agilityExp -= getExpToNextStatUp(agility);
                         agility++;
                         events.add(MainText.STAT_UP_START.text() + Stats.AGILITY.which() + MainText.STAT_UP_END.text() + agility);
-                    }
+//                    }
                     break;
                 case INTELLIGENCE:
-                    while (intelligenceExp >= getExpToNextStatUp(intelligence)) {
+//                    while (intelligenceExp >= getExpToNextStatUp(intelligence)) {
                         intelligenceExp -= getExpToNextStatUp(intelligence);
                         intelligence++;
                         events.add(MainText.STAT_UP_START.text() + Stats.INTELLIGENCE.which() + MainText.STAT_UP_END.text() + intelligence);
-                    }
+//                    }
                     break;
                 case ENDURANCE:
-                    while (enduranceExp >= getExpToNextStatUp(endurance)) {
+//                    while (enduranceExp >= getExpToNextStatUp(endurance)) {
                         enduranceExp -= getExpToNextStatUp(endurance);
                         endurance++;
                         events.add(MainText.STAT_UP_START.text() + Stats.ENDURANCE.which() + MainText.STAT_UP_END.text() + endurance);
-                    }
+//                    }
                     break;
             }
-            temp = isLevelUp();
-            if (temp != null) {
-                while (temp != null) {
-                    events.add(temp);
-                    temp = isLevelUp();
-                }
-            }
-            return events;
+//            temp = isLevelUp();
+//            if (temp != null) {
+//                while (temp != null) {
+//                    events.add(temp);
+//                    temp = isLevelUp();
+//                }
+//            }
+            events.add(isLevelUp());
+            up = isStatUp(stat, 0);
+//            }
         }
-        return null;
+        return events;
     }
 
     private Boolean isStatUp(Stats stat, Integer newExp) throws SOCInvalidDataException {
