@@ -184,8 +184,8 @@ public class Player {
     }
 
     private String isLevelUp() {
-        System.out.println((strength + agility + intelligence + endurance + luck) + " >= " + (5 * level + (20 + level * 5)));
-        if ((strength + agility + intelligence + endurance + luck) >= (5 * level + (20 + level * 5))) {
+        System.out.println((strength + agility + intelligence + endurance + luck) + " >= " + (((5 * level + (20 + level * 5))) - unassignedPoints));
+        if ((strength + agility + intelligence + endurance + luck) >= (((5 * level + (20 + level * 5))) - unassignedPoints)) {
             System.out.println("Level up! Player: " + nickname);
             levelUp();
             return MainText.LEVEL_UP.text() + getLevel();
