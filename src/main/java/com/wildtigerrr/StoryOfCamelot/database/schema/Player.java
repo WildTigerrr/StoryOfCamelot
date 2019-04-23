@@ -162,7 +162,7 @@ public class Player {
                     }
                     break;
                 case ENDURANCE:
-                    while (intelligenceExp > getExpToNextStatUp(endurance)) {
+                    while (enduranceExp > getExpToNextStatUp(endurance)) {
                         enduranceExp -= getExpToNextStatUp(endurance);
                         endurance++;
                         events.add(MainText.STAT_UP_START.text() + Stats.ENDURANCE.which() + MainText.STAT_UP_END.text() + endurance);
@@ -184,6 +184,7 @@ public class Player {
     }
 
     private String isLevelUp() {
+        System.out.println((strength + agility + intelligence + endurance + luck) + " >= " + (5 * level + (20 + level * 5)));
         if ((strength + agility + intelligence + endurance + luck) >= (5 * level + (20 + level * 5))) {
             System.out.println("Level up! Player: " + nickname);
             levelUp();
