@@ -1,9 +1,12 @@
 package com.wildtigerrr.StoryOfCamelot.web;
 
 import com.wildtigerrr.StoryOfCamelot.bin.Command;
+import com.wildtigerrr.StoryOfCamelot.bin.GameEvent;
 import com.wildtigerrr.StoryOfCamelot.bin.MainText;
+import com.wildtigerrr.StoryOfCamelot.bin.exceptions.SOCInvalidDataException;
 import com.wildtigerrr.StoryOfCamelot.database.schema.Location;
 import com.wildtigerrr.StoryOfCamelot.database.schema.Player;
+import com.wildtigerrr.StoryOfCamelot.database.schema.enums.Stats;
 import com.wildtigerrr.StoryOfCamelot.database.service.implementation.*;
 import com.wildtigerrr.StoryOfCamelot.web.service.AmazonClient;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +21,7 @@ import java.awt.image.BufferedImage;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
 
 import static com.wildtigerrr.StoryOfCamelot.web.BotConfig.WEBHOOK_ADMIN_ID;
 
@@ -207,6 +211,28 @@ public class ResponseHandler {
                     sendMessage(MainText.EMPTY_NICKNAME.text(), message.getUserId(), true);
                 }
                 break;
+            case ADD:
+                String[] values = commandParts[1].split(" ", 2);
+                try {
+                    ArrayList<GameEvent> eventList = message.getPlayer().addStatExp(
+                            Integer.valueOf(values[1]),
+                            Stats.valueOf(values[0].toUpperCase())
+                    );
+                    for (GameEvent event : eventList) {
+                        if (event != null) {
+                            switch (event) {
+                                case LEVEL_UP: sendMessage("Вы научились чему-то новому! Уровень повышен до " + message.getPlayer().getLevel(), message.getUserId()); break;
+                                case STRENGTH_LEVEL_UP: sendMessage("Уровень силы повышен до " + message.getPlayer().getStrength(), message.getUserId()); break;
+                                case AGILITY_LEVEL_UP: sendMessage("Уровень ловкости повышен до " + message.getPlayer().getAgility(), message.getUserId()); break;
+                                case INTELLIGENCE_LEVEL_UP: sendMessage("Уровень интеллекта повышен до " + message.getPlayer().getIntelligence(), message.getUserId()); break;
+                                case ENDURANCE_LEVEL_UP: sendMessage("Уровень выносливости повышен до " + message.getPlayer().getEndurance(), message.getUserId()); break;
+                            }
+                        }
+                    }
+                } catch (SOCInvalidDataException e) {
+                    sendMessageToAdmin(e.getMessage());
+                    e.printStackTrace();
+                }
             default:
                 sendMessage(MainText.COMMAND_NOT_DEFINED.text(), message.getUserId(), true);
         }

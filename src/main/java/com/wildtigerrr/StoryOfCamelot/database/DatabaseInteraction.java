@@ -76,16 +76,7 @@ public class DatabaseInteraction {
     }
 
     private HashMap<String, Mob> insertMobs(HashMap<String, FileLink> filesMap, HashMap<String, Location> loctions) {
-        /*ArrayList<Mob> initialMobs = new ArrayList<>(
-                Arrays.asList(
-                        new Mob("Flying Sword", 1, 2, 3, 0, 0, filesMap.get("sword-test"))
-                        , new Mob("Super Flying Sword", 2, 2, 7, 2, 2, filesMap.get("sword-test"))
-                )
-        );*/
-        HashMap<String, Mob> initialMobsMap = new HashMap<String, Mob>() {{
-            put("Flying Sword", new Mob("Flying Sword", 1, 2, 3, 0, 0, filesMap.get("sword-test")));
-            put("Super Flying Sword", new Mob("Super Flying Sword", 2, 2, 7, 2, 2, filesMap.get("sword-test")));
-        }};
+        HashMap<String, Mob> initialMobsMap = getMobs(filesMap);
         HashMap<String, ArrayList<String>> locationsMapping = getPossibleLocationsMapping();
         for (String locationName : locationsMapping.keySet()) {
             for (String mobName : locationsMapping.get(locationName)) {
@@ -100,7 +91,14 @@ public class DatabaseInteraction {
                 );
             }
         }
-        return mobService.create(new ArrayList<Mob>(initialMobsMap.values()));
+        return mobService.create(new ArrayList<>(initialMobsMap.values()));
+    }
+
+    private HashMap<String, Mob> getMobs(HashMap<String, FileLink> filesMap) {
+        return new HashMap<String, Mob>() {{
+            put("Flying Sword", new Mob("Flying Sword", 1, 2, 3, 0, 0, filesMap.get("sword-test")));
+            put("Super Flying Sword", new Mob("Super Flying Sword", 2, 2, 7, 2, 2, filesMap.get("sword-test")));
+        }};
     }
 
     private HashMap<String, ArrayList<String>> getPossibleLocationsMapping() {
