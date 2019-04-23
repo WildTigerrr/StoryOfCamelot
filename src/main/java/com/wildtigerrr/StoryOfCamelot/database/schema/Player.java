@@ -54,6 +54,16 @@ public class Player {
         this.externalId = externalId;
         this.nickname = nickname;
         this.isNew = externalId.equals(nickname);
+        strength = 5;
+        agility = 5;
+        intelligence = 5;
+        endurance = 5;
+        luck = 5;
+
+        strengthExp = 0;
+        agilityExp = 0;
+        intelligenceExp = 0;
+        enduranceExp = 0;
     }
 
     // ================================================== END MAIN ================================================== //
