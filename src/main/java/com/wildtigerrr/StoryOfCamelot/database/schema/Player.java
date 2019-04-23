@@ -53,11 +53,12 @@ public class Player {
         this.externalId = externalId;
         this.nickname = nickname;
         this.isNew = externalId.equals(nickname);
-        strength = 5;
-        agility = 5;
-        intelligence = 5;
-        endurance = 5;
-        luck = 5;
+        unassignedPoints = 25;
+        strength = 0;
+        agility = 0;
+        intelligence = 0;
+        endurance = 0;
+        luck = 0;
 
         strengthExp = 0;
         agilityExp = 0;
@@ -142,28 +143,28 @@ public class Player {
                     while (strengthExp > getExpToNextStatUp(strength)) {
                         strengthExp -= getExpToNextStatUp(strength);
                         strength++;
-                        events.add(MainText.STAT_UP_START.text() + Stats.STRENGTH.which() + MainText.STAT_UP_END.text());
+                        events.add(MainText.STAT_UP_START.text() + Stats.STRENGTH.which() + MainText.STAT_UP_END.text() + strength);
                     }
                     break;
                 case AGILITY:
                     while (agilityExp > getExpToNextStatUp(agility)) {
                         agilityExp -= getExpToNextStatUp(agility);
                         agility++;
-                        events.add(MainText.STAT_UP_START.text() + Stats.AGILITY.which() + MainText.STAT_UP_END.text());
+                        events.add(MainText.STAT_UP_START.text() + Stats.AGILITY.which() + MainText.STAT_UP_END.text() + agility);
                     }
                     break;
                 case INTELLIGENCE:
                     while (intelligenceExp > getExpToNextStatUp(intelligence)) {
                         intelligenceExp -= getExpToNextStatUp(intelligence);
                         intelligence++;
-                        events.add(MainText.STAT_UP_START.text() + Stats.INTELLIGENCE.which() + MainText.STAT_UP_END.text());
+                        events.add(MainText.STAT_UP_START.text() + Stats.INTELLIGENCE.which() + MainText.STAT_UP_END.text() + intelligence);
                     }
                     break;
                 case ENDURANCE:
                     while (intelligenceExp > getExpToNextStatUp(endurance)) {
                         enduranceExp -= getExpToNextStatUp(endurance);
                         endurance++;
-                        events.add(MainText.STAT_UP_START.text() + Stats.ENDURANCE.which() + MainText.STAT_UP_END.text());
+                        events.add(MainText.STAT_UP_START.text() + Stats.ENDURANCE.which() + MainText.STAT_UP_END.text() + endurance);
                     }
                     break;
             }
