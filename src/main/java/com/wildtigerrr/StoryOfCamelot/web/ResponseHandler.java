@@ -103,7 +103,8 @@ public class ResponseHandler {
             e.printStackTrace();
         }
         if (file != null) {
-            sendDocument(file, userId);
+//            sendDocument(file, userId);
+            sendImage(file, userId);
         }
     }
 
