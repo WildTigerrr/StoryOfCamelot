@@ -213,19 +213,23 @@ public class ResponseHandler {
             case ADD:
                 String[] values = commandParts[1].split(" ", 2);
                 try {
-                    ArrayList<String> eventList = message.getPlayer().addStatExp(
-                            Integer.valueOf(values[1]),
-                            Stats.valueOf(values[0].toUpperCase())
-                    );
-                    if (eventList != null) {
-                        for (String event : eventList) {
-                            if (event != null && !event.equals("")) {
-                                sendMessage(event, message.getUserId());
+                    try {
+                        ArrayList<String> eventList = message.getPlayer().addStatExp(
+                                Integer.valueOf(values[1]),
+                                Stats.valueOf(values[0].toUpperCase())
+                        );
+                        if (eventList != null) {
+                            for (String event : eventList) {
+                                if (event != null && !event.equals("")) {
+                                    sendMessage(event, message.getUserId());
+                                }
                             }
                         }
+                        sendMessage("Очков опыта получено: " + values[1], message.getUserId());
+                        playerService.update(message.getPlayer());
+                    } catch (NumberFormatException e) {
+                        sendMessageToAdmin("Не торопись, это слишком много");
                     }
-                    sendMessage("Очков опыта получено: " + values[1], message.getUserId());
-                    playerService.update(message.getPlayer());
                 } catch (SOCInvalidDataException e) {
                     sendMessageToAdmin(e.getMessage());
                     e.printStackTrace();

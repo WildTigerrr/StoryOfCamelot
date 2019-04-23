@@ -141,28 +141,28 @@ public class Player {
         if (isStatUp(stat, exp)) {
             switch (stat) {
                 case STRENGTH:
-                    while (strengthExp > getExpToNextStatUp(strength)) {
+                    while (strengthExp >= getExpToNextStatUp(strength)) {
                         strengthExp -= getExpToNextStatUp(strength);
                         strength++;
                         events.add(MainText.STAT_UP_START.text() + Stats.STRENGTH.which() + MainText.STAT_UP_END.text() + strength);
                     }
                     break;
                 case AGILITY:
-                    while (agilityExp > getExpToNextStatUp(agility)) {
+                    while (agilityExp >= getExpToNextStatUp(agility)) {
                         agilityExp -= getExpToNextStatUp(agility);
                         agility++;
                         events.add(MainText.STAT_UP_START.text() + Stats.AGILITY.which() + MainText.STAT_UP_END.text() + agility);
                     }
                     break;
                 case INTELLIGENCE:
-                    while (intelligenceExp > getExpToNextStatUp(intelligence)) {
+                    while (intelligenceExp >= getExpToNextStatUp(intelligence)) {
                         intelligenceExp -= getExpToNextStatUp(intelligence);
                         intelligence++;
                         events.add(MainText.STAT_UP_START.text() + Stats.INTELLIGENCE.which() + MainText.STAT_UP_END.text() + intelligence);
                     }
                     break;
                 case ENDURANCE:
-                    while (enduranceExp > getExpToNextStatUp(endurance)) {
+                    while (enduranceExp >= getExpToNextStatUp(endurance)) {
                         enduranceExp -= getExpToNextStatUp(endurance);
                         endurance++;
                         events.add(MainText.STAT_UP_START.text() + Stats.ENDURANCE.which() + MainText.STAT_UP_END.text() + endurance);
