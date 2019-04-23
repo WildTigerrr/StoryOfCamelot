@@ -53,6 +53,7 @@ public class Player {
         this.externalId = externalId;
         this.nickname = nickname;
         this.isNew = externalId.equals(nickname);
+        level = 1;
         unassignedPoints = 25;
         strength = 0;
         agility = 0;
