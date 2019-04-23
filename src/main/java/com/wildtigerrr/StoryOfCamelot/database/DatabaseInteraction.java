@@ -50,6 +50,7 @@ public class DatabaseInteraction {
                 Arrays.asList(
                         new FileLink("forest-test", "images/locations/forest-test.png")
                         , new FileLink("sword-test", "images/items/weapons/swords/sword-test.png")
+                        , new FileLink("merchants-square", "images/locations/the-merchants-square.png")
                 )
         );
         fileLinkService.create(initialFileLinks);
@@ -60,6 +61,7 @@ public class DatabaseInteraction {
                 Arrays.asList(
                         new Location("Test Forest", filesMap.get("forest-test"))
                         , new Location("Test Far Forest", filesMap.get("forest-test"))
+                        , new Location("The Merchants Square", filesMap.get("merchants-square"))
                 )
         );
         return locationService.create(initialLocations);

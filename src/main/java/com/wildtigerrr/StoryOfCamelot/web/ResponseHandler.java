@@ -1,6 +1,7 @@
 package com.wildtigerrr.StoryOfCamelot.web;
 
 import com.wildtigerrr.StoryOfCamelot.bin.Command;
+import com.wildtigerrr.StoryOfCamelot.bin.ImageProcessing;
 import com.wildtigerrr.StoryOfCamelot.bin.MainText;
 import com.wildtigerrr.StoryOfCamelot.bin.exceptions.SOCInvalidDataException;
 import com.wildtigerrr.StoryOfCamelot.database.schema.Location;
@@ -12,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.send.SendDocument;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 import javax.imageio.ImageIO;
@@ -31,15 +33,16 @@ public class ResponseHandler {
     @Autowired private PlayerServiceImpl playerService;
     @Autowired private FileLinkServiceImpl fileLinkService;
     @Autowired private LocationServiceImpl locationService;
-    private AmazonClient amazonClient;
-
-    public ResponseHandler() {}
-
-    @SuppressWarnings("unused")
-    @Autowired
-    ResponseHandler(AmazonClient amazonClient) {
-        this.amazonClient = amazonClient;
-    }
+    @Autowired private ImageProcessing imageService;
+//    private AmazonClient amazonClient;
+//
+//    public ResponseHandler() {}
+//
+//    @SuppressWarnings("unused")
+//    @Autowired
+//    ResponseHandler(AmazonClient amazonClient) {
+//        this.amazonClient = amazonClient;
+//    }
 
     void handleMessage(UpdateWrapper message) {
         System.out.println("Working with message: " + message);
@@ -58,29 +61,6 @@ public class ResponseHandler {
                 }
             } else if (message.getText().equals("image test")) {
                 sendTestImage(message.getUserId());
-//                InputStream stream = amazonClient.getObject("images/items/weapons/swords/sword-test.png");
-//                File file = inputStreamToFile(stream);
-
-//                MultipartFile multi = null;
-//                try {
-//                    multi = new MockMultipartFile("Test File", "Test File", "", stream);
-//                } catch (IOException e) {
-//                    sendMessageToAdmin(e.getMessage());
-//                    e.printStackTrace();
-//                }
-//                SendDocument newDocMessage = new SendDocument().setDocument(file);
-//                SendPhoto newPhotoMessage = new SendPhoto().setPhoto(file);
-//                SendPhoto newPhotoMessage = new SendPhoto().setPhoto("Test", stream);
-//                newDocMessage.setChatId(message.getUserId());
-//                newPhotoMessage.setChatId(message.getUserId());
-//
-//                try {
-//                    new WebHookHandler().execute(newDocMessage);
-//                    new WebHookHandler().execute(newPhotoMessage);
-//                } catch (TelegramApiException e) {
-//                    sendMessageToAdmin(e.getMessage());
-//                    e.printStackTrace();
-//                }
                 return;
             }
         }
@@ -102,78 +82,29 @@ public class ResponseHandler {
         sendMessage(answer, message.getUserId(), false);
     }
 
-    private File inputStreamToFile(InputStream stream, String name) {
-        if (stream == null) return null;
-        Path path = null;
-        try {
-            path = Files.createTempFile(name, ".png");
-        } catch (IOException e) {
-            sendMessageToAdmin(e.getMessage());
-            e.printStackTrace();
-        }
-        if (path != null) {
-            try (FileOutputStream out = new FileOutputStream(path.toFile())) {
-                byte[] buffer = new byte[1024];
-                int len;
-                while ((len = stream.read(buffer)) != -1) {
-                    out.write(buffer, 0, len);
-                }
-            } catch (Exception e) {
-                sendMessageToAdmin(e.getMessage());
-                e.printStackTrace();
-            }
-            return path.toFile();
-        }
-        return null;
-    }
-
     private void sendTestImage(String userId) {
         sendMessage("Нужно бы забраться повыше и осмотреться...", userId);
         String docName = "Test name";
-        InputStream result = overlayImages(
-                amazonClient.getObject("images/locations/forest-test.png"),
-                amazonClient.getObject("images/items/weapons/swords/sword-test.png")
-        );
-//        SendPhoto newMessage = new SendPhoto().setPhoto("Test Name", result);
-//        newMessage.setCaption("Test");
-        SendDocument newMessage;
-        File file = inputStreamToFile(result, docName);
-        if (file != null) {
-            newMessage = new SendDocument().setDocument(file);
-            newMessage.setChatId(userId);
-            try {
-                new WebHookHandler().execute(newMessage);
-            } catch (TelegramApiException e) {
-                sendMessage(e.getMessage(), userId);
-                e.printStackTrace();
-            }
-        } else {
-            sendMessageToAdmin("Image wasn't found: " + docName);
-        }
-    }
-
-    private InputStream overlayImages(InputStream inputBack, InputStream inputFront) {
-        BufferedImage imageBack;
-        BufferedImage imageFront;
+        InputStream result = null;
         try {
-            imageBack = ImageIO.read(inputBack);
-            imageFront = ImageIO.read(inputFront);
-            Graphics2D g = imageBack.createGraphics();
-            g.setRenderingHint(
-                    RenderingHints.KEY_ANTIALIASING,
-                    RenderingHints.VALUE_ANTIALIAS_ON
+            result = imageService.overlayImages(
+                    imageService.getImage("images/locations/forest-test.png"),
+                    imageService.getImage("images/items/weapons/swords/sword-test.png")
             );
-            g.drawImage(imageBack, 0, 0, null);
-            g.drawImage(imageFront, 0, 0, null);
-            g.dispose();
-            ByteArrayOutputStream os = new ByteArrayOutputStream();
-            ImageIO.write(imageBack, "png", os);
-            return new ByteArrayInputStream(os.toByteArray());
         } catch (IOException e) {
             sendMessageToAdmin(e.getMessage());
             e.printStackTrace();
         }
-        return null;
+        File file = null;
+        try {
+            file = imageService.inputStreamToImage(result, docName, ".png");
+        } catch (IOException e) {
+            sendMessageToAdmin(e.getMessage());
+            e.printStackTrace();
+        }
+        if (file != null) {
+            sendDocument(file, userId);
+        }
     }
 
     private void logSender(UpdateWrapper message) {
@@ -251,7 +182,6 @@ public class ResponseHandler {
     }
 
     private void setNickname(Player player, String newName) {
-        System.out.println("New nickname would be: " + newName);
         player.setNickname(newName);
         playerService.update(player);
         sendMessage(MainText.NICKNAME_CHANGED.text() + player.getNickname() + "*", player.getExternalId(), true);
@@ -266,7 +196,6 @@ public class ResponseHandler {
     private void sendMessage(String text, String userId, Boolean useMarkdown) {
         if (alreadyRedirected == null || !alreadyRedirected) alreadyRedirected = true;
         else return;
-        System.out.println("Message text: " + text);
 
         SendMessage sendMessage = new SendMessage();
         sendMessage.enableMarkdown(useMarkdown);
@@ -283,6 +212,55 @@ public class ResponseHandler {
                 sendMessageToAdmin(e.getMessage());
                 ex.printStackTrace();
             }
+        } catch (TelegramApiException e) {
+            sendMessageToAdmin(e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    private void sendImage(File file, String userId) {
+        sendImage(file, userId, null);
+    }
+    private void sendImage(File file, String userId, String caption) {
+        SendPhoto newMessage = new SendPhoto().setPhoto(file);
+        if (caption != null && !caption.equals("")) {
+            newMessage.setCaption(caption);
+        }
+        proceedImageSend(newMessage, userId);
+    }
+    private void sendImage(String fileName, InputStream stream, String userId) {
+        sendImage(fileName, stream, userId, null);
+    }
+    private void sendImage(String fileName, InputStream stream, String userId, String caption) {
+        SendPhoto newMessage = new SendPhoto().setPhoto(fileName, stream);
+        if (caption != null && !caption.equals("")) {
+            newMessage.setCaption(caption);
+        }
+        proceedImageSend(newMessage, userId);
+    }
+    private void proceedImageSend(SendPhoto newMessage, String userId) {
+        if (alreadyRedirected == null || !alreadyRedirected) alreadyRedirected = true;
+        else return;
+
+        newMessage.setChatId(userId);
+        try {
+            webHook.execute(newMessage);
+            alreadyRedirected = false;
+        } catch (TelegramApiException e) {
+            sendMessageToAdmin(e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    private void sendDocument(File file, String userId) {
+        if (alreadyRedirected == null || !alreadyRedirected) alreadyRedirected = true;
+        else return;
+
+        SendDocument sendMessage = new SendDocument().setDocument(file);
+        sendMessage.setChatId(userId);
+        try {
+            webHook.execute(sendMessage);
+            alreadyRedirected = false;
         } catch (TelegramApiException e) {
             sendMessageToAdmin(e.getMessage());
             e.printStackTrace();
