@@ -218,6 +218,7 @@ public class ResponseHandler {
                             Integer.valueOf(values[1]),
                             Stats.valueOf(values[0].toUpperCase())
                     );
+                    if (eventList == null) return;
                     for (GameEvent event : eventList) {
                         if (event != null) {
                             switch (event) {
