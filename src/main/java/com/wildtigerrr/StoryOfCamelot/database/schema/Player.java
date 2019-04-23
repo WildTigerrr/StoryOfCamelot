@@ -75,12 +75,14 @@ public class Player {
     private Integer unassignedPoints;
 
     private Integer strength;
+    private Integer health;
     private Integer agility;
     private Integer intelligence;
     private Integer endurance;
     private Integer luck;
 
     private Integer strengthExp;
+    private Integer healthExp;
     private Integer agilityExp;
     private Integer intelligenceExp;
     private Integer enduranceExp;
@@ -106,6 +108,11 @@ public class Player {
                     strengthExp -= getExpToNextStatUp(strength);
                     strength++;
                     events.add(MainText.STAT_UP_START.text() + Stats.STRENGTH.which() + MainText.STAT_UP_END.text() + strength);
+                    break;
+                case HEALTH:
+                    healthExp -= getExpToNextStatUp(health);
+                    health++;
+                    events.add(MainText.STAT_UP_START.text() + Stats.HEALTH.which() + MainText.STAT_UP_END.text() + strength);
                     break;
                 case AGILITY:
                     agilityExp -= getExpToNextStatUp(agility);
@@ -141,7 +148,7 @@ public class Player {
     }
 
     private Integer getTotalStats() {
-        return strength + agility + intelligence + endurance + luck;
+        return strength + health + agility + intelligence + endurance + luck;
     }
 
     // ------------------- GETTERS AND SETTERS ---------------------------------------------------------------------- //
@@ -164,6 +171,9 @@ public class Player {
             case STRENGTH:
                 strengthExp += exp;
                 return strengthExp;
+            case HEALTH:
+                healthExp += exp;
+                return healthExp;
             case AGILITY:
                 agilityExp += exp;
                 return agilityExp;
@@ -182,6 +192,8 @@ public class Player {
         switch (stat) {
             case STRENGTH:
                 return strength;
+            case HEALTH:
+                return health;
             case AGILITY:
                 return agility;
             case INTELLIGENCE:
@@ -195,6 +207,10 @@ public class Player {
 
     public Integer getStrength() {
         return strength;
+    }
+
+    public Integer getHealth() {
+        return health;
     }
 
     public Integer getAgility() {
@@ -215,12 +231,13 @@ public class Player {
 
     // ============================================== END LEVEL SYSTEM ============================================== //
 
-    // ================================================ BATTLE STATS ================================================ //
+    // ================================================= FINAL STATS ================================================ //
 
     private Integer hitpoints;
     private Integer hitpointsMax;
     private Integer damage;
     private Integer speed;
+    private Integer hunger;
 
     // TODO Battle stats methods
 
@@ -257,46 +274,6 @@ public class Player {
         this.level = 1;
     }
 
-    public Integer getHitpoints() {
-        return hitpoints;
-    }
-
-    public void setHitpoints(Integer hitpoints) {
-        this.hitpoints = hitpoints;
-    }
-
-    public Integer getHitpointsMax() {
-        return hitpointsMax;
-    }
-
-    public void setHitpointsMax(Integer hitpointsMax) {
-        this.hitpointsMax = hitpointsMax;
-    }
-
-    public Integer getDamage() {
-        return damage;
-    }
-
-    public void setDamage(Integer damage) {
-        this.damage = damage;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
-    public Integer getSpeed() {
-        return speed;
-    }
-
-    public void setSpeed(Integer speed) {
-        this.speed = speed;
-    }
-
     public List<Backpack> getBackpacks() {
         return backpacks;
     }
@@ -318,7 +295,7 @@ public class Player {
         return imageLink;
     }
 
-    public void setImage_link(FileLink imageLink) {
+    public void setImageLink(FileLink imageLink) {
         this.imageLink = imageLink;
     }
 
@@ -338,10 +315,10 @@ public class Player {
                 + "\n\n_Что же ещё известно?_";
     }
 
-    private String removeSpecialCharacters(String nickname) {
-        nickname = nickname.replaceAll("[^a-zA-Z\\s]", "");
-        if (nickname.length() > 25) nickname = nickname.substring(0, 35);
-        return nickname;
+    private String removeSpecialCharacters(String newNickname) {
+        newNickname = newNickname.replaceAll("[^a-zA-Z\\s]", "");
+        if (newNickname.length() > 25) newNickname = newNickname.substring(0, 35);
+        return newNickname;
     }
 
     // ================================================ END SERVICE ================================================= //

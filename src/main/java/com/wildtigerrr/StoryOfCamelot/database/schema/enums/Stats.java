@@ -4,6 +4,9 @@ public enum  Stats {
     STRENGTH (
             "силы"
     ),
+    HEALTH (
+            "здоровья"
+    ),
     AGILITY (
             "ловкости"
     ),
