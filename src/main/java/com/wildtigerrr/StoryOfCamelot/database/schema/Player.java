@@ -1,6 +1,5 @@
 package com.wildtigerrr.StoryOfCamelot.database.schema;
 
-import com.wildtigerrr.StoryOfCamelot.bin.GameEvent;
 import com.wildtigerrr.StoryOfCamelot.bin.MainText;
 import com.wildtigerrr.StoryOfCamelot.bin.exceptions.SOCInvalidDataException;
 import com.wildtigerrr.StoryOfCamelot.database.schema.enums.Stats;
@@ -138,6 +137,7 @@ public class Player {
 
     public ArrayList<String> addStatExp(Integer exp, Stats stat) throws SOCInvalidDataException {
         ArrayList<String> events = new ArrayList<>();
+        String temp;
         if (isStatUp(stat, exp)) {
             switch (stat) {
                 case STRENGTH:
@@ -169,7 +169,13 @@ public class Player {
                     }
                     break;
             }
-            events.add(isLevelUp());
+            temp = isLevelUp();
+            if (temp != null) {
+                while (temp != null) {
+                    events.add(temp);
+                    temp = isLevelUp();
+                }
+            }
             return events;
         }
         return null;
