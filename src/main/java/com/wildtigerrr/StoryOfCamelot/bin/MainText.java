@@ -23,6 +23,15 @@ public enum MainText {
     ),
     PLAYER_NOT_EXIST (
             "You don't have a player yet."
+    ),
+    STAT_UP_START (
+            "Уровень "
+    ),
+    STAT_UP_END (
+            " повышен до "
+    ),
+    LEVEL_UP (
+            "Вы научились чему-то новому. Ваш уровень повышен до "
     );
     private final String text;
 

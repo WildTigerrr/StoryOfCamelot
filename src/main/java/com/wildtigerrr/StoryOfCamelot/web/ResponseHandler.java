@@ -214,25 +214,18 @@ public class ResponseHandler {
             case ADD:
                 String[] values = commandParts[1].split(" ", 2);
                 try {
-                    ArrayList<GameEvent> eventList = message.getPlayer().addStatExp(
+                    ArrayList<String> eventList = message.getPlayer().addStatExp(
                             Integer.valueOf(values[1]),
                             Stats.valueOf(values[0].toUpperCase())
                     );
                     if (eventList != null) {
-                        for (GameEvent event : eventList) {
-                            if (event != null) {
-                                switch (event) {
-                                    case LEVEL_UP: sendMessage("Вы научились чему-то новому! Уровень повышен до " + message.getPlayer().getLevel(), message.getUserId()); break;
-                                    case STRENGTH_LEVEL_UP: sendMessage("Уровень силы повышен до " + message.getPlayer().getStrength(), message.getUserId()); break;
-                                    case AGILITY_LEVEL_UP: sendMessage("Уровень ловкости повышен до " + message.getPlayer().getAgility(), message.getUserId()); break;
-                                    case INTELLIGENCE_LEVEL_UP: sendMessage("Уровень интеллекта повышен до " + message.getPlayer().getIntelligence(), message.getUserId()); break;
-                                    case ENDURANCE_LEVEL_UP: sendMessage("Уровень выносливости повышен до " + message.getPlayer().getEndurance(), message.getUserId()); break;
-                                }
+                        for (String event : eventList) {
+                            if (event != null && !event.equals("")) {
+                                sendMessage(event, message.getUserId());
                             }
                         }
-                    } else {
-                        sendMessage("Очков опыта получено: " + values[1], message.getUserId());
                     }
+                    sendMessage("Очков опыта получено: " + values[1], message.getUserId());
                     playerService.update(message.getPlayer());
                 } catch (SOCInvalidDataException e) {
                     sendMessageToAdmin(e.getMessage());

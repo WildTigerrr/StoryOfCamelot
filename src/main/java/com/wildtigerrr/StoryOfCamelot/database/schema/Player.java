@@ -1,12 +1,11 @@
 package com.wildtigerrr.StoryOfCamelot.database.schema;
 
 import com.wildtigerrr.StoryOfCamelot.bin.GameEvent;
+import com.wildtigerrr.StoryOfCamelot.bin.MainText;
 import com.wildtigerrr.StoryOfCamelot.bin.exceptions.SOCInvalidDataException;
 import com.wildtigerrr.StoryOfCamelot.database.schema.enums.Stats;
-import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
-import javax.persistence.criteria.CriteriaBuilder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -103,32 +102,70 @@ public class Player {
 
     private Integer getCurrentStatExp(Stats stat, Integer exp) throws SOCInvalidDataException {
         switch (stat) {
-            case STRENGTH: strengthExp += exp; return strengthExp;
-            case AGILITY: agilityExp += exp; return agilityExp;
-            case INTELLIGENCE: intelligenceExp += exp; return intelligenceExp;
-            case ENDURANCE: enduranceExp += exp; return enduranceExp;
-            default: throw new SOCInvalidDataException("Unknown Player stat for exp: " + stat.name());
+            case STRENGTH:
+                strengthExp += exp;
+                return strengthExp;
+            case AGILITY:
+                agilityExp += exp;
+                return agilityExp;
+            case INTELLIGENCE:
+                intelligenceExp += exp;
+                return intelligenceExp;
+            case ENDURANCE:
+                enduranceExp += exp;
+                return enduranceExp;
+            default:
+                throw new SOCInvalidDataException("Unknown Player stat for exp: " + stat.name());
         }
     }
 
     private Integer getCurrentStat(Stats stat) throws SOCInvalidDataException {
         switch (stat) {
-            case STRENGTH: return strength;
-            case AGILITY: return agility;
-            case INTELLIGENCE: return intelligence;
-            case ENDURANCE: return endurance;
-            default: throw new SOCInvalidDataException("Unknown Player stat: " + stat.name());
+            case STRENGTH:
+                return strength;
+            case AGILITY:
+                return agility;
+            case INTELLIGENCE:
+                return intelligence;
+            case ENDURANCE:
+                return endurance;
+            default:
+                throw new SOCInvalidDataException("Unknown Player stat: " + stat.name());
         }
     }
 
-    public ArrayList<GameEvent> addStatExp(Integer exp, Stats stat) throws SOCInvalidDataException {
-        ArrayList<GameEvent> events = new ArrayList<>();
+    public ArrayList<String> addStatExp(Integer exp, Stats stat) throws SOCInvalidDataException {
+        ArrayList<String> events = new ArrayList<>();
         if (isStatUp(stat, exp)) {
             switch (stat) {
-                case STRENGTH: events.add(GameEvent.STRENGTH_LEVEL_UP); break;
-                case AGILITY: events.add(GameEvent.AGILITY_LEVEL_UP); break;
-                case INTELLIGENCE: events.add(GameEvent.INTELLIGENCE_LEVEL_UP); break;
-                case ENDURANCE: events.add(GameEvent.ENDURANCE_LEVEL_UP); break;
+                case STRENGTH:
+                    while (strengthExp > getExpToNextStatUp(strength)) {
+                        strengthExp -= getExpToNextStatUp(strength);
+                        strength++;
+                        events.add(MainText.STAT_UP_START.text() + Stats.STRENGTH.which() + MainText.STAT_UP_END.text());
+                    }
+                    break;
+                case AGILITY:
+                    while (agilityExp > getExpToNextStatUp(agility)) {
+                        agilityExp -= getExpToNextStatUp(agility);
+                        agility++;
+                        events.add(MainText.STAT_UP_START.text() + Stats.AGILITY.which() + MainText.STAT_UP_END.text());
+                    }
+                    break;
+                case INTELLIGENCE:
+                    while (intelligenceExp > getExpToNextStatUp(intelligence)) {
+                        intelligenceExp -= getExpToNextStatUp(intelligence);
+                        intelligence++;
+                        events.add(MainText.STAT_UP_START.text() + Stats.INTELLIGENCE.which() + MainText.STAT_UP_END.text());
+                    }
+                    break;
+                case ENDURANCE:
+                    while (intelligenceExp > getExpToNextStatUp(endurance)) {
+                        enduranceExp -= getExpToNextStatUp(endurance);
+                        endurance++;
+                        events.add(MainText.STAT_UP_START.text() + Stats.ENDURANCE.which() + MainText.STAT_UP_END.text());
+                    }
+                    break;
             }
             events.add(isLevelUp());
             return events;
@@ -137,14 +174,18 @@ public class Player {
     }
 
     private Boolean isStatUp(Stats stat, Integer newExp) throws SOCInvalidDataException {
-        return getCurrentStatExp(stat, newExp) >= ((int) (10 * Math.pow(2, getCurrentStat(stat) - 1)));
+        return getCurrentStatExp(stat, newExp) >= getExpToNextStatUp(getCurrentStat(stat));
     }
 
-    private GameEvent isLevelUp() {
+    private Integer getExpToNextStatUp(Integer currentLevel) {
+        return ((int) (10 * Math.pow(2, currentLevel - 1)));
+    }
+
+    private String isLevelUp() {
         if ((strength + agility + intelligence + endurance + luck) >= (5 * level + (20 + level * 5))) {
             System.out.println("Level up! Player: " + nickname);
             levelUp();
-            return GameEvent.LEVEL_UP;
+            return MainText.LEVEL_UP.text() + getLevel();
         }
         return null;
     }
@@ -273,10 +314,10 @@ public class Player {
     public String toString() {
         return "Если память тебя не подводит, то:"
                 + "\n*" + this.nickname + "*, " + this.level + " уровень"
-                + "\n*Сила:* " + this.strength + " (" + this.strengthExp + "/" + ((int) (10 * Math.pow(2, this.strength - 1))) + ")"
-                + "\n*Ловкость:* " + this.agility + " (" + this.agilityExp + "/" + ((int) (10 * Math.pow(2, this.agility - 1))) + ")"
-                + "\n*Интеллект:* " + this.intelligence + " (" + this.intelligenceExp + "/" + ((int) (10 * Math.pow(2, this.intelligence - 1))) + ")"
-                + "\n*Выносливость:* " + this.endurance + " (" + this.enduranceExp + "/" + ((int) (10 * Math.pow(2, this.endurance - 1))) + ")"
+                + "\n*Сила:* " + this.strength + " (" + this.strengthExp + "/" + getExpToNextStatUp(this.strength) + ")"
+                + "\n*Ловкость:* " + this.agility + " (" + this.agilityExp + "/" + getExpToNextStatUp(this.agility) + ")"
+                + "\n*Интеллект:* " + this.intelligence + " (" + this.intelligenceExp + "/" + getExpToNextStatUp(this.intelligence) + ")"
+                + "\n*Выносливость:* " + this.endurance + " (" + this.enduranceExp + "/" + getExpToNextStatUp(this.endurance) + ")"
                 + "\n*Удача:* " + this.luck
                 + "\n\n_Что же ещё известно?_";
     }
