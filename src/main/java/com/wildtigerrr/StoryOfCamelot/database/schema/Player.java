@@ -68,7 +68,6 @@ public class Player {
 
     // ================================================== END MAIN ================================================== //
 
-
     // ================================================ LEVEL SYSTEM ================================================ //
 
     private Integer level;
@@ -85,6 +84,61 @@ public class Player {
     private Integer agilityExp;
     private Integer intelligenceExp;
     private Integer enduranceExp;
+
+    // ------------------- LEVEL UP CALCULATION ------------------------------------------------------------------------ //
+
+    private Integer getExpToNextStatUp(Integer currentLevel) {
+        return ((int) (10 * Math.pow(2, currentLevel - 1)));
+    }
+
+    private Integer getStatsToNextLevelUp() {
+        return 5 * level;
+    }
+
+    // ------------------- LEVEL UP MECHANIC ------------------------------------------------------------------------ //
+
+    public ArrayList<String> addStatExp(Integer exp, Stats stat) throws SOCInvalidDataException {
+        ArrayList<String> events = new ArrayList<>();
+        Boolean up = isStatUp(stat, exp);
+        while (up) {
+            switch (stat) {
+                case STRENGTH:
+                    strengthExp -= getExpToNextStatUp(strength);
+                    strength++;
+                    events.add(MainText.STAT_UP_START.text() + Stats.STRENGTH.which() + MainText.STAT_UP_END.text() + strength);
+                    break;
+                case AGILITY:
+                    agilityExp -= getExpToNextStatUp(agility);
+                    agility++;
+                    events.add(MainText.STAT_UP_START.text() + Stats.AGILITY.which() + MainText.STAT_UP_END.text() + agility);
+                    break;
+                case INTELLIGENCE:
+                    intelligenceExp -= getExpToNextStatUp(intelligence);
+                    intelligence++;
+                    events.add(MainText.STAT_UP_START.text() + Stats.INTELLIGENCE.which() + MainText.STAT_UP_END.text() + intelligence);
+                    break;
+                case ENDURANCE:
+                    enduranceExp -= getExpToNextStatUp(endurance);
+                    endurance++;
+                    events.add(MainText.STAT_UP_START.text() + Stats.ENDURANCE.which() + MainText.STAT_UP_END.text() + endurance);
+                    break;
+            }
+            if (isLevelUp()) {
+                levelUp();
+                events.add(MainText.LEVEL_UP.text() + getLevel());
+            }
+            up = isStatUp(stat, 0);
+        }
+        return events;
+    }
+
+    private Boolean isStatUp(Stats stat, Integer newExp) throws SOCInvalidDataException {
+        return getCurrentStatExp(stat, newExp) >= getExpToNextStatUp(getCurrentStat(stat));
+    }
+
+    private Boolean isLevelUp() {
+        return (strength + agility + intelligence + endurance + luck) >= getStatsToNextLevelUp();
+    }
 
     // ------------------- GETTERS AND SETTERS ---------------------------------------------------------------------- //
 
@@ -135,74 +189,6 @@ public class Player {
         }
     }
 
-    public ArrayList<String> addStatExp(Integer exp, Stats stat) throws SOCInvalidDataException {
-        ArrayList<String> events = new ArrayList<>();
-        String temp;
-        Boolean up = isStatUp(stat, exp);
-        while (up) {
-//            if (isStatUp(stat, exp)) {
-            switch (stat) {
-                case STRENGTH:
-//                    while (strengthExp >= getExpToNextStatUp(strength)) {
-                        strengthExp -= getExpToNextStatUp(strength);
-                        strength++;
-                        events.add(MainText.STAT_UP_START.text() + Stats.STRENGTH.which() + MainText.STAT_UP_END.text() + strength);
-//                    }
-                    break;
-                case AGILITY:
-//                    while (agilityExp >= getExpToNextStatUp(agility)) {
-                        agilityExp -= getExpToNextStatUp(agility);
-                        agility++;
-                        events.add(MainText.STAT_UP_START.text() + Stats.AGILITY.which() + MainText.STAT_UP_END.text() + agility);
-//                    }
-                    break;
-                case INTELLIGENCE:
-//                    while (intelligenceExp >= getExpToNextStatUp(intelligence)) {
-                        intelligenceExp -= getExpToNextStatUp(intelligence);
-                        intelligence++;
-                        events.add(MainText.STAT_UP_START.text() + Stats.INTELLIGENCE.which() + MainText.STAT_UP_END.text() + intelligence);
-//                    }
-                    break;
-                case ENDURANCE:
-//                    while (enduranceExp >= getExpToNextStatUp(endurance)) {
-                        enduranceExp -= getExpToNextStatUp(endurance);
-                        endurance++;
-                        events.add(MainText.STAT_UP_START.text() + Stats.ENDURANCE.which() + MainText.STAT_UP_END.text() + endurance);
-//                    }
-                    break;
-            }
-//            temp = isLevelUp();
-//            if (temp != null) {
-//                while (temp != null) {
-//                    events.add(temp);
-//                    temp = isLevelUp();
-//                }
-//            }
-            events.add(isLevelUp());
-            up = isStatUp(stat, 0);
-//            }
-        }
-        return events;
-    }
-
-    private Boolean isStatUp(Stats stat, Integer newExp) throws SOCInvalidDataException {
-        return getCurrentStatExp(stat, newExp) >= getExpToNextStatUp(getCurrentStat(stat));
-    }
-
-    private Integer getExpToNextStatUp(Integer currentLevel) {
-        return ((int) (10 * Math.pow(2, currentLevel - 1)));
-    }
-
-    private String isLevelUp() {
-        System.out.println((strength + agility + intelligence + endurance + luck) + " >= " + (((5 * level + (20 + level * 5))) - unassignedPoints));
-        if ((strength + agility + intelligence + endurance + luck) >= (((5 * level + (20 + level * 5))) - unassignedPoints)) {
-            System.out.println("Level up! Player: " + nickname);
-            levelUp();
-            return MainText.LEVEL_UP.text() + getLevel();
-        }
-        return null;
-    }
-
     public Integer getStrength() {
         return strength;
     }
@@ -225,14 +211,26 @@ public class Player {
 
     // ============================================== END LEVEL SYSTEM ============================================== //
 
+    // ================================================ BATTLE STATS ================================================ //
+
     private Integer hitpoints;
     private Integer hitpointsMax;
     private Integer damage;
     private Integer speed;
 
+    // TODO
+
+    // ============================================== END BATTLE STATS ============================================== //
+
+    // =================================================== FINANCE ================================================== //
+
     private Integer silver;
     private Integer gold;
     private Integer diamonds;
+
+    // TODO
+
+    // ================================================= END FINANCE ================================================ //
 
     private String status;
     private Boolean isNew;
@@ -327,6 +325,7 @@ public class Player {
     public String toString() {
         return "Если память тебя не подводит, то:"
                 + "\n*" + this.nickname + "*, " + this.level + " уровень"
+                    + (getUnassignedPoints() > 0 ? " (+" + getUnassignedPoints() + ")" : "")
                 + "\n*Сила:* " + this.strength + " (" + this.strengthExp + "/" + getExpToNextStatUp(this.strength) + ")"
                 + "\n*Ловкость:* " + this.agility + " (" + this.agilityExp + "/" + getExpToNextStatUp(this.agility) + ")"
                 + "\n*Интеллект:* " + this.intelligence + " (" + this.intelligenceExp + "/" + getExpToNextStatUp(this.intelligence) + ")"
