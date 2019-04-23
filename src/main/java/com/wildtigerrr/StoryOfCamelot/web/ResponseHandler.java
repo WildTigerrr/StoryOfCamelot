@@ -238,6 +238,7 @@ public class ResponseHandler {
                     sendMessageToAdmin(e.getMessage());
                     e.printStackTrace();
                 }
+                break;
             default:
                 sendMessage(MainText.COMMAND_NOT_DEFINED.text(), message.getUserId(), true);
         }

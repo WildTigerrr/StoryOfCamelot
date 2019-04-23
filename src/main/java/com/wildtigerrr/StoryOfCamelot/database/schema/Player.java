@@ -273,6 +273,11 @@ public class Player {
     public String toString() {
         return "Если память тебя не подводит, то:"
                 + "\n*" + this.nickname + "*, " + this.level + " уровень"
+                + "\n*Сила:* " + this.strength + " (" + this.strengthExp + "/" + ((int) (10 * Math.pow(2, this.strength - 1))) + ")"
+                + "\n*Ловкость:* " + this.agility + " (" + this.agilityExp + "/" + ((int) (10 * Math.pow(2, this.agility - 1))) + ")"
+                + "\n*Интеллект:* " + this.intelligence + " (" + this.intelligenceExp + "/" + ((int) (10 * Math.pow(2, this.intelligence - 1))) + ")"
+                + "\n*Выносливость:* " + this.endurance + " (" + this.enduranceExp + "/" + ((int) (10 * Math.pow(2, this.endurance - 1))) + ")"
+                + "\n*Удача:* " + this.luck
                 + "\n\n_Что же ещё известно?_";
     }
 
