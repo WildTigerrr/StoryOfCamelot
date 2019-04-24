@@ -23,23 +23,23 @@ public class TimeDependentActions {
     }
 
     private static void checkForWaitingActivities() {
-        hasWaitingAction = true;
-        long lastCall = 0;
-        Date date;
-        DateFormat formatter = new SimpleDateFormat("HH:mm:ss.SSS");
-        formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
-        try {
-            while (hasWaitingAction) {
-                if (System.currentTimeMillis() - lastCall > 20000) {
-                    lastCall = System.currentTimeMillis();
-                    date = new Date(lastCall);
-                    new ResponseHandler().sendMessageToAdmin("Last call was on " + formatter.format(date));
-                }
-            }
-        } catch (Exception e) {
-            new ResponseHandler().sendMessageToAdmin(e.getMessage());
-            e.printStackTrace();
-        }
+//        hasWaitingAction = true;
+//        long lastCall = 0;
+//        Date date;
+//        DateFormat formatter = new SimpleDateFormat("HH:mm:ss.SSS");
+//        formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
+//        try {
+//            while (hasWaitingAction) {
+//                if (System.currentTimeMillis() - lastCall > 20000) {
+//                    lastCall = System.currentTimeMillis();
+//                    date = new Date(lastCall);
+//                    new ResponseHandler().sendMessageToAdmin("Last call was on " + formatter.format(date));
+//                }
+//            }
+//        } catch (Exception e) {
+//            new ResponseHandler().sendMessageToAdmin(e.getMessage());
+//            e.printStackTrace();
+//        }
     }
 
 }
