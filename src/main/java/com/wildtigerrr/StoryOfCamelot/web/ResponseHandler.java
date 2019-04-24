@@ -9,6 +9,7 @@ import com.wildtigerrr.StoryOfCamelot.database.schema.Player;
 import com.wildtigerrr.StoryOfCamelot.database.schema.enums.Stats;
 import com.wildtigerrr.StoryOfCamelot.database.service.implementation.*;
 import com.wildtigerrr.StoryOfCamelot.web.service.AmazonClient;
+import com.wildtigerrr.StoryOfCamelot.web.service.TimeDependentActions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.send.SendDocument;
@@ -65,6 +66,13 @@ public class ResponseHandler {
             }
         }
         if (message.getText().startsWith("/")) {
+            if (message.getText().equals("/loopStart")) {
+                new TimeDependentActions().startCheckingActions();
+                return;
+            } else if (message.getText().equals("/loopEnd")) {
+                new TimeDependentActions().stopCheckingActions();
+                return;
+            }
             performCommand(message);
             return;
         }
