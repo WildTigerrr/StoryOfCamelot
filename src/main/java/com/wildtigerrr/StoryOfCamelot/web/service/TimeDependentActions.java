@@ -54,6 +54,7 @@ public class TimeDependentActions {
             try {
                 System.out.println("Waiting...");
                 Thread.sleep(1500);
+                restore();
             } catch (InterruptedException ex) {
                 ex.printStackTrace();
             }
