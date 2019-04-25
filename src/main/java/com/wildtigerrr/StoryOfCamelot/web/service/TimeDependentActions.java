@@ -12,7 +12,6 @@ import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 
 @Service
-@DependsOn("AmazonClient")
 public class TimeDependentActions {
 
     private static Integer counter = 0;
@@ -26,7 +25,6 @@ public class TimeDependentActions {
         new FileProcessing().saveFile("BackupValues", String.valueOf(counter), "temp/");
     }
 
-    @PostConstruct
     public static void restoreValues() {
         try {
             InputStream stream = new FileProcessing().getFile("temp/BackupValues");

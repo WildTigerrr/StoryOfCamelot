@@ -30,6 +30,7 @@ public class AmazonClient {
                 .withRegion(Regions.EU_CENTRAL_1)
                 .withCredentials(new AWSStaticCredentialsProvider(credentials))
                 .build();
+        TimeDependentActions.restoreValues();
     }
 
     public InputStream getObject(String filePath) {
