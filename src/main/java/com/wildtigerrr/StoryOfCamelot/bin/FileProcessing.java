@@ -1,6 +1,5 @@
 package com.wildtigerrr.StoryOfCamelot.bin;
 
-import com.wildtigerrr.StoryOfCamelot.web.ResponseHandler;
 import com.wildtigerrr.StoryOfCamelot.web.service.AmazonClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

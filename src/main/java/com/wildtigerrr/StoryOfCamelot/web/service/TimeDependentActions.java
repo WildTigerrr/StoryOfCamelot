@@ -5,6 +5,7 @@ import com.wildtigerrr.StoryOfCamelot.web.ResponseHandler;
 import org.apache.commons.io.IOUtils;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
@@ -23,6 +24,7 @@ public class TimeDependentActions {
         new FileProcessing().saveFile("BackupValues", String.valueOf(counter), "temp/");
     }
 
+    @PostConstruct
     public static void restoreValues() {
         try {
             InputStream stream = new FileProcessing().getFile("temp/BackupValues");
