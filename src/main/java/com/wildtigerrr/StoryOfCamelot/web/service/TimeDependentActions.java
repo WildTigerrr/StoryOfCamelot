@@ -56,8 +56,7 @@ public class TimeDependentActions {
                 counter = Integer.valueOf(values);
             }
         } catch (IOException | NullPointerException e) {
-            new ResponseHandler().sendMessageToAdmin(e.getMessage());
-            e.printStackTrace();
+            System.out.println("Exception: " + e.getMessage());
         }
     }
 
