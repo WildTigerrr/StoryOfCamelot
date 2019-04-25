@@ -23,6 +23,26 @@ public class TimeDependentActions {
         new ResponseHandler().sendMessageToAdmin("Updated to: " + counter);
     }
 
+    @EventListener
+    public void handleContextRefresh(ContextRefreshedEvent event) {
+        System.out.println("Context Refreshed!");
+        try {
+            restoreValues();
+        } catch (NullPointerException e) {
+            System.out.println("Exception on refresh: " + e.getMessage());
+        }
+    }
+
+    @EventListener
+    public void handleContextStart(ContextStartedEvent event) {
+        System.out.println("Context Start!");
+        try {
+            restoreValues();
+        } catch (NullPointerException e) {
+            System.out.println("Exception on start: " + e.getMessage());
+        }
+    }
+
     public static void backupValues() {
         new FileProcessing().saveFile("BackupValues", String.valueOf(counter), "temp/");
     }
