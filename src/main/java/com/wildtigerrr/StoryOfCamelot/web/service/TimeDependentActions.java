@@ -40,9 +40,9 @@ public class TimeDependentActions {
     @PostConstruct
     public void initialization() {
         System.out.println("Context Start!");
-        ScheduledExecutorService scheduledExecutorService = Executors.newScheduledThreadPool(Runtime.getRuntime().availableProcessors());
-        task = scheduledExecutorService.scheduleAtFixedRate(
-                TimeDependentActions::restoreValues, 0, 2, TimeUnit.SECONDS);
+//        ScheduledExecutorService scheduledExecutorService = Executors.newScheduledThreadPool(Runtime.getRuntime().availableProcessors());
+//        task = scheduledExecutorService.scheduleAtFixedRate(
+//                TimeDependentActions::restoreValues, 0, 2, TimeUnit.SECONDS);
     }
 
     public static void backupValues() {
@@ -53,7 +53,7 @@ public class TimeDependentActions {
         try {
             InputStream stream = new FileProcessing().getFile("temp/BackupValues");
             if (stream != null) {
-                task.cancel(true);
+//                task.cancel(true);
                 String values = IOUtils.toString(stream, StandardCharsets.UTF_8);
                 System.out.println(values);
                 counter = Integer.valueOf(values);
