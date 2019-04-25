@@ -13,21 +13,28 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 @Service
-public class ImageProcessing {
+public class FileProcessing {
 
     private AmazonClient amazonClient;
 
-    public ImageProcessing() {
+    public FileProcessing() {
     }
 
     @SuppressWarnings("unused")
     @Autowired
-    ImageProcessing(AmazonClient amazonClient) {
+    FileProcessing(AmazonClient amazonClient) {
         this.amazonClient = amazonClient;
     }
 
-    public InputStream getImage(String path) {
+    public InputStream getFile(String path) {
         return amazonClient.getObject(path);
+    }
+
+    public void saveFile(String name, File file, String path) {
+        amazonClient.saveFile(path + name, file);
+    }
+    public void saveFile(String name, String data, String path) {
+        amazonClient.saveString(path + name, data);
     }
 
     public InputStream overlayImages(InputStream inputBack, InputStream inputFront) throws IOException {
@@ -48,7 +55,7 @@ public class ImageProcessing {
         return new ByteArrayInputStream(os.toByteArray());
     }
 
-    public File inputStreamToImage(InputStream stream, String name, String extension) throws IOException {
+    public File inputStreamToFile(InputStream stream, String name, String extension) throws IOException {
         if (stream == null) return null;
         Path path;
         path = Files.createTempFile(name, extension);

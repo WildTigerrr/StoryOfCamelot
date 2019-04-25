@@ -1,14 +1,13 @@
 package com.wildtigerrr.StoryOfCamelot.web;
 
 import com.wildtigerrr.StoryOfCamelot.bin.Command;
-import com.wildtigerrr.StoryOfCamelot.bin.ImageProcessing;
+import com.wildtigerrr.StoryOfCamelot.bin.FileProcessing;
 import com.wildtigerrr.StoryOfCamelot.bin.MainText;
 import com.wildtigerrr.StoryOfCamelot.bin.exceptions.SOCInvalidDataException;
 import com.wildtigerrr.StoryOfCamelot.database.schema.Location;
 import com.wildtigerrr.StoryOfCamelot.database.schema.Player;
 import com.wildtigerrr.StoryOfCamelot.database.schema.enums.Stats;
 import com.wildtigerrr.StoryOfCamelot.database.service.implementation.*;
-import com.wildtigerrr.StoryOfCamelot.web.service.AmazonClient;
 import com.wildtigerrr.StoryOfCamelot.web.service.TimeDependentActions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,12 +16,7 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
-import javax.imageio.ImageIO;
-import java.awt.*;
-import java.awt.image.BufferedImage;
 import java.io.*;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.ArrayList;
 
 import static com.wildtigerrr.StoryOfCamelot.web.BotConfig.WEBHOOK_ADMIN_ID;
@@ -34,7 +28,7 @@ public class ResponseHandler {
     @Autowired private PlayerServiceImpl playerService;
     @Autowired private FileLinkServiceImpl fileLinkService;
     @Autowired private LocationServiceImpl locationService;
-    @Autowired private ImageProcessing imageService;
+    @Autowired private FileProcessing imageService;
     @Autowired private TimeDependentActions timeActions;
 //    private AmazonClient amazonClient;
 //
@@ -94,8 +88,8 @@ public class ResponseHandler {
         InputStream result = null;
         try {
             result = imageService.overlayImages(
-                    imageService.getImage("images/locations/forest-test.png"),
-                    imageService.getImage("images/items/weapons/swords/sword-test.png")
+                    imageService.getFile("images/locations/forest-test.png"),
+                    imageService.getFile("images/items/weapons/swords/sword-test.png")
             );
         } catch (IOException e) {
             sendMessageToAdmin(e.getMessage());
@@ -103,7 +97,7 @@ public class ResponseHandler {
         }
         File file = null;
         try {
-            file = imageService.inputStreamToImage(result, docName, ".png");
+            file = imageService.inputStreamToFile(result, docName, ".png");
         } catch (IOException e) {
             sendMessageToAdmin(e.getMessage());
             e.printStackTrace();
