@@ -15,7 +15,7 @@ import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 
 @Service
-@DependsOn("filesProcessing")
+@DependsOn({"filesProcessing","amazonClient"})
 public class TimeDependentActions {
 
     private static Integer counter = 0;
