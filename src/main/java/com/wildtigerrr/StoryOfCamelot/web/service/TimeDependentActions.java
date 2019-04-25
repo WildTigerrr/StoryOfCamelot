@@ -8,6 +8,7 @@ import org.springframework.context.event.ContextStartedEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
@@ -40,12 +41,21 @@ public class TimeDependentActions {
         }
     }
 
-    @EventListener
-    public void onApplicationEvent(ContextStartedEvent event) { // After all Beans init
-        restoreValues();
+    private int attemptCounter = 0;
+
+    @PostConstruct
+    public void restore() {
+        if (attemptCounter > 10) return;
+        try {
+            restoreValues();
+        } catch (NullPointerException e) {
+            attemptCounter++;
+            try {
+                Thread.sleep(1500);
+            } catch (InterruptedException ex) {
+                ex.printStackTrace();
+            }
+        }
     }
-
-
-
 
 }
