@@ -13,6 +13,10 @@ import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
 
 @Service
 @DependsOn({"filesProcessing","amazonClient"})
@@ -31,10 +35,14 @@ public class TimeDependentActions {
         restoreValues();
     }
 
-    @EventListener
-    public void handleContextStart(ContextStartedEvent event) {
+    private static ScheduledFuture<?> task;
+
+    @PostConstruct
+    public void initialization() {
         System.out.println("Context Start!");
-        restoreValues();
+        ScheduledExecutorService scheduledExecutorService = Executors.newScheduledThreadPool(Runtime.getRuntime().availableProcessors());
+        task = scheduledExecutorService.scheduleAtFixedRate(
+                TimeDependentActions::restoreValues, 0, 2, TimeUnit.SECONDS);
     }
 
     public static void backupValues() {
@@ -45,6 +53,7 @@ public class TimeDependentActions {
         try {
             InputStream stream = new FileProcessing().getFile("temp/BackupValues");
             if (stream != null) {
+                task.cancel(true);
                 String values = IOUtils.toString(stream, StandardCharsets.UTF_8);
                 System.out.println(values);
                 counter = Integer.valueOf(values);
