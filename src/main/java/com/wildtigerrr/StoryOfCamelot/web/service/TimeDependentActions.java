@@ -58,7 +58,7 @@ public class TimeDependentActions {
     }
 
     public static void backupValues() {
-        new FileProcessing().saveFile("BackupValues", String.valueOf(counter), "temp/");
+        fileService.saveFile("BackupValues", String.valueOf(counter), "temp/");
     }
 
     public static void restoreValues() {
