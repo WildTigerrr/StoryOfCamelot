@@ -6,6 +6,7 @@ import org.apache.commons.io.IOUtils;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 
 @Service
@@ -24,9 +25,12 @@ public class TimeDependentActions {
 
     public static void restoreValues() {
         try {
-            String values = IOUtils.toString(new FileProcessing().getFile("temp/BackupValues"), StandardCharsets.UTF_8);
-            System.out.println(values);
-            counter = Integer.valueOf(values);
+            InputStream stream = new FileProcessing().getFile("temp/BackupValues");
+            if (stream != null) {
+                String values = IOUtils.toString(stream, StandardCharsets.UTF_8);
+                System.out.println(values);
+                counter = Integer.valueOf(values);
+            }
         } catch (IOException e) {
             new ResponseHandler().sendMessageToAdmin(e.getMessage());
             e.printStackTrace();
