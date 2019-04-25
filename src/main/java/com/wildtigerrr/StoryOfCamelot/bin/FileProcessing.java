@@ -11,7 +11,7 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-@Service
+@Service("filesProcessing")
 public class FileProcessing {
 
     private AmazonClient amazonClient;
