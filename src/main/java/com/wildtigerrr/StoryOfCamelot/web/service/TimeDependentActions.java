@@ -4,6 +4,7 @@ import com.wildtigerrr.StoryOfCamelot.bin.FileProcessing;
 import com.wildtigerrr.StoryOfCamelot.web.ResponseHandler;
 import org.apache.commons.io.IOUtils;
 import org.springframework.context.event.ContextRefreshedEvent;
+import org.springframework.context.event.ContextStartedEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
 
@@ -40,7 +41,7 @@ public class TimeDependentActions {
     }
 
     @EventListener
-    public void onApplicationEvent(ContextRefreshedEvent event) { // After all Beans init
+    public void onApplicationEvent(ContextStartedEvent event) { // After all Beans init
         restoreValues();
     }
 
