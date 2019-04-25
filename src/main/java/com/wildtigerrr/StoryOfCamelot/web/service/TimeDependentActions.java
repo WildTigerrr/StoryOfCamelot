@@ -1,5 +1,6 @@
 package com.wildtigerrr.StoryOfCamelot.web.service;
 
+import com.amazonaws.services.s3.model.AmazonS3Exception;
 import com.wildtigerrr.StoryOfCamelot.bin.FileProcessing;
 import com.wildtigerrr.StoryOfCamelot.web.ResponseHandler;
 import org.apache.commons.io.IOUtils;
@@ -41,6 +42,8 @@ public class TimeDependentActions {
     public void init() {
         System.out.println("Post construct");
         restoreValues();
+        System.out.println("Re-creation");
+        backupValues();
     }
 
     private static ScheduledFuture<?> task;
@@ -71,7 +74,7 @@ public class TimeDependentActions {
                 System.out.println(values);
                 counter = Integer.valueOf(values);
             }
-        } catch (IOException e) {
+        } catch (IOException | AmazonS3Exception e) {
             System.out.println("Exception: " + e.getMessage());
         }
     }
