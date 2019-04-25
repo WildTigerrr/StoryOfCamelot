@@ -2,7 +2,6 @@ package com.wildtigerrr.StoryOfCamelot.bin;
 
 import com.wildtigerrr.StoryOfCamelot.web.service.AmazonClient;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Service;
 
 import javax.imageio.ImageIO;
@@ -13,7 +12,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 @Service
-@DependsOn("AmazonClient")
 public class FileProcessing {
 
     private AmazonClient amazonClient;

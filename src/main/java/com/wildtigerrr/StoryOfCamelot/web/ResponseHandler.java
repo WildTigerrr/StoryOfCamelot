@@ -29,7 +29,6 @@ public class ResponseHandler {
     @Autowired private FileLinkServiceImpl fileLinkService;
     @Autowired private LocationServiceImpl locationService;
     @Autowired private FileProcessing imageService;
-    @Autowired private TimeDependentActions timeActions;
 //    private AmazonClient amazonClient;
 //
 //    public ResponseHandler() {}
@@ -62,7 +61,7 @@ public class ResponseHandler {
         }
         if (message.getText().startsWith("/")) {
             if (message.getText().equals("/count")) {
-                timeActions.addCount();
+                TimeDependentActions.addCount();
                 return;
             }
             performCommand(message);

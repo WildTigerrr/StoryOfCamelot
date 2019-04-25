@@ -3,6 +3,7 @@ package com.wildtigerrr.StoryOfCamelot.web.service;
 import com.wildtigerrr.StoryOfCamelot.bin.FileProcessing;
 import com.wildtigerrr.StoryOfCamelot.web.ResponseHandler;
 import org.apache.commons.io.IOUtils;
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
@@ -11,11 +12,12 @@ import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 
 @Service
+@DependsOn("AmazonClient")
 public class TimeDependentActions {
 
     private static Integer counter = 0;
 
-    public void addCount() {
+    public static void addCount() {
         counter++;
         new ResponseHandler().sendMessageToAdmin("Updated to: " + counter);
     }
