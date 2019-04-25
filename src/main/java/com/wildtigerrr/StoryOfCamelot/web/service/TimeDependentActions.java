@@ -6,19 +6,12 @@ import com.wildtigerrr.StoryOfCamelot.web.ResponseHandler;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.DependsOn;
-import org.springframework.context.event.ContextRefreshedEvent;
-import org.springframework.context.event.ContextStartedEvent;
-import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ScheduledFuture;
-import java.util.concurrent.TimeUnit;
 
 @Service
 @DependsOn({"filesProcessing","amazonClient"})
@@ -42,19 +35,8 @@ public class TimeDependentActions {
     public void init() {
         System.out.println("Post construct");
         restoreValues();
-        System.out.println("Re-creation");
-        backupValues();
-    }
-
-    private static ScheduledFuture<?> task;
-
-    @PostConstruct
-    public void initialization() {
-        System.out.println("Context Start!");
-        restoreValues();
-//        ScheduledExecutorService scheduledExecutorService = Executors.newScheduledThreadPool(Runtime.getRuntime().availableProcessors());
-//        task = scheduledExecutorService.scheduleAtFixedRate(
-//                TimeDependentActions::restoreValues, 0, 2, TimeUnit.SECONDS);
+//        System.out.println("Re-creation");
+//        backupValues();
     }
 
     public static void backupValues() {
@@ -69,7 +51,6 @@ public class TimeDependentActions {
         try {
             InputStream stream = fileService.getFile("temp/BackupValues");
             if (stream != null) {
-//                task.cancel(true);
                 String values = IOUtils.toString(stream, StandardCharsets.UTF_8);
                 System.out.println(values);
                 counter = Integer.valueOf(values);
