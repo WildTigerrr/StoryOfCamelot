@@ -3,6 +3,7 @@ package com.wildtigerrr.StoryOfCamelot.web.service;
 import com.wildtigerrr.StoryOfCamelot.bin.FileProcessing;
 import com.wildtigerrr.StoryOfCamelot.web.ResponseHandler;
 import org.apache.commons.io.IOUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.context.event.ContextStartedEvent;
@@ -22,6 +23,13 @@ import java.util.concurrent.TimeUnit;
 @DependsOn({"filesProcessing","amazonClient"})
 public class TimeDependentActions {
 
+    private static FileProcessing fileService;
+    @Autowired
+    private TimeDependentActions(FileProcessing fileService) {
+        System.out.println("Autowiring FileService");
+        TimeDependentActions.fileService = fileService;
+    }
+
     private static Integer counter = 0;
 
     public static void addCount() {
@@ -40,6 +48,7 @@ public class TimeDependentActions {
     @PostConstruct
     public void initialization() {
         System.out.println("Context Start!");
+        restoreValues();
 //        ScheduledExecutorService scheduledExecutorService = Executors.newScheduledThreadPool(Runtime.getRuntime().availableProcessors());
 //        task = scheduledExecutorService.scheduleAtFixedRate(
 //                TimeDependentActions::restoreValues, 0, 2, TimeUnit.SECONDS);
@@ -50,8 +59,12 @@ public class TimeDependentActions {
     }
 
     public static void restoreValues() {
+        if (fileService == null) {
+            System.out.println("FileService null");
+            return;
+        }
         try {
-            InputStream stream = new FileProcessing().getFile("temp/BackupValues");
+            InputStream stream = fileService.getFile("temp/BackupValues");
             if (stream != null) {
 //                task.cancel(true);
                 String values = IOUtils.toString(stream, StandardCharsets.UTF_8);
