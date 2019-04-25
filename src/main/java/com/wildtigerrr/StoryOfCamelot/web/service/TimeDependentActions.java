@@ -35,30 +35,30 @@ public class TimeDependentActions {
                 System.out.println(values);
                 counter = Integer.valueOf(values);
             }
-        } catch (IOException e) {
+        } catch (IOException | NullPointerException e) {
             new ResponseHandler().sendMessageToAdmin(e.getMessage());
             e.printStackTrace();
         }
     }
 
-    private int attemptCounter = 0;
-
-    @PostConstruct
-    public void restore() {
-        if (attemptCounter > 10) return;
-        try {
-            restoreValues();
-            System.out.println("Success");
-        } catch (NullPointerException e) {
-            attemptCounter++;
-            try {
-                System.out.println("Waiting...");
-                Thread.sleep(1500);
-                restore();
-            } catch (InterruptedException ex) {
-                ex.printStackTrace();
-            }
-        }
-    }
+//    private int attemptCounter = 0;
+//
+//    @PostConstruct
+//    public void restore() {
+//        if (attemptCounter > 10) return;
+//        try {
+//            restoreValues();
+//            System.out.println("Success");
+//        } catch (NullPointerException e) {
+//            attemptCounter++;
+//            try {
+//                System.out.println("Waiting...");
+//                Thread.sleep(1500);
+//                restore();
+//            } catch (InterruptedException ex) {
+//                ex.printStackTrace();
+//            }
+//        }
+//    }
 
 }
