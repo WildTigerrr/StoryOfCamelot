@@ -16,7 +16,7 @@ import javax.annotation.PostConstruct;
 import java.io.File;
 import java.io.InputStream;
 
-@Service
+@Service("amazonClient")
 public class AmazonClient {
 
     private String bucketName = "storyofcameloteu";

@@ -3,6 +3,7 @@ package com.wildtigerrr.StoryOfCamelot.web.service;
 import com.wildtigerrr.StoryOfCamelot.bin.FileProcessing;
 import com.wildtigerrr.StoryOfCamelot.web.ResponseHandler;
 import org.apache.commons.io.IOUtils;
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.context.event.ContextStartedEvent;
 import org.springframework.context.event.EventListener;
@@ -14,6 +15,7 @@ import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 
 @Service
+@DependsOn("amazonClient")
 public class TimeDependentActions {
 
     private static Integer counter = 0;
@@ -23,9 +25,9 @@ public class TimeDependentActions {
         new ResponseHandler().sendMessageToAdmin("Updated to: " + counter);
     }
 
-    @EventListener
-    public void handleContextRefresh(ContextRefreshedEvent event) {
-        System.out.println("Context Refreshed!");
+    @PostConstruct
+    public void init() {
+        System.out.println("Post construct");
         restoreValues();
     }
 
