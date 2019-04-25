@@ -48,9 +48,11 @@ public class TimeDependentActions {
         if (attemptCounter > 10) return;
         try {
             restoreValues();
+            System.out.println("Success");
         } catch (NullPointerException e) {
             attemptCounter++;
             try {
+                System.out.println("Waiting...");
                 Thread.sleep(1500);
             } catch (InterruptedException ex) {
                 ex.printStackTrace();
