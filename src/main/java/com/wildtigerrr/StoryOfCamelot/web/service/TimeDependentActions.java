@@ -26,21 +26,13 @@ public class TimeDependentActions {
     @EventListener
     public void handleContextRefresh(ContextRefreshedEvent event) {
         System.out.println("Context Refreshed!");
-        try {
-            restoreValues();
-        } catch (NullPointerException e) {
-            System.out.println("Exception on refresh: " + e.getMessage());
-        }
+        restoreValues();
     }
 
     @EventListener
     public void handleContextStart(ContextStartedEvent event) {
         System.out.println("Context Start!");
-        try {
-            restoreValues();
-        } catch (NullPointerException e) {
-            System.out.println("Exception on start: " + e.getMessage());
-        }
+        restoreValues();
     }
 
     public static void backupValues() {
@@ -55,7 +47,7 @@ public class TimeDependentActions {
                 System.out.println(values);
                 counter = Integer.valueOf(values);
             }
-        } catch (IOException | NullPointerException e) {
+        } catch (IOException e) {
             System.out.println("Exception: " + e.getMessage());
         }
     }
