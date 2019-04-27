@@ -55,12 +55,14 @@ public class Player {
         level = 1;
         unassignedPoints = 25;
         strength = 0;
+        health = 0;
         agility = 0;
         intelligence = 0;
         endurance = 0;
         luck = 0;
 
         strengthExp = 0;
+        healthExp = 0;
         agilityExp = 0;
         intelligenceExp = 0;
         enduranceExp = 0;
