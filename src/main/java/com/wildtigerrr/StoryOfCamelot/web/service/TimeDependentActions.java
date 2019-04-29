@@ -4,8 +4,6 @@ import com.wildtigerrr.StoryOfCamelot.bin.FileProcessing;
 import com.wildtigerrr.StoryOfCamelot.bin.enums.ActionType;
 import com.wildtigerrr.StoryOfCamelot.database.DatabaseInteraction;
 import com.wildtigerrr.StoryOfCamelot.database.schema.Player;
-import com.wildtigerrr.StoryOfCamelot.database.service.implementation.LocationServiceImpl;
-import com.wildtigerrr.StoryOfCamelot.database.service.implementation.PlayerServiceImpl;
 import com.wildtigerrr.StoryOfCamelot.web.ResponseHandler;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,7 +52,7 @@ public class TimeDependentActions {
     private TimeDependentActions(FileProcessing fileService) {
         TimeDependentActions.fileService = fileService;
     }
-    @Autowired
+    @Autowired(required=false)
     private TimeDependentActions(DatabaseInteraction databaseInteraction) {
         TimeDependentActions.databaseInteraction = databaseInteraction;
     }
