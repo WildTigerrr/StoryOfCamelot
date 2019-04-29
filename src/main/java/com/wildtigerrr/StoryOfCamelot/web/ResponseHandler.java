@@ -172,12 +172,16 @@ public class ResponseHandler {
                 switch (commandParts[1]) {
                     case "init":
                         TimeDependentActions.initList();
+                        break;
                     case "add":
                         TimeDependentActions.addElement(commandParts[2]);
+                        break;
                     case "remove":
                         TimeDependentActions.removeFirst();
+                        break;
                     case "get":
                         TimeDependentActions.getAll();
+                        break;
                 }
                 break;
             default:
