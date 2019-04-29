@@ -49,11 +49,8 @@ public class TimeDependentActions {
     private static DatabaseInteraction databaseInteraction;
 
     @Autowired
-    private TimeDependentActions(FileProcessing fileService) {
+    private TimeDependentActions(FileProcessing fileService, DatabaseInteraction databaseInteraction) {
         TimeDependentActions.fileService = fileService;
-    }
-    @Autowired(required=false)
-    private TimeDependentActions(DatabaseInteraction databaseInteraction) {
         TimeDependentActions.databaseInteraction = databaseInteraction;
     }
 
