@@ -1,6 +1,7 @@
 package com.wildtigerrr.StoryOfCamelot.database.schema;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name = "location")
@@ -15,6 +16,11 @@ public class Location {
     @ManyToOne(optional = true)
     @JoinColumn(name = "filelink_id")
     private FileLink imageLink;
+
+    @OneToMany(fetch=FetchType.LAZY, cascade=CascadeType.ALL, mappedBy="startLocation")
+    private List<LocationNear> locationsAsStart;
+    @OneToMany(fetch=FetchType.LAZY, cascade=CascadeType.ALL, mappedBy="finishLocation")
+    private List<LocationNear> locationsAsFinish;
 
     protected Location() {
     }
@@ -43,6 +49,14 @@ public class Location {
         this.name = name;
     }
 
+    public Boolean getHasStores() {
+        return hasStores;
+    }
+
+    public void setHasStores(Boolean hasStores) {
+        this.hasStores = hasStores;
+    }
+
     public FileLink getImageLink() {
         return imageLink;
     }
@@ -51,12 +65,20 @@ public class Location {
         this.imageLink = imageLink;
     }
 
-    public Boolean getHasStores() {
-        return hasStores;
+    public List<LocationNear> getLocationsAsStart() {
+        return locationsAsStart;
     }
 
-    public void setHasStores(Boolean hasStores) {
-        this.hasStores = hasStores;
+    public void setLocationsAsStart(List<LocationNear> locationsAsStart) {
+        this.locationsAsStart = locationsAsStart;
+    }
+
+    public List<LocationNear> getLocationsAsFinish() {
+        return locationsAsFinish;
+    }
+
+    public void setLocationsAsFinish(List<LocationNear> locationsAsFinish) {
+        this.locationsAsFinish = locationsAsFinish;
     }
 
     @Override

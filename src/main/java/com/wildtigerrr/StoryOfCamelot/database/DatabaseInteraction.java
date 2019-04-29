@@ -29,6 +29,9 @@ public class DatabaseInteraction {
     private LocationServiceImpl locationService;
 
     @Autowired
+    private LocationNearServiceImpl locationNearService;
+
+    @Autowired
     private ItemServiceImpl itemService;
 
     @Autowired
@@ -56,12 +59,10 @@ public class DatabaseInteraction {
         fileLinkService.create(initialFileLinks);
     }
 
-    private HashMap<String, Location> insertLocations(HashMap<String, FileLink> filesMap) {
+    private HashMap<String, Location> insertLocationsTemp(HashMap<String, FileLink> filesMap) {
         ArrayList<Location> initialLocations = new ArrayList<>(
                 Arrays.asList(
-                        new Location("Test Forest", filesMap.get("forest-test"))
-                        , new Location("Test Far Forest", filesMap.get("forest-test"))
-                        , new Location("The Merchants Square", filesMap.get("merchants-square"))
+
                 )
         );
         return locationService.create(initialLocations);
@@ -77,7 +78,7 @@ public class DatabaseInteraction {
         itemService.create(initialItems);
     }
 
-    private HashMap<String, Mob> insertMobs(HashMap<String, FileLink> filesMap, HashMap<String, Location> loctions) {
+    private HashMap<String, Mob> insertMobs(HashMap<String, FileLink> filesMap, HashMap<String, Location> locations) {
         HashMap<String, Mob> initialMobsMap = getMobs(filesMap);
         HashMap<String, ArrayList<String>> locationsMapping = getPossibleLocationsMapping();
         for (String locationName : locationsMapping.keySet()) {
@@ -87,13 +88,44 @@ public class DatabaseInteraction {
                         initialMobsMap.get(mobName).addPossibleLocation(
                                 new PossibleLocation(
                                         initialMobsMap.get(mobName),
-                                        loctions.get(locationName)
+                                        locations.get(locationName)
                                 )
                         )
                 );
             }
         }
         return mobService.create(new ArrayList<>(initialMobsMap.values()));
+    }
+
+    private HashMap<String, Location> insertLocations(HashMap<String, FileLink> filesMap) {
+        HashMap<String, Integer> initialDistances = getLocationDistances();
+        HashMap<String, Location> initialLocations = getLocations(filesMap);
+
+        String[] keyParts;
+        ArrayList<LocationNear> nearLocations = new ArrayList<>();
+        for (String key : initialDistances.keySet()) {
+            keyParts = key.split("\\*", 2);
+            nearLocations.add(new LocationNear(initialLocations.get(keyParts[0]), initialLocations.get(keyParts[1]), initialDistances.get(key)));
+        }
+        locationNearService.create(nearLocations);
+        return locationService.getAllAsMap();
+    }
+
+    private HashMap<String, Location> getLocations(HashMap<String, FileLink> filesMap) {
+        return new HashMap<String, Location>() {{
+            put("Test Forest", new Location("Test Forest", filesMap.get("forest-test")));
+            put("Test Far Forest", new Location("Test Far Forest", filesMap.get("forest-test")));
+            put("The Merchants Square", new Location("The Merchants Square", filesMap.get("merchants-square")));
+        }};
+    }
+
+    private HashMap<String, Integer> getLocationDistances() {
+        return new HashMap<String, Integer>() {{
+            put("The Merchants Square*Test Forest", 10);
+            put("Test Forest*The Merchants Square", 10);
+            put("Test Forest*Test Far Forest", 25);
+            put("Test Far Forest*Test Forest", 25);
+        }};
     }
 
     private HashMap<String, Mob> getMobs(HashMap<String, FileLink> filesMap) {

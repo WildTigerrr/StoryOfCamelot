@@ -14,4 +14,5 @@ public interface LocationService {
     Location findByName(String locationName);
     Location update(Location location);
     List<Location> getAll();
+    HashMap<String, Location> getAllAsMap();
 }

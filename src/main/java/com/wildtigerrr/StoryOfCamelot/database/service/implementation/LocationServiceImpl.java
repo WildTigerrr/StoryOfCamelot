@@ -67,4 +67,11 @@ public class LocationServiceImpl implements LocationService {
     public List<Location> getAll() {
         return (List<Location>) locationDao.findAll();
     }
+
+    @Override
+    public HashMap<String, Location> getAllAsMap() {
+        HashMap<String, Location> locationsMap = new HashMap<>();
+        for (Location location : getAll()) locationsMap.put(location.getName(), location);
+        return locationsMap;
+    }
 }
