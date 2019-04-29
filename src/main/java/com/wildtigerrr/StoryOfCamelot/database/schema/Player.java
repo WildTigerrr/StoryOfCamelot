@@ -255,6 +255,26 @@ public class Player {
 
     // ================================================= END FINANCE ================================================ //
 
+    // ================================================== MOVEMENT ================================================== //
+
+    @ManyToOne
+    @JoinColumn(name = "location_id")
+    private Location location;
+
+    public Location getLocation() {
+        return location;
+    }
+
+    public void setLocation(Location location) {
+        this.location = location;
+    }
+
+    public void moveTo(Location targetLocation) {
+        setLocation(targetLocation);
+    }
+
+    // ================================================ END MOVEMENT ================================================ //
+
     private String status;
     private Boolean isNew;
 

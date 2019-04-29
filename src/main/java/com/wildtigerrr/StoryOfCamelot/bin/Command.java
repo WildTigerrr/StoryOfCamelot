@@ -4,5 +4,6 @@ public enum Command {
     ME,
     NICKNAME,
     ADD,
-    ACTION;
+    ACTION,
+    MOVE;
 }

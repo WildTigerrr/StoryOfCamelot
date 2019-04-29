@@ -184,6 +184,10 @@ public class ResponseHandler {
                         break;
                 }
                 break;
+            case MOVE:
+                if (commandParts.length <= 1) {
+                    sendMessage(locationService.getAll().toString(), message.getUserId());
+                }
             default:
                 sendMessage(MainText.COMMAND_NOT_DEFINED.text(), message.getUserId(), true);
         }

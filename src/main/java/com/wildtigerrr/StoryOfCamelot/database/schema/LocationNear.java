@@ -55,4 +55,12 @@ public class LocationNear {
         this.distance = distance;
     }
 
+    @Override
+    public String toString() {
+        return "LocationNear{" +
+                "id=" + id +
+                ", finishLocation=" + finishLocation +
+                ", distance=" + distance +
+                '}';
+    }
 }
