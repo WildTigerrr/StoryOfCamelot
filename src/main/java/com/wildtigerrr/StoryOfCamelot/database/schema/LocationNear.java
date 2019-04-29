@@ -2,6 +2,8 @@ package com.wildtigerrr.StoryOfCamelot.database.schema;
 
 import javax.persistence.*;
 
+@Entity
+@Table(name = "location_near")
 public class LocationNear {
 
     @Id
