@@ -4,11 +4,13 @@ import com.wildtigerrr.StoryOfCamelot.database.dataaccessobject.LocationNearDao;
 import com.wildtigerrr.StoryOfCamelot.database.schema.LocationNear;
 import com.wildtigerrr.StoryOfCamelot.database.service.template.LocationNearService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+@Service
 public class LocationNearServiceImpl implements LocationNearService {
 
     @Autowired
