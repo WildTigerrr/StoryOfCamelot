@@ -188,6 +188,7 @@ public class ResponseHandler {
                 if (commandParts.length <= 1) {
                     sendMessage(locationService.getAll().toString(), message.getUserId());
                 }
+                break;
             default:
                 sendMessage(MainText.COMMAND_NOT_DEFINED.text(), message.getUserId(), true);
         }
