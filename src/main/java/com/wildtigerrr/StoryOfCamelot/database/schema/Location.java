@@ -89,6 +89,6 @@ public class Location {
                 ", nearLocations=" + locationsAsStart.toString() +
                 ", imageLink=" + imageLink.toString() +
                 ", hasStores=" + hasStores +
-                '}';
+                "}\n";
     }
 }
