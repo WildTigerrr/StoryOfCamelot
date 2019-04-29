@@ -86,13 +86,16 @@ public class TimeDependentActions {
     }
 
     private static String listToString() {
+        System.out.println(actions);
         if (actions == null || actions.isEmpty()) {
+            System.out.println("Empty");
             return "List is empty";
         }
         StringBuilder data = new StringBuilder();
         for (String action : actions) {
             data.append(";").append(action);
         }
+        System.out.println(data);
         data.deleteCharAt(0);
         return data.toString();
     }
