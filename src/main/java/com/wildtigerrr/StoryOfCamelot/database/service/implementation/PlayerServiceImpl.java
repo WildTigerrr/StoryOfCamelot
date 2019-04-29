@@ -1,6 +1,6 @@
 package com.wildtigerrr.StoryOfCamelot.database.service.implementation;
 
-import com.wildtigerrr.StoryOfCamelot.bin.MainText;
+import com.wildtigerrr.StoryOfCamelot.bin.enums.MainText;
 import com.wildtigerrr.StoryOfCamelot.database.dataaccessobject.PlayerDao;
 import com.wildtigerrr.StoryOfCamelot.database.schema.Player;
 import com.wildtigerrr.StoryOfCamelot.database.service.template.PlayerService;
@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class PlayerServiceImpl implements PlayerService {
@@ -34,6 +35,15 @@ public class PlayerServiceImpl implements PlayerService {
     @Override
     public void delete(int id) {
         playerDao.findById(id).ifPresent(player -> playerDao.delete(player));
+    }
+
+    @Override
+    public Player findById(int id) {
+        Optional obj = playerDao.findById(id);
+        if (obj.isPresent()) {
+            return (Player) obj.get();
+        }
+        return null;
     }
 
     @Override

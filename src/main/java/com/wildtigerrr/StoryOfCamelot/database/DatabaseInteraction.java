@@ -37,6 +37,18 @@ public class DatabaseInteraction {
     @Autowired
     private MobServiceImpl mobService;
 
+    public Player getPlayerById(Integer id) {
+        return playerService.findById(id);
+    }
+
+    public void updatePlayer(Player player) {
+        playerService.update(player);
+    }
+
+    public Location getLocationByName(String locationName) {
+        return locationService.findByName(locationName);
+    }
+
     private void insertInitialData() {
         insertFileLinks();
         List<FileLink> fileLinks = fileLinkService.getAll();
@@ -45,7 +57,6 @@ public class DatabaseInteraction {
         HashMap<String, Location> locations = insertLocations(filesMap);
         insertMobs(filesMap, locations);
         insertItems(filesMap);
-
     }
 
     private void insertFileLinks() {
@@ -57,15 +68,6 @@ public class DatabaseInteraction {
                 )
         );
         fileLinkService.create(initialFileLinks);
-    }
-
-    private HashMap<String, Location> insertLocationsTemp(HashMap<String, FileLink> filesMap) {
-        ArrayList<Location> initialLocations = new ArrayList<>(
-                Arrays.asList(
-
-                )
-        );
-        return locationService.create(initialLocations);
     }
 
     private void insertItems(HashMap<String, FileLink> filesMap) {

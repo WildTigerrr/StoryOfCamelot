@@ -9,6 +9,7 @@ public interface PlayerService {
     Player create(Player player);
     void create(ArrayList<Player> players);
     void delete(int id);
+    Player findById(int id);
     Player findByExternalId(String externalId);
     Player findByNickname(String nickname);
     Player update(Player player);

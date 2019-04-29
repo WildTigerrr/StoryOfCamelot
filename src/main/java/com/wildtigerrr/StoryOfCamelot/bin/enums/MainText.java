@@ -1,4 +1,4 @@
-package com.wildtigerrr.StoryOfCamelot.bin;
+package com.wildtigerrr.StoryOfCamelot.bin.enums;
 
 public enum MainText {
     HELLO (

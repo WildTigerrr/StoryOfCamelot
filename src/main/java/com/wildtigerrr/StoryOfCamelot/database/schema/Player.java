@@ -1,6 +1,6 @@
 package com.wildtigerrr.StoryOfCamelot.database.schema;
 
-import com.wildtigerrr.StoryOfCamelot.bin.MainText;
+import com.wildtigerrr.StoryOfCamelot.bin.enums.MainText;
 import com.wildtigerrr.StoryOfCamelot.bin.exceptions.SOCInvalidDataException;
 import com.wildtigerrr.StoryOfCamelot.database.schema.enums.Stats;
 

@@ -1,8 +1,8 @@
 package com.wildtigerrr.StoryOfCamelot.web;
 
-import com.wildtigerrr.StoryOfCamelot.bin.Command;
+import com.wildtigerrr.StoryOfCamelot.bin.enums.Command;
 import com.wildtigerrr.StoryOfCamelot.bin.FileProcessing;
-import com.wildtigerrr.StoryOfCamelot.bin.MainText;
+import com.wildtigerrr.StoryOfCamelot.bin.enums.MainText;
 import com.wildtigerrr.StoryOfCamelot.bin.exceptions.SOCInvalidDataException;
 import com.wildtigerrr.StoryOfCamelot.database.schema.Location;
 import com.wildtigerrr.StoryOfCamelot.database.schema.Player;
@@ -18,6 +18,8 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 
 import static com.wildtigerrr.StoryOfCamelot.web.BotConfig.WEBHOOK_ADMIN_ID;
 
@@ -40,9 +42,9 @@ public class ResponseHandler {
 //    }
 
     void handleMessage(UpdateWrapper message) {
+        message.setPlayer(getPlayer(message.getUserId()));
         System.out.println("Working with message: " + message);
         logSender(message);
-        message.setPlayer(getPlayer(message.getUserId()));
         if (message.getUserId().equals(WEBHOOK_ADMIN_ID)) {
             if (message.getText().equals("database test")) {
                 // Some admin actions
@@ -187,6 +189,11 @@ public class ResponseHandler {
             case MOVE:
                 if (commandParts.length <= 1) {
                     sendMessage(locationService.getAll().toString(), message.getUserId());
+                } else {
+                    Calendar calendar = Calendar.getInstance();
+                    calendar.add(Calendar.SECOND, 25);
+                    TimeDependentActions.scheduleMove(message.getPlayer().getId(), calendar.getTimeInMillis(), commandParts[1]);
+                    sendMessage("Вы двигаетесь к месту назначения", message.getUserId());
                 }
                 break;
             default:
@@ -212,11 +219,11 @@ public class ResponseHandler {
 
     private Boolean alreadyRedirected;
 
-    private void sendMessage(String text, String userId) {
+    public void sendMessage(String text, String userId) {
         sendMessage(text, userId, false);
     }
 
-    private void sendMessage(String text, String userId, Boolean useMarkdown) {
+    public void sendMessage(String text, String userId, Boolean useMarkdown) {
         if (alreadyRedirected == null || !alreadyRedirected) alreadyRedirected = true;
         else return;
 
