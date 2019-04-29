@@ -55,4 +55,15 @@ public class UpdateWrapper {
     Player getPlayer() {
         return player;
     }
+
+    @Override
+    public String toString() {
+        return "UpdateWrapper{" +
+                "message='" + message + '\'' +
+                ", userId='" + userId + '\'' +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", username='" + username + '\'' +
+                '}';
+    }
 }
