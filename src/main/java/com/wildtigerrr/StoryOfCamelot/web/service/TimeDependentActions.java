@@ -42,7 +42,7 @@ public class TimeDependentActions {
                 playerId,
                 target
         ));
-        check();
+        startCheck();
     }
 
     private static FileProcessing fileService;
