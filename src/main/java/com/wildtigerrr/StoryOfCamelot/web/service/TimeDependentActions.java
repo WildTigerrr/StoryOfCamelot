@@ -19,7 +19,7 @@ import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
 @Service
-@DependsOn({"filesProcessing","amazonClient"})
+@DependsOn({"filesProcessing", "amazonClient"})
 public class TimeDependentActions {
 
     private static Integer counter = 0;
@@ -32,6 +32,7 @@ public class TimeDependentActions {
     }
 
     private static FileProcessing fileService;
+
     @Autowired
     private TimeDependentActions(FileProcessing fileService) {
         TimeDependentActions.fileService = fileService;
@@ -39,15 +40,15 @@ public class TimeDependentActions {
 
     @PostConstruct
     public void restoreValuesFromBackup() {
-        System.out.println("TimeDependentActions > restoreValuesFromBackup: Attempt to restore values from backup" );
+        System.out.println("TimeDependentActions > restoreValuesFromBackup: Attempt to restore values from backup");
         restoreValues();
-        System.out.println("TimeDependentActions > restoreValuesFromBackup: Attempt finished" );
+        System.out.println("TimeDependentActions > restoreValuesFromBackup: Attempt finished");
     }
 
     public static void backupValues() {
-        System.out.println("TimeDependentActions > backupValues: Creating backup" );
+        System.out.println("TimeDependentActions > backupValues: Creating backup");
         fileService.saveFile("temp/", "BackupValues", listToString()); //String.valueOf(counter)
-        System.out.println("TimeDependentActions > backupValues: Backup created" );
+        System.out.println("TimeDependentActions > backupValues: Backup created");
     }
 
     private static void restoreValues() {
@@ -85,12 +86,14 @@ public class TimeDependentActions {
     }
 
     private static String listToString() {
-        StringBuilder data = new StringBuilder();
-        if (actions != null && !actions.isEmpty()) {
-            for (String action : actions) {
-                data.append(";").append(action);
-            }
+        if (actions == null || actions.isEmpty()) {
+            return "List is empty";
         }
+        StringBuilder data = new StringBuilder();
+        for (String action : actions) {
+            data.append(";").append(action);
+        }
+        data.deleteCharAt(0);
         return data.toString();
     }
 
@@ -113,9 +116,10 @@ public class TimeDependentActions {
     }
 
     private static void schedule() {
-         if (scheduledExecutorService == null) scheduledExecutorService = Executors.newScheduledThreadPool(Runtime.getRuntime().availableProcessors());
-         task = scheduledExecutorService.scheduleAtFixedRate(
-                 TimeDependentActions::check, 0, 5, TimeUnit.SECONDS);
+        if (scheduledExecutorService == null)
+            scheduledExecutorService = Executors.newScheduledThreadPool(Runtime.getRuntime().availableProcessors());
+        task = scheduledExecutorService.scheduleAtFixedRate(
+                TimeDependentActions::check, 0, 5, TimeUnit.SECONDS);
     }
 
 }
