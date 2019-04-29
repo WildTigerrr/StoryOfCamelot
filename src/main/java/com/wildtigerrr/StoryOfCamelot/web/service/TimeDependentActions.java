@@ -31,7 +31,7 @@ public class TimeDependentActions {
     public static void addCount() {
         counter++;
 //        actions.add(String.valueOf(counter));
-        new ResponseHandler().sendMessageToAdmin("Updated to: " + counter);
+        responseHandler.sendMessageToAdmin("Updated to: " + counter);
     }
 
     public static void scheduleMove(int playerId, Long timestamp, String target) {
@@ -47,11 +47,13 @@ public class TimeDependentActions {
 
     private static FileProcessing fileService;
     private static DatabaseInteraction databaseInteraction;
+    private static ResponseHandler responseHandler;
 
     @Autowired
-    private TimeDependentActions(FileProcessing fileService, DatabaseInteraction databaseInteraction) {
+    private TimeDependentActions(FileProcessing fileService, DatabaseInteraction databaseInteraction, ResponseHandler responseHandler) {
         TimeDependentActions.fileService = fileService;
         TimeDependentActions.databaseInteraction = databaseInteraction;
+        TimeDependentActions.responseHandler = responseHandler;
     }
 
     @PostConstruct
@@ -98,7 +100,7 @@ public class TimeDependentActions {
     }
 
     public static void getAll() {
-        new ResponseHandler().sendMessageToAdmin(listToString());
+        responseHandler.sendMessageToAdmin(listToString());
     }
 
     private static String listToString() {
@@ -148,7 +150,7 @@ public class TimeDependentActions {
                     Player player = databaseInteraction.getPlayerById(action.playerId);
                     player.setLocation(databaseInteraction.getLocationByName(action.target));
                     databaseInteraction.updatePlayer(player);
-                    new ResponseHandler().sendMessage("Вы пришли в " + action.target, player.getExternalId());
+                    responseHandler.sendMessage("Вы пришли в " + action.target, player.getExternalId());
                     iter.remove();
                     System.out.println("Item removed");
                 } else {
