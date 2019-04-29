@@ -59,7 +59,7 @@ public class LocationNear {
     public String toString() {
         return "LocationNear{" +
                 "id=" + id +
-                ", finishLocation=" + finishLocation +
+                ", finishLocation=" + finishLocation.getName() +
                 ", distance=" + distance +
                 '}';
     }
