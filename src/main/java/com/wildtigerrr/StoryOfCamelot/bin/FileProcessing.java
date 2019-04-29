@@ -26,19 +26,13 @@ public class FileProcessing {
     }
 
     public InputStream getFile(String path) {
-        System.out.println(amazonClient);
-        if (amazonClient != null) {
-            return amazonClient.getObject(path);
-        } else {
-            System.out.println("Amazon not initialized");
-            return null;
-        }
+        return amazonClient.getObject(path);
     }
 
-    public void saveFile(String name, File file, String path) {
+    public void saveFile(String path, String name, File file) {
         amazonClient.saveFile(path + name, file);
     }
-    public void saveFile(String name, String data, String path) {
+    public void saveFile(String path, String name, String data) {
         amazonClient.saveString(path + name, data);
     }
 

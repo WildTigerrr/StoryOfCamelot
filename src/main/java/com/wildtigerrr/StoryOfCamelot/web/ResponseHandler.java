@@ -166,6 +166,20 @@ public class ResponseHandler {
                     e.printStackTrace();
                 }
                 break;
+            case ACTION:
+                if (commandParts.length <= 1) return;
+                commandParts = message.getText().split(" ", 3);
+                switch (commandParts[1]) {
+                    case "init":
+                        TimeDependentActions.initList();
+                    case "add":
+                        TimeDependentActions.addElement(commandParts[2]);
+                    case "remove":
+                        TimeDependentActions.removeFirst();
+                    case "get":
+                        TimeDependentActions.getAll();
+                }
+                break;
             default:
                 sendMessage(MainText.COMMAND_NOT_DEFINED.text(), message.getUserId(), true);
         }

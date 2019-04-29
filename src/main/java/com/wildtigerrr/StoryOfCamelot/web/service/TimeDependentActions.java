@@ -1,6 +1,5 @@
 package com.wildtigerrr.StoryOfCamelot.web.service;
 
-import com.amazonaws.services.s3.model.AmazonS3Exception;
 import com.wildtigerrr.StoryOfCamelot.bin.FileProcessing;
 import com.wildtigerrr.StoryOfCamelot.web.ResponseHandler;
 import org.apache.commons.io.IOUtils;
@@ -12,72 +11,111 @@ import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
 
 @Service
 @DependsOn({"filesProcessing","amazonClient"})
 public class TimeDependentActions {
 
-    private static FileProcessing fileService;
-    @Autowired
-    private TimeDependentActions(FileProcessing fileService) {
-        System.out.println("Autowiring FileService");
-        TimeDependentActions.fileService = fileService;
-    }
-
     private static Integer counter = 0;
+    private static ArrayList<String> actions = new ArrayList<>();
 
     public static void addCount() {
         counter++;
+//        actions.add(String.valueOf(counter));
         new ResponseHandler().sendMessageToAdmin("Updated to: " + counter);
     }
 
+    private static FileProcessing fileService;
+    @Autowired
+    private TimeDependentActions(FileProcessing fileService) {
+        TimeDependentActions.fileService = fileService;
+    }
+
     @PostConstruct
-    public void init() {
-        System.out.println("Post construct");
+    public void restoreValuesFromBackup() {
+        System.out.println("TimeDependentActions > restoreValuesFromBackup: Attempt to restore values from backup" );
         restoreValues();
-//        System.out.println("Re-creation");
-//        backupValues();
+        System.out.println("TimeDependentActions > restoreValuesFromBackup: Attempt finished" );
     }
 
     public static void backupValues() {
-        fileService.saveFile("BackupValues", String.valueOf(counter), "temp/");
+        System.out.println("TimeDependentActions > backupValues: Creating backup" );
+        fileService.saveFile("temp/", "BackupValues", listToString()); //String.valueOf(counter)
+        System.out.println("TimeDependentActions > backupValues: Backup created" );
     }
 
-    public static void restoreValues() {
-        if (fileService == null) {
-            System.out.println("FileService null");
-            return;
-        }
+    private static void restoreValues() {
         try {
-            InputStream stream = fileService.getFile("temp/BackupValues");
+            InputStream stream = fileService.getFile("temp/BackupValues"); // If file not found > AmazonS3Exception
             if (stream != null) {
                 String values = IOUtils.toString(stream, StandardCharsets.UTF_8);
                 System.out.println(values);
-                counter = Integer.valueOf(values);
+                stringToList(values);
+//                counter = Integer.valueOf(values);
+                counter = 10;
             }
-        } catch (IOException | AmazonS3Exception e) {
+        } catch (IOException e) {
             System.out.println("Exception: " + e.getMessage());
         }
     }
 
-//    private int attemptCounter = 0;
-//
-//    @PostConstruct
-//    public void restore() {
-//        if (attemptCounter > 10) return;
-//        try {
-//            restoreValues();
-//            System.out.println("Success");
-//        } catch (NullPointerException e) {
-//            attemptCounter++;
-//            try {
-//                System.out.println("Waiting...");
-//                Thread.sleep(1500);
-//                restore();
-//            } catch (InterruptedException ex) {
-//                ex.printStackTrace();
-//            }
-//        }
-//    }
+    public static void initList() {
+        actions = new ArrayList<>();
+        actions.add("Test");
+    }
+
+    public static void addElement(String str) {
+        actions.add(str);
+    }
+
+    public static void removeFirst() {
+        if (actions != null && !actions.isEmpty()) {
+            actions.remove(0);
+        }
+    }
+
+    public static void getAll() {
+        new ResponseHandler().sendMessageToAdmin(listToString());
+    }
+
+    private static String listToString() {
+        StringBuilder data = new StringBuilder();
+        if (actions != null && !actions.isEmpty()) {
+            for (String action : actions) {
+                data.append(";").append(action);
+            }
+        }
+        return data.toString();
+    }
+
+    private static void stringToList(String data) {
+        actions = new ArrayList<>();
+        if (data != null) {
+            actions.addAll(Arrays.asList(data.split(";")));
+        }
+    }
+
+    private static ScheduledExecutorService scheduledExecutorService;
+    private static ScheduledFuture<?> task;
+
+    private static void cancel() {
+        task.cancel(false);
+    }
+
+    private static void check() {
+        System.out.println("Do something");
+    }
+
+    private static void schedule() {
+         if (scheduledExecutorService == null) scheduledExecutorService = Executors.newScheduledThreadPool(Runtime.getRuntime().availableProcessors());
+         task = scheduledExecutorService.scheduleAtFixedRate(
+                 TimeDependentActions::check, 0, 5, TimeUnit.SECONDS);
+    }
 
 }
