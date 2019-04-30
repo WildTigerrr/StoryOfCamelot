@@ -242,7 +242,7 @@ public class ResponseHandler {
             }
             button = new InlineKeyboardButton();
             button.setText(loc.getName());
-            button.setText("/move" + loc.getId());
+            button.setCallbackData("/move" + loc.getId());
             buttonsRow.add(button);
         }
         rowList.add(buttonsRow);
