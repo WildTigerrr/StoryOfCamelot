@@ -203,27 +203,7 @@ public class ResponseHandler {
 //                    sendMessage(locationService.getAll().toString(), message.getUserId());
                     sendAvailableLocations(message.getPlayer());
                 } else if (message.isQuery()) {
-                    Location location = locationService.findById(Integer.parseInt(commandParts[1]));
-                    if (location != null) {
-                        int distance = locationNearService.getDistance(message.getPlayer().getLocation(), location);
-                        if (distance == -1) {
-                            sendMessage("Кажется, между этими локациями нет прямого пути", message.getUserId());
-                            return;
-                        }
-                        EditMessageText messageEdit = new EditMessageText();
-                        messageEdit.setMessageId(message.getMessageId());
-                        messageEdit.setChatId(message.getUserId());
-                        messageEdit.setText("Ну, пойдем к " + location.getName());
-                        Calendar calendar = Calendar.getInstance();
-                        calendar.add(Calendar.SECOND, distance);
-                        TimeDependentActions.scheduleMove(message.getPlayer().getId(), calendar.getTimeInMillis(), commandParts[1]);
-                        try {
-                            webHook.execute(messageEdit);
-                        } catch (TelegramApiException e) {
-                            e.printStackTrace();
-                        }
-                    }
-
+                    moveToLocation(message, commandParts[1]);
                 }
                 break;
             default:
@@ -275,10 +255,39 @@ public class ResponseHandler {
         sendMessage(message);
     }
 
+    private void moveToLocation(UpdateWrapper message, String locationId) {
+        Location location = locationService.findById(Integer.parseInt(locationId));
+        if (location != null) {
+            int distance = locationNearService.getDistance(message.getPlayer().getLocation(), location);
+            if (distance == -1) {
+                sendMessage("Кажется, между этими локациями нет прямого пути", message.getUserId());
+                return;
+            }
+            EditMessageText messageEdit = new EditMessageText();
+            messageEdit.setMessageId(message.getMessageId());
+            messageEdit.setChatId(message.getUserId());
+            messageEdit.setText("Ну, пойдем к " + location.getName());
+            Calendar calendar = Calendar.getInstance();
+            calendar.add(Calendar.SECOND, distance);
+            TimeDependentActions.scheduleMove(message.getPlayer().getId(), calendar.getTimeInMillis(), locationId, String.valueOf(distance));
+            try {
+                webHook.execute(messageEdit);
+            } catch (TelegramApiException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
     public void sendLocationUpdate(ScheduledAction action) {
         Player player = playerService.findById(action.playerId);
         Location location = locationService.findById(Integer.valueOf(action.target));
         player.setLocation(location);
+        try {
+            player.addStatExp(Integer.valueOf(action.additionalValue), Stats.ENDURANCE);
+        } catch (SOCInvalidDataException e) {
+            e.printStackTrace();
+            sendMessageToAdmin(e.getMessage());
+        }
         playerService.update(player);
         if (location.getImageLink() != null) {
             InputStream stream = amazonClient.getObject(location.getImageLink().getLocation());

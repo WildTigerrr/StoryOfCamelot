@@ -35,13 +35,14 @@ public class TimeDependentActions {
         responseHandler.sendMessageToAdmin("Updated to: " + counter);
     }
 
-    public static void scheduleMove(int playerId, Long timestamp, String target) {
+    public static void scheduleMove(int playerId, Long timestamp, String target, String distance) {
         while (scheduledActionMap.containsKey(timestamp)) timestamp++;
         scheduledActionMap.put(timestamp, new ScheduledAction(
                 timestamp,
                 ActionType.MOVEMENT,
                 playerId,
-                target
+                target,
+                distance
         ));
         startCheck();
     }
