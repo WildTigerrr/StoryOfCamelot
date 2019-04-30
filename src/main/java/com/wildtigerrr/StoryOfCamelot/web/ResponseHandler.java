@@ -256,7 +256,7 @@ public class ResponseHandler {
         Integer buttonsCounter = 0;
         for (Location loc : nearLocations) {
             buttonsCounter++;
-            if (buttonsCounter > 3) {
+            if (buttonsCounter > 2) {
                 rowList.add(buttonsRow);
                 buttonsRow = new ArrayList<>();
                 buttonsCounter = 1;
