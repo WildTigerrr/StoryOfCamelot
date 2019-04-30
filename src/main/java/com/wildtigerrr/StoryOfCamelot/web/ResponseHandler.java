@@ -283,7 +283,7 @@ public class ResponseHandler {
         Location location = locationService.findById(Integer.valueOf(action.target));
         player.setLocation(location);
         try {
-            player.addStatExp(Integer.valueOf(action.additionalValue), Stats.ENDURANCE);
+            player.addStatExp(Integer.valueOf(action.additionalValue)/10, Stats.ENDURANCE);
         } catch (SOCInvalidDataException e) {
             e.printStackTrace();
             sendMessageToAdmin(e.getMessage());
