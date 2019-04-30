@@ -1,5 +1,6 @@
 package com.wildtigerrr.StoryOfCamelot.database;
 
+import com.vdurmont.emoji.EmojiParser;
 import com.wildtigerrr.StoryOfCamelot.database.schema.*;
 import com.wildtigerrr.StoryOfCamelot.database.schema.enums.ItemQuality;
 import com.wildtigerrr.StoryOfCamelot.database.schema.enums.ItemSubType;
@@ -126,7 +127,7 @@ public class DatabaseInteraction {
 
     private HashMap<String, Location> getLocations(HashMap<String, FileLink> filesMap) {
         return new HashMap<String, Location>() {{
-            put("%F0%9F%98%81 Лес", new Location("%F0%9F%98%81 Лес", filesMap.get("forest-test")));
+            put(EmojiParser.parseToUnicode("evergreen_tree") + " Лес", new Location(EmojiParser.parseToUnicode("evergreen_tree") + " Лес", filesMap.get("forest-test")));
             put("Дебри", new Location("Дебри", filesMap.get("forest-test")));
             put("Таинственная Пещера", new Location("Таинственная Пещера", null));
             put("Торговая Площадь", new Location("Торговая Площадь", filesMap.get("merchants-square")));
@@ -135,12 +136,12 @@ public class DatabaseInteraction {
 
     private HashMap<String, Integer> getLocationDistances() {
         return new HashMap<String, Integer>() {{
-            put("Торговая Площадь*%F0%9F%98%81 Лес", 10);
-            put("%F0%9F%98%81 Лес*Торговая Площадь", 10);
-            put("%F0%9F%98%81 Лес*Дебри", 30);
-            put("Дебри*%F0%9F%98%81 Лес", 30);
-            put("Таинственная Пещера*%F0%9F%98%81 Лес", 5);
-            put("%F0%9F%98%81 Лес*Таинственная Пещера", 5);
+            put("Торговая Площадь*" + EmojiParser.parseToUnicode("evergreen_tree") + " Лес", 10);
+            put(EmojiParser.parseToUnicode("evergreen_tree") + " Лес*Торговая Площадь", 10);
+            put(EmojiParser.parseToUnicode("evergreen_tree") + " Лес*Дебри", 30);
+            put("Дебри*" + EmojiParser.parseToUnicode("evergreen_tree") + " Лес", 30);
+            put("Таинственная Пещера*" + EmojiParser.parseToUnicode("evergreen_tree") + " Лес", 5);
+            put(EmojiParser.parseToUnicode("evergreen_tree") + " Лес*Таинственная Пещера", 5);
         }};
     }
 
@@ -153,7 +154,7 @@ public class DatabaseInteraction {
 
     private HashMap<String, ArrayList<String>> getPossibleLocationsMapping() {
         return new HashMap<String, ArrayList<String>>() {{
-            put("%F0%9F%98%81 Лес", new ArrayList<String>() {{
+            put(EmojiParser.parseToUnicode("evergreen_tree") + " Лес", new ArrayList<String>() {{
                 add("Flying Sword");
             }});
             put("Дебри", new ArrayList<String>() {{
