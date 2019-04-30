@@ -1,8 +1,10 @@
 package com.wildtigerrr.StoryOfCamelot.bin.enums;
 
+import com.vdurmont.emoji.EmojiParser;
+
 public enum GameSettings {
     DEFAULT_LOCATION (
-            "Торговая Площадь"
+            EmojiParser.parseToUnicode(":circus_tent:") + " Торговая Площадь"
     );
 
     private final String text;
