@@ -118,18 +118,18 @@ public class DatabaseInteraction {
 
     private HashMap<String, Location> getLocations(HashMap<String, FileLink> filesMap) {
         return new HashMap<String, Location>() {{
-            put("Test Forest", new Location("Test Forest", filesMap.get("forest-test")));
-            put("Test Far Forest", new Location("Test Far Forest", filesMap.get("forest-test")));
-            put("The Merchants Square", new Location("The Merchants Square", filesMap.get("merchants-square")));
+            put("Лес", new Location("Лес", filesMap.get("forest-test")));
+            put("Дебри", new Location("Дебри", filesMap.get("forest-test")));
+            put("Торговая Площадь", new Location("Торговая Площадь", filesMap.get("merchants-square")));
         }};
     }
 
     private HashMap<String, Integer> getLocationDistances() {
         return new HashMap<String, Integer>() {{
-            put("The Merchants Square*Test Forest", 10);
-            put("Test Forest*The Merchants Square", 10);
-            put("Test Forest*Test Far Forest", 25);
-            put("Test Far Forest*Test Forest", 25);
+            put("Торговая Площадь*Лес", 10);
+            put("Лес*Торговая Площадь", 10);
+            put("Лес*Дебри", 25);
+            put("Дебри*Лес", 25);
         }};
     }
 
@@ -142,10 +142,10 @@ public class DatabaseInteraction {
 
     private HashMap<String, ArrayList<String>> getPossibleLocationsMapping() {
         return new HashMap<String, ArrayList<String>>() {{
-            put("Test Forest", new ArrayList<String>() {{
+            put("Лес", new ArrayList<String>() {{
                 add("Flying Sword");
             }});
-            put("Test Far Forest", new ArrayList<String>() {{
+            put("Дебри", new ArrayList<String>() {{
                 add("Flying Sword");
                 add("Super Flying Sword");
             }});

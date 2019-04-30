@@ -2,7 +2,7 @@ package com.wildtigerrr.StoryOfCamelot.bin.enums;
 
 public enum GameSettings {
     DEFAULT_LOCATION (
-            "The Merchants Square"
+            "Торговая Площадь"
     );
 
     private final String text;
