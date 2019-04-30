@@ -16,6 +16,9 @@ public class WebHookHandler extends TelegramWebhookBot {
     public BotApiMethod onWebhookUpdateReceived(Update update) {
         if (update.hasMessage() && update.getMessage().hasText()) {
             responseHandler.handleMessage(new UpdateWrapper(update));
+        } else if (update.hasCallbackQuery()) {
+            System.out.println(update.getCallbackQuery().getData());
+            System.out.println(update.getCallbackQuery().getMessage().getChatId());
         }
         return null;
     }
