@@ -256,6 +256,7 @@ public class ResponseHandler {
         message.setText("Итак, куда пойдём?");
         message.setChatId(player.getExternalId());
         message.setReplyMarkup(keyboard);
+        message.enableMarkdown(true);
         sendMessage(message);
     }
 
@@ -271,6 +272,7 @@ public class ResponseHandler {
             messageEdit.setMessageId(message.getMessageId());
             messageEdit.setChatId(message.getUserId());
             messageEdit.setText("Ну, пойдем к " + location.getName());
+            messageEdit.enableMarkdown(true);
             Calendar calendar = Calendar.getInstance();
             calendar.add(Calendar.SECOND, distance);
             TimeDependentActions.scheduleMove(message.getPlayer().getId(), calendar.getTimeInMillis(), locationId, String.valueOf(distance));
