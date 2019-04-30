@@ -228,6 +228,7 @@ public class ResponseHandler {
             sendMessageToAdmin(e.getMessage());
             e.printStackTrace();
         }
+        return player;
     }
 
     private void sendAvailableLocations(Player player) {
