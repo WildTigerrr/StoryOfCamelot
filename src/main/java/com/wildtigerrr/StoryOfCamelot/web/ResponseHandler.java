@@ -1,5 +1,6 @@
 package com.wildtigerrr.StoryOfCamelot.web;
 
+import com.vdurmont.emoji.EmojiParser;
 import com.wildtigerrr.StoryOfCamelot.bin.enums.Command;
 import com.wildtigerrr.StoryOfCamelot.bin.FileProcessing;
 import com.wildtigerrr.StoryOfCamelot.bin.enums.GameSettings;
@@ -237,6 +238,7 @@ public class ResponseHandler {
         InlineKeyboardButton button;
         List<InlineKeyboardButton> buttonsRow = new ArrayList<>();
         List<List<InlineKeyboardButton>> rowList = new ArrayList<>();
+        String tree = EmojiParser.parseToUnicode(":evergreen_tree:");
         Integer buttonsCounter = 0;
         for (Location loc : nearLocations) {
             buttonsCounter++;
@@ -246,7 +248,7 @@ public class ResponseHandler {
                 buttonsCounter = 1;
             }
             button = new InlineKeyboardButton();
-            button.setText(loc.getName());
+            button.setText(tree + " " + loc.getName());
             button.setCallbackData("/move " + loc.getId());
             buttonsRow.add(button);
         }

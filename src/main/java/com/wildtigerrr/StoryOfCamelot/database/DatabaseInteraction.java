@@ -127,7 +127,7 @@ public class DatabaseInteraction {
 
     private HashMap<String, Location> getLocations(HashMap<String, FileLink> filesMap) {
         return new HashMap<String, Location>() {{
-            put(EmojiParser.parseToUnicode("evergreen_tree") + " Лес", new Location(EmojiParser.parseToUnicode("evergreen_tree") + " Лес", filesMap.get("forest-test")));
+            put("Лес", new Location("Лес", filesMap.get("forest-test")));
             put("Дебри", new Location("Дебри", filesMap.get("forest-test")));
             put("Таинственная Пещера", new Location("Таинственная Пещера", null));
             put("Торговая Площадь", new Location("Торговая Площадь", filesMap.get("merchants-square")));
@@ -136,12 +136,12 @@ public class DatabaseInteraction {
 
     private HashMap<String, Integer> getLocationDistances() {
         return new HashMap<String, Integer>() {{
-            put("Торговая Площадь*" + EmojiParser.parseToUnicode("evergreen_tree") + " Лес", 10);
-            put(EmojiParser.parseToUnicode("evergreen_tree") + " Лес*Торговая Площадь", 10);
-            put(EmojiParser.parseToUnicode("evergreen_tree") + " Лес*Дебри", 30);
-            put("Дебри*" + EmojiParser.parseToUnicode("evergreen_tree") + " Лес", 30);
-            put("Таинственная Пещера*" + EmojiParser.parseToUnicode("evergreen_tree") + " Лес", 5);
-            put(EmojiParser.parseToUnicode("evergreen_tree") + " Лес*Таинственная Пещера", 5);
+            put("Торговая Площадь*Лес", 10);
+            put("Лес*Торговая Площадь", 10);
+            put("Лес*Дебри", 30);
+            put("Дебри*Лес", 30);
+            put("Таинственная Пещера*Лес", 5);
+            put("Лес*Таинственная Пещера", 5);
         }};
     }
 
@@ -154,7 +154,7 @@ public class DatabaseInteraction {
 
     private HashMap<String, ArrayList<String>> getPossibleLocationsMapping() {
         return new HashMap<String, ArrayList<String>>() {{
-            put(EmojiParser.parseToUnicode("evergreen_tree") + " Лес", new ArrayList<String>() {{
+            put("Лес", new ArrayList<String>() {{
                 add("Flying Sword");
             }});
             put("Дебри", new ArrayList<String>() {{
