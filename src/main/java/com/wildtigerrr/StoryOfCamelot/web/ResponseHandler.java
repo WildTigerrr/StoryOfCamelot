@@ -198,7 +198,7 @@ public class ResponseHandler {
                 if (commandParts.length <= 1) {
 //                    sendMessage(locationService.getAll().toString(), message.getUserId());
                     sendAvailableLocations(message.getPlayer());
-                } else {
+                } else if (message.isQuery()) {
                     Calendar calendar = Calendar.getInstance();
                     calendar.add(Calendar.SECOND, 25);
                     TimeDependentActions.scheduleMove(message.getPlayer().getId(), calendar.getTimeInMillis(), commandParts[1]);
@@ -242,7 +242,7 @@ public class ResponseHandler {
             }
             button = new InlineKeyboardButton();
             button.setText(loc.getName());
-            button.setCallbackData("/move" + loc.getId());
+            button.setCallbackData("/move " + loc.getId());
             buttonsRow.add(button);
         }
         rowList.add(buttonsRow);

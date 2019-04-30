@@ -13,15 +13,17 @@ public class UpdateWrapper {
     private String username;
     private String language;
     private Player player;
+    private Boolean isQuery;
 
-    UpdateWrapper(Update update) {
+    UpdateWrapper(Update update, Boolean isQuery) {
         User user = update.getMessage().getFrom();
-        this.message = update.getMessage().getText().trim();
+        this.message = isQuery ? update.getCallbackQuery().getData() : update.getMessage().getText().trim();
         this.userId = user.getId().toString();
         this.firstName = user.getFirstName();
         this.lastName = user.getLastName();
         this.username = user.getUserName();
         this.language = user.getLanguageCode();
+        this.isQuery = isQuery;
     }
 
     String getText() {
@@ -46,6 +48,10 @@ public class UpdateWrapper {
 
     String getLanguage() {
         return language;
+    }
+
+    public Boolean isQuery() {
+        return isQuery;
     }
 
     void setPlayer(Player player) {
