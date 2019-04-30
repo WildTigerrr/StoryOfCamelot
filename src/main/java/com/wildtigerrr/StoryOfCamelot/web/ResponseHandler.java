@@ -17,6 +17,7 @@ import org.telegram.telegrambots.meta.api.methods.PartialBotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.send.SendDocument;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
+import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
@@ -199,10 +200,22 @@ public class ResponseHandler {
 //                    sendMessage(locationService.getAll().toString(), message.getUserId());
                     sendAvailableLocations(message.getPlayer());
                 } else if (message.isQuery()) {
-                    Calendar calendar = Calendar.getInstance();
-                    calendar.add(Calendar.SECOND, 25);
-                    TimeDependentActions.scheduleMove(message.getPlayer().getId(), calendar.getTimeInMillis(), commandParts[1]);
-                    sendMessage("Вы двигаетесь к месту назначения", message.getUserId());
+                    Location location = locationService.findById(Integer.parseInt(commandParts[1]));
+                    if (location != null) {
+                        EditMessageText messageEdit = new EditMessageText();
+                        messageEdit.setMessageId(message.getMessageId());
+                        messageEdit.setChatId(message.getUserId());
+                        messageEdit.setText("Ну, пойдем к " + location.getName());
+                        Calendar calendar = Calendar.getInstance();
+                        calendar.add(Calendar.SECOND, 25);
+                        TimeDependentActions.scheduleMove(message.getPlayer().getId(), calendar.getTimeInMillis(), commandParts[1]);
+                        try {
+                            webHook.execute(messageEdit);
+                        } catch (TelegramApiException e) {
+                            e.printStackTrace();
+                        }
+                    }
+
                 }
                 break;
             default:
