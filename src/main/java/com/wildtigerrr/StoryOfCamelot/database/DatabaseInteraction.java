@@ -63,23 +63,12 @@ public class DatabaseInteraction {
     }
 
     private void insertFileLinks() {
-        ArrayList<FileLink> initialFileLinks = new ArrayList<>(
-                Arrays.asList(
-                        new FileLink("forest-test", "images/locations/forest-test.png")
-                        , new FileLink("sword-test", "images/items/weapons/swords/sword-test.png")
-                        , new FileLink("merchants-square", "images/locations/the-merchants-square.png")
-                )
-        );
+        ArrayList<FileLink> initialFileLinks = getFileLinks();
         fileLinkService.create(initialFileLinks);
     }
 
     private void insertItems(HashMap<String, FileLink> filesMap) {
-        ArrayList<Item> initialItems = new ArrayList<>(
-                Arrays.asList(
-                        new Item(10.0, 100, 10.0, ItemSubType.SWORD, ItemQuality.COMMON, filesMap.get("sword-test"))
-                        , new Item(15.0, 150, 25.0, ItemSubType.SWORD, ItemQuality.UNCOMMON, filesMap.get("sword-test"))
-                )
-        );
+        ArrayList<Item> initialItems = getItems(filesMap);
         itemService.create(initialItems);
     }
 
@@ -114,6 +103,25 @@ public class DatabaseInteraction {
         }
         locationNearService.create(nearLocations);
         return locationService.getAllAsMap();
+    }
+
+    private ArrayList<Item> getItems(HashMap<String, FileLink> filesMap) {
+        return new ArrayList<>(
+                Arrays.asList(
+                        new Item(10.0, 100, 10.0, ItemSubType.SWORD, ItemQuality.COMMON, filesMap.get("sword-test"))
+                        , new Item(15.0, 150, 25.0, ItemSubType.SWORD, ItemQuality.UNCOMMON, filesMap.get("sword-test"))
+                )
+        );
+    }
+
+    private ArrayList<FileLink> getFileLinks() {
+        return new ArrayList<>(
+                Arrays.asList(
+                        new FileLink("forest-test", "images/locations/forest-test.png")
+                        , new FileLink("sword-test", "images/items/weapons/swords/sword-test.png")
+                        , new FileLink("merchants-square", "images/locations/the-merchants-square.png")
+                )
+        );
     }
 
     private HashMap<String, Location> getLocations(HashMap<String, FileLink> filesMap) {

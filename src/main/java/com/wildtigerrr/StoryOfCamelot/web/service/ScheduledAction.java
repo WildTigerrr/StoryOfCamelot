@@ -2,7 +2,7 @@ package com.wildtigerrr.StoryOfCamelot.web.service;
 
 import com.wildtigerrr.StoryOfCamelot.bin.enums.ActionType;
 
-class ScheduledAction {
+public class ScheduledAction {
     public ActionType type;
     public String target;
     public Long timestamp;

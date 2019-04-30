@@ -142,18 +142,12 @@ public class TimeDependentActions {
         if (scheduledActionMap.isEmpty()) {
             cancel();
         } else {
-            Iterator<Map.Entry<Long, ScheduledAction>> iter = scheduledActionMap.entrySet().iterator();
-            ScheduledAction action;
-            while (iter.hasNext()) {
-                Map.Entry<Long, ScheduledAction> entry = iter.next();
+            Iterator<Map.Entry<Long, ScheduledAction>> iterator = scheduledActionMap.entrySet().iterator();
+            while (iterator.hasNext()) {
+                Map.Entry<Long, ScheduledAction> entry = iterator.next();
                 if (Calendar.getInstance().getTimeInMillis() > entry.getKey()) {
-                    action = scheduledActionMap.get(entry.getKey());
-                    Player player = databaseInteraction.getPlayerById(action.playerId);
-                    Location location = databaseInteraction.getLocationById(Integer.valueOf(action.target));
-                    player.setLocation(location);
-                    databaseInteraction.updatePlayer(player);
-                    responseHandler.sendMessage(location.getName() + ", и что у нас тут?", player.getExternalId());
-                    iter.remove();
+                    responseHandler.sendLocationUpdate(scheduledActionMap.get(entry.getKey()));
+                    iterator.remove();
                     System.out.println("Item removed");
                 } else {
                     break;

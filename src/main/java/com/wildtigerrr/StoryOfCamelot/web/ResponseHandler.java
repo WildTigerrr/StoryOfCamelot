@@ -10,6 +10,8 @@ import com.wildtigerrr.StoryOfCamelot.database.schema.LocationNear;
 import com.wildtigerrr.StoryOfCamelot.database.schema.Player;
 import com.wildtigerrr.StoryOfCamelot.database.schema.enums.Stats;
 import com.wildtigerrr.StoryOfCamelot.database.service.implementation.*;
+import com.wildtigerrr.StoryOfCamelot.web.service.AmazonClient;
+import com.wildtigerrr.StoryOfCamelot.web.service.ScheduledAction;
 import com.wildtigerrr.StoryOfCamelot.web.service.TimeDependentActions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -41,15 +43,15 @@ public class ResponseHandler {
     @Autowired private LocationServiceImpl locationService;
     @Autowired private LocationNearServiceImpl locationNearService;
     @Autowired private FileProcessing imageService;
-//    private AmazonClient amazonClient;
-//
-//    public ResponseHandler() {}
-//
-//    @SuppressWarnings("unused")
-//    @Autowired
-//    ResponseHandler(AmazonClient amazonClient) {
-//        this.amazonClient = amazonClient;
-//    }
+    private AmazonClient amazonClient;
+
+    public ResponseHandler() {}
+
+    @SuppressWarnings("unused")
+    @Autowired
+    ResponseHandler(AmazonClient amazonClient) {
+        this.amazonClient = amazonClient;
+    }
 
     void handleMessage(UpdateWrapper message) {
         message.setPlayer(getPlayer(message.getUserId()));
@@ -271,6 +273,15 @@ public class ResponseHandler {
         message.setChatId(player.getExternalId());
         message.setReplyMarkup(keyboard);
         sendMessage(message);
+    }
+
+    public void sendLocationUpdate(ScheduledAction action) {
+        Player player = playerService.findById(action.playerId);
+        Location location = locationService.findById(Integer.valueOf(action.target));
+        player.setLocation(location);
+        playerService.update(player);
+        InputStream stream = amazonClient.getObject(location.getImageLink().getLocation());
+        sendImage(location.getName(), stream, player.getExternalId(), location.getName() + ", и что у нас тут?");
     }
 
     private Boolean alreadyRedirected;
