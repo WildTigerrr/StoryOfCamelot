@@ -38,6 +38,8 @@ public class DatabaseInteraction {
     @Autowired
     private MobServiceImpl mobService;
 
+    private String evergreenTree = EmojiParser.parseToUnicode(":evergreen_tree:");
+
     public Player getPlayerById(Integer id) {
         return playerService.findById(id);
     }
@@ -127,8 +129,8 @@ public class DatabaseInteraction {
 
     private HashMap<String, Location> getLocations(HashMap<String, FileLink> filesMap) {
         return new HashMap<String, Location>() {{
-            put("Лес", new Location("Лес", filesMap.get("forest-test")));
-            put("Дебри", new Location("Дебри", filesMap.get("forest-test")));
+            put("Лес", new Location(evergreenTree + " Лес", filesMap.get("forest-test")));
+            put("Дебри", new Location(evergreenTree + " Дебри", filesMap.get("forest-test")));
             put("Таинственная Пещера", new Location("Таинственная Пещера", null));
             put("Торговая Площадь", new Location("Торговая Площадь", filesMap.get("merchants-square")));
         }};

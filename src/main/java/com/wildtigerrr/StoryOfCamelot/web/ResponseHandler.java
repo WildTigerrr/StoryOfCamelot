@@ -238,7 +238,6 @@ public class ResponseHandler {
         InlineKeyboardButton button;
         List<InlineKeyboardButton> buttonsRow = new ArrayList<>();
         List<List<InlineKeyboardButton>> rowList = new ArrayList<>();
-        String tree = EmojiParser.parseToUnicode(":evergreen_tree:");
         Integer buttonsCounter = 0;
         for (Location loc : nearLocations) {
             buttonsCounter++;
@@ -248,7 +247,7 @@ public class ResponseHandler {
                 buttonsCounter = 1;
             }
             button = new InlineKeyboardButton();
-            button.setText(tree + " " + loc.getName());
+            button.setText(loc.getName());
             button.setCallbackData("/move " + loc.getId());
             buttonsRow.add(button);
         }
