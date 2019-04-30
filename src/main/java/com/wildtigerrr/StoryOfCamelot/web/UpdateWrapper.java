@@ -18,7 +18,7 @@ public class UpdateWrapper {
     UpdateWrapper(Update update, Boolean isQuery) {
         User user = isQuery ? update.getCallbackQuery().getMessage().getFrom() : update.getMessage().getFrom();
         this.message = isQuery ? update.getCallbackQuery().getData() : update.getMessage().getText().trim();
-        this.userId = user.getId().toString();
+        this.userId = isQuery ? update.getCallbackQuery().getMessage().getChatId().toString() : user.getId().toString();
         this.firstName = user.getFirstName();
         this.lastName = user.getLastName();
         this.username = user.getUserName();
