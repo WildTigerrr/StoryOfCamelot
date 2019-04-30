@@ -157,28 +157,8 @@ public class ResponseHandler {
                 break;
             case ADD:
                 String[] values = commandParts[1].split(" ", 2);
-                try {
-                    try {
-                        ArrayList<String> eventList = message.getPlayer().addStatExp(
-                                Integer.valueOf(values[1]),
-                                Stats.valueOf(values[0].toUpperCase())
-                        );
-                        if (eventList != null && !eventList.isEmpty()) {
-                            for (String event : eventList) {
-                                if (event != null && !event.equals("")) {
-                                    sendMessage(event, message.getUserId());
-                                }
-                            }
-                        }
-                        sendMessage("Очков опыта получено: " + values[1], message.getUserId());
-                        playerService.update(message.getPlayer());
-                    } catch (NumberFormatException e) {
-                        sendMessageToAdmin("Не торопись, это слишком много");
-                    }
-                } catch (SOCInvalidDataException e) {
-                    sendMessageToAdmin(e.getMessage());
-                    e.printStackTrace();
-                }
+                Player player = addExperience(message.getPlayer(), Stats.valueOf(values[0].toUpperCase()), Integer.parseInt(values[1]), true);
+                playerService.update(player);
                 break;
             case ACTION:
                 if (commandParts.length <= 1) return;
@@ -225,6 +205,29 @@ public class ResponseHandler {
         player.setNickname(newName);
         playerService.update(player);
         sendMessage(MainText.NICKNAME_CHANGED.text() + player.getNickname() + "*", player.getExternalId(), true);
+    }
+
+    private Player addExperience(Player player, Stats stat, int experience, Boolean sendExperienceGet) {
+        try {
+            ArrayList<String> eventList = player.addStatExp(
+                    experience,
+                    stat
+            );
+            if (eventList != null && !eventList.isEmpty()) {
+                for (String event : eventList) {
+                    if (event != null && !event.equals("")) {
+                        sendMessage(event, player.getExternalId());
+                    }
+                }
+            }
+            if (sendExperienceGet) {
+                sendMessage("Очков опыта получено: " + experience, player.getExternalId());
+            }
+            return player;
+        } catch (SOCInvalidDataException e) {
+            sendMessageToAdmin(e.getMessage());
+            e.printStackTrace();
+        }
     }
 
     private void sendAvailableLocations(Player player) {
@@ -282,12 +285,7 @@ public class ResponseHandler {
         Player player = playerService.findById(action.playerId);
         Location location = locationService.findById(Integer.valueOf(action.target));
         player.setLocation(location);
-        try {
-            player.addStatExp(Integer.valueOf(action.additionalValue)/10, Stats.ENDURANCE);
-        } catch (SOCInvalidDataException e) {
-            e.printStackTrace();
-            sendMessageToAdmin(e.getMessage());
-        }
+        addExperience(player, Stats.ENDURANCE, Integer.valueOf(action.additionalValue) / 10, true);
         playerService.update(player);
         if (location.getImageLink() != null) {
             InputStream stream = amazonClient.getObject(location.getImageLink().getLocation());
