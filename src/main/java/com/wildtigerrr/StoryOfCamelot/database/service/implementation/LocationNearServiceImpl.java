@@ -1,6 +1,7 @@
 package com.wildtigerrr.StoryOfCamelot.database.service.implementation;
 
 import com.wildtigerrr.StoryOfCamelot.database.dataaccessobject.LocationNearDao;
+import com.wildtigerrr.StoryOfCamelot.database.schema.Location;
 import com.wildtigerrr.StoryOfCamelot.database.schema.LocationNear;
 import com.wildtigerrr.StoryOfCamelot.database.service.template.LocationNearService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,7 +47,17 @@ public class LocationNearServiceImpl implements LocationNearService {
     }
 
     @Override
-    public List<LocationNear> getAll() {
-        return (List<LocationNear>) locationNearDao.findAll();
+    public ArrayList<Location> getNearLocations(Location location) {
+        ArrayList<LocationNear> nearLocations = (ArrayList<LocationNear>) locationNearDao.findByStartLocation(location);
+        ArrayList<Location> locations = new ArrayList<>();
+        for (LocationNear nearLocation : nearLocations) {
+            locations.add(nearLocation.getFinishLocation());
+        }
+        return locations;
+    }
+
+    @Override
+    public ArrayList<LocationNear> getAll() {
+        return (ArrayList<LocationNear>) locationNearDao.findAll();
     }
 }

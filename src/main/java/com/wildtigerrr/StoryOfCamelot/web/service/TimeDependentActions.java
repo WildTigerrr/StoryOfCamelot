@@ -3,6 +3,7 @@ package com.wildtigerrr.StoryOfCamelot.web.service;
 import com.wildtigerrr.StoryOfCamelot.bin.FileProcessing;
 import com.wildtigerrr.StoryOfCamelot.bin.enums.ActionType;
 import com.wildtigerrr.StoryOfCamelot.database.DatabaseInteraction;
+import com.wildtigerrr.StoryOfCamelot.database.schema.Location;
 import com.wildtigerrr.StoryOfCamelot.database.schema.Player;
 import com.wildtigerrr.StoryOfCamelot.web.ResponseHandler;
 import org.apache.commons.io.IOUtils;
@@ -148,9 +149,10 @@ public class TimeDependentActions {
                 if (Calendar.getInstance().getTimeInMillis() > entry.getKey()) {
                     action = scheduledActionMap.get(entry.getKey());
                     Player player = databaseInteraction.getPlayerById(action.playerId);
-                    player.setLocation(databaseInteraction.getLocationByName(action.target));
+                    Location location = databaseInteraction.getLocationById(Integer.valueOf(action.target));
+                    player.setLocation(location);
                     databaseInteraction.updatePlayer(player);
-                    responseHandler.sendMessage("Вы пришли в " + action.target, player.getExternalId());
+                    responseHandler.sendMessage("Вы пришли в " + location.getName(), player.getExternalId());
                     iter.remove();
                     System.out.println("Item removed");
                 } else {
@@ -166,7 +168,7 @@ public class TimeDependentActions {
             scheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
         }
         task = scheduledExecutorService.scheduleAtFixedRate(
-                TimeDependentActions::check, 0, 5, TimeUnit.SECONDS);
+                TimeDependentActions::check, 3, 5, TimeUnit.SECONDS);
     }
 
 }

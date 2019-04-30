@@ -48,10 +48,11 @@ public class Player {
     protected Player() {
     }
 
-    public Player(String externalId, String nickname) {
+    public Player(String externalId, String nickname, Location location) {
         this.externalId = externalId;
         this.nickname = nickname;
-        this.isNew = externalId.equals(nickname);
+        this.location = location;
+        isNew = externalId.equals(nickname);
         level = 1;
         unassignedPoints = 25;
         strength = 0;

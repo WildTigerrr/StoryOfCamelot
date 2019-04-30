@@ -48,6 +48,9 @@ public class DatabaseInteraction {
     public Location getLocationByName(String locationName) {
         return locationService.findByName(locationName);
     }
+    public Location getLocationById(int locationId) {
+        return locationService.findById(locationId);
+    }
 
     private void insertInitialData() {
         insertFileLinks();

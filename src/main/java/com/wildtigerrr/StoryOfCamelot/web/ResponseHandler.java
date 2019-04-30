@@ -2,6 +2,7 @@ package com.wildtigerrr.StoryOfCamelot.web;
 
 import com.wildtigerrr.StoryOfCamelot.bin.enums.Command;
 import com.wildtigerrr.StoryOfCamelot.bin.FileProcessing;
+import com.wildtigerrr.StoryOfCamelot.bin.enums.GameSettings;
 import com.wildtigerrr.StoryOfCamelot.bin.enums.MainText;
 import com.wildtigerrr.StoryOfCamelot.bin.exceptions.SOCInvalidDataException;
 import com.wildtigerrr.StoryOfCamelot.database.schema.Location;
@@ -11,15 +12,21 @@ import com.wildtigerrr.StoryOfCamelot.database.service.implementation.*;
 import com.wildtigerrr.StoryOfCamelot.web.service.TimeDependentActions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
+import org.telegram.telegrambots.meta.api.methods.PartialBotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.send.SendDocument;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
+import org.telegram.telegrambots.meta.api.objects.Message;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 import static com.wildtigerrr.StoryOfCamelot.web.BotConfig.WEBHOOK_ADMIN_ID;
 
@@ -30,6 +37,7 @@ public class ResponseHandler {
     @Autowired private PlayerServiceImpl playerService;
     @Autowired private FileLinkServiceImpl fileLinkService;
     @Autowired private LocationServiceImpl locationService;
+    @Autowired private LocationNearServiceImpl locationNearService;
     @Autowired private FileProcessing imageService;
 //    private AmazonClient amazonClient;
 //
@@ -188,7 +196,8 @@ public class ResponseHandler {
                 break;
             case MOVE:
                 if (commandParts.length <= 1) {
-                    sendMessage(locationService.getAll().toString(), message.getUserId());
+//                    sendMessage(locationService.getAll().toString(), message.getUserId());
+                    sendAvailableLocations(message.getPlayer());
                 } else {
                     Calendar calendar = Calendar.getInstance();
                     calendar.add(Calendar.SECOND, 25);
@@ -205,7 +214,7 @@ public class ResponseHandler {
         Player player;
         player = playerService.findByExternalId(externalId);
         if (player == null) {
-            player = new Player(externalId, externalId);
+            player = new Player(externalId, externalId, locationService.findByName(GameSettings.DEFAULT_LOCATION.get()));
             player = playerService.create(player);
         }
         return player;
@@ -217,6 +226,34 @@ public class ResponseHandler {
         sendMessage(MainText.NICKNAME_CHANGED.text() + player.getNickname() + "*", player.getExternalId(), true);
     }
 
+    private void sendAvailableLocations(Player player) {
+        ArrayList<Location> nearLocations = locationNearService.getNearLocations(player.getLocation());
+        InlineKeyboardMarkup keyboard = new InlineKeyboardMarkup();
+        InlineKeyboardButton button;
+        List<InlineKeyboardButton> buttonsRow = new ArrayList<>();
+        List<List<InlineKeyboardButton>> rowList = new ArrayList<>();
+        Integer buttonsCounter = 0;
+        for (Location loc : nearLocations) {
+            buttonsCounter++;
+            if (buttonsCounter > 3) {
+                rowList.add(buttonsRow);
+                buttonsRow = new ArrayList<>();
+                buttonsCounter = 1;
+            }
+            button = new InlineKeyboardButton();
+            button.setText(loc.getName());
+            button.setText("/move" + loc.getId());
+            buttonsRow.add(button);
+        }
+        rowList.add(buttonsRow);
+        keyboard.setKeyboard(rowList);
+        SendMessage message = new SendMessage();
+        message.setText("Итак, куда пойдём?");
+        message.setChatId(player.getExternalId());
+        message.setReplyMarkup(keyboard);
+        sendMessage(message);
+    }
+
     private Boolean alreadyRedirected;
 
     public void sendMessage(String text, String userId) {
@@ -224,20 +261,23 @@ public class ResponseHandler {
     }
 
     public void sendMessage(String text, String userId, Boolean useMarkdown) {
+        SendMessage message = new SendMessage();
+        message.enableMarkdown(useMarkdown);
+        message.setChatId(userId);
+        message.setText(text);
+        sendMessage(message);
+    }
+
+    private void sendMessage(SendMessage message) {
         if (alreadyRedirected == null || !alreadyRedirected) alreadyRedirected = true;
         else return;
-
-        SendMessage sendMessage = new SendMessage();
-        sendMessage.enableMarkdown(useMarkdown);
-        sendMessage.setChatId(userId);
-        sendMessage.setText(text);
         try {
-            webHook.execute(sendMessage);
+            webHook.execute(message);
             alreadyRedirected = false;
         } catch (NullPointerException e) {
             System.out.println("Spring Startup Error (Autowired Services not initialized)");
             try {
-                new WebHookHandler().execute(sendMessage);
+                new WebHookHandler().execute(message);
             } catch (TelegramApiException ex) {
                 sendMessageToAdmin(e.getMessage());
                 ex.printStackTrace();
@@ -251,6 +291,7 @@ public class ResponseHandler {
     private void sendImage(File file, String userId) {
         sendImage(file, userId, null);
     }
+
     private void sendImage(File file, String userId, String caption) {
         SendPhoto newMessage = new SendPhoto().setPhoto(file);
         if (caption != null && !caption.equals("")) {
@@ -258,9 +299,11 @@ public class ResponseHandler {
         }
         proceedImageSend(newMessage, userId);
     }
+
     private void sendImage(String fileName, InputStream stream, String userId) {
         sendImage(fileName, stream, userId, null);
     }
+
     private void sendImage(String fileName, InputStream stream, String userId, String caption) {
         SendPhoto newMessage = new SendPhoto().setPhoto(fileName, stream);
         if (caption != null && !caption.equals("")) {
@@ -268,6 +311,7 @@ public class ResponseHandler {
         }
         proceedImageSend(newMessage, userId);
     }
+
     private void proceedImageSend(SendPhoto newMessage, String userId) {
         if (alreadyRedirected == null || !alreadyRedirected) alreadyRedirected = true;
         else return;
