@@ -152,7 +152,7 @@ public class TimeDependentActions {
                     Location location = databaseInteraction.getLocationById(Integer.valueOf(action.target));
                     player.setLocation(location);
                     databaseInteraction.updatePlayer(player);
-                    responseHandler.sendMessage(location.getName(), player.getExternalId() + ", и что у нас тут?");
+                    responseHandler.sendMessage(location.getName() + ", и что у нас тут?", player.getExternalId());
                     iter.remove();
                     System.out.println("Item removed");
                 } else {
