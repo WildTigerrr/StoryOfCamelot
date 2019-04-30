@@ -128,6 +128,7 @@ public class DatabaseInteraction {
         return new HashMap<String, Location>() {{
             put("Лес", new Location("Лес", filesMap.get("forest-test")));
             put("Дебри", new Location("Дебри", filesMap.get("forest-test")));
+            put("Таинственная Пещера", new Location("Таинственная Пещера", null));
             put("Торговая Площадь", new Location("Торговая Площадь", filesMap.get("merchants-square")));
         }};
     }
@@ -136,8 +137,10 @@ public class DatabaseInteraction {
         return new HashMap<String, Integer>() {{
             put("Торговая Площадь*Лес", 10);
             put("Лес*Торговая Площадь", 10);
-            put("Лес*Дебри", 25);
-            put("Дебри*Лес", 25);
+            put("Лес*Дебри", 30);
+            put("Дебри*Лес", 30);
+            put("Таинственная Пещера*Лес", 5);
+            put("Лес*Таинственная Пещера", 5);
         }};
     }
 

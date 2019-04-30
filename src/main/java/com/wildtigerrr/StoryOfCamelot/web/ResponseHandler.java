@@ -280,8 +280,12 @@ public class ResponseHandler {
         Location location = locationService.findById(Integer.valueOf(action.target));
         player.setLocation(location);
         playerService.update(player);
-        InputStream stream = amazonClient.getObject(location.getImageLink().getLocation());
-        sendImage(location.getName(), stream, player.getExternalId(), location.getName() + ", и что у нас тут?");
+        if (location.getImageLink() != null) {
+            InputStream stream = amazonClient.getObject(location.getImageLink().getLocation());
+            sendImage(location.getName(), stream, player.getExternalId(), location.getName() + ", и что у нас тут?");
+        } else {
+            sendMessage(location.getName() + ", и что у нас тут?", player.getExternalId());
+        }
     }
 
     private Boolean alreadyRedirected;

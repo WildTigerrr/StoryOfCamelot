@@ -162,7 +162,7 @@ public class TimeDependentActions {
             scheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
         }
         task = scheduledExecutorService.scheduleAtFixedRate(
-                TimeDependentActions::check, 3, 5, TimeUnit.SECONDS);
+                TimeDependentActions::check, 5, 5, TimeUnit.SECONDS);
     }
 
 }
