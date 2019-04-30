@@ -12,5 +12,6 @@ public interface LocationNearService {
     void delete(int id);
     LocationNear update(LocationNear locationNear);
     ArrayList<Location> getNearLocations(Location location);
+    int getDistance(Location start, Location finish);
     ArrayList<LocationNear> getAll();
 }

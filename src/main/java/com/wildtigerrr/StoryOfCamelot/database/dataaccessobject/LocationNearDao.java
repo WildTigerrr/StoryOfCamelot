@@ -8,4 +8,5 @@ import java.util.List;
 
 public interface LocationNearDao extends CrudRepository<LocationNear, Integer> {
     List<LocationNear> findByStartLocation(Location location);
+    LocationNear findByStartLocationAndFinishLocation(Location startLocation, Location finishLocation);
 }

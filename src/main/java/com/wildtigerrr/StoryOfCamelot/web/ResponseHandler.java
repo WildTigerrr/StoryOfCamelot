@@ -6,6 +6,7 @@ import com.wildtigerrr.StoryOfCamelot.bin.enums.GameSettings;
 import com.wildtigerrr.StoryOfCamelot.bin.enums.MainText;
 import com.wildtigerrr.StoryOfCamelot.bin.exceptions.SOCInvalidDataException;
 import com.wildtigerrr.StoryOfCamelot.database.schema.Location;
+import com.wildtigerrr.StoryOfCamelot.database.schema.LocationNear;
 import com.wildtigerrr.StoryOfCamelot.database.schema.Player;
 import com.wildtigerrr.StoryOfCamelot.database.schema.enums.Stats;
 import com.wildtigerrr.StoryOfCamelot.database.service.implementation.*;
@@ -202,12 +203,17 @@ public class ResponseHandler {
                 } else if (message.isQuery()) {
                     Location location = locationService.findById(Integer.parseInt(commandParts[1]));
                     if (location != null) {
+                        int distance = locationNearService.getDistance(message.getPlayer().getLocation(), location);
+                        if (distance == -1) {
+                            sendMessage("Кажется, между этими локациями нет прямого пути", message.getUserId());
+                            return;
+                        }
                         EditMessageText messageEdit = new EditMessageText();
                         messageEdit.setMessageId(message.getMessageId());
                         messageEdit.setChatId(message.getUserId());
                         messageEdit.setText("Ну, пойдем к " + location.getName());
                         Calendar calendar = Calendar.getInstance();
-                        calendar.add(Calendar.SECOND, 25);
+                        calendar.add(Calendar.SECOND, distance);
                         TimeDependentActions.scheduleMove(message.getPlayer().getId(), calendar.getTimeInMillis(), commandParts[1]);
                         try {
                             webHook.execute(messageEdit);

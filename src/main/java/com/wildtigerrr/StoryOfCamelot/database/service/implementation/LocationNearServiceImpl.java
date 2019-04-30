@@ -57,6 +57,16 @@ public class LocationNearServiceImpl implements LocationNearService {
     }
 
     @Override
+    public int getDistance(Location start, Location finish) {
+        LocationNear locationNear = locationNearDao.findByStartLocationAndFinishLocation(start, finish);
+        if (locationNear != null) {
+            return locationNear.getDistance();
+        } else {
+            return -1;
+        }
+    }
+
+    @Override
     public ArrayList<LocationNear> getAll() {
         return (ArrayList<LocationNear>) locationNearDao.findAll();
     }
