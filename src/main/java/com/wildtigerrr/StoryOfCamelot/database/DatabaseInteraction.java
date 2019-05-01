@@ -39,7 +39,7 @@ public class DatabaseInteraction {
     private MobServiceImpl mobService;
 
     private String evergreenTree = EmojiParser.parseToUnicode(":evergreen_tree:");
-    private String bat = EmojiParser.parseToUnicode(":vampire:");
+    private String bat = EmojiParser.parseToUnicode("\uD83E\uDD87");
     private String tent = EmojiParser.parseToUnicode(":circus_tent:");
 
     public Player getPlayerById(Integer id) {
