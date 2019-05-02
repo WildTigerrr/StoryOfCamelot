@@ -38,10 +38,6 @@ public class DatabaseInteraction {
     @Autowired
     private MobServiceImpl mobService;
 
-    private String evergreenTree = EmojiParser.parseToUnicode(":evergreen_tree:");
-    private String bat = EmojiParser.parseToUnicode("\uD83E\uDD87");
-    private String tent = EmojiParser.parseToUnicode(":circus_tent:");
-
     public Player getPlayerById(Integer id) {
         return playerService.findById(id);
     }
@@ -110,6 +106,16 @@ public class DatabaseInteraction {
         return locationService.getAllAsMap();
     }
 
+    private HashMap<String, String> emojis;
+    private HashMap<String, String> getEmoji() {
+        if (emojis == null) emojis = new HashMap<String, String>() {{
+            put("evergreenTree", EmojiParser.parseToUnicode(":evergreen_tree:"));
+            put("bat", EmojiParser.parseToUnicode("\uD83E\uDD87"));
+            put("tent", EmojiParser.parseToUnicode(":circus_tent:"));
+        }};
+        return emojis;
+    }
+
     private ArrayList<Item> getItems(HashMap<String, FileLink> filesMap) {
         return new ArrayList<>(
                 Arrays.asList(
@@ -131,10 +137,10 @@ public class DatabaseInteraction {
 
     private HashMap<String, Location> getLocations(HashMap<String, FileLink> filesMap) {
         return new HashMap<String, Location>() {{
-            put("Лес", new Location(evergreenTree + " Лес", filesMap.get("forest-test")));
-            put("Дебри", new Location(evergreenTree + " Дебри", filesMap.get("forest-test")));
-            put("Таинственная Пещера", new Location(bat + " Таинственная Пещера", null));
-            put("Торговая Площадь", new Location(tent + " Торговая Площадь", filesMap.get("merchants-square")));
+            put("Лес", new Location(getEmoji().get("evergreenTree") + " Лес", filesMap.get("forest-test")));
+            put("Дебри", new Location(getEmoji().get("evergreenTree") + " Дебри", filesMap.get("forest-test")));
+            put("Таинственная Пещера", new Location(getEmoji().get("bat") + " Таинственная Пещера", null));
+            put("Торговая Площадь", new Location(getEmoji().get("tent") + " Торговая Площадь", filesMap.get("merchants-square")));
         }};
     }
 
