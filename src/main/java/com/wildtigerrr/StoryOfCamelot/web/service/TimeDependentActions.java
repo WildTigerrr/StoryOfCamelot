@@ -37,14 +37,14 @@ public class TimeDependentActions {
         responseHandler.sendMessageToAdmin("Updated to: " + counter);
     }
 
-    public static void scheduleMove(int playerId, Long timestamp, String target, String distance) {
+    public static void scheduleMove(int playerId, Long timestamp, String target, String distance, String externalId) {
         while (scheduledActionMap.containsKey(timestamp)) timestamp++;
         ArrayList<Long> playerActions;
         if (playerToScheduled.containsKey(playerId)) {
             playerActions = playerToScheduled.get(playerId);
             for (Long key : playerActions) {
                 if (scheduledActionMap.get(key).type == ActionType.MOVEMENT) {
-                    responseHandler.sendMessage(MainText.ALREADY_MOVING.text(), String.valueOf(playerId));
+                    responseHandler.sendMessage(MainText.ALREADY_MOVING.text(), externalId);
                     return;
                 }
             }

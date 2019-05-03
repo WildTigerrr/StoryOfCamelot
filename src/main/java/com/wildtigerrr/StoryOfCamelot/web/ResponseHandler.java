@@ -277,7 +277,7 @@ public class ResponseHandler {
             messageEdit.enableMarkdown(true);
             Calendar calendar = Calendar.getInstance();
             calendar.add(Calendar.SECOND, distance);
-            TimeDependentActions.scheduleMove(message.getPlayer().getId(), calendar.getTimeInMillis(), locationId, String.valueOf(distance));
+            TimeDependentActions.scheduleMove(message.getPlayer().getId(), calendar.getTimeInMillis(), locationId, String.valueOf(distance), message.getUserId());
             try {
                 webHook.execute(messageEdit);
             } catch (TelegramApiException e) {
