@@ -131,6 +131,7 @@ public class DatabaseInteraction {
         return new ArrayList<>(
                 Arrays.asList(
                         new FileLink("forest-test", "images/locations/forest-test.png")
+                        , new FileLink("8ktest", "images/locations/4k-test.png")
                         , new FileLink("thicket", "images/locations/thicket.png")
                         , new FileLink("merchants-square", "images/locations/the-merchants-square.png")
                         , new FileLink("sword-test", "images/items/weapons/swords/sword-test.png")
@@ -140,7 +141,7 @@ public class DatabaseInteraction {
 
     private HashMap<String, Location> getLocations(HashMap<String, FileLink> filesMap) {
         return new HashMap<String, Location>() {{
-            put("Лес", new Location(getEmoji().get("evergreenTree") + " Лес", filesMap.get("forest-test")));
+            put("Лес", new Location(getEmoji().get("evergreenTree") + " Лес", filesMap.get("8ktest")));
             put("Дебри", new Location(getEmoji().get("evergreenTree") + " Дебри", filesMap.get("thicket")));
             put("Таинственная Пещера", new Location(getEmoji().get("bat") + " Таинственная Пещера", null));
             put("Торговая Площадь", new Location(getEmoji().get("tent") + " Торговая Площадь", filesMap.get("merchants-square")));
