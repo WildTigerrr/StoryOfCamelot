@@ -1,5 +1,6 @@
 package com.wildtigerrr.StoryOfCamelot.web;
 
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import com.vdurmont.emoji.EmojiParser;
 import com.wildtigerrr.StoryOfCamelot.bin.enums.Command;
 import com.wildtigerrr.StoryOfCamelot.bin.FileProcessing;
@@ -277,7 +278,10 @@ public class ResponseHandler {
             messageEdit.enableMarkdown(true);
             Calendar calendar = Calendar.getInstance();
             calendar.add(Calendar.SECOND, distance);
-            TimeDependentActions.scheduleMove(message.getPlayer().getId(), calendar.getTimeInMillis(), locationId, String.valueOf(distance), message.getUserId());
+            Boolean scheduled = TimeDependentActions.scheduleMove(message.getPlayer().getId(), calendar.getTimeInMillis(), locationId, String.valueOf(distance));
+            if (!scheduled) {
+                messageEdit.setText(MainText.ALREADY_MOVING.text());
+            }
             try {
                 webHook.execute(messageEdit);
             } catch (TelegramApiException e) {
