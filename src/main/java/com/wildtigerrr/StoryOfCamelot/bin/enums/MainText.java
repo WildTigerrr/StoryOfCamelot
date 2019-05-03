@@ -32,6 +32,9 @@ public enum MainText {
     ),
     LEVEL_UP (
             "Вы научились чему-то новому. Ваш уровень повышен до "
+    ),
+    ALREADY_MOVING (
+            "Вы уже в пути."
     );
     private final String text;
 

@@ -2,6 +2,7 @@ package com.wildtigerrr.StoryOfCamelot.web.service;
 
 import com.wildtigerrr.StoryOfCamelot.bin.FileProcessing;
 import com.wildtigerrr.StoryOfCamelot.bin.enums.ActionType;
+import com.wildtigerrr.StoryOfCamelot.bin.enums.MainText;
 import com.wildtigerrr.StoryOfCamelot.database.DatabaseInteraction;
 import com.wildtigerrr.StoryOfCamelot.database.schema.Location;
 import com.wildtigerrr.StoryOfCamelot.database.schema.Player;
@@ -28,6 +29,7 @@ public class TimeDependentActions {
     private static Integer counter = 0;
     private static ArrayList<String> actions = new ArrayList<>();
     private static HashMap<Long, ScheduledAction> scheduledActionMap = new HashMap<>();
+    private static HashMap<Integer, ArrayList<Long>> playerToScheduled = new HashMap<>();
 
     public static void addCount() {
         counter++;
@@ -37,6 +39,18 @@ public class TimeDependentActions {
 
     public static void scheduleMove(int playerId, Long timestamp, String target, String distance) {
         while (scheduledActionMap.containsKey(timestamp)) timestamp++;
+        ArrayList<Long> playerActions;
+        if (playerToScheduled.containsKey(playerId)) {
+            playerActions = playerToScheduled.get(playerId);
+            for (Long key : playerActions) {
+                if (scheduledActionMap.get(key).type == ActionType.MOVEMENT) {
+                    responseHandler.sendMessage(MainText.ALREADY_MOVING.text(), String.valueOf(playerId));
+                    return;
+                }
+            }
+            playerActions.add(timestamp);
+            playerToScheduled.put(playerId, playerActions);
+        }
         scheduledActionMap.put(timestamp, new ScheduledAction(
                 timestamp,
                 ActionType.MOVEMENT,
@@ -48,13 +62,13 @@ public class TimeDependentActions {
     }
 
     private static FileProcessing fileService;
-    private static DatabaseInteraction databaseInteraction;
+//    private static DatabaseInteraction databaseInteraction;
     private static ResponseHandler responseHandler;
 
     @Autowired
-    private TimeDependentActions(FileProcessing fileService, DatabaseInteraction databaseInteraction, ResponseHandler responseHandler) {
+    private TimeDependentActions(FileProcessing fileService, ResponseHandler responseHandler) { // DatabaseInteraction databaseInteraction,
         TimeDependentActions.fileService = fileService;
-        TimeDependentActions.databaseInteraction = databaseInteraction;
+//        TimeDependentActions.databaseInteraction = databaseInteraction;
         TimeDependentActions.responseHandler = responseHandler;
     }
 
@@ -115,6 +129,12 @@ public class TimeDependentActions {
         for (String action : actions) {
             data.append(";").append(action);
         }
+//        if (playerToScheduled != null && !playerToScheduled.isEmpty()) {
+//            data.append("|||");
+//            for () {
+//
+//            }
+//        }
         System.out.println(data);
         data.deleteCharAt(0);
         return data.toString();
@@ -144,14 +164,25 @@ public class TimeDependentActions {
             cancel();
         } else {
             Iterator<Map.Entry<Long, ScheduledAction>> iterator = scheduledActionMap.entrySet().iterator();
+            ArrayList<Long> playerActions;
+            Integer playerId;
+            Long currentTime = Calendar.getInstance().getTimeInMillis();
             while (iterator.hasNext()) {
                 Map.Entry<Long, ScheduledAction> entry = iterator.next();
-                if (Calendar.getInstance().getTimeInMillis() > entry.getKey()) {
+                if (currentTime > entry.getKey()) {
                     responseHandler.sendLocationUpdate(scheduledActionMap.get(entry.getKey()));
+                    playerId = entry.getValue().playerId;
+                    playerActions = playerToScheduled.get(playerId);
+                    playerActions.remove(entry.getValue().timestamp);
+                    if (playerActions.isEmpty()) {
+                        playerToScheduled.remove(playerId);
+                    } else {
+                        playerToScheduled.put(playerId, playerActions);
+                    }
+                    System.out.println(playerActions);
+                    System.out.println(playerToScheduled);
                     iterator.remove();
                     System.out.println("Item removed");
-                } else {
-                    break;
                 }
             }
             if (scheduledActionMap.isEmpty()) cancel();
