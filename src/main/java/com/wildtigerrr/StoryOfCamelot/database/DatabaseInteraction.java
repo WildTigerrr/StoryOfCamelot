@@ -49,6 +49,7 @@ public class DatabaseInteraction {
     public Location getLocationByName(String locationName) {
         return locationService.findByName(locationName);
     }
+
     public Location getLocationById(int locationId) {
         return locationService.findById(locationId);
     }
@@ -107,6 +108,7 @@ public class DatabaseInteraction {
     }
 
     private HashMap<String, String> emojis;
+
     private HashMap<String, String> getEmoji() {
         if (emojis == null) emojis = new HashMap<String, String>() {{
             put("evergreenTree", EmojiParser.parseToUnicode(":evergreen_tree:"));
@@ -129,8 +131,9 @@ public class DatabaseInteraction {
         return new ArrayList<>(
                 Arrays.asList(
                         new FileLink("forest-test", "images/locations/forest-test.png")
-                        , new FileLink("sword-test", "images/items/weapons/swords/sword-test.png")
+                        , new FileLink("thicket", "images/locations/thicket.png")
                         , new FileLink("merchants-square", "images/locations/the-merchants-square.png")
+                        , new FileLink("sword-test", "images/items/weapons/swords/sword-test.png")
                 )
         );
     }
@@ -138,7 +141,7 @@ public class DatabaseInteraction {
     private HashMap<String, Location> getLocations(HashMap<String, FileLink> filesMap) {
         return new HashMap<String, Location>() {{
             put("Лес", new Location(getEmoji().get("evergreenTree") + " Лес", filesMap.get("forest-test")));
-            put("Дебри", new Location(getEmoji().get("evergreenTree") + " Дебри", filesMap.get("forest-test")));
+            put("Дебри", new Location(getEmoji().get("evergreenTree") + " Дебри", filesMap.get("thicket")));
             put("Таинственная Пещера", new Location(getEmoji().get("bat") + " Таинственная Пещера", null));
             put("Торговая Площадь", new Location(getEmoji().get("tent") + " Торговая Площадь", filesMap.get("merchants-square")));
         }};
