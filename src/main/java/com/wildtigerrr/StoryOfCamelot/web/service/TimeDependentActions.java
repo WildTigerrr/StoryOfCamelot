@@ -50,6 +50,10 @@ public class TimeDependentActions {
             }
             playerActions.add(timestamp);
             playerToScheduled.put(playerId, playerActions);
+        } else {
+            playerActions = new ArrayList<>();
+            playerActions.add(timestamp);
+            playerToScheduled.put(playerId, playerActions);
         }
         scheduledActionMap.put(timestamp, new ScheduledAction(
                 timestamp,
