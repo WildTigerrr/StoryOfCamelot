@@ -268,7 +268,7 @@ public class ResponseHandler {
         if (location != null) {
             int distance = locationNearService.getDistance(message.getPlayer().getLocation(), location);
             if (distance == -1) {
-                sendMessage("Кажется, между этими локациями нет прямого пути", message.getUserId());
+                sendMessage(MainText.NO_DIRECT.text(), message.getUserId());
                 return;
             }
             EditMessageText messageEdit = new EditMessageText();
