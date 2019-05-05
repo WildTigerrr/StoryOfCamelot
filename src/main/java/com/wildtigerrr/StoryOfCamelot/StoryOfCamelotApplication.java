@@ -1,15 +1,18 @@
 package com.wildtigerrr.StoryOfCamelot;
 
 import com.wildtigerrr.StoryOfCamelot.web.ResponseHandler;
+import com.wildtigerrr.StoryOfCamelot.web.service.LocalRedisConfig;
 import com.wildtigerrr.StoryOfCamelot.web.service.TimeDependentActions;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.context.annotation.Import;
 import org.springframework.stereotype.Controller;
 
 @Controller
 @SpringBootApplication
+@Import(LocalRedisConfig.class)
 public class StoryOfCamelotApplication {
 
     public static void main(String[] args) throws Exception {

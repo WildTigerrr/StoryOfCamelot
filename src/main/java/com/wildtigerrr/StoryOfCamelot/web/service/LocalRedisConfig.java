@@ -27,34 +27,34 @@ public class LocalRedisConfig {
         return new JedisConnectionFactory(poolConfig);
     }
 
-    @Bean
-    public JedisPool getJedisPool() {
-        try {
-            String link = System.getenv("REDIS_URL");
-            System.out.println("Link:");
-            System.out.println(link);
-            URI redisURI = new URI(link);
-            System.out.println("URI");
-            System.out.println(redisURI);
-
-            System.out.println("UInfo");
-            System.out.println(redisURI.getUserInfo());
-            return new JedisPool(new JedisPoolConfig(),
-                    redisURI.getHost(),
-                    redisURI.getPort(),
-                    Protocol.DEFAULT_TIMEOUT,
-                    redisURI.getUserInfo().split(":",2)[1]);
-        } catch (URISyntaxException e) {
-            throw new RuntimeException("Redis couldn't be configured from URL in REDISTOGO_URL env var:"+
-                    System.getenv("REDISTOGO_URL"));
-        }
-    }
-
-    @Bean
-    public RedisTemplate<String, Object> redisTemplate() {
-        RedisTemplate<String, Object> template = new RedisTemplate<>();
-        template.setConnectionFactory(jedisConnectionFactory());
-        return template;
-    }
+//    @Bean
+//    public JedisPool getJedisPool() {
+//        try {
+//            String link = System.getenv("REDIS_URL");
+//            System.out.println("Link:");
+//            System.out.println(link);
+//            URI redisURI = new URI(link);
+//            System.out.println("URI");
+//            System.out.println(redisURI);
+//
+//            System.out.println("UInfo");
+//            System.out.println(redisURI.getUserInfo());
+//            return new JedisPool(new JedisPoolConfig(),
+//                    redisURI.getHost(),
+//                    redisURI.getPort(),
+//                    Protocol.DEFAULT_TIMEOUT,
+//                    redisURI.getUserInfo().split(":",2)[1]);
+//        } catch (URISyntaxException e) {
+//            throw new RuntimeException("Redis couldn't be configured from URL in REDISTOGO_URL env var:"+
+//                    System.getenv("REDISTOGO_URL"));
+//        }
+//    }
+//
+//    @Bean
+//    public RedisTemplate<String, Object> redisTemplate() {
+//        RedisTemplate<String, Object> template = new RedisTemplate<>();
+//        template.setConnectionFactory(jedisConnectionFactory());
+//        return template;
+//    }
 
 }
