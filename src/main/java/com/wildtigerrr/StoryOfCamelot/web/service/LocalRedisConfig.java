@@ -30,7 +30,15 @@ public class LocalRedisConfig {
     @Bean
     public JedisPool getJedisPool() {
         try {
-            URI redisURI = new URI(System.getenv("REDISTOGO_URL"));
+            String link = System.getenv("REDISTOGO_URL");
+            System.out.println("Link:");
+            System.out.println(link);
+            URI redisURI = new URI(link);
+            System.out.println("URI");
+            System.out.println(redisURI);
+
+            System.out.println("UInfo");
+            System.out.println(redisURI.getUserInfo());
             return new JedisPool(new JedisPoolConfig(),
                     redisURI.getHost(),
                     redisURI.getPort(),
