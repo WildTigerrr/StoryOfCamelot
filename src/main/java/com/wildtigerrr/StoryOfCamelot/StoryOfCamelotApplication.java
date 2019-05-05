@@ -10,14 +10,16 @@ import org.springframework.stereotype.Controller;
 
 @Controller
 @SpringBootApplication
-@EnableAutoConfiguration
 public class StoryOfCamelotApplication {
 
     public static void main(String[] args) throws Exception {
-        ConfigurableApplicationContext applicationContext = SpringApplication.run(StoryOfCamelotApplication.class, args);
-//        TimeDependentActions.restoreValues();
+        SpringApplication.run(StoryOfCamelotApplication.class, args);
         new ResponseHandler().sendMessageToAdmin("Bot Started");
-        applicationContext.start();
+        addShutdownHook();
+    }
+
+    // Actions before restart
+    private static void addShutdownHook() {
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             TimeDependentActions.backupValues();
             new ResponseHandler().sendMessageToAdmin("Bot Shutting Down");
