@@ -60,7 +60,7 @@ public class ResponseHandler {
     }
 
     void handleMessage(UpdateWrapper message) {
-        if (isBanned(message.getUserId())) return;
+//        if (isBanned(message.getUserId())) return;
         message.setPlayer(getPlayer(message.getUserId()));
         System.out.println("Working with message: " + message);
         logSender(message);
