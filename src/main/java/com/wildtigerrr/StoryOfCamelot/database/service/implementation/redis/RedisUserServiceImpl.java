@@ -4,9 +4,11 @@ import com.wildtigerrr.StoryOfCamelot.database.dataaccessobject.redis.RedisUserD
 import com.wildtigerrr.StoryOfCamelot.database.schema.redis.RedisUser;
 import com.wildtigerrr.StoryOfCamelot.database.service.template.redis.RedisUserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
+@Service
 public class RedisUserServiceImpl implements RedisUserService {
 
     @Autowired
