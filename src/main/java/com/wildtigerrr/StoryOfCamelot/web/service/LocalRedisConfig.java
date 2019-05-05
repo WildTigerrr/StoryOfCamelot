@@ -11,6 +11,7 @@ public class LocalRedisConfig {
 
     @Bean
     public RedisConnectionFactory jedisConnectionFactory(){
+        System.out.println("Redis Jedis init");
         JedisPoolConfig poolConfig = new JedisPoolConfig();
         poolConfig.setMaxTotal(10);
         poolConfig.setMaxIdle(5);
