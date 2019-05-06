@@ -1,21 +1,10 @@
 package com.wildtigerrr.StoryOfCamelot;
 
 import com.wildtigerrr.StoryOfCamelot.web.ResponseHandler;
-import com.wildtigerrr.StoryOfCamelot.web.service.LocalRedisConfig;
 import com.wildtigerrr.StoryOfCamelot.web.service.TimeDependentActions;
 import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.ConfigurableApplicationContext;
-import org.springframework.context.annotation.Import;
 import org.springframework.stereotype.Controller;
-import org.springframework.util.DefaultPropertiesPersister;
-
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.OutputStream;
-import java.net.URI;
-import java.util.Properties;
 
 @Controller
 @SpringBootApplication
