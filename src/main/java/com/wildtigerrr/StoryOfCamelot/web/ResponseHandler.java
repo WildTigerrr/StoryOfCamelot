@@ -1,40 +1,35 @@
 package com.wildtigerrr.StoryOfCamelot.web;
 
-import com.sun.org.apache.xpath.internal.operations.Bool;
-import com.vdurmont.emoji.EmojiParser;
-import com.wildtigerrr.StoryOfCamelot.bin.enums.Command;
 import com.wildtigerrr.StoryOfCamelot.bin.FileProcessing;
+import com.wildtigerrr.StoryOfCamelot.bin.enums.Command;
 import com.wildtigerrr.StoryOfCamelot.bin.enums.GameSettings;
 import com.wildtigerrr.StoryOfCamelot.bin.enums.MainText;
 import com.wildtigerrr.StoryOfCamelot.bin.exceptions.SOCInvalidDataException;
 import com.wildtigerrr.StoryOfCamelot.database.schema.Location;
-import com.wildtigerrr.StoryOfCamelot.database.schema.LocationNear;
 import com.wildtigerrr.StoryOfCamelot.database.schema.Player;
 import com.wildtigerrr.StoryOfCamelot.database.schema.enums.Stats;
-import com.wildtigerrr.StoryOfCamelot.database.schema.redis.RedisUser;
-import com.wildtigerrr.StoryOfCamelot.database.service.implementation.*;
-import com.wildtigerrr.StoryOfCamelot.database.service.implementation.redis.RedisUserServiceImpl;
+import com.wildtigerrr.StoryOfCamelot.database.service.implementation.FileLinkServiceImpl;
+import com.wildtigerrr.StoryOfCamelot.database.service.implementation.LocationNearServiceImpl;
+import com.wildtigerrr.StoryOfCamelot.database.service.implementation.LocationServiceImpl;
+import com.wildtigerrr.StoryOfCamelot.database.service.implementation.PlayerServiceImpl;
 import com.wildtigerrr.StoryOfCamelot.web.service.AmazonClient;
 import com.wildtigerrr.StoryOfCamelot.web.service.ScheduledAction;
 import com.wildtigerrr.StoryOfCamelot.web.service.TimeDependentActions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
-import org.telegram.telegrambots.meta.api.methods.PartialBotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.send.SendDocument;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText;
-import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
-import org.telegram.telegrambots.meta.exceptions.TelegramApiRequestException;
 
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 import static com.wildtigerrr.StoryOfCamelot.web.BotConfig.WEBHOOK_ADMIN_ID;
@@ -47,7 +42,6 @@ public class ResponseHandler {
     @Autowired private FileLinkServiceImpl fileLinkService;
     @Autowired private LocationServiceImpl locationService;
     @Autowired private LocationNearServiceImpl locationNearService;
-    @Autowired private RedisUserServiceImpl redisUserService;
     @Autowired private FileProcessing imageService;
     private AmazonClient amazonClient;
 
@@ -60,7 +54,7 @@ public class ResponseHandler {
     }
 
     void handleMessage(UpdateWrapper message) {
-        if (isBanned(message.getUserId())) return;
+//        if (isBanned(message.getUserId())) return;
         message.setPlayer(getPlayer(message.getUserId()));
         System.out.println("Working with message: " + message);
         logSender(message);
@@ -100,18 +94,6 @@ public class ResponseHandler {
         String answer = "You wrote me: " + message.getText();
         System.out.println("Answer: " + answer);
         sendMessage(answer, message.getUserId(), false);
-    }
-
-    private Boolean isBanned(String userId) {
-        RedisUser redisUser = redisUserService.get(userId);
-        if (redisUser == null) {
-            redisUser = new RedisUser(userId);
-            redisUserService.create(redisUser);
-            sendMessageToAdmin("New user, external id = " + userId);
-            return false;
-        } else {
-            return redisUser.getStatus() == RedisUser.Status.BANNED;
-        }
     }
 
     private void sendTestImage(String userId) {
