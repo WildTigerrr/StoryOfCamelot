@@ -10,6 +10,9 @@ public enum  Stats {
     AGILITY (
             "ловкости"
     ),
+    CHARISMA (
+            "харизмы"
+    ),
     INTELLIGENCE (
             "интеллекта"
     ),

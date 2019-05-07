@@ -61,6 +61,7 @@ public class Player {
         intelligence = 0;
         endurance = 0;
         luck = 0;
+        // TODO Charisma
 
         strengthExp = 0;
         healthExp = 0;

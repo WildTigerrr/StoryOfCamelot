@@ -34,7 +34,7 @@ public class TimeDependentActions {
     public static void addCount() {
         counter++;
 //        actions.add(String.valueOf(counter));
-        responseHandler.sendMessageToAdmin("Updated to: " + counter);
+        messages.sendMessageToAdmin("Updated to: " + counter);
     }
 
     public static Boolean scheduleMove(int playerId, Long timestamp, String target, String distance) {
@@ -68,12 +68,14 @@ public class TimeDependentActions {
     private static FileProcessing fileService;
 //    private static DatabaseInteraction databaseInteraction;
     private static ResponseHandler responseHandler;
+    private static ResponseManager messages;
 
     @Autowired
-    private TimeDependentActions(FileProcessing fileService, ResponseHandler responseHandler) { // DatabaseInteraction databaseInteraction,
+    private TimeDependentActions(FileProcessing fileService, ResponseHandler responseHandler, ResponseManager responseManager) { // DatabaseInteraction databaseInteraction,
         TimeDependentActions.fileService = fileService;
 //        TimeDependentActions.databaseInteraction = databaseInteraction;
         TimeDependentActions.responseHandler = responseHandler;
+        TimeDependentActions.messages = responseManager;
     }
 
     @PostConstruct
@@ -120,7 +122,7 @@ public class TimeDependentActions {
     }
 
     public static void getAll() {
-        responseHandler.sendMessageToAdmin(listToString());
+        messages.sendMessageToAdmin(listToString());
     }
 
     private static String listToString() {

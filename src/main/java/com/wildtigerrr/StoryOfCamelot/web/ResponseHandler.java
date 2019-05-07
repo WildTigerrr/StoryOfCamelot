@@ -13,17 +13,13 @@ import com.wildtigerrr.StoryOfCamelot.database.service.implementation.LocationNe
 import com.wildtigerrr.StoryOfCamelot.database.service.implementation.LocationServiceImpl;
 import com.wildtigerrr.StoryOfCamelot.database.service.implementation.PlayerServiceImpl;
 import com.wildtigerrr.StoryOfCamelot.web.service.AmazonClient;
+import com.wildtigerrr.StoryOfCamelot.web.service.ResponseManager;
 import com.wildtigerrr.StoryOfCamelot.web.service.ScheduledAction;
 import com.wildtigerrr.StoryOfCamelot.web.service.TimeDependentActions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.telegram.telegrambots.meta.api.methods.send.SendDocument;
-import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
-import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
-import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
-import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 import java.io.File;
 import java.io.IOException;
@@ -32,17 +28,15 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-import static com.wildtigerrr.StoryOfCamelot.web.BotConfig.WEBHOOK_ADMIN_ID;
-
 @Service
 public class ResponseHandler {
 
-    @Autowired private WebHookHandler webHook;
     @Autowired private PlayerServiceImpl playerService;
     @Autowired private FileLinkServiceImpl fileLinkService;
     @Autowired private LocationServiceImpl locationService;
     @Autowired private LocationNearServiceImpl locationNearService;
     @Autowired private FileProcessing imageService;
+    @Autowired private ResponseManager messages;
     private AmazonClient amazonClient;
 
     public ResponseHandler() {}
@@ -56,16 +50,17 @@ public class ResponseHandler {
     void handleMessage(UpdateWrapper message) {
         message.setPlayer(getPlayer(message.getUserId()));
         System.out.println("Working with message: " + message);
+//        if (message.getPlayer().getS);
         logSender(message);
-        if (message.getUserId().equals(WEBHOOK_ADMIN_ID)) {
+        if (message.getUserId().equals(BotConfig.WEBHOOK_ADMIN_ID)) {
             if (message.getText().equals("database test")) {
                 // Some admin actions
                 String locationName = "Test Forest";
                 Location newLocation = locationService.findByName(locationName);
                 if (newLocation != null) {
-                    sendMessage(newLocation.toString(), message.getUserId());
+                    messages.sendMessage(newLocation.toString(), message.getUserId());
                 } else {
-                    sendMessageToAdmin("Searched location didn't found: " + locationName);
+                    messages.sendMessageToAdmin("Searched location didn't found: " + locationName);
                     System.out.println("No such location");
                 }
             } else if (message.getText().equals("image test")) {
@@ -86,17 +81,17 @@ public class ResponseHandler {
             System.out.println("New player");
             player.setup();
             playerService.update(player);
-            sendMessage(MainText.MEET_NEW_PLAYER.text(), message.getUserId(), true);
+            messages.sendMessage(MainText.MEET_NEW_PLAYER.text(), message.getUserId(), true);
         } else if (player.getExternalId().equals(player.getNickname())) {
             System.out.println("Here should be nickname set");
         }
         String answer = "You wrote me: " + message.getText();
         System.out.println("Answer: " + answer);
-        sendMessage(answer, message.getUserId(), false);
+        messages.sendMessage(answer, message.getUserId(), false);
     }
 
     private void sendTestImage(String userId) {
-        sendMessage("Нужно бы забраться повыше и осмотреться...", userId);
+        messages.sendMessage("Нужно бы забраться повыше и осмотреться...", userId);
         String docName = "Test name";
         InputStream result = null;
         try {
@@ -105,19 +100,19 @@ public class ResponseHandler {
                     imageService.getFile("images/items/weapons/swords/sword-test.png")
             );
         } catch (IOException e) {
-            sendMessageToAdmin(e.getMessage());
+            messages.sendMessageToAdmin(e.getMessage());
             e.printStackTrace();
         }
         File file = null;
         try {
             file = imageService.inputStreamToFile(result, docName, ".png");
         } catch (IOException e) {
-            sendMessageToAdmin(e.getMessage());
+            messages.sendMessageToAdmin(e.getMessage());
             e.printStackTrace();
         }
         if (file != null) {
 //            sendDocument(file, userId);
-            sendImage(file, userId);
+            messages.sendImage(file, userId);
         }
     }
 
@@ -130,8 +125,8 @@ public class ResponseHandler {
                 + ", wrote a message: " + message.getText();
         System.out.println(log);
 
-        if (!message.getUserId().equals(WEBHOOK_ADMIN_ID)) {
-            sendMessage(log, WEBHOOK_ADMIN_ID);
+        if (!message.getUserId().equals(BotConfig.WEBHOOK_ADMIN_ID)) {
+            messages.sendMessageToAdmin(log);
         }
     }
 
@@ -141,18 +136,18 @@ public class ResponseHandler {
         try {
             command = Command.valueOf(commandParts[0].substring(1).toUpperCase());
         } catch (IllegalArgumentException e) {
-            sendMessage(MainText.UNKNOWN_COMMAND.text(), message.getUserId(), true);
+            messages.sendMessage(MainText.UNKNOWN_COMMAND.text(), message.getUserId(), true);
             return;
         }
         switch (command) {
             case ME:
-                sendMessage(playerService.getPlayerInfo(message.getUserId()), message.getUserId(), true);
+                messages.sendMessage(playerService.getPlayerInfo(message.getUserId()), message.getUserId(), true);
                 break;
             case NICKNAME:
                 if (commandParts.length > 1) {
                     setNickname(message.getPlayer(), commandParts[1]);
                 } else {
-                    sendMessage(MainText.EMPTY_NICKNAME.text(), message.getUserId(), true);
+                    messages.sendMessage(MainText.EMPTY_NICKNAME.text(), message.getUserId(), true);
                 }
                 break;
             case ADD:
@@ -187,7 +182,7 @@ public class ResponseHandler {
                 }
                 break;
             default:
-                sendMessage(MainText.COMMAND_NOT_DEFINED.text(), message.getUserId(), true);
+                messages.sendMessage(MainText.COMMAND_NOT_DEFINED.text(), message.getUserId(), true);
         }
     }
 
@@ -204,7 +199,7 @@ public class ResponseHandler {
     private void setNickname(Player player, String newName) {
         player.setNickname(newName);
         playerService.update(player);
-        sendMessage(MainText.NICKNAME_CHANGED.text() + player.getNickname() + "*", player.getExternalId(), true);
+        messages.sendMessage(MainText.NICKNAME_CHANGED.text() + player.getNickname() + "*", player.getExternalId(), true);
     }
 
     private Player addExperience(Player player, Stats stat, int experience, Boolean sendExperienceGet) {
@@ -216,16 +211,16 @@ public class ResponseHandler {
             if (eventList != null && !eventList.isEmpty()) {
                 for (String event : eventList) {
                     if (event != null && !event.equals("")) {
-                        sendMessage(event, player.getExternalId());
+                        messages.sendMessage(event, player.getExternalId());
                     }
                 }
             }
             if (sendExperienceGet) {
-                sendMessage("Очков опыта получено: " + experience, player.getExternalId());
+                messages.sendMessage("Очков опыта получено: " + experience, player.getExternalId());
             }
             return player;
         } catch (SOCInvalidDataException e) {
-            sendMessageToAdmin(e.getMessage());
+            messages.sendMessageToAdmin(e.getMessage());
             e.printStackTrace();
         }
         return player;
@@ -252,12 +247,7 @@ public class ResponseHandler {
         }
         rowList.add(buttonsRow);
         keyboard.setKeyboard(rowList);
-        SendMessage message = new SendMessage();
-        message.setText("Итак, куда пойдём?");
-        message.setChatId(player.getExternalId());
-        message.setReplyMarkup(keyboard);
-        message.enableMarkdown(true);
-        sendMessage(message);
+        messages.sendMessage("Итак, куда пойдём?", keyboard, player.getExternalId());
     }
 
     private void moveToLocation(UpdateWrapper message, String locationId) {
@@ -265,25 +255,16 @@ public class ResponseHandler {
         if (location != null) {
             int distance = locationNearService.getDistance(message.getPlayer().getLocation(), location);
             if (distance == -1) {
-                sendMessage(MainText.NO_DIRECT.text(), message.getUserId());
+                messages.sendMessage(MainText.NO_DIRECT.text(), message.getUserId());
                 return;
             }
-            EditMessageText messageEdit = new EditMessageText();
-            messageEdit.setMessageId(message.getMessageId());
-            messageEdit.setChatId(message.getUserId());
-            messageEdit.setText("Ну, пойдем к " + location.getName());
-            messageEdit.enableMarkdown(true);
+            String newText = "Ну, пойдем к " + location.getName();
             Calendar calendar = Calendar.getInstance();
             calendar.add(Calendar.SECOND, distance);
-            Boolean scheduled = TimeDependentActions.scheduleMove(message.getPlayer().getId(), calendar.getTimeInMillis(), locationId, String.valueOf(distance));
-            if (!scheduled) {
-                messageEdit.setText(MainText.ALREADY_MOVING.text());
+            if (!TimeDependentActions.scheduleMove(message.getPlayer().getId(), calendar.getTimeInMillis(), locationId, String.valueOf(distance))) {
+                newText = MainText.ALREADY_MOVING.text();
             }
-            try {
-                webHook.execute(messageEdit);
-            } catch (TelegramApiException e) {
-                e.printStackTrace();
-            }
+            messages.sendMessageEdit(message.getMessageId(), newText, message.getUserId(), true);
         }
     }
 
@@ -295,101 +276,10 @@ public class ResponseHandler {
         playerService.update(player);
         if (location.getImageLink() != null) {
             InputStream stream = amazonClient.getObject(location.getImageLink().getLocation());
-            sendImage(location.getName(), stream, player.getExternalId(), location.getName() + ", и что у нас тут?");
+            messages.sendImage(location.getName(), stream, player.getExternalId(), location.getName() + ", и что у нас тут?");
         } else {
-            sendMessage(location.getName() + ", и что у нас тут?", player.getExternalId());
+            messages.sendMessage(location.getName() + ", и что у нас тут?", player.getExternalId());
         }
-    }
-
-    private Boolean alreadyRedirected;
-
-    public void sendMessage(String text, String userId) {
-        sendMessage(text, userId, false);
-    }
-
-    public void sendMessage(String text, String userId, Boolean useMarkdown) {
-        SendMessage message = new SendMessage();
-        message.enableMarkdown(useMarkdown);
-        message.setChatId(userId);
-        message.setText(text);
-        sendMessage(message);
-    }
-
-    private void sendMessage(SendMessage message) {
-        if (alreadyRedirected == null || !alreadyRedirected) alreadyRedirected = true;
-        else return;
-        try {
-            webHook.execute(message);
-            alreadyRedirected = false;
-        } catch (NullPointerException e) {
-            System.out.println("Spring Startup Error (Autowired Services not initialized)");
-            try {
-                new WebHookHandler().execute(message);
-            } catch (TelegramApiException ex) {
-                sendMessageToAdmin(e.getMessage());
-                ex.printStackTrace();
-            }
-        } catch (TelegramApiException e) {
-            sendMessageToAdmin(e.getMessage());
-            e.printStackTrace();
-        }
-    }
-
-    private void sendImage(File file, String userId) {
-        sendImage(file, userId, null);
-    }
-
-    private void sendImage(File file, String userId, String caption) {
-        SendPhoto newMessage = new SendPhoto().setPhoto(file);
-        if (caption != null && !caption.equals("")) {
-            newMessage.setCaption(caption);
-        }
-        proceedImageSend(newMessage, userId);
-    }
-
-    private void sendImage(String fileName, InputStream stream, String userId) {
-        sendImage(fileName, stream, userId, null);
-    }
-
-    private void sendImage(String fileName, InputStream stream, String userId, String caption) {
-        SendPhoto newMessage = new SendPhoto().setPhoto(fileName, stream);
-        if (caption != null && !caption.equals("")) {
-            newMessage.setCaption(caption);
-        }
-        proceedImageSend(newMessage, userId);
-    }
-
-    private void proceedImageSend(SendPhoto newMessage, String userId) {
-        if (alreadyRedirected == null || !alreadyRedirected) alreadyRedirected = true;
-        else return;
-
-        newMessage.setChatId(userId);
-        try {
-            webHook.execute(newMessage);
-            alreadyRedirected = false;
-        } catch (TelegramApiException e) {
-            sendMessageToAdmin(e.getMessage());
-            e.printStackTrace();
-        }
-    }
-
-    private void sendDocument(File file, String userId) {
-        if (alreadyRedirected == null || !alreadyRedirected) alreadyRedirected = true;
-        else return;
-
-        SendDocument sendMessage = new SendDocument().setDocument(file);
-        sendMessage.setChatId(userId);
-        try {
-            webHook.execute(sendMessage);
-            alreadyRedirected = false;
-        } catch (TelegramApiException e) {
-            sendMessageToAdmin(e.getMessage());
-            e.printStackTrace();
-        }
-    }
-
-    public void sendMessageToAdmin(String text) {
-        sendMessage(text, BotConfig.WEBHOOK_ADMIN_ID, false);
     }
 
 }
