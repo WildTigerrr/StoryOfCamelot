@@ -104,7 +104,7 @@ public class TimeDependentActions {
                     if (line[0].equals("actions")) {
                         stringToActions(line[1]);
                     } else if (line[0].equals("scheduledActionMap")) {
-                        stringToScheduledActionMap(line[1]);
+//                        stringToScheduledActionMap(line[1]);
                     }
                 }
 //                counter = Integer.valueOf(values);
