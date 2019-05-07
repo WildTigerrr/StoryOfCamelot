@@ -1,12 +1,10 @@
-package com.wildtigerrr.StoryOfCamelot.web.service;
+package com.wildtigerrr.StoryOfCamelot.bin;
 
-import com.wildtigerrr.StoryOfCamelot.bin.FileProcessing;
+import com.wildtigerrr.StoryOfCamelot.bin.base.GameMovement;
 import com.wildtigerrr.StoryOfCamelot.bin.enums.ActionType;
-import com.wildtigerrr.StoryOfCamelot.bin.enums.MainText;
-import com.wildtigerrr.StoryOfCamelot.database.DatabaseInteraction;
-import com.wildtigerrr.StoryOfCamelot.database.schema.Location;
-import com.wildtigerrr.StoryOfCamelot.database.schema.Player;
 import com.wildtigerrr.StoryOfCamelot.web.ResponseHandler;
+import com.wildtigerrr.StoryOfCamelot.web.service.ResponseManager;
+import com.wildtigerrr.StoryOfCamelot.bin.service.ScheduledAction;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.DependsOn;
@@ -66,15 +64,15 @@ public class TimeDependentActions {
     }
 
     private static FileProcessing fileService;
-//    private static DatabaseInteraction databaseInteraction;
-    private static ResponseHandler responseHandler;
+    //    private static DatabaseInteraction databaseInteraction;
+    private static GameMovement movement;
     private static ResponseManager messages;
 
     @Autowired
-    private TimeDependentActions(FileProcessing fileService, ResponseHandler responseHandler, ResponseManager responseManager) { // DatabaseInteraction databaseInteraction,
+    private TimeDependentActions(FileProcessing fileService, GameMovement gameMovement, ResponseManager responseManager) { // DatabaseInteraction databaseInteraction,
         TimeDependentActions.fileService = fileService;
 //        TimeDependentActions.databaseInteraction = databaseInteraction;
-        TimeDependentActions.responseHandler = responseHandler;
+        TimeDependentActions.movement = gameMovement;
         TimeDependentActions.messages = responseManager;
     }
 
@@ -87,7 +85,9 @@ public class TimeDependentActions {
 
     public static void backupValues() {
         System.out.println("TimeDependentActions > backupValues: Creating backup");
-        fileService.saveFile("temp/", "BackupValues", listToString()); //String.valueOf(counter)
+        String data = "actions===" + actionsToString() + "|||"
+            + "scheduledActionMap===" + scheduledActionMapToString();
+        fileService.saveFile("temp/", "BackupValues", data);
         System.out.println("TimeDependentActions > backupValues: Backup created");
     }
 
@@ -97,7 +97,16 @@ public class TimeDependentActions {
             if (stream != null) {
                 String values = IOUtils.toString(stream, StandardCharsets.UTF_8);
                 System.out.println(values);
-                stringToList(values);
+                String[] line;
+                for (String str : values.split("\\|\\|\\|")) {
+                    line = str.split("===", 2);
+                    if (line.length < 2) continue;
+                    if (line[0].equals("actions")) {
+                        stringToActions(line[1]);
+                    } else if (line[0].equals("scheduledActionMap")) {
+                        stringToScheduledActionMap(line[1]);
+                    }
+                }
 //                counter = Integer.valueOf(values);
                 counter = 10;
             }
@@ -122,46 +131,62 @@ public class TimeDependentActions {
     }
 
     public static void getAll() {
-        messages.sendMessageToAdmin(listToString());
+        messages.sendMessageToAdmin(scheduledActionMapToString());
     }
 
-    private static String listToString() {
+    private static String scheduledActionMapToString() {
+        System.out.println(scheduledActionMap);
+        if (scheduledActionMap == null || scheduledActionMap.isEmpty()) {
+            System.out.println("Scheduled actions is empty");
+            return "null";
+        }
+        StringBuilder data = new StringBuilder();
+        for (Long key : scheduledActionMap.keySet()) {
+            data.append(";").append(scheduledActionMap.get(key).toString());
+        }
+        System.out.println("Scheduled: " + data);
+        data.deleteCharAt(0);
+        return data.toString();
+    }
+
+    private static void stringToScheduledActionMap(String data) {
+        scheduledActionMap = new HashMap<>();
+        playerToScheduled = new HashMap<>();
+        if (data == null) return;
+        ArrayList<String> values = new ArrayList<>(Arrays.asList(data.split(";")));
+        ScheduledAction action;
+        ArrayList<Long> schedules;
+        for (String value : values) {
+            action = new ScheduledAction(value);
+            scheduledActionMap.put(action.timestamp, action);
+            if (playerToScheduled.containsKey(action.playerId)) {
+                schedules = playerToScheduled.get(action.playerId);
+                schedules.add(action.timestamp);
+                playerToScheduled.put(action.playerId, schedules);
+            }
+        }
+        startCheck();
+    }
+
+    private static String actionsToString() {
         System.out.println(actions);
         if (actions == null || actions.isEmpty()) {
-            System.out.println("Empty");
-            return "List is empty";
+            System.out.println("Actions");
+            return "null";
         }
         StringBuilder data = new StringBuilder();
         for (String action : actions) {
             data.append(";").append(action);
         }
-//        if (playerToScheduled != null && !playerToScheduled.isEmpty()) {
-//            data.append("|||");
-//            for () {
-//
-//            }
-//        }
-        System.out.println(data);
+        System.out.println("Actions: " + data);
         data.deleteCharAt(0);
         return data.toString();
     }
 
-    private static void stringToList(String data) {
+    private static void stringToActions(String data) {
         actions = new ArrayList<>();
-        if (data != null) {
-            actions.addAll(Arrays.asList(data.split(";")));
-        }
-    }
-
-    private static ScheduledExecutorService scheduledExecutorService;
-    private static ScheduledFuture<?> task;
-
-    private static void startCheck() {
-        if (task == null || task.isCancelled()) schedule();
-    }
-
-    private static void cancel() {
-        task.cancel(true);
+        if (data == null) return;
+        actions.addAll(Arrays.asList(data.split(";")));
     }
 
     private static void check() {
@@ -176,7 +201,7 @@ public class TimeDependentActions {
             while (iterator.hasNext()) {
                 Map.Entry<Long, ScheduledAction> entry = iterator.next();
                 if (currentTime > entry.getKey()) {
-                    responseHandler.sendLocationUpdate(scheduledActionMap.get(entry.getKey()));
+                    movement.sendLocationUpdate(scheduledActionMap.get(entry.getKey()));
                     playerId = entry.getValue().playerId;
                     playerActions = playerToScheduled.get(playerId);
                     playerActions.remove(entry.getValue().timestamp);
@@ -185,14 +210,23 @@ public class TimeDependentActions {
                     } else {
                         playerToScheduled.put(playerId, playerActions);
                     }
-                    System.out.println(playerActions);
-                    System.out.println(playerToScheduled);
                     iterator.remove();
                     System.out.println("Item removed");
                 }
             }
             if (scheduledActionMap.isEmpty()) cancel();
         }
+    }
+
+    private static ScheduledExecutorService scheduledExecutorService;
+    private static ScheduledFuture<?> task;
+
+    private static void startCheck() {
+        if (task == null || task.isCancelled()) schedule();
+    }
+
+    private static void cancel() {
+        task.cancel(true);
     }
 
     private static void schedule() {

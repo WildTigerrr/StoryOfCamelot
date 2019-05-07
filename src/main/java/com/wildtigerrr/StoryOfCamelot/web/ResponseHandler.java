@@ -1,6 +1,9 @@
 package com.wildtigerrr.StoryOfCamelot.web;
 
 import com.wildtigerrr.StoryOfCamelot.bin.FileProcessing;
+import com.wildtigerrr.StoryOfCamelot.bin.TimeDependentActions;
+import com.wildtigerrr.StoryOfCamelot.bin.base.GameMain;
+import com.wildtigerrr.StoryOfCamelot.bin.base.GameMovement;
 import com.wildtigerrr.StoryOfCamelot.bin.enums.Command;
 import com.wildtigerrr.StoryOfCamelot.bin.enums.GameSettings;
 import com.wildtigerrr.StoryOfCamelot.bin.enums.MainText;
@@ -9,37 +12,39 @@ import com.wildtigerrr.StoryOfCamelot.database.schema.Location;
 import com.wildtigerrr.StoryOfCamelot.database.schema.Player;
 import com.wildtigerrr.StoryOfCamelot.database.schema.enums.Stats;
 import com.wildtigerrr.StoryOfCamelot.database.service.implementation.FileLinkServiceImpl;
-import com.wildtigerrr.StoryOfCamelot.database.service.implementation.LocationNearServiceImpl;
 import com.wildtigerrr.StoryOfCamelot.database.service.implementation.LocationServiceImpl;
 import com.wildtigerrr.StoryOfCamelot.database.service.implementation.PlayerServiceImpl;
 import com.wildtigerrr.StoryOfCamelot.web.service.AmazonClient;
 import com.wildtigerrr.StoryOfCamelot.web.service.ResponseManager;
-import com.wildtigerrr.StoryOfCamelot.web.service.ScheduledAction;
-import com.wildtigerrr.StoryOfCamelot.web.service.TimeDependentActions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
 
 @Service
 public class ResponseHandler {
 
-    @Autowired private PlayerServiceImpl playerService;
-    @Autowired private FileLinkServiceImpl fileLinkService;
-    @Autowired private LocationServiceImpl locationService;
-    @Autowired private LocationNearServiceImpl locationNearService;
-    @Autowired private FileProcessing imageService;
-    @Autowired private ResponseManager messages;
+    @Autowired
+    private GameMain gameMain;
+    @Autowired
+    private PlayerServiceImpl playerService;
+    @Autowired
+    private FileLinkServiceImpl fileLinkService;
+    @Autowired
+    private LocationServiceImpl locationService;
+    @Autowired
+    private FileProcessing imageService;
+    @Autowired
+    private ResponseManager messages;
+    @Autowired
+    private GameMovement movementService;
     private AmazonClient amazonClient;
 
-    public ResponseHandler() {}
+    public ResponseHandler() {
+    }
 
     @SuppressWarnings("unused")
     @Autowired
@@ -152,7 +157,7 @@ public class ResponseHandler {
                 break;
             case ADD:
                 String[] values = commandParts[1].split(" ", 2);
-                Player player = addExperience(message.getPlayer(), Stats.valueOf(values[0].toUpperCase()), Integer.parseInt(values[1]), true);
+                Player player = gameMain.addExperience(message.getPlayer(), Stats.valueOf(values[0].toUpperCase()), Integer.parseInt(values[1]), true);
                 playerService.update(player);
                 break;
             case ACTION:
@@ -176,9 +181,9 @@ public class ResponseHandler {
             case MOVE:
                 if (commandParts.length <= 1) {
 //                    sendMessage(locationService.getAll().toString(), message.getUserId());
-                    sendAvailableLocations(message.getPlayer());
+                    movementService.sendAvailableLocations(message.getPlayer());
                 } else if (message.isQuery()) {
-                    moveToLocation(message, commandParts[1]);
+                    movementService.moveToLocation(message, commandParts[1]);
                 }
                 break;
             default:
@@ -200,86 +205,6 @@ public class ResponseHandler {
         player.setNickname(newName);
         playerService.update(player);
         messages.sendMessage(MainText.NICKNAME_CHANGED.text() + player.getNickname() + "*", player.getExternalId(), true);
-    }
-
-    private Player addExperience(Player player, Stats stat, int experience, Boolean sendExperienceGet) {
-        try {
-            ArrayList<String> eventList = player.addStatExp(
-                    experience,
-                    stat
-            );
-            if (eventList != null && !eventList.isEmpty()) {
-                for (String event : eventList) {
-                    if (event != null && !event.equals("")) {
-                        messages.sendMessage(event, player.getExternalId());
-                    }
-                }
-            }
-            if (sendExperienceGet) {
-                messages.sendMessage("Очков опыта получено: " + experience, player.getExternalId());
-            }
-            return player;
-        } catch (SOCInvalidDataException e) {
-            messages.sendMessageToAdmin(e.getMessage());
-            e.printStackTrace();
-        }
-        return player;
-    }
-
-    private void sendAvailableLocations(Player player) {
-        ArrayList<Location> nearLocations = locationNearService.getNearLocations(player.getLocation());
-        InlineKeyboardMarkup keyboard = new InlineKeyboardMarkup();
-        InlineKeyboardButton button;
-        List<InlineKeyboardButton> buttonsRow = new ArrayList<>();
-        List<List<InlineKeyboardButton>> rowList = new ArrayList<>();
-        Integer buttonsCounter = 0;
-        for (Location loc : nearLocations) {
-            buttonsCounter++;
-            if (buttonsCounter > 2) {
-                rowList.add(buttonsRow);
-                buttonsRow = new ArrayList<>();
-                buttonsCounter = 1;
-            }
-            button = new InlineKeyboardButton();
-            button.setText(loc.getName());
-            button.setCallbackData("/move " + loc.getId());
-            buttonsRow.add(button);
-        }
-        rowList.add(buttonsRow);
-        keyboard.setKeyboard(rowList);
-        messages.sendMessage("Итак, куда пойдём?", keyboard, player.getExternalId());
-    }
-
-    private void moveToLocation(UpdateWrapper message, String locationId) {
-        Location location = locationService.findById(Integer.parseInt(locationId));
-        if (location != null) {
-            int distance = locationNearService.getDistance(message.getPlayer().getLocation(), location);
-            if (distance == -1) {
-                messages.sendMessage(MainText.NO_DIRECT.text(), message.getUserId());
-                return;
-            }
-            String newText = "Ну, пойдем к " + location.getName();
-            Calendar calendar = Calendar.getInstance();
-            calendar.add(Calendar.SECOND, distance);
-            if (!TimeDependentActions.scheduleMove(message.getPlayer().getId(), calendar.getTimeInMillis(), locationId, String.valueOf(distance))) {
-                newText = MainText.ALREADY_MOVING.text();
-            }
-            messages.sendMessageEdit(message.getMessageId(), newText, message.getUserId(), true);
-        }
-    }
-
-    public void sendLocationUpdate(ScheduledAction action) {
-        Player player = playerService.findById(action.playerId);
-        Location location = locationService.findById(Integer.valueOf(action.target));
-        player.setLocation(location);
-        addExperience(player, Stats.ENDURANCE, Integer.valueOf(action.additionalValue) / 10, true);
-        playerService.update(player);
-        if (location.getImageLink() != null) {
-            InputStream stream = amazonClient.getObject(location.getImageLink().getLocation());
-            messages.sendImage(location.getName(), stream, player.getExternalId(), location.getName() + ", и что у нас тут?");
-        } else {
-            messages.sendMessage(location.getName() + ", и что у нас тут?", player.getExternalId());
-        }
     }
 
 }
