@@ -34,8 +34,8 @@ public class ScheduledAction {
         HashMap<String, String> actionValues = parse(stringifiedAction);
 
         this.type = ActionType.valueOf(actionValues.get("type"));
-        this.target = actionValues.get("target");
-        this.additionalValue = actionValues.get("additionalValue");
+        this.target = actionValues.get("target").replace("\'", "");
+        this.additionalValue = actionValues.get("additionalValue").replace("\'", "");
         this.timestamp = Long.valueOf(actionValues.get("timestamp"));
         this.playerId = Integer.valueOf(actionValues.get("playerId"));
 
