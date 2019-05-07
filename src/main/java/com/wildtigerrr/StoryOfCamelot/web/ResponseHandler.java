@@ -5,10 +5,7 @@ import com.wildtigerrr.StoryOfCamelot.bin.TimeDependentActions;
 import com.wildtigerrr.StoryOfCamelot.bin.base.GameMain;
 import com.wildtigerrr.StoryOfCamelot.bin.base.GameMovement;
 import com.wildtigerrr.StoryOfCamelot.bin.enums.Command;
-import com.wildtigerrr.StoryOfCamelot.bin.enums.GameSettings;
 import com.wildtigerrr.StoryOfCamelot.bin.enums.MainText;
-import com.wildtigerrr.StoryOfCamelot.bin.exceptions.SOCInvalidDataException;
-import com.wildtigerrr.StoryOfCamelot.database.schema.Location;
 import com.wildtigerrr.StoryOfCamelot.database.schema.Player;
 import com.wildtigerrr.StoryOfCamelot.database.schema.enums.Stats;
 import com.wildtigerrr.StoryOfCamelot.database.service.implementation.FileLinkServiceImpl;
@@ -22,7 +19,6 @@ import org.springframework.stereotype.Service;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
 
 @Service
 public class ResponseHandler {
@@ -53,31 +49,14 @@ public class ResponseHandler {
     }
 
     void handleMessage(UpdateWrapper message) {
-        message.setPlayer(getPlayer(message.getUserId()));
+        message.setPlayer(gameMain.getPlayer(message.getUserId()));
         System.out.println("Working with message: " + message);
 //        if (message.getPlayer().getS);
         logSender(message);
         if (message.getUserId().equals(BotConfig.WEBHOOK_ADMIN_ID)) {
-            if (message.getText().equals("database test")) {
-                // Some admin actions
-                String locationName = "Test Forest";
-                Location newLocation = locationService.findByName(locationName);
-                if (newLocation != null) {
-                    messages.sendMessage(newLocation.toString(), message.getUserId());
-                } else {
-                    messages.sendMessageToAdmin("Searched location didn't found: " + locationName);
-                    System.out.println("No such location");
-                }
-            } else if (message.getText().equals("image test")) {
-                sendTestImage(message.getUserId());
-                return;
-            }
+            if (performAdminCommands(message)) return;
         }
         if (message.getText().startsWith("/")) {
-            if (message.getText().equals("/count")) {
-                TimeDependentActions.addCount();
-                return;
-            }
             performCommand(message);
             return;
         }
@@ -135,6 +114,14 @@ public class ResponseHandler {
         }
     }
 
+    private Boolean performAdminCommands(UpdateWrapper message) {
+        if (message.getText().equals("image test")) {
+            sendTestImage(message.getUserId());
+            return true;
+        }
+        return false;
+    }
+
     private void performCommand(UpdateWrapper message) {
         String[] commandParts = message.getText().split(" ", 2);
         Command command;
@@ -150,7 +137,7 @@ public class ResponseHandler {
                 break;
             case NICKNAME:
                 if (commandParts.length > 1) {
-                    setNickname(message.getPlayer(), commandParts[1]);
+                    gameMain.setNickname(message.getPlayer(), commandParts[1]);
                 } else {
                     messages.sendMessage(MainText.EMPTY_NICKNAME.text(), message.getUserId(), true);
                 }
@@ -164,9 +151,6 @@ public class ResponseHandler {
                 if (commandParts.length <= 1) return;
                 commandParts = message.getText().split(" ", 3);
                 switch (commandParts[1]) {
-                    case "init":
-                        TimeDependentActions.initList();
-                        break;
                     case "add":
                         TimeDependentActions.addElement(commandParts[2]);
                         break;
@@ -179,32 +163,15 @@ public class ResponseHandler {
                 }
                 break;
             case MOVE:
-                if (commandParts.length <= 1) {
-//                    sendMessage(locationService.getAll().toString(), message.getUserId());
+                if (!message.isQuery() || commandParts.length < 2) {
                     movementService.sendAvailableLocations(message.getPlayer());
-                } else if (message.isQuery()) {
+                } else {
                     movementService.moveToLocation(message, commandParts[1]);
                 }
                 break;
             default:
                 messages.sendMessage(MainText.COMMAND_NOT_DEFINED.text(), message.getUserId(), true);
         }
-    }
-
-    private Player getPlayer(String externalId) {
-        Player player;
-        player = playerService.findByExternalId(externalId);
-        if (player == null) {
-            player = new Player(externalId, externalId, locationService.findByName(GameSettings.DEFAULT_LOCATION.get()));
-            player = playerService.create(player);
-        }
-        return player;
-    }
-
-    private void setNickname(Player player, String newName) {
-        player.setNickname(newName);
-        playerService.update(player);
-        messages.sendMessage(MainText.NICKNAME_CHANGED.text() + player.getNickname() + "*", player.getExternalId(), true);
     }
 
 }

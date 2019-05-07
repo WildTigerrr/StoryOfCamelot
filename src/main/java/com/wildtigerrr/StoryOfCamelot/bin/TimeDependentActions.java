@@ -24,16 +24,9 @@ import java.util.concurrent.TimeUnit;
 @DependsOn({"filesProcessing", "amazonClient"})
 public class TimeDependentActions {
 
-    private static Integer counter = 0;
     private static ArrayList<String> actions = new ArrayList<>();
     private static HashMap<Long, ScheduledAction> scheduledActionMap = new HashMap<>();
     private static HashMap<Integer, ArrayList<Long>> playerToScheduled = new HashMap<>();
-
-    public static void addCount() {
-        counter++;
-//        actions.add(String.valueOf(counter));
-        messages.sendMessageToAdmin("Updated to: " + counter);
-    }
 
     public static Boolean scheduleMove(int playerId, Long timestamp, String target, String distance) {
         while (scheduledActionMap.containsKey(timestamp)) timestamp++;
@@ -86,7 +79,7 @@ public class TimeDependentActions {
     public static void backupValues() {
         System.out.println("TimeDependentActions > backupValues: Creating backup");
         String data = "actions===" + actionsToString() + "|||"
-            + "scheduledActionMap===" + scheduledActionMapToString();
+                + "scheduledActionMap===" + scheduledActionMapToString();
         fileService.saveFile("temp/", "BackupValues", data);
         System.out.println("TimeDependentActions > backupValues: Backup created");
     }
@@ -101,14 +94,15 @@ public class TimeDependentActions {
                 for (String str : values.split("\\|\\|\\|")) {
                     line = str.split("===", 2);
                     if (line.length < 2) continue;
-                    if (line[0].equals("actions")) {
-                        stringToActions(line[1]);
-                    } else if (line[0].equals("scheduledActionMap")) {
-//                        stringToScheduledActionMap(line[1]);
+                    switch (line[0]) {
+                        case "actions":
+                            stringToActions(line[1]);
+                            break;
+                        case "scheduledActionMap":
+//                            stringToScheduledActionMap(line[1]);
+                            break;
                     }
                 }
-//                counter = Integer.valueOf(values);
-                counter = 10;
             }
         } catch (IOException e) {
             System.out.println("Exception: " + e.getMessage());
