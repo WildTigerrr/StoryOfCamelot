@@ -32,7 +32,7 @@ public class UpdateWrapper {
         return message;
     }
 
-    String getUserId() {
+    public String getUserId() {
         return userId;
     }
 
@@ -64,7 +64,7 @@ public class UpdateWrapper {
         this.player = player;
     }
 
-    Player getPlayer() {
+    public Player getPlayer() {
         return player;
     }
 
