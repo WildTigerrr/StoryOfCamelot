@@ -178,6 +178,7 @@ public class ResponseHandler {
                     messages.sendMessage(commandParts[2], commandParts[1]);
 //                    messages.sendMessage("Пользователь не найден", message.getUserId());
                 }
+                break;
             default:
                 messages.sendMessage(MainText.COMMAND_NOT_DEFINED.text(), message.getUserId(), true);
         }
