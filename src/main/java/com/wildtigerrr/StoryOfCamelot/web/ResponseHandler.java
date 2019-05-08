@@ -169,6 +169,15 @@ public class ResponseHandler {
                     movementService.moveToLocation(message, commandParts[1]);
                 }
                 break;
+            case SEND:
+                commandParts = message.getText().split(" ", 3);
+                Player reciever = playerService.findByExternalId(commandParts[1]);
+                if (reciever != null) {
+                    messages.sendMessage(commandParts[2], commandParts[1]);
+                } else {
+                    messages.sendMessage(commandParts[2], commandParts[1]);
+//                    messages.sendMessage("Пользователь не найден", message.getUserId());
+                }
             default:
                 messages.sendMessage(MainText.COMMAND_NOT_DEFINED.text(), message.getUserId(), true);
         }
