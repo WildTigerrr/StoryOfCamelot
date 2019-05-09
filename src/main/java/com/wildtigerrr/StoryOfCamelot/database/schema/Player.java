@@ -81,6 +81,7 @@ public class Player {
         isNew = externalId.equals(nickname);
         level = 1;
         status = PlayerStatus.TUTORIAL;
+        additionalStatus = PlayerStatusExtended.TUTORIAL_NICKNAME;
         unassignedPoints = 25;
         strength = 0;
         health = 0;
