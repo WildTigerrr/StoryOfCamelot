@@ -10,8 +10,11 @@ import com.wildtigerrr.StoryOfCamelot.database.service.implementation.PlayerServ
 import com.wildtigerrr.StoryOfCamelot.web.service.ResponseManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
 
 import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class GameMain {
@@ -35,28 +38,27 @@ public class GameMain {
 
     public void setNickname(Player player, String newName, Boolean firstSet) {
         player.setNickname(newName);
+        String message;
         if (player.getNickname().isEmpty()) {
-            messages.sendMessage(
-                    MainText.NICKNAME_EMPTY.text(),
-                    player.getExternalId(),
-                    true
-            );
+            message = MainText.NICKNAME_EMPTY.text();
         } else if (playerService.findByNickname(player.getNickname()) != null) {
-            messages.sendMessage(
-                    MainText.NICKNAME_DUPLICATE.text(player.getNickname()),
-                    player.getExternalId(),
-                    true
-            );
+            message = MainText.NICKNAME_DUPLICATE.text(player.getNickname());
+        } else if (!firstSet){
+            playerService.update(player);
+            message = MainText.NICKNAME_CHANGED.text(player.getNickname());
         } else {
             playerService.update(player);
-            String success = MainText.NICKNAME_CHANGED.text(player.getNickname());
-            if (firstSet) success = MainText.NICKNAME_SET.text(player.getNickname(), locationService.findByName(GameSettings.FIRST_FOREST_LOCATION.get()).getName());
-            messages.sendMessage(
-                    success,
-                    player.getExternalId(),
-                    true
-            );
+            message = MainText.NICKNAME_SET.text(player.getNickname(), locationService.findByName(GameSettings.FIRST_FOREST_LOCATION.get()).getName());
+            ReplyKeyboardMarkup keyboard = new ReplyKeyboardMarkup();
+            List<KeyboardRow> keyboardRow = new ArrayList<>();
+            KeyboardRow button = new KeyboardRow();
+            button.add(MainText.MOVE_BUTTON.text());
+            keyboardRow.add(button);
+            keyboard.setKeyboard(keyboardRow);
+            messages.sendMessage(message, keyboard, player.getExternalId());
+            return;
         }
+        messages.sendMessage(message, player.getExternalId(), true);
     }
 
     public Player addExperience(Player player, Stats stat, int experience, Boolean sendExperienceGet) {
