@@ -55,6 +55,7 @@ public class GameMain {
             button.add(MainText.MOVE_BUTTON.text());
             keyboardRow.add(button);
             keyboard.setKeyboard(keyboardRow);
+            keyboard.setResizeKeyboard(true);
             messages.sendMessage(message, keyboard, player.getExternalId());
             return;
         }
