@@ -6,5 +6,6 @@ public enum Command {
     ADD,
     ACTION,
     SEND,
-    MOVE;
+    MOVE,
+    START
 }

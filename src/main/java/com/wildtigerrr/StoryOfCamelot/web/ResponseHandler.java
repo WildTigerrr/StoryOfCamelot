@@ -181,6 +181,13 @@ public class ResponseHandler {
 //                    messages.sendMessage("Пользователь не найден", message.getUserId());
                 }
                 break;
+            case START:
+                if (message.getPlayer().isNew()) {
+                    tutorial.tutorialStart(message.getPlayer());
+                } else {
+                    messages.sendMessage(MainText.PROPOSITION_EXPIRED.text(), message.getUserId());
+                }
+                return true;
             default:
                 messages.sendMessage(MainText.COMMAND_NOT_DEFINED.text(), message.getUserId(), true);
                 return false;

@@ -32,6 +32,7 @@ public enum MainText {
 
     UNKNOWN_COMMAND(0, "Я не знаю что мне делать с этою бедой..."),
     COMMAND_NOT_DEFINED(0, "Слушай, я о чем-то таком слышал, но почему-то не знаю что делать"),
+    PROPOSITION_EXPIRED(0, "Кажется, это уже неактуально"),
     PLAYER_NOT_EXIST(0, "You don't have a player yet.");
 
     private final String text;
