@@ -2,7 +2,6 @@ package com.wildtigerrr.StoryOfCamelot.bin;
 
 import com.wildtigerrr.StoryOfCamelot.bin.base.GameMovement;
 import com.wildtigerrr.StoryOfCamelot.bin.enums.ActionType;
-import com.wildtigerrr.StoryOfCamelot.web.ResponseHandler;
 import com.wildtigerrr.StoryOfCamelot.web.service.ResponseManager;
 import com.wildtigerrr.StoryOfCamelot.bin.service.ScheduledAction;
 import org.apache.commons.io.IOUtils;
@@ -57,14 +56,12 @@ public class TimeDependentActions {
     }
 
     private static FileProcessing fileService;
-    //    private static DatabaseInteraction databaseInteraction;
     private static GameMovement movement;
     private static ResponseManager messages;
 
     @Autowired
-    private TimeDependentActions(FileProcessing fileService, GameMovement gameMovement, ResponseManager responseManager) { // DatabaseInteraction databaseInteraction,
+    private TimeDependentActions(FileProcessing fileService, GameMovement gameMovement, ResponseManager responseManager) {
         TimeDependentActions.fileService = fileService;
-//        TimeDependentActions.databaseInteraction = databaseInteraction;
         TimeDependentActions.movement = gameMovement;
         TimeDependentActions.messages = responseManager;
     }
@@ -107,11 +104,6 @@ public class TimeDependentActions {
         } catch (IOException e) {
             System.out.println("Exception: " + e.getMessage());
         }
-    }
-
-    public static void initList() {
-        actions = new ArrayList<>();
-        actions.add("Test");
     }
 
     public static void addElement(String str) {

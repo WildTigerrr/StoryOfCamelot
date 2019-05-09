@@ -144,8 +144,17 @@ public class ResponseHandler {
                 break;
             case ADD:
                 String[] values = commandParts[1].split(" ", 2);
-                Player player = gameMain.addExperience(message.getPlayer(), Stats.valueOf(values[0].toUpperCase()), Integer.parseInt(values[1]), true);
-                playerService.update(player);
+                try {
+                    Player player = gameMain.addExperience(
+                            message.getPlayer(),
+                            Stats.valueOf(values[0].toUpperCase()),
+                            Integer.parseInt(values[1]),
+                            true
+                    );
+                    playerService.update(player);
+                } catch (IllegalArgumentException e) {
+                    messages.sendMessageToAdmin("Не верная характеристика: " + values[0].toUpperCase());
+                }
                 break;
             case ACTION:
                 if (commandParts.length <= 1) return;
@@ -171,8 +180,8 @@ public class ResponseHandler {
                 break;
             case SEND:
                 commandParts = message.getText().split(" ", 3);
-                Player reciever = playerService.findByExternalId(commandParts[1]);
-                if (reciever != null) {
+                Player receiver = playerService.findByExternalId(commandParts[1]);
+                if (receiver != null) {
                     messages.sendMessage(commandParts[2], commandParts[1]);
                 } else {
                     messages.sendMessage(commandParts[2], commandParts[1]);
