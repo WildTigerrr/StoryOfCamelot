@@ -2,6 +2,8 @@ package com.wildtigerrr.StoryOfCamelot.database.schema;
 
 import com.wildtigerrr.StoryOfCamelot.bin.enums.MainText;
 import com.wildtigerrr.StoryOfCamelot.bin.exceptions.SOCInvalidDataException;
+import com.wildtigerrr.StoryOfCamelot.database.schema.enums.PlayerStatus;
+import com.wildtigerrr.StoryOfCamelot.database.schema.enums.PlayerStatusExtended;
 import com.wildtigerrr.StoryOfCamelot.database.schema.enums.Stats;
 
 import javax.persistence.*;
@@ -19,6 +21,10 @@ public class Player {
     private Integer id;
     private String externalId;
     private String nickname;
+    @Enumerated(EnumType.STRING)
+    private PlayerStatus status;
+    @Enumerated(EnumType.STRING)
+    private PlayerStatusExtended additionalStatus;
 
     // ------------------- GETTERS AND SETTERS ---------------------------------------------------------------------- //
 
@@ -43,6 +49,26 @@ public class Player {
         this.nickname = removeSpecialCharacters(nickname);
     }
 
+    public PlayerStatus getStatus() {
+        return status;
+    }
+
+    public void ban() {
+        status = PlayerStatus.BANNED;
+    }
+
+    public void activate() {
+        status = PlayerStatus.ACTIVE;
+    }
+
+    public PlayerStatusExtended getAdditionalStatus() {
+        return additionalStatus;
+    }
+
+    public void setAdditionalStatus(PlayerStatusExtended additionalStatus) {
+        this.additionalStatus = additionalStatus;
+    }
+
     // ------------------- CONSTRUCTORS ----------------------------------------------------------------------------- //
 
     protected Player() {
@@ -54,6 +80,7 @@ public class Player {
         this.location = location;
         isNew = externalId.equals(nickname);
         level = 1;
+        status = PlayerStatus.TUTORIAL;
         unassignedPoints = 25;
         strength = 0;
         health = 0;
@@ -277,7 +304,6 @@ public class Player {
 
     // ================================================ END MOVEMENT ================================================ //
 
-    private String status;
     private Boolean isNew;
 
     @OneToMany(

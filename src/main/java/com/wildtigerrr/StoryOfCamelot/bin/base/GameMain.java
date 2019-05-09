@@ -4,23 +4,23 @@ import com.wildtigerrr.StoryOfCamelot.bin.enums.GameSettings;
 import com.wildtigerrr.StoryOfCamelot.bin.enums.MainText;
 import com.wildtigerrr.StoryOfCamelot.bin.exceptions.SOCInvalidDataException;
 import com.wildtigerrr.StoryOfCamelot.database.schema.Player;
+import com.wildtigerrr.StoryOfCamelot.database.schema.enums.PlayerStatusExtended;
 import com.wildtigerrr.StoryOfCamelot.database.schema.enums.Stats;
 import com.wildtigerrr.StoryOfCamelot.database.service.implementation.LocationServiceImpl;
 import com.wildtigerrr.StoryOfCamelot.database.service.implementation.PlayerServiceImpl;
 import com.wildtigerrr.StoryOfCamelot.web.service.ResponseManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
 
 import java.util.ArrayList;
-import java.util.List;
 
 @Service
 public class GameMain {
 
     @Autowired
     private ResponseManager messages;
+    @Autowired
+    private GameTutorial tutorial;
     @Autowired
     private PlayerServiceImpl playerService;
     @Autowired
@@ -36,28 +36,20 @@ public class GameMain {
         return player;
     }
 
-    public void setNickname(Player player, String newName, Boolean firstSet) {
+    public void setNickname(Player player, String newName) {
         player.setNickname(newName);
         String message;
         if (player.getNickname().isEmpty()) {
             message = MainText.NICKNAME_EMPTY.text();
         } else if (playerService.findByNickname(player.getNickname()) != null) {
             message = MainText.NICKNAME_DUPLICATE.text(player.getNickname());
-        } else if (!firstSet){
-            playerService.update(player);
-            message = MainText.NICKNAME_CHANGED.text(player.getNickname());
+        } else if (player.getAdditionalStatus() == PlayerStatusExtended.TUTORIAL_NICKNAME) {
+            tutorial.tutorialNickname(player);
+            return;
         } else {
             playerService.update(player);
-            message = MainText.NICKNAME_SET.text(player.getNickname(), locationService.findByName(GameSettings.FIRST_FOREST_LOCATION.get()).getName());
-            ReplyKeyboardMarkup keyboard = new ReplyKeyboardMarkup();
-            List<KeyboardRow> keyboardRow = new ArrayList<>();
-            KeyboardRow button = new KeyboardRow();
-            button.add(MainText.MOVE_BUTTON.text());
-            keyboardRow.add(button);
-            keyboard.setKeyboard(keyboardRow);
-            keyboard.setResizeKeyboard(true);
-            messages.sendMessage(message, keyboard, player.getExternalId());
-            return;
+            message = MainText.NICKNAME_CHANGED.text(player.getNickname());
+
         }
         messages.sendMessage(message, player.getExternalId(), true);
     }

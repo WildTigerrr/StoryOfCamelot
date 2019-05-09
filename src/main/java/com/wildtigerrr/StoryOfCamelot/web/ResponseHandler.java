@@ -4,14 +4,13 @@ import com.wildtigerrr.StoryOfCamelot.bin.FileProcessing;
 import com.wildtigerrr.StoryOfCamelot.bin.TimeDependentActions;
 import com.wildtigerrr.StoryOfCamelot.bin.base.GameMain;
 import com.wildtigerrr.StoryOfCamelot.bin.base.GameMovement;
+import com.wildtigerrr.StoryOfCamelot.bin.base.GameTutorial;
 import com.wildtigerrr.StoryOfCamelot.bin.enums.Command;
 import com.wildtigerrr.StoryOfCamelot.bin.enums.MainText;
+import com.wildtigerrr.StoryOfCamelot.bin.enums.ReplyButtons;
 import com.wildtigerrr.StoryOfCamelot.database.schema.Player;
 import com.wildtigerrr.StoryOfCamelot.database.schema.enums.Stats;
-import com.wildtigerrr.StoryOfCamelot.database.service.implementation.FileLinkServiceImpl;
-import com.wildtigerrr.StoryOfCamelot.database.service.implementation.LocationServiceImpl;
 import com.wildtigerrr.StoryOfCamelot.database.service.implementation.PlayerServiceImpl;
-import com.wildtigerrr.StoryOfCamelot.web.service.AmazonClient;
 import com.wildtigerrr.StoryOfCamelot.web.service.ResponseManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,27 +25,15 @@ public class ResponseHandler {
     @Autowired
     private GameMain gameMain;
     @Autowired
+    private GameTutorial tutorial;
+    @Autowired
     private PlayerServiceImpl playerService;
-    @Autowired
-    private FileLinkServiceImpl fileLinkService;
-    @Autowired
-    private LocationServiceImpl locationService;
     @Autowired
     private FileProcessing imageService;
     @Autowired
     private ResponseManager messages;
     @Autowired
     private GameMovement movementService;
-    private AmazonClient amazonClient;
-
-    public ResponseHandler() {
-    }
-
-    @SuppressWarnings("unused")
-    @Autowired
-    ResponseHandler(AmazonClient amazonClient) {
-        this.amazonClient = amazonClient;
-    }
 
     void handleMessage(UpdateWrapper message) {
         message.setPlayer(gameMain.getPlayer(message.getUserId()));
@@ -61,13 +48,10 @@ public class ResponseHandler {
         }
         Player player = message.getPlayer();
         if (message.getPlayer().isNew()) {
-            System.out.println("New player");
-            player.setup();
-            playerService.update(player);
-            messages.sendMessage(MainText.MEET_NEW_PLAYER.text(), message.getUserId(), true);
+            tutorial.tutorialStart(message.getPlayer());
             return;
         } else if (player.getExternalId().equals(player.getNickname())) {
-            gameMain.setNickname(message.getPlayer(), message.getText(), true);
+            gameMain.setNickname(message.getPlayer(), message.getText());
             return;
         }
         String answer = "You wrote me: " + message.getText();
@@ -145,7 +129,7 @@ public class ResponseHandler {
                 break;
             case NICKNAME:
                 if (commandParts.length > 1) {
-                    gameMain.setNickname(message.getPlayer(), commandParts[1], false);
+                    gameMain.setNickname(message.getPlayer(), commandParts[1]);
                 } else {
                     messages.sendMessage(MainText.NICKNAME_EMPTY.text(), message.getUserId(), true);
                 }
@@ -205,7 +189,8 @@ public class ResponseHandler {
     }
 
     private Command buttonToCommand(String text) {
-        if (text.equals(MainText.MOVE_BUTTON.text())) return Command.MOVE;
+        if (text.equals(ReplyButtons.MOVE.getLabel())) return Command.MOVE;
+        else if (text.equals(ReplyButtons.ME.getLabel())) return Command.ME;
         return null;
     }
 
