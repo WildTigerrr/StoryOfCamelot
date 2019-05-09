@@ -34,7 +34,7 @@ public class ResponseManager {
         proceedMessageSend(text, null, userId, useMarkdown);
     }
 
-    public void sendMessage(String text, InlineKeyboardMarkup keyboard, String userId) {
+    public void sendMessage(String text, ReplyKeyboard keyboard, String userId) {
         proceedMessageSend(text, keyboard, userId, true);
     }
 
