@@ -56,8 +56,7 @@ public class ResponseHandler {
         if (message.getUserId().equals(BotConfig.WEBHOOK_ADMIN_ID)) {
             if (performAdminCommands(message)) return;
         }
-        if (message.getText().startsWith("/")) {
-            performCommand(message);
+        if (performCommand(message)) {
             return;
         }
         Player player = message.getPlayer();
@@ -124,14 +123,21 @@ public class ResponseHandler {
         return false;
     }
 
-    private void performCommand(UpdateWrapper message) {
+    private Boolean performCommand(UpdateWrapper message) {
         String[] commandParts = message.getText().split(" ", 2);
         Command command;
-        try {
-            command = Command.valueOf(commandParts[0].substring(1).toUpperCase());
-        } catch (IllegalArgumentException e) {
-            messages.sendMessage(MainText.UNKNOWN_COMMAND.text(), message.getUserId(), true);
-            return;
+        if (message.getText().startsWith("/")) {
+            try {
+                command = Command.valueOf(commandParts[0].substring(1).toUpperCase());
+            } catch (IllegalArgumentException e) {
+                messages.sendMessage(MainText.UNKNOWN_COMMAND.text(), message.getUserId(), true);
+                return false;
+            }
+        } else {
+            command = buttonToCommand(message.getText());
+            if (command == null) {
+                return false;
+            }
         }
         switch (command) {
             case ME:
@@ -160,7 +166,7 @@ public class ResponseHandler {
                 }
                 break;
             case ACTION:
-                if (commandParts.length <= 1) return;
+                if (commandParts.length <= 1) return true;
                 commandParts = message.getText().split(" ", 3);
                 switch (commandParts[1]) {
                     case "add":
@@ -193,7 +199,14 @@ public class ResponseHandler {
                 break;
             default:
                 messages.sendMessage(MainText.COMMAND_NOT_DEFINED.text(), message.getUserId(), true);
+                return false;
         }
+        return true;
+    }
+
+    private Command buttonToCommand(String text) {
+        if (text.equals(MainText.MOVE_BUTTON.text())) return Command.MOVE;
+        return null;
     }
 
 }
