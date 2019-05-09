@@ -97,7 +97,7 @@ public class GameMovement {
         playerService.update(player);
         if (location.getImageLink() != null) {
             InputStream stream = amazonClient.getObject(location.getImageLink().getLocation());
-            messages.sendImage(location.getName(), stream, player.getExternalId(), location.getName() + MainText.LOCATION_HELLO.text());
+            messages.sendImage(location.getName(), stream, player.getExternalId(),  MainText.LOCATION_HELLO.text(location.getName()));
         } else {
             messages.sendMessage(location.getName() + ", и что у нас тут?", player.getExternalId());
         }

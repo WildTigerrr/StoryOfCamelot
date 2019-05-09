@@ -33,19 +33,29 @@ public class GameMain {
         return player;
     }
 
-    public void setNickname(Player player, String newName) {
+    public void setNickname(Player player, String newName, Boolean firstSet) {
         player.setNickname(newName);
         if (player.getNickname().isEmpty()) {
-            messages.sendMessage(MainText.NICKNAME_EMPTY.text(), player.getExternalId(), true);
+            messages.sendMessage(
+                    MainText.NICKNAME_EMPTY.text(),
+                    player.getExternalId(),
+                    true
+            );
         } else if (playerService.findByNickname(player.getNickname()) != null) {
             messages.sendMessage(
-                    MainText.NICKNAME_DUPLICATE_START.text() + player.getNickname() + MainText.NICKNAME_DUPLICATE_END,
+                    MainText.NICKNAME_DUPLICATE.text(player.getNickname()),
                     player.getExternalId(),
                     true
             );
         } else {
             playerService.update(player);
-            messages.sendMessage(MainText.NICKNAME_CHANGED.text() + player.getNickname() + "*", player.getExternalId(), true);
+            String success = MainText.NICKNAME_CHANGED.text(player.getNickname());
+            if (firstSet) success = MainText.NICKNAME_SETTED.text(player.getNickname());
+            messages.sendMessage(
+                    success,
+                    player.getExternalId(),
+                    true
+            );
         }
     }
 

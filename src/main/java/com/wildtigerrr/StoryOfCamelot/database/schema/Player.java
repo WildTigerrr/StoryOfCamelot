@@ -111,32 +111,32 @@ public class Player {
                 case STRENGTH:
                     strengthExp -= getExpToNextStatUp(strength);
                     strength++;
-                    events.add(MainText.STAT_UP_START.text() + Stats.STRENGTH.which() + MainText.STAT_UP_END.text() + strength);
+                    events.add(MainText.STAT_UP.text(Stats.STRENGTH.which(), String.valueOf(strength)));
                     break;
                 case HEALTH:
                     healthExp -= getExpToNextStatUp(health);
                     health++;
-                    events.add(MainText.STAT_UP_START.text() + Stats.HEALTH.which() + MainText.STAT_UP_END.text() + strength);
+                    events.add(MainText.STAT_UP.text(Stats.HEALTH.which(), String.valueOf(health)));
                     break;
                 case AGILITY:
                     agilityExp -= getExpToNextStatUp(agility);
                     agility++;
-                    events.add(MainText.STAT_UP_START.text() + Stats.AGILITY.which() + MainText.STAT_UP_END.text() + agility);
+                    events.add(MainText.STAT_UP.text(Stats.AGILITY.which(), String.valueOf(agility)));
                     break;
                 case INTELLIGENCE:
                     intelligenceExp -= getExpToNextStatUp(intelligence);
                     intelligence++;
-                    events.add(MainText.STAT_UP_START.text() + Stats.INTELLIGENCE.which() + MainText.STAT_UP_END.text() + intelligence);
+                    events.add(MainText.STAT_UP.text(Stats.INTELLIGENCE.which(), String.valueOf(intelligence)));
                     break;
                 case ENDURANCE:
                     enduranceExp -= getExpToNextStatUp(endurance);
                     endurance++;
-                    events.add(MainText.STAT_UP_START.text() + Stats.ENDURANCE.which() + MainText.STAT_UP_END.text() + endurance);
+                    events.add(MainText.STAT_UP.text(Stats.ENDURANCE.which(), String.valueOf(endurance)));
                     break;
             }
             if (isLevelUp()) {
                 levelUp();
-                events.add(MainText.LEVEL_UP.text() + getLevel());
+                events.add(MainText.LEVEL_UP.text(String.valueOf(getLevel())));
             }
             up = isStatUp(stat, 0);
         }
