@@ -154,6 +154,7 @@ public class ResponseHandler {
                     playerService.update(player);
                 } catch (IllegalArgumentException e) {
                     messages.sendMessageToAdmin("Не верная характеристика: " + values[0].toUpperCase());
+                    System.out.println("Error, IllegalArgumentException - Не верная характеристика: " + values[0].toUpperCase());
                 }
                 break;
             case ACTION:
