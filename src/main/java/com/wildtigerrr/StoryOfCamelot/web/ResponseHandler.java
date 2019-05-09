@@ -66,8 +66,10 @@ public class ResponseHandler {
             player.setup();
             playerService.update(player);
             messages.sendMessage(MainText.MEET_NEW_PLAYER.text(), message.getUserId(), true);
+            return;
         } else if (player.getExternalId().equals(player.getNickname())) {
-            System.out.println("Here should be nickname set");
+            gameMain.setNickname(message.getPlayer(), message.getText());
+            return;
         }
         String answer = "You wrote me: " + message.getText();
         System.out.println("Answer: " + answer);
@@ -139,7 +141,7 @@ public class ResponseHandler {
                 if (commandParts.length > 1) {
                     gameMain.setNickname(message.getPlayer(), commandParts[1]);
                 } else {
-                    messages.sendMessage(MainText.EMPTY_NICKNAME.text(), message.getUserId(), true);
+                    messages.sendMessage(MainText.NICKNAME_EMPTY.text(), message.getUserId(), true);
                 }
                 break;
             case ADD:

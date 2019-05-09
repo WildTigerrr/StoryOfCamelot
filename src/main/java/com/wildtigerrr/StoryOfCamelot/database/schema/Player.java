@@ -343,7 +343,7 @@ public class Player {
     private String removeSpecialCharacters(String newNickname) {
         newNickname = newNickname.replaceAll("[^a-zA-Z\\s]", "");
         if (newNickname.length() > 25) newNickname = newNickname.substring(0, 35);
-        return newNickname;
+        return newNickname.trim();
     }
 
     // ================================================ END SERVICE ================================================= //

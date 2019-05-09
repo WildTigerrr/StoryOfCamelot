@@ -35,8 +35,18 @@ public class GameMain {
 
     public void setNickname(Player player, String newName) {
         player.setNickname(newName);
-        playerService.update(player);
-        messages.sendMessage(MainText.NICKNAME_CHANGED.text() + player.getNickname() + "*", player.getExternalId(), true);
+        if (player.getNickname().isEmpty()) {
+            messages.sendMessage(MainText.NICKNAME_EMPTY.text(), player.getExternalId(), true);
+        } else if (playerService.findByNickname(player.getNickname()) != null) {
+            messages.sendMessage(
+                    MainText.NICKNAME_DUPLICATE_START.text() + player.getNickname() + MainText.NICKNAME_DUPLICATE_END,
+                    player.getExternalId(),
+                    true
+            );
+        } else {
+            playerService.update(player);
+            messages.sendMessage(MainText.NICKNAME_CHANGED.text() + player.getNickname() + "*", player.getExternalId(), true);
+        }
     }
 
     public Player addExperience(Player player, Stats stat, int experience, Boolean sendExperienceGet) {
