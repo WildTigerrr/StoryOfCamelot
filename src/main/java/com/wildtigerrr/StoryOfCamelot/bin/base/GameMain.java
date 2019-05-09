@@ -50,7 +50,7 @@ public class GameMain {
         } else {
             playerService.update(player);
             String success = MainText.NICKNAME_CHANGED.text(player.getNickname());
-            if (firstSet) success = MainText.NICKNAME_SETTED.text(player.getNickname());
+            if (firstSet) success = MainText.NICKNAME_SET.text(player.getNickname(), locationService.findByName(GameSettings.FIRST_FOREST_LOCATION.get()).getName());
             messages.sendMessage(
                     success,
                     player.getExternalId(),
