@@ -1,6 +1,5 @@
 package com.wildtigerrr.StoryOfCamelot.database;
 
-import com.vdurmont.emoji.EmojiParser;
 import com.wildtigerrr.StoryOfCamelot.bin.enums.Emojis;
 import com.wildtigerrr.StoryOfCamelot.database.schema.*;
 import com.wildtigerrr.StoryOfCamelot.database.schema.enums.ItemQuality;
@@ -130,8 +129,8 @@ public class DatabaseInteraction {
 
     private HashMap<String, Location> getLocations(HashMap<String, FileLink> filesMap) {
         return new HashMap<String, Location>() {{
-            put("Лес", new Location(Emojis.EVRGREEN_TREE.getCode() + " Лес", filesMap.get("forest-test")));
-            put("Дебри", new Location(Emojis.EVRGREEN_TREE.getCode() + " Дебри", filesMap.get("thicket")));
+            put("Лес", new Location(Emojis.EVERGREEN_TREE.getCode() + " Лес", filesMap.get("forest-test")));
+            put("Дебри", new Location(Emojis.EVERGREEN_TREE.getCode() + " Дебри", filesMap.get("thicket")));
             put("Таинственная Пещера", new Location(Emojis.BAT.getCode() + " Таинственная Пещера", null));
             put("Торговая Площадь", new Location(Emojis.CIRCUS_TENT.getCode() + " Торговая Площадь", filesMap.get("merchants-square")));
         }};
