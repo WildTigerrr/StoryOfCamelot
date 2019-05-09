@@ -1,6 +1,7 @@
 package com.wildtigerrr.StoryOfCamelot.database;
 
 import com.vdurmont.emoji.EmojiParser;
+import com.wildtigerrr.StoryOfCamelot.bin.enums.Emojis;
 import com.wildtigerrr.StoryOfCamelot.database.schema.*;
 import com.wildtigerrr.StoryOfCamelot.database.schema.enums.ItemQuality;
 import com.wildtigerrr.StoryOfCamelot.database.schema.enums.ItemSubType;
@@ -107,17 +108,6 @@ public class DatabaseInteraction {
         return locationService.getAllAsMap();
     }
 
-    private HashMap<String, String> emojis;
-
-    private HashMap<String, String> getEmoji() {
-        if (emojis == null) emojis = new HashMap<String, String>() {{
-            put("evergreenTree", EmojiParser.parseToUnicode(":evergreen_tree:"));
-            put("bat", EmojiParser.parseToUnicode("\uD83E\uDD87"));
-            put("tent", EmojiParser.parseToUnicode(":circus_tent:"));
-        }};
-        return emojis;
-    }
-
     private ArrayList<Item> getItems(HashMap<String, FileLink> filesMap) {
         return new ArrayList<>(
                 Arrays.asList(
@@ -140,10 +130,10 @@ public class DatabaseInteraction {
 
     private HashMap<String, Location> getLocations(HashMap<String, FileLink> filesMap) {
         return new HashMap<String, Location>() {{
-            put("Лес", new Location(getEmoji().get("evergreenTree") + " Лес", filesMap.get("forest-test")));
-            put("Дебри", new Location(getEmoji().get("evergreenTree") + " Дебри", filesMap.get("thicket")));
-            put("Таинственная Пещера", new Location(getEmoji().get("bat") + " Таинственная Пещера", null));
-            put("Торговая Площадь", new Location(getEmoji().get("tent") + " Торговая Площадь", filesMap.get("merchants-square")));
+            put("Лес", new Location(Emojis.EVRGREEN_TREE.getCode() + " Лес", filesMap.get("forest-test")));
+            put("Дебри", new Location(Emojis.EVRGREEN_TREE.getCode() + " Дебри", filesMap.get("thicket")));
+            put("Таинственная Пещера", new Location(Emojis.BAT.getCode() + " Таинственная Пещера", null));
+            put("Торговая Площадь", new Location(Emojis.CIRCUS_TENT.getCode() + " Торговая Площадь", filesMap.get("merchants-square")));
         }};
     }
 
