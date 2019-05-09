@@ -26,7 +26,7 @@ public enum MainText {
     LEVEL_UP(1, "Вы научились чему-то новому. Ваш уровень повышен до p1"),
 
     // BUTTONS
-    MOVE_BUTTON(0, Emojis.FOOTPRINTS.getCode() + "В путь!");
+    MOVE_BUTTON(0, Emojis.FOOTPRINTS.getCode() + "В путь");
 
     private final String text;
     private final int parameters;
