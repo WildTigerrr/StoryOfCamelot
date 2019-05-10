@@ -128,7 +128,8 @@ public class ResponseHandler {
         switch (command) {
             case ME:
                 messages.sendMessage(playerService.getPlayerInfo(message.getUserId()), message.getUserId(), true);
-                if (message.getPlayer().getAdditionalStatus() == PlayerStatusExtended.TUTORIAL_STATS) tutorial.tutorialStats(message.getPlayer());
+                if (message.getPlayer().getAdditionalStatus() == PlayerStatusExtended.TUTORIAL_STATS)
+                    tutorial.tutorialStats(message.getPlayer());
                 break;
             case SKILLS:
                 messages.sendMessage(MainText.COMMAND_NOT_DEVELOPED.text(), message.getUserId(), true);
@@ -171,12 +172,12 @@ public class ResponseHandler {
                 }
                 break;
             case MOVE:
-                if (!message.isQuery() || commandParts.length < 2) {
-                    movementService.sendAvailableLocations(message.getPlayer());
-                } else if (message.getPlayer().getStatus() != PlayerStatus.MOVEMENT) {
-                    movementService.moveToLocation(message, commandParts[1]);
-                } else {
+                if ((message.getPlayer().getStatus() == PlayerStatus.MOVEMENT)) {
                     messages.sendMessage(MainText.ALREADY_MOVING.text(), message.getUserId());
+                } else if (!message.isQuery() || commandParts.length < 2) {
+                    movementService.sendAvailableLocations(message.getPlayer());
+                } else {
+                    movementService.moveToLocation(message, commandParts[1]);
                 }
                 break;
             case SEND:
