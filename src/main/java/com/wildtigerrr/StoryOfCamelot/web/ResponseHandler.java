@@ -176,7 +176,7 @@ public class ResponseHandler {
                     movementService.moveToLocation(message, commandParts[1]);
                 } else if (message.getPlayer().getStatus() == PlayerStatus.MOVEMENT) {
                     messages.sendMessage(MainText.ALREADY_MOVING.text(), message.getUserId());
-                } else if (commandParts.length < 2) {
+                } else { // if (commandParts.length < 2)
                     movementService.sendAvailableLocations(message.getPlayer());
                 }
                 break;
