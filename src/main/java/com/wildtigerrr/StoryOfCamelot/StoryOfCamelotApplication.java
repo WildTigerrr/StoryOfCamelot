@@ -21,7 +21,6 @@ public class StoryOfCamelotApplication {
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             TimeDependentActions.backupValues();
             new ResponseManager().sendMessageToAdmin("Bot Shutting Down");
-            System.out.println("Shutdown Hook Added");
         }));
     }
 

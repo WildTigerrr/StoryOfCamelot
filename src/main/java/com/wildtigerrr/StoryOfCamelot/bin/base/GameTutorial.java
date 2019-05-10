@@ -65,8 +65,14 @@ public class GameTutorial {
         );
     }
 
-    /*void tutorialStats() {
-
-    }*/
+    public void tutorialStats(Player player) {
+        player.setAdditionalStatus(PlayerStatusExtended.TUTORIAL_STATS_UP);
+        playerService.update(player);
+        messages.sendMessage(
+                MainText.GUARD_LESSON_TWO.text(),
+                KeyboardManager.getReplyByButtons(new ArrayList<>(Collections.singleton(ReplyButtons.SKILLS))),
+                player.getExternalId()
+        );
+    }
 
 }

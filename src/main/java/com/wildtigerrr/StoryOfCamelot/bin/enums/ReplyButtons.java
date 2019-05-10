@@ -2,6 +2,7 @@ package com.wildtigerrr.StoryOfCamelot.bin.enums;
 
 public enum ReplyButtons {
     MOVE(Emojis.FOOTPRINTS.getCode() + "В путь"),
+    SKILLS(Emojis.SKILLS.getCode() + "Навыки"),
     ME(Emojis.SCROLL.getCode() + "Летопись");
 
     private final String label;

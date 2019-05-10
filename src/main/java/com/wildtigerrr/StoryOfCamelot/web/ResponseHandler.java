@@ -9,6 +9,7 @@ import com.wildtigerrr.StoryOfCamelot.bin.enums.Command;
 import com.wildtigerrr.StoryOfCamelot.bin.enums.MainText;
 import com.wildtigerrr.StoryOfCamelot.bin.enums.ReplyButtons;
 import com.wildtigerrr.StoryOfCamelot.database.schema.Player;
+import com.wildtigerrr.StoryOfCamelot.database.schema.enums.PlayerStatusExtended;
 import com.wildtigerrr.StoryOfCamelot.database.schema.enums.Stats;
 import com.wildtigerrr.StoryOfCamelot.database.service.implementation.PlayerServiceImpl;
 import com.wildtigerrr.StoryOfCamelot.web.service.ResponseManager;
@@ -126,6 +127,10 @@ public class ResponseHandler {
         switch (command) {
             case ME:
                 messages.sendMessage(playerService.getPlayerInfo(message.getUserId()), message.getUserId(), true);
+                if (message.getPlayer().getAdditionalStatus() == PlayerStatusExtended.TUTORIAL_STATS) tutorial.tutorialStats(message.getPlayer());
+                break;
+            case SKILLS:
+                messages.sendMessage(MainText.COMMAND_NOT_DEVELOPED.text(), message.getUserId(), true);
                 break;
             case NICKNAME:
                 if (commandParts.length > 1) {
@@ -198,6 +203,7 @@ public class ResponseHandler {
     private Command buttonToCommand(String text) {
         if (text.equals(ReplyButtons.MOVE.getLabel())) return Command.MOVE;
         else if (text.equals(ReplyButtons.ME.getLabel())) return Command.ME;
+        else if (text.equals(ReplyButtons.SKILLS.getLabel())) return Command.SKILLS;
         return null;
     }
 

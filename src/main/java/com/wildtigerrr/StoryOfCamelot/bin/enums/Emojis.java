@@ -7,6 +7,7 @@ public enum  Emojis {
     CIRCUS_TENT(EmojiParser.parseToUnicode(":circus_tent:")),
     BAT(EmojiParser.parseToUnicode("\uD83E\uDD87")),
     FOOTPRINTS(EmojiParser.parseToUnicode(":footprints:")),
+    SKILLS(EmojiParser.parseToUnicode(":mortar_board:")),
     SCROLL(EmojiParser.parseToUnicode(":scroll:"));
 
     private final String code;
