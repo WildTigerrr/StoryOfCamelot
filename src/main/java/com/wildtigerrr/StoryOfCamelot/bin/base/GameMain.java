@@ -37,9 +37,12 @@ public class GameMain {
     }
 
     public void setNickname(Player player, String newName) {
-        player.setNickname(newName);
         String message;
-        if (player.getNickname().isEmpty()) {
+        if (Player.containsSpecialCharacters(newName)) {
+            message = MainText.NICKNAME_WRONG.text();
+        } else if (!player.setNickname(newName)) {
+            message = MainText.NICKNAME_LONG.text(String.valueOf(Player.getNicknameLengthMax()));
+        } else if (player.getNickname().isEmpty()) {
             message = MainText.NICKNAME_EMPTY.text();
         } else if (playerService.findByNickname(player.getNickname()) != null) {
             message = MainText.NICKNAME_DUPLICATE.text(player.getNickname());

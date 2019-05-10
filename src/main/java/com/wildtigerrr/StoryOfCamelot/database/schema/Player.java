@@ -45,8 +45,13 @@ public class Player {
         return nickname;
     }
 
-    public void setNickname(String nickname) {
-        this.nickname = removeSpecialCharacters(nickname);
+    public Boolean setNickname(String nickname) {
+        if (nickname.length() > getNicknameLengthMax()) {
+            return false;
+        } else {
+            this.nickname = nickname;
+            return true;
+        }
     }
 
     public PlayerStatus getStatus() {
@@ -381,10 +386,19 @@ public class Player {
                 + "\n\n_Что же ещё известно?_";
     }
 
-    private String removeSpecialCharacters(String newNickname) {
+    public static int getNicknameLengthMax() {
+        return 40;
+    }
+
+    /*private String removeSpecialCharacters(String newNickname) {
         newNickname = newNickname.replaceAll("[^a-zA-Z\\s]", "");
         if (newNickname.length() > 25) newNickname = newNickname.substring(0, 35);
         return newNickname.trim();
+    }*/
+
+    public static Boolean containsSpecialCharacters(String newNickname) {
+        String updated = newNickname.replaceAll(" {2,}", " ").replaceAll("[*_`]", "");
+        return !newNickname.equals(updated);
     }
 
     // ================================================ END SERVICE ================================================= //
