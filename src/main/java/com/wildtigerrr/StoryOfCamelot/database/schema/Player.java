@@ -61,6 +61,20 @@ public class Player {
         status = PlayerStatus.ACTIVE;
     }
 
+    public void move() {
+        status = PlayerStatus.MOVEMENT;
+    }
+
+    public void stop() {
+        if (additionalStatus.getNumber() == 0) {
+            status = PlayerStatus.ACTIVE;
+        } else if (additionalStatus.getNumber() > 100) {
+            status = PlayerStatus.BANNED;
+        } else {
+            status = PlayerStatus.TUTORIAL;
+        }
+    }
+
     public PlayerStatusExtended getAdditionalStatus() {
         return additionalStatus;
     }

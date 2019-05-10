@@ -88,6 +88,10 @@ public class GameMovement {
                             String.valueOf(distance))
             ) {
                 newText = MainText.ALREADY_MOVING.text();
+            } else {
+                Player player = message.getPlayer();
+                player.move();
+                playerService.update(player);
             }
             messages.sendMessageEdit(
                     message.getMessageId(),
@@ -102,6 +106,7 @@ public class GameMovement {
         Player player = playerService.findById(action.playerId);
         Location location = locationService.findById(Integer.valueOf(action.target));
         player.setLocation(location);
+        player.stop();
         if (location.getImageLink() != null) {
             InputStream stream = amazonClient.getObject(location.getImageLink().getLocation());
             messages.sendImage(

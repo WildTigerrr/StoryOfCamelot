@@ -1,13 +1,25 @@
 package com.wildtigerrr.StoryOfCamelot.database.schema.enums;
 
 public enum  PlayerStatusExtended {
-    TUTORIAL_NICKNAME,
-    TUTORIAL_MOVEMENT,
-    TUTORIAL_STATS,
-    TUTORIAL_STATS_UP,
+    NONE(0),
 
-    BAN_DAY,
-    BAN_WEEK,
-    BAN_MONTH,
-    BAN_PERMANENT;
+    TUTORIAL_NICKNAME(1),
+    TUTORIAL_MOVEMENT(2),
+    TUTORIAL_STATS(3),
+    TUTORIAL_STATS_UP(4),
+
+    BAN_DAY(101),
+    BAN_WEEK(102),
+    BAN_MONTH(103),
+    BAN_PERMANENT(104);
+
+    private int number;
+
+    PlayerStatusExtended(int number) {
+        this.number = number;
+    }
+
+    public int getNumber() {
+        return number;
+    }
 }

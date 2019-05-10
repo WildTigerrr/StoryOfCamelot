@@ -9,6 +9,7 @@ import com.wildtigerrr.StoryOfCamelot.bin.enums.Command;
 import com.wildtigerrr.StoryOfCamelot.bin.enums.MainText;
 import com.wildtigerrr.StoryOfCamelot.bin.enums.ReplyButtons;
 import com.wildtigerrr.StoryOfCamelot.database.schema.Player;
+import com.wildtigerrr.StoryOfCamelot.database.schema.enums.PlayerStatus;
 import com.wildtigerrr.StoryOfCamelot.database.schema.enums.PlayerStatusExtended;
 import com.wildtigerrr.StoryOfCamelot.database.schema.enums.Stats;
 import com.wildtigerrr.StoryOfCamelot.database.service.implementation.PlayerServiceImpl;
@@ -172,8 +173,10 @@ public class ResponseHandler {
             case MOVE:
                 if (!message.isQuery() || commandParts.length < 2) {
                     movementService.sendAvailableLocations(message.getPlayer());
-                } else {
+                } else if (message.getPlayer().getStatus() != PlayerStatus.MOVEMENT) {
                     movementService.moveToLocation(message, commandParts[1]);
+                } else {
+                    messages.sendMessage(MainText.ALREADY_MOVING.text(), message.getUserId());
                 }
                 break;
             case SEND:
