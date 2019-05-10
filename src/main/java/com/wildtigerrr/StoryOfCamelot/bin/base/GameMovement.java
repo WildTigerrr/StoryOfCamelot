@@ -102,17 +102,6 @@ public class GameMovement {
         Player player = playerService.findById(action.playerId);
         Location location = locationService.findById(Integer.valueOf(action.target));
         player.setLocation(location);
-        if (player.getAdditionalStatus() == PlayerStatusExtended.TUTORIAL_MOVEMENT) {
-            tutorial.tutorialMovement(player);
-            return;
-        }
-        gameMain.addExperience(
-                player,
-                Stats.ENDURANCE,
-                Integer.valueOf(action.additionalValue) / 10,
-                true
-        );
-        playerService.update(player);
         if (location.getImageLink() != null) {
             InputStream stream = amazonClient.getObject(location.getImageLink().getLocation());
             messages.sendImage(
@@ -127,5 +116,16 @@ public class GameMovement {
                     player.getExternalId()
             );
         }
+        if (player.getAdditionalStatus() == PlayerStatusExtended.TUTORIAL_MOVEMENT) {
+            tutorial.tutorialMovement(player);
+            return;
+        }
+        gameMain.addExperience(
+                player,
+                Stats.ENDURANCE,
+                Integer.valueOf(action.additionalValue) / 10,
+                true
+        );
+        playerService.update(player);
     }
 }
