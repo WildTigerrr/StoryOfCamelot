@@ -34,25 +34,34 @@ public class GameTutorial {
             case TUTORIAL_NICKNAME:
                 if (command == Command.ME) {
                     tutorialStart(message.getPlayer());
-                    break;
-                } else messages.sendMessage(MainText.TUTORIAL_NO_RUSH.text(), message.getUserId());
+                } else {
+                    messages.sendMessage(MainText.TUTORIAL_NO_RUSH.text(), message.getUserId());
+                }
+                break;
             case TUTORIAL_MOVEMENT:
                 if (command == Command.MOVE) {
                     return false;
-                } else messages.sendMessage(MainText.TUTORIAL_NO_RUSH.text(), message.getUserId());
+                } else {
+                    messages.sendMessage(MainText.TUTORIAL_NO_RUSH.text(), message.getUserId());
+                }
+                break;
             case TUTORIAL_STATS:
                 if (command == Command.ME) {
                     messages.sendMessage(playerService.getPlayerInfo(message.getUserId()), message.getUserId(), true);
                     tutorialStats(message.getPlayer());
-                    break;
-                } else messages.sendMessage(MainText.TUTORIAL_NO_RUSH.text(), message.getUserId());
+                } else {
+                    messages.sendMessage(MainText.TUTORIAL_NO_RUSH.text(), message.getUserId());
+                }
+                break;
             case TUTORIAL_STATS_UP:
                 if (command == Command.SKILLS) {
                     messages.sendMessage(MainText.TUTORIAL_STUCK.text(), message.getUserId());
-                    break;
-                } else messages.sendMessage(MainText.TUTORIAL_NO_RUSH.text(), message.getUserId());
+                } else {
+                    messages.sendMessage(MainText.TUTORIAL_NO_RUSH.text(), message.getUserId());
+                }
+                break;
             default:
-                messages.sendMessage(MainText.TUTORIAL_NO_RUSH.text(), message.getUserId());
+                messages.sendMessage(MainText.COMMAND_NOT_DEVELOPED.text(), message.getUserId());
         }
         return true;
     }
