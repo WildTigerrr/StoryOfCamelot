@@ -42,21 +42,16 @@ public class ResponseHandler {
         System.out.println("Working with message: " + message);
 //        if (message.getPlayer().getS);
         logSender(message);
-        if (message.getUserId().equals(BotConfig.WEBHOOK_ADMIN_ID)) {
-            if (performAdminCommands(message)) return;
-        }
-        if (performCommand(message)) {
-            return;
-        }
-        Player player = message.getPlayer();
-        if (message.getPlayer().isNew()) {
+        if (message.getUserId().equals(BotConfig.WEBHOOK_ADMIN_ID) && performAdminCommands(message)) return;
+        else if (performCommand(message)) return;
+        else if (message.getPlayer().isNew()) {
             tutorial.tutorialStart(message.getPlayer());
             return;
-        } else if (player.getExternalId().equals(player.getNickname())) {
+        } else if (message.getPlayer().getExternalId().equals(message.getPlayer().getNickname())) {
             gameMain.setNickname(message.getPlayer(), message.getText());
             return;
         }
-        String answer = "You wrote me: " + message.getText();
+        String answer = "Я не знаю как это обработать: " + message.getText();
         System.out.println("Answer: " + answer);
         messages.sendMessage(answer, message.getUserId(), false);
     }
@@ -110,6 +105,8 @@ public class ResponseHandler {
     }
 
     private Boolean performCommand(UpdateWrapper message) {
+        if (message.getPlayer().getStatus() == PlayerStatus.TUTORIAL && tutorial.proceedTutorial(message)) return true;
+
         String[] commandParts = message.getText().split(" ", 2);
         Command command;
         if (message.getText().startsWith("/")) {
@@ -121,15 +118,11 @@ public class ResponseHandler {
             }
         } else {
             command = buttonToCommand(message.getText());
-            if (command == null) {
-                return false;
-            }
+            if (command == null) return false;
         }
         switch (command) {
             case ME:
                 messages.sendMessage(playerService.getPlayerInfo(message.getUserId()), message.getUserId(), true);
-                if (message.getPlayer().getAdditionalStatus() == PlayerStatusExtended.TUTORIAL_STATS)
-                    tutorial.tutorialStats(message.getPlayer());
                 break;
             case SKILLS:
                 messages.sendMessage(MainText.COMMAND_NOT_DEVELOPED.text(), message.getUserId(), true);
@@ -204,7 +197,21 @@ public class ResponseHandler {
         return true;
     }
 
-    private Command buttonToCommand(String text) {
+    public static Command messageToCommand(String text) {
+        if (text == null || text.length() == 0) return null;
+        if (text.startsWith("/")) {
+            try {
+                String[] commandParts = text.split(" ", 2);
+                return Command.valueOf(commandParts[0].substring(1).toUpperCase());
+            } catch (IllegalArgumentException e) {
+                return null;
+            }
+        } else {
+            return buttonToCommand(text);
+        }
+    }
+
+    private static Command buttonToCommand(String text) {
         if (text.equals(ReplyButtons.MOVE.getLabel())) return Command.MOVE;
         else if (text.equals(ReplyButtons.ME.getLabel())) return Command.ME;
         else if (text.equals(ReplyButtons.SKILLS.getLabel())) return Command.SKILLS;

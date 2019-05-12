@@ -28,7 +28,7 @@ public class UpdateWrapper {
         this.isQuery = isQuery;
     }
 
-    String getText() {
+    public String getText() {
         return message;
     }
 

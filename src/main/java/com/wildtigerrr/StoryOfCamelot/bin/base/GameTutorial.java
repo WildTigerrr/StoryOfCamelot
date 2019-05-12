@@ -1,6 +1,7 @@
 package com.wildtigerrr.StoryOfCamelot.bin.base;
 
 import com.wildtigerrr.StoryOfCamelot.bin.KeyboardManager;
+import com.wildtigerrr.StoryOfCamelot.bin.enums.Command;
 import com.wildtigerrr.StoryOfCamelot.bin.enums.GameSettings;
 import com.wildtigerrr.StoryOfCamelot.bin.enums.MainText;
 import com.wildtigerrr.StoryOfCamelot.bin.enums.ReplyButtons;
@@ -8,6 +9,8 @@ import com.wildtigerrr.StoryOfCamelot.database.schema.Player;
 import com.wildtigerrr.StoryOfCamelot.database.schema.enums.PlayerStatusExtended;
 import com.wildtigerrr.StoryOfCamelot.database.service.implementation.LocationServiceImpl;
 import com.wildtigerrr.StoryOfCamelot.database.service.implementation.PlayerServiceImpl;
+import com.wildtigerrr.StoryOfCamelot.web.ResponseHandler;
+import com.wildtigerrr.StoryOfCamelot.web.UpdateWrapper;
 import com.wildtigerrr.StoryOfCamelot.web.service.ResponseManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,6 +27,35 @@ public class GameTutorial {
     private PlayerServiceImpl playerService;
     @Autowired
     private LocationServiceImpl locationService;
+
+    public Boolean proceedTutorial(UpdateWrapper message) {
+        Command command = ResponseHandler.messageToCommand(message.getText());
+        switch (message.getPlayer().getAdditionalStatus()) {
+            case TUTORIAL_NICKNAME:
+                if (command == Command.ME) {
+                    tutorialStart(message.getPlayer());
+                    break;
+                } else messages.sendMessage(MainText.TUTORIAL_NO_RUSH.text(), message.getUserId());
+            case TUTORIAL_MOVEMENT:
+                if (command == Command.MOVE) {
+                    return false;
+                } else messages.sendMessage(MainText.TUTORIAL_NO_RUSH.text(), message.getUserId());
+            case TUTORIAL_STATS:
+                if (command == Command.ME) {
+                    messages.sendMessage(playerService.getPlayerInfo(message.getUserId()), message.getUserId(), true);
+                    tutorialStats(message.getPlayer());
+                    break;
+                } else messages.sendMessage(MainText.TUTORIAL_NO_RUSH.text(), message.getUserId());
+            case TUTORIAL_STATS_UP:
+                if (command == Command.SKILLS) {
+                    messages.sendMessage(MainText.TUTORIAL_STUCK.text(), message.getUserId());
+                    break;
+                } else messages.sendMessage(MainText.TUTORIAL_NO_RUSH.text(), message.getUserId());
+            default:
+                messages.sendMessage(MainText.TUTORIAL_NO_RUSH.text(), message.getUserId());
+        }
+        return true;
+    }
 
     public void tutorialStart(Player player) {
         System.out.println("New player");
