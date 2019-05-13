@@ -102,7 +102,7 @@ public class ResponseHandler {
     }
 
     private Boolean performCommand(UpdateWrapper message) {
-        if (message.getPlayer().getStatus() == PlayerStatus.TUTORIAL && tutorial.proceedTutorial(message)) return true;
+        //if (message.getPlayer().getStatus() == PlayerStatus.TUTORIAL && tutorial.proceedTutorial(message)) return true;
 
         String[] commandParts = message.getText().split(" ", 2);
         Command command;
