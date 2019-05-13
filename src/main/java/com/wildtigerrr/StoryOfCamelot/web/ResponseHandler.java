@@ -97,26 +97,27 @@ public class ResponseHandler {
         if (message.getText().equals("image test")) {
             sendTestImage(message.getUserId());
             return true;
+        } else if (message.getText().equals("/tutorial off")) {
+            Player player = message.getPlayer();
+            player.activate();
+            playerService.update(player);
+            return true;
+        } else if (message.getText().equals("/tutorial on")) {
+            Player player = message.getPlayer();
+            player.setAdditionalStatus(PlayerStatusExtended.TUTORIAL_NICKNAME);
+            player.stop();
+            playerService.update(player);
+            return true;
         }
         return false;
     }
 
     private Boolean performCommand(UpdateWrapper message) {
-        //if (message.getPlayer().getStatus() == PlayerStatus.TUTORIAL && tutorial.proceedTutorial(message)) return true;
+        if (message.getPlayer().getStatus() == PlayerStatus.TUTORIAL && tutorial.proceedTutorial(message)) return true;
 
+        Command command = messageToCommand(message.getText());
+        if (command == null) return false;
         String[] commandParts = message.getText().split(" ", 2);
-        Command command;
-        if (message.getText().startsWith("/")) {
-            try {
-                command = Command.valueOf(commandParts[0].substring(1).toUpperCase());
-            } catch (IllegalArgumentException e) {
-                messages.sendMessage(MainText.UNKNOWN_COMMAND.text(), message.getUserId(), true);
-                return false;
-            }
-        } else {
-            command = buttonToCommand(message.getText());
-            if (command == null) return false;
-        }
         switch (command) {
             case ME:
                 messages.sendMessage(playerService.getPlayerInfo(message.getUserId()), message.getUserId(), true);
@@ -213,15 +214,8 @@ public class ResponseHandler {
                 return null;
             }
         } else {
-            return buttonToCommand(text);
+            return ReplyButtons.buttonToCommand(text);
         }
-    }
-
-    private static Command buttonToCommand(String text) {
-        if (text.equals(ReplyButtons.MOVE.getLabel())) return Command.MOVE;
-        else if (text.equals(ReplyButtons.ME.getLabel())) return Command.ME;
-        else if (text.equals(ReplyButtons.SKILLS.getLabel())) return Command.SKILLS;
-        return null;
     }
 
 }
