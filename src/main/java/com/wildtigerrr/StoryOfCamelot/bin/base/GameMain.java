@@ -51,6 +51,7 @@ public class GameMain {
             message = MainText.NICKNAME_DUPLICATE.text(player.getNickname());
         } else if (player.getAdditionalStatus() == PlayerStatusExtended.TUTORIAL_NICKNAME) {
             tutorial.tutorialSetNickname(player);
+            return;
         } else {
             playerService.update(player);
             message = MainText.NICKNAME_CHANGED.text(player.getNickname());
