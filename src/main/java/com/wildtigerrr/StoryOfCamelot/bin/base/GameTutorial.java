@@ -34,7 +34,7 @@ public class GameTutorial {
         Command command = ResponseHandler.messageToCommand(message.getText());
         switch (message.getPlayer().getAdditionalStatus()) {
             case TUTORIAL_NICKNAME:
-                if (command == Command.START) {
+                if (command == Command.START || message.getPlayer().isNew()) {
                     tutorialStart(message.getPlayer());
                 } else {
                     tutorialNickname(message.getPlayer(), message.getText());
