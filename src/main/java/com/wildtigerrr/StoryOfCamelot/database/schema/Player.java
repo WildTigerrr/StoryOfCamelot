@@ -397,7 +397,7 @@ public class Player {
     }*/
 
     public static Boolean containsSpecialCharacters(String newNickname) {
-        String updated = newNickname.replaceAll(" {2,}", " ").replaceAll("[*_`]", "");
+        String updated = newNickname.replaceAll(" {2,}", " ").replaceAll("[*_`\\\\/]", "");
         return !newNickname.equals(updated);
     }
 

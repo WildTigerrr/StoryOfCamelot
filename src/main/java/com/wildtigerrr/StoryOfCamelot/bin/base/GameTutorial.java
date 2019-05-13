@@ -24,6 +24,8 @@ public class GameTutorial {
     @Autowired
     private ResponseManager messages;
     @Autowired
+    private GameMain gameMain;
+    @Autowired
     private PlayerServiceImpl playerService;
     @Autowired
     private LocationServiceImpl locationService;
@@ -32,10 +34,10 @@ public class GameTutorial {
         Command command = ResponseHandler.messageToCommand(message.getText());
         switch (message.getPlayer().getAdditionalStatus()) {
             case TUTORIAL_NICKNAME:
-                if (command == Command.ME) {
+                if (command == Command.START) {
                     tutorialStart(message.getPlayer());
                 } else {
-                    messages.sendMessage(MainText.TUTORIAL_NO_RUSH.text(), message.getUserId());
+                    tutorialNickname(message.getPlayer(), message.getText());
                 }
                 break;
             case TUTORIAL_MOVEMENT:
@@ -77,7 +79,11 @@ public class GameTutorial {
         );
     }
 
-    void tutorialNickname(Player player) {
+    private void tutorialNickname(Player player, String nickname) {
+        gameMain.setNickname(player, nickname);
+    }
+
+    void tutorialSetNickname(Player player) {
         player.setAdditionalStatus(PlayerStatusExtended.TUTORIAL_MOVEMENT);
         playerService.update(player);
         messages.sendMessage(

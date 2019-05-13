@@ -1,7 +1,9 @@
 package com.wildtigerrr.StoryOfCamelot.bin.base;
 
+import com.wildtigerrr.StoryOfCamelot.bin.KeyboardManager;
 import com.wildtigerrr.StoryOfCamelot.bin.enums.GameSettings;
 import com.wildtigerrr.StoryOfCamelot.bin.enums.MainText;
+import com.wildtigerrr.StoryOfCamelot.bin.enums.ReplyButtons;
 import com.wildtigerrr.StoryOfCamelot.bin.exceptions.SOCInvalidDataException;
 import com.wildtigerrr.StoryOfCamelot.database.schema.Player;
 import com.wildtigerrr.StoryOfCamelot.database.schema.enums.PlayerStatusExtended;
@@ -13,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 @Service
 public class GameMain {
@@ -47,12 +50,10 @@ public class GameMain {
         } else if (playerService.findByNickname(player.getNickname()) != null) {
             message = MainText.NICKNAME_DUPLICATE.text(player.getNickname());
         } else if (player.getAdditionalStatus() == PlayerStatusExtended.TUTORIAL_NICKNAME) {
-            tutorial.tutorialNickname(player);
-            return;
+            tutorial.tutorialSetNickname(player);
         } else {
             playerService.update(player);
             message = MainText.NICKNAME_CHANGED.text(player.getNickname());
-
         }
         messages.sendMessage(message, player.getExternalId(), true);
     }

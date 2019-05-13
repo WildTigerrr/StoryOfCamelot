@@ -44,10 +44,7 @@ public class ResponseHandler {
         logSender(message);
         if (message.getUserId().equals(BotConfig.WEBHOOK_ADMIN_ID) && performAdminCommands(message)) return;
         else if (performCommand(message)) return;
-        else if (message.getPlayer().isNew()) {
-            tutorial.tutorialStart(message.getPlayer());
-            return;
-        } else if (message.getPlayer().getExternalId().equals(message.getPlayer().getNickname())) {
+        else if (message.getPlayer().getExternalId().equals(message.getPlayer().getNickname())) {
             gameMain.setNickname(message.getPlayer(), message.getText());
             return;
         }
