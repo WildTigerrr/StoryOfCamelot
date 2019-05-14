@@ -144,8 +144,7 @@ public class Player {
     // ------------------- LEVEL UP CALCULATION ------------------------------------------------------------------------ //
 
     private int getExpToNextStatUp(Integer currentLevel) {
-        int exp = (int) Math.pow(currentLevel + 1, 2);
-        return exp > 50 ? 5 * (Math.round(exp / 5)) : exp;
+        return  (int) Math.pow(currentLevel + 1, 2);
     }
 
     private int getStatsToNextLevelUp() {
