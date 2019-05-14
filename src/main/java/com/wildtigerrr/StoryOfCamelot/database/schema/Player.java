@@ -439,7 +439,7 @@ public class Player {
     @Override
     public String toString() {
         return "Если память тебя не подводит, то:"
-                + "\n*" + this.nickname + "*, " + this.level + " уровень (" + (getTotalStats()  - (unassignedPoints - (getDefaultPoints() + (5 * level))) + "/" + getStatsToNextLevelUp() + ")"
+                + "\n*" + this.nickname + "*, " + this.level + " уровень (" + (getTotalStats()  - (unassignedPoints - (getDefaultPoints() + (5 * level))) )+ "/" + getStatsToNextLevelUp() + ")"
                 + (getUnassignedPoints() > 0 ? " (+" + getUnassignedPoints() + ")" : "")
                 + "\n*Сила:* " + this.strength + " (" + this.strengthExp + "/" + getExpToNextStatUp(this.strength) + ")"
                 + "\n*Здоровье:* " + this.health + " (" + this.healthExp + "/" + getExpToNextStatUp(this.health) + ")"
