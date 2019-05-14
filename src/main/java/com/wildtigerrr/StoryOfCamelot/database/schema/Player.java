@@ -143,16 +143,20 @@ public class Player {
 
     // ------------------- LEVEL UP CALCULATION ------------------------------------------------------------------------ //
 
-    private Integer getExpToNextStatUp(Integer currentLevel) {
+    private int getExpToNextStatUp(Integer currentLevel) {
         return 5 * (Math.round(((int) Math.pow(currentLevel + 1, 2)) / 5));
     }
 
-    private Integer getStatsToNextLevelUp() {
-        return 5 * level * (level + 1) / 2 - (unassignedPoints - (getDefaultPoints() + (5 * level)));
+    private int getStatsToNextLevelUp() {
+        return 5 * level * (level + 1) / 2 - (unassignedPoints + (getDefaultPoints() + (5 * level)));
     }
 
     private int getDefaultPoints() {
         return 20;
+    }
+
+    private int getAssignedPoints() {
+        return (7 - unassignedPoints + (getDefaultPoints() + (5 * level)));
     }
 
     // ------------------- LEVEL UP MECHANIC ------------------------------------------------------------------------ //
@@ -441,7 +445,7 @@ public class Player {
     @Override
     public String toString() {
         return "Если память тебя не подводит, то:"
-                + "\n*" + this.nickname + "*, " + this.level + " уровень (" + (getTotalStats() - (7 - unassignedPoints + (getDefaultPoints() + (5 * level)))) + "/" + getStatsToNextLevelUp() + ")"
+                + "\n*" + this.nickname + "*, " + this.level + " уровень (" + (getTotalStats() - getAssignedPoints()) + "/" + (getStatsToNextLevelUp() - getAssignedPoints()) + ")"
                 + (getUnassignedPoints() > 0 ? " (+" + getUnassignedPoints() + ")" : "")
                 + "\n*Сила:* " + this.strength + " (" + this.strengthExp + "/" + getExpToNextStatUp(this.strength) + ")"
                 + "\n*Здоровье:* " + this.health + " (" + this.healthExp + "/" + getExpToNextStatUp(this.health) + ")"
