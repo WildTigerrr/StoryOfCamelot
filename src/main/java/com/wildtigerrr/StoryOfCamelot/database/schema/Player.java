@@ -101,7 +101,7 @@ public class Player {
         level = 1;
         status = PlayerStatus.TUTORIAL;
         additionalStatus = PlayerStatusExtended.TUTORIAL_NICKNAME;
-        unassignedPoints = 25;
+        unassignedPoints = getDefaultPoints() + 5;
         strength = 1;
         health = 1;
         agility = 1;
@@ -148,8 +148,10 @@ public class Player {
     }
 
     private Integer getStatsToNextLevelUp() {
-        return 5 * level * (level + 1) / 2 - (unassignedPoints - (20 + (5 * level)));
+        return 5 * level * (level + 1) / 2 - (unassignedPoints - (getDefaultPoints() + (5 * level)));
     }
+
+    private int getDefaultPoints() {return 20;}
 
     // ------------------- LEVEL UP MECHANIC ------------------------------------------------------------------------ //
 
@@ -437,7 +439,7 @@ public class Player {
     @Override
     public String toString() {
         return "Если память тебя не подводит, то:"
-                + "\n*" + this.nickname + "*, " + this.level + " уровень (" + getTotalStats() + "/" + getStatsToNextLevelUp() + ")"
+                + "\n*" + this.nickname + "*, " + this.level + " уровень (" + (getTotalStats()  - (unassignedPoints - (getDefaultPoints() + (5 * level))) + "/" + getStatsToNextLevelUp() + ")"
                 + (getUnassignedPoints() > 0 ? " (+" + getUnassignedPoints() + ")" : "")
                 + "\n*Сила:* " + this.strength + " (" + this.strengthExp + "/" + getExpToNextStatUp(this.strength) + ")"
                 + "\n*Здоровье:* " + this.health + " (" + this.healthExp + "/" + getExpToNextStatUp(this.health) + ")"
