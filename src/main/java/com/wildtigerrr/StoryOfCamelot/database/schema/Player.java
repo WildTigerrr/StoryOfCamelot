@@ -101,7 +101,7 @@ public class Player {
         level = 1;
         status = PlayerStatus.TUTORIAL;
         additionalStatus = PlayerStatusExtended.TUTORIAL_NICKNAME;
-        unassignedPoints = 20;
+        unassignedPoints = 25;
         strength = 1;
         health = 1;
         agility = 1;
@@ -144,7 +144,7 @@ public class Player {
     // ------------------- LEVEL UP CALCULATION ------------------------------------------------------------------------ //
 
     private Integer getExpToNextStatUp(Integer currentLevel) {
-        return ((int) Math.pow(2, currentLevel + 1));
+        return ((int) Math.pow(currentLevel + 1, 2));
     }
 
     private Integer getStatsToNextLevelUp() {
