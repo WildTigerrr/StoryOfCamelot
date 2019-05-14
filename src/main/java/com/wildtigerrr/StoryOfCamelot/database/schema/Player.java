@@ -148,7 +148,7 @@ public class Player {
     }
 
     private int getStatsToNextLevelUp() {
-        return 5 * level * (level + 1) / 2 - getAssignedPoints();
+        return 5 * level * (level + 1) / 2 - getAssignedPoints() + 7;
     }
 
     private int getDefaultPoints() {

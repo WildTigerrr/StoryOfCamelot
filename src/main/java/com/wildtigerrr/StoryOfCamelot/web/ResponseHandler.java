@@ -103,6 +103,7 @@ public class ResponseHandler {
                 Player player = message.getPlayer();
                 player.activate();
                 playerService.update(player);
+                messages.sendMessage("Туториал отключен", message.getUserId());
                 return true;
             }
             case "/tutorial on": {
@@ -110,6 +111,7 @@ public class ResponseHandler {
                 player.setAdditionalStatus(PlayerStatusExtended.TUTORIAL_NICKNAME);
                 player.stop();
                 playerService.update(player);
+                messages.sendMessage("Туториал перезапущен", message.getUserId());
                 return true;
             }
         }
