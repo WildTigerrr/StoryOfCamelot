@@ -34,7 +34,7 @@ public class WebHookHandler extends TelegramWebhookBot {
 
     @Override
     public String getBotPath() {
-        return BotConfig.WEBHOOK_ADMIN; //arbitrary path to deliver updates on
+        return BotConfig.WEBHOOK_ADMIN;
     }
 
 }
