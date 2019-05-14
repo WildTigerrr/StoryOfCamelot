@@ -148,7 +148,7 @@ public class Player {
     }
 
     private int getStatsToNextLevelUp() {
-        return 5 * level * (level + 1) / 2 - getAssignedPoints() + getTotalStats();
+        return 5 * level * (level + 1) / 2;
     }
 
     private int getDefaultPoints() {
@@ -256,7 +256,7 @@ public class Player {
     }
 
     private Boolean isLevelUp() {
-        return getTotalStats() >= getStatsToNextLevelUp();
+        return getTotalStats() - getAssignedPoints() >= getStatsToNextLevelUp();
     }
 
     private Integer getTotalStats() {
@@ -450,7 +450,7 @@ public class Player {
                 + "\n*Сила:* " + this.strength + " (" + this.strengthExp + "/" + getExpToNextStatUp(this.strength) + ")"
                 + "\n*Здоровье:* " + this.health + " (" + this.healthExp + "/" + getExpToNextStatUp(this.health) + ")"
                 + "\n*Ловкость:* " + this.agility + " (" + this.agilityExp + "/" + getExpToNextStatUp(this.agility) + ")"
-                + "\n*Харизму:* " + this.charisma + " (" + this.charismaExp + "/" + getExpToNextStatUp(this.charisma) + ")"
+                + "\n*Харизмa:* " + this.charisma + " (" + this.charismaExp + "/" + getExpToNextStatUp(this.charisma) + ")"
                 + "\n*Интеллект:* " + this.intelligence + " (" + this.intelligenceExp + "/" + getExpToNextStatUp(this.intelligence) + ")"
                 + "\n*Выносливость:* " + this.endurance + " (" + this.enduranceExp + "/" + getExpToNextStatUp(this.endurance) + ")"
                 + "\n*Удача:* " + this.luck
