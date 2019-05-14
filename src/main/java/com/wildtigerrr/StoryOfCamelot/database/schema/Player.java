@@ -128,6 +128,7 @@ public class Player {
     private Integer strength;
     private Integer health;
     private Integer agility;
+    private Integer charisma;
     private Integer intelligence;
     private Integer endurance;
     private Integer luck;
@@ -135,6 +136,7 @@ public class Player {
     private Integer strengthExp;
     private Integer healthExp;
     private Integer agilityExp;
+    private Integer charismaExp;
     private Integer intelligenceExp;
     private Integer enduranceExp;
 
@@ -149,6 +151,51 @@ public class Player {
     }
 
     // ------------------- LEVEL UP MECHANIC ------------------------------------------------------------------------ //
+
+    public String raiseStat(Stats stat, Integer quantity) {
+        if (quantity > unassignedPoints) return MainText.STAT_INSUFFICIENT_POINTS.text();
+        int newQuantity;
+        switch (stat) {
+            case STRENGTH:
+                strengthExp = 0;
+                strength += quantity;
+                newQuantity = strength;
+                break;
+            case HEALTH:
+                healthExp = 0;
+                health += quantity;
+                newQuantity = health;
+                break;
+            case AGILITY:
+                agilityExp = 0;
+                agility += quantity;
+                newQuantity = agility;
+                break;
+            case CHARISMA:
+                charismaExp = 0;
+                charisma += quantity;
+                newQuantity = charisma;
+                break;
+            case INTELLIGENCE:
+                intelligenceExp = 0;
+                intelligence += quantity;
+                newQuantity = intelligence;
+                break;
+            case ENDURANCE:
+                enduranceExp = 0;
+                endurance += quantity;
+                newQuantity = endurance;
+                break;
+            case LUCK:
+                luck += quantity;
+                newQuantity = luck;
+                break;
+            default:
+                return MainText.STAT_INVALID.text();
+        }
+        unassignedPoints -= quantity;
+        return MainText.STAT_UP.text(stat.what().substring(0, 1).toUpperCase() + stat.what().substring(1), String.valueOf(newQuantity));
+    }
 
     public ArrayList<String> addStatExp(Integer exp, Stats stat) throws SOCInvalidDataException {
         ArrayList<String> events = new ArrayList<>();
@@ -169,6 +216,11 @@ public class Player {
                     agilityExp -= getExpToNextStatUp(agility);
                     agility++;
                     events.add(MainText.STAT_UP.text(Stats.AGILITY.which(), String.valueOf(agility)));
+                    break;
+                case CHARISMA:
+                    charismaExp -= getExpToNextStatUp(charisma);
+                    charisma++;
+                    events.add(MainText.STAT_UP.text(Stats.CHARISMA.which(), String.valueOf(charisma)));
                     break;
                 case INTELLIGENCE:
                     intelligenceExp -= getExpToNextStatUp(intelligence);
@@ -199,7 +251,7 @@ public class Player {
     }
 
     private Integer getTotalStats() {
-        return strength + health + agility + intelligence + endurance + luck;
+        return strength + health + agility + charisma + intelligence + endurance + luck;
     }
 
     // ------------------- GETTERS AND SETTERS ---------------------------------------------------------------------- //
@@ -228,6 +280,9 @@ public class Player {
             case AGILITY:
                 agilityExp += exp;
                 return agilityExp;
+            case CHARISMA:
+                charismaExp += exp;
+                return charismaExp;
             case INTELLIGENCE:
                 intelligenceExp += exp;
                 return intelligenceExp;
@@ -247,6 +302,8 @@ public class Player {
                 return health;
             case AGILITY:
                 return agility;
+            case CHARISMA:
+                return charisma;
             case INTELLIGENCE:
                 return intelligence;
             case ENDURANCE:
@@ -266,6 +323,10 @@ public class Player {
 
     public Integer getAgility() {
         return agility;
+    }
+
+    public Integer getCharisma() {
+        return charisma;
     }
 
     public Integer getIntelligence() {
@@ -375,7 +436,7 @@ public class Player {
     @Override
     public String toString() {
         return "Если память тебя не подводит, то:"
-                + "\n*" + this.nickname + "*, " + this.level + " уровень (" + getTotalStats() + "/" + getStatsToNextLevelUp() +")"
+                + "\n*" + this.nickname + "*, " + this.level + " уровень (" + getTotalStats() + "/" + getStatsToNextLevelUp() + ")"
                 + (getUnassignedPoints() > 0 ? " (+" + getUnassignedPoints() + ")" : "")
                 + "\n*Сила:* " + this.strength + " (" + this.strengthExp + "/" + getExpToNextStatUp(this.strength) + ")"
                 + "\n*Здоровье:* " + this.health + " (" + this.healthExp + "/" + getExpToNextStatUp(this.health) + ")"

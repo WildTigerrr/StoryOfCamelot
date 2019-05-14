@@ -8,5 +8,6 @@ public enum Command {
     SEND,
     MOVE,
     SKILLS,
-    START
+    START,
+    UP
 }

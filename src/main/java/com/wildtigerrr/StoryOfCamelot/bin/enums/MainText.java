@@ -35,12 +35,16 @@ public enum MainText {
 
     // EXPERIENCE
     STAT_UP(2, "Уровень p1 повышен до p2"),
+    STAT_INVALID(0, "Такой характеристики нет."),
+    STAT_INSUFFICIENT_POINTS(0, "Не хватает свободных очков."),
+    STAT_CANNOT_BE_RAISED(1, "p1 не может быть повышена"),
     LEVEL_UP(1, "Вы научились чему-то новому. Ваш уровень повышен до p1"),
 
-    UNKNOWN_COMMAND(0, "Я не знаю что мне делать с этою бедой..."),
+    COMMAND_INVALID(0, "Кажется, где-то здесь ошибка."),
+    COMMAND_UNKNOWN(0, "Я не знаю что мне делать с этою бедой..."),
     COMMAND_NOT_DEFINED(0, "Слушай, я о чем-то таком слышал, но почему-то не знаю что делать"),
     COMMAND_NOT_DEVELOPED(0, "Увы, эта функция ещё в разработке =( \n\n *Но скоро всё будет!*"),
-    PROPOSITION_EXPIRED(0, "Кажется, это уже неактуально"),
+    PROPOSITION_EXPIRED(0, "Это уже неактуально"),
     PLAYER_NOT_EXIST(0, "You don't have a player yet.");
 
     private final String text;

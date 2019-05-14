@@ -1,35 +1,63 @@
 package com.wildtigerrr.StoryOfCamelot.database.schema.enums;
 
-public enum  Stats {
-    STRENGTH (
-            "силы"
+public enum Stats {
+    STRENGTH(
+            "силы", "сила"
     ),
-    HEALTH (
-            "здоровья"
+    HEALTH(
+            "здоровья", "здоровье"
     ),
-    AGILITY (
-            "ловкости"
+    AGILITY(
+            "ловкости", "ловкость"
     ),
-    CHARISMA (
-            "харизмы"
+    CHARISMA(
+            "харизмы", "харизма"
     ),
-    INTELLIGENCE (
-            "интеллекта"
+    INTELLIGENCE(
+            "интеллекта", "интеллект"
     ),
-    ENDURANCE (
-            "выносливости"
+    ENDURANCE(
+            "выносливости", "выносливость"
     ),
-    LUCK (
-            "удачи"
+    LUCK(
+            "удачи", "удача"
     );
 
-    private final String which;
+    public static Stats getStat(String character) {
+        character = character.toUpperCase();
+        switch (character) {
+            case "S":
+                return STRENGTH;
+            case "H":
+                return HEALTH;
+            case "A":
+                return AGILITY;
+            case "C":
+                return CHARISMA;
+            case "I":
+                return INTELLIGENCE;
+            case "E":
+                return ENDURANCE;
+            case "L":
+                return LUCK;
+            default:
+                return null;
+        }
+    }
 
-    Stats(String text) {
-        this.which = text;
+    private final String which;
+    private final String what;
+
+    Stats(String which, String what) {
+        this.which = which;
+        this.what = what;
     }
 
     public String which() {
         return which;
+    }
+
+    public String what() {
+        return what;
     }
 }

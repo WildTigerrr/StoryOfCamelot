@@ -16,6 +16,7 @@ import com.wildtigerrr.StoryOfCamelot.database.service.implementation.PlayerServ
 import com.wildtigerrr.StoryOfCamelot.web.service.ResponseManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.NumberUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -94,20 +95,23 @@ public class ResponseHandler {
     }
 
     private Boolean performAdminCommands(UpdateWrapper message) {
-        if (message.getText().equals("image test")) {
-            sendTestImage(message.getUserId());
-            return true;
-        } else if (message.getText().equals("/tutorial off")) {
-            Player player = message.getPlayer();
-            player.activate();
-            playerService.update(player);
-            return true;
-        } else if (message.getText().equals("/tutorial on")) {
-            Player player = message.getPlayer();
-            player.setAdditionalStatus(PlayerStatusExtended.TUTORIAL_NICKNAME);
-            player.stop();
-            playerService.update(player);
-            return true;
+        switch (message.getText()) {
+            case "image test":
+                sendTestImage(message.getUserId());
+                return true;
+            case "/tutorial off": {
+                Player player = message.getPlayer();
+                player.activate();
+                playerService.update(player);
+                return true;
+            }
+            case "/tutorial on": {
+                Player player = message.getPlayer();
+                player.setAdditionalStatus(PlayerStatusExtended.TUTORIAL_NICKNAME);
+                player.stop();
+                playerService.update(player);
+                return true;
+            }
         }
         return false;
     }
@@ -197,6 +201,23 @@ public class ResponseHandler {
                     messages.sendMessage(MainText.PROPOSITION_EXPIRED.text(), message.getUserId());
                 }
                 return true;
+            case UP:
+                commandParts = message.getText().split("_", 3);
+                if (commandParts.length == 3 && commandParts[1].length() == 1 && isNumeric(commandParts[2])) {
+                    Stats stat = Stats.getStat(commandParts[1]);
+                    if (stat == null) {
+                        messages.sendMessage(MainText.STAT_INVALID.text(), message.getUserId());
+                        return true;
+                    } else {
+                        Player player = message.getPlayer();
+                        String result = player.raiseStat(stat, Integer.valueOf(commandParts[2]));
+                        if (!result.equals(MainText.STAT_INVALID.text())) playerService.update(player);
+                        messages.sendMessage(result, message.getUserId());
+                    }
+                } else {
+                    messages.sendMessage(MainText.COMMAND_INVALID.text(), message.getUserId());
+                }
+                return true;
             default:
                 messages.sendMessage(MainText.COMMAND_NOT_DEFINED.text(), message.getUserId(), true);
                 return false;
@@ -211,11 +232,19 @@ public class ResponseHandler {
                 String[] commandParts = text.split(" ", 2);
                 return Command.valueOf(commandParts[0].substring(1).toUpperCase());
             } catch (IllegalArgumentException e) {
+                if (text.startsWith("/up")) return Command.UP;
                 return null;
             }
         } else {
             return ReplyButtons.buttonToCommand(text);
         }
+    }
+
+    public static boolean isNumeric(String str) {
+        for (char c : str.toCharArray()) {
+            if (!Character.isDigit(c)) return false;
+        }
+        return true;
     }
 
 }
