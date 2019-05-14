@@ -441,11 +441,12 @@ public class Player {
     @Override
     public String toString() {
         return "Если память тебя не подводит, то:"
-                + "\n*" + this.nickname + "*, " + this.level + " уровень (" + (getTotalStats() - (7 + unassignedPoints - (getDefaultPoints() + (5 * level)))) + "/" + getStatsToNextLevelUp() + ")"
+                + "\n*" + this.nickname + "*, " + this.level + " уровень (" + (getTotalStats() - (7 - unassignedPoints + (getDefaultPoints() + (5 * level)))) + "/" + getStatsToNextLevelUp() + ")"
                 + (getUnassignedPoints() > 0 ? " (+" + getUnassignedPoints() + ")" : "")
                 + "\n*Сила:* " + this.strength + " (" + this.strengthExp + "/" + getExpToNextStatUp(this.strength) + ")"
                 + "\n*Здоровье:* " + this.health + " (" + this.healthExp + "/" + getExpToNextStatUp(this.health) + ")"
                 + "\n*Ловкость:* " + this.agility + " (" + this.agilityExp + "/" + getExpToNextStatUp(this.agility) + ")"
+                + "\n*Харизму:* " + this.charisma + " (" + this.charismaExp + "/" + getExpToNextStatUp(this.charisma) + ")"
                 + "\n*Интеллект:* " + this.intelligence + " (" + this.intelligenceExp + "/" + getExpToNextStatUp(this.intelligence) + ")"
                 + "\n*Выносливость:* " + this.endurance + " (" + this.enduranceExp + "/" + getExpToNextStatUp(this.endurance) + ")"
                 + "\n*Удача:* " + this.luck
