@@ -101,14 +101,14 @@ public class Player {
         level = 1;
         status = PlayerStatus.TUTORIAL;
         additionalStatus = PlayerStatusExtended.TUTORIAL_NICKNAME;
-        unassignedPoints = 25;
-        strength = 0;
-        health = 0;
-        agility = 0;
-        charisma = 0;
-        intelligence = 0;
-        endurance = 0;
-        luck = 0;
+        unassignedPoints = 20;
+        strength = 1;
+        health = 1;
+        agility = 1;
+        charisma = 1;
+        intelligence = 1;
+        endurance = 1;
+        luck = 1;
 
         strengthExp = 0;
         healthExp = 0;
