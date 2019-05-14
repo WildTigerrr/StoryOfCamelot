@@ -148,7 +148,7 @@ public class Player {
     }
 
     private int getStatsToNextLevelUp() {
-        return 5 * level * (level + 1) / 2 - (unassignedPoints + (getDefaultPoints() + (5 * level)));
+        return 5 * level * (level + 1) / 2 - getAssignedPoints();
     }
 
     private int getDefaultPoints() {
@@ -445,7 +445,7 @@ public class Player {
     @Override
     public String toString() {
         return "Если память тебя не подводит, то:"
-                + "\n*" + this.nickname + "*, " + this.level + " уровень (" + (getTotalStats() - getAssignedPoints()) + "/" + (getStatsToNextLevelUp() - getAssignedPoints()) + ")"
+                + "\n*" + this.nickname + "*, " + this.level + " уровень (" + (getTotalStats() - getAssignedPoints()) + "/" + getStatsToNextLevelUp() + ")"
                 + (getUnassignedPoints() > 0 ? " (+" + getUnassignedPoints() + ")" : "")
                 + "\n*Сила:* " + this.strength + " (" + this.strengthExp + "/" + getExpToNextStatUp(this.strength) + ")"
                 + "\n*Здоровье:* " + this.health + " (" + this.healthExp + "/" + getExpToNextStatUp(this.health) + ")"
