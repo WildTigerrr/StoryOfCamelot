@@ -122,8 +122,8 @@ public enum MainText {
 
     MainText(int parameters, String textRUS, String textUKR) {
         this.parameters = parameters;
-        this.textRUS = textUKR;
-        this.textUKR = textRUS;
+        this.textRUS = textRUS;
+        this.textUKR = textUKR;
     }
 
     public String text(Language lang) {
