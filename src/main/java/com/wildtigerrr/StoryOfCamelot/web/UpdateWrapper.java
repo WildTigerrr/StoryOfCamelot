@@ -76,6 +76,8 @@ public class UpdateWrapper {
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", username='" + username + '\'' +
+                ", languageCode='" + language + '\'' +
+                ", isQuery='" + isQuery + '\'' +
                 '}';
     }
 }
