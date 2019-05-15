@@ -41,14 +41,14 @@ public class GameTutorial {
                         player.setLanguage(Language.values()[Integer.valueOf(commandParts[1])]);
                         player.setAdditionalStatus(PlayerStatusExtended.TUTORIAL_NICKNAME);
                         playerService.update(player);
-                        /*messages.sendMessageEdit(
+                        messages.sendMessageEdit(
                                 message.getMessageId(),
-                                newText,
+                                MainText.LANGUAGE_SELECTED.text(player.getLanguage()),
                                 message.getUserId(),
                                 true
-                        );*/
+                        );
                     } else {
-
+                        messages.sendMessage(MainText.COMMAND_INVALID.text(message.getPlayer().getLanguage()), message.getUserId());
                     }
                 } else {
                     messages.sendMessage(MainText.TUTORIAL_NO_RUSH.text(message.getPlayer().getLanguage()), message.getUserId());

@@ -3,6 +3,9 @@ package com.wildtigerrr.StoryOfCamelot.bin.enums;
 public enum MainText {
     // TUTORIAL
     LANGUAGE_SELECT(0, "Please, choose language:", "Будь-ласка, оберіть мову:"),
+    LANGUAGE_SELECTED(0,
+            "Установлен язык " + Language.RUS.getName(),
+            "Встановлено мову " + Language.UKR.getName()),
     MEET_NEW_PLAYER(0,
             "Ты видишь перед собой пожилого человека в фиолетовой мантии."
                     + "\n\n*Похоже, мы ещё не знакомы. Меня зовут Хранитель. Я глава Гильдии Магов этого королевства.*"
