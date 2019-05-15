@@ -40,13 +40,13 @@ public class GameTutorial {
                         Player player = message.getPlayer();
                         player.setLanguage(Language.values()[Integer.valueOf(commandParts[1])]);
                         player.setAdditionalStatus(PlayerStatusExtended.TUTORIAL_NICKNAME);
-                        playerService.update(player);
                         messages.sendMessageEdit(
                                 message.getMessageId(),
                                 MainText.LANGUAGE_SELECTED.text(player.getLanguage()),
                                 message.getUserId(),
                                 true
                         );
+                        tutorialStart(player);
                     } else {
                         messages.sendMessage(MainText.COMMAND_INVALID.text(message.getPlayer().getLanguage()), message.getUserId());
                     }
