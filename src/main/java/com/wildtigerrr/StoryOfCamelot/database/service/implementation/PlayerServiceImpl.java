@@ -1,5 +1,6 @@
 package com.wildtigerrr.StoryOfCamelot.database.service.implementation;
 
+import com.wildtigerrr.StoryOfCamelot.bin.enums.Language;
 import com.wildtigerrr.StoryOfCamelot.bin.enums.MainText;
 import com.wildtigerrr.StoryOfCamelot.database.dataaccessobject.PlayerDao;
 import com.wildtigerrr.StoryOfCamelot.database.schema.Player;
@@ -72,7 +73,7 @@ public class PlayerServiceImpl implements PlayerService {
         if (player != null) {
             return player.toString();
         } else {
-            return MainText.PLAYER_NOT_EXIST.text();
+            return MainText.PLAYER_NOT_EXIST.text(Language.RUS);
         }
     }
 }
