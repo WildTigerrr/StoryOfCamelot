@@ -2,8 +2,8 @@ package com.wildtigerrr.StoryOfCamelot.bin.base;
 
 import com.wildtigerrr.StoryOfCamelot.bin.KeyboardManager;
 import com.wildtigerrr.StoryOfCamelot.bin.enums.GameSettings;
+import com.wildtigerrr.StoryOfCamelot.bin.enums.Language;
 import com.wildtigerrr.StoryOfCamelot.bin.enums.MainText;
-import com.wildtigerrr.StoryOfCamelot.bin.enums.ReplyButtons;
 import com.wildtigerrr.StoryOfCamelot.bin.exceptions.SOCInvalidDataException;
 import com.wildtigerrr.StoryOfCamelot.database.schema.Player;
 import com.wildtigerrr.StoryOfCamelot.database.schema.enums.PlayerStatusExtended;
@@ -15,7 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.Collections;
 
 @Service
 public class GameMain {
@@ -28,6 +27,14 @@ public class GameMain {
     private PlayerServiceImpl playerService;
     @Autowired
     private LocationServiceImpl locationService;
+
+    public void sendLanguageSelector(String userId, Language lang) {
+        messages.sendMessage(
+                MainText.LANGUAGE_SELECT.text(lang),
+                KeyboardManager.getKeyboardForLanguageSelect(),
+                userId
+        );
+    }
 
     public Player getPlayer(String externalId) {
         Player player;
@@ -42,19 +49,19 @@ public class GameMain {
     public void setNickname(Player player, String newName) {
         String message;
         if (Player.containsSpecialCharacters(newName)) {
-            message = MainText.NICKNAME_WRONG.text();
+            message = MainText.NICKNAME_WRONG.text(player.getLanguage());
         } else if (!player.setNickname(newName)) {
-            message = MainText.NICKNAME_LONG.text(String.valueOf(Player.getNicknameLengthMax()));
+            message = MainText.NICKNAME_LONG.text(player.getLanguage(),  String.valueOf(Player.getNicknameLengthMax()));
         } else if (player.getNickname().isEmpty()) {
-            message = MainText.NICKNAME_EMPTY.text();
+            message = MainText.NICKNAME_EMPTY.text(player.getLanguage());
         } else if (playerService.findByNickname(player.getNickname()) != null) {
-            message = MainText.NICKNAME_DUPLICATE.text(player.getNickname());
+            message = MainText.NICKNAME_DUPLICATE.text(player.getLanguage(), player.getNickname());
         } else if (player.getAdditionalStatus() == PlayerStatusExtended.TUTORIAL_NICKNAME) {
             tutorial.tutorialSetNickname(player);
             return;
         } else {
             playerService.update(player);
-            message = MainText.NICKNAME_CHANGED.text(player.getNickname());
+            message = MainText.NICKNAME_CHANGED.text(player.getLanguage(), player.getNickname());
         }
         messages.sendMessage(message, player.getExternalId(), true);
     }
@@ -63,7 +70,8 @@ public class GameMain {
         try {
             ArrayList<String> eventList = player.addStatExp(
                     experience,
-                    stat
+                    stat,
+                    player.getLanguage()
             );
             if (eventList != null && !eventList.isEmpty()) {
                 for (String event : eventList) {

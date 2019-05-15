@@ -52,13 +52,13 @@ public class GameMovement {
         ArrayList<Location> nearLocations = locationNearService.getNearLocations(player.getLocation());
         if (!nearLocations.isEmpty()) {
             messages.sendMessage(
-                    MainText.LOCATION_SELECT.text(),
+                    MainText.LOCATION_SELECT.text(player.getLanguage()),
                     KeyboardManager.getKeyboardForLocations(nearLocations),
                     player.getExternalId()
             );
         } else {
             messages.sendMessage(
-                    MainText.LOCATION_BLOCKED.text(),
+                    MainText.LOCATION_BLOCKED.text(player.getLanguage()),
                     player.getExternalId()
             );
         }
@@ -73,12 +73,12 @@ public class GameMovement {
             );
             if (distance == -1) {
                 messages.sendMessage(
-                        MainText.NO_DIRECT.text(),
+                        MainText.NO_DIRECT.text(message.getPlayer().getLanguage()),
                         message.getUserId()
                 );
                 return;
             }
-            String newText = MainText.LOCATION_SELECTED.text(location.getName());
+            String newText = MainText.LOCATION_SELECTED.text(message.getPlayer().getLanguage(), location.getName());
             Calendar calendar = Calendar.getInstance();
             calendar.add(Calendar.SECOND, distance);
             if (!TimeDependentActions.scheduleMove(
@@ -87,7 +87,7 @@ public class GameMovement {
                             locationId,
                             String.valueOf(distance))
             ) {
-                newText = MainText.ALREADY_MOVING.text();
+                newText = MainText.ALREADY_MOVING.text(message.getPlayer().getLanguage());
             } else {
                 Player player = message.getPlayer();
                 player.move();
@@ -113,11 +113,11 @@ public class GameMovement {
                     location.getName(),
                     stream,
                     player.getExternalId(),
-                    MainText.LOCATION_ARRIVED.text(location.getName())
+                    MainText.LOCATION_ARRIVED.text(player.getLanguage(), location.getName())
             );
         } else {
             messages.sendMessage(
-                    MainText.LOCATION_ARRIVED.text(location.getName()),
+                    MainText.LOCATION_ARRIVED.text(player.getLanguage(), location.getName()),
                     player.getExternalId()
             );
         }

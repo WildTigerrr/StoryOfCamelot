@@ -1,10 +1,8 @@
 package com.wildtigerrr.StoryOfCamelot.bin.base;
 
 import com.wildtigerrr.StoryOfCamelot.bin.KeyboardManager;
-import com.wildtigerrr.StoryOfCamelot.bin.enums.Command;
-import com.wildtigerrr.StoryOfCamelot.bin.enums.GameSettings;
-import com.wildtigerrr.StoryOfCamelot.bin.enums.MainText;
-import com.wildtigerrr.StoryOfCamelot.bin.enums.ReplyButtons;
+import com.wildtigerrr.StoryOfCamelot.bin.enums.*;
+import com.wildtigerrr.StoryOfCamelot.bin.service.StringUtils;
 import com.wildtigerrr.StoryOfCamelot.database.schema.Player;
 import com.wildtigerrr.StoryOfCamelot.database.schema.enums.PlayerStatusExtended;
 import com.wildtigerrr.StoryOfCamelot.database.service.implementation.LocationServiceImpl;
@@ -33,18 +31,37 @@ public class GameTutorial {
     public Boolean proceedTutorial(UpdateWrapper message) {
         Command command = ResponseHandler.messageToCommand(message.getText());
         switch (message.getPlayer().getAdditionalStatus()) {
-            case TUTORIAL_NICKNAME:
-                if (command == Command.START || message.getPlayer().isNew()) {
-                    tutorialStart(message.getPlayer());
+            case LANGUAGE_CHOOSE:
+                if (!message.isQuery() && (command == Command.START || message.getPlayer().isNew())) {
+                    gameMain.sendLanguageSelector(message.getUserId(), message.getPlayer().getLanguage());
+                } else if (message.isQuery() && command == Command.LANG) {
+                    String[] commandParts = message.getText().split(" ", 2);
+                    if (StringUtils.isNumeric(commandParts[1]) && Integer.valueOf(commandParts[1]) < Language.values().length) {
+                        Player player = message.getPlayer();
+                        player.setLanguage(Language.values()[Integer.valueOf(commandParts[1])]);
+                        player.setAdditionalStatus(PlayerStatusExtended.TUTORIAL_NICKNAME);
+                        playerService.update(player);
+                        /*messages.sendMessageEdit(
+                                message.getMessageId(),
+                                newText,
+                                message.getUserId(),
+                                true
+                        );*/
+                    } else {
+
+                    }
                 } else {
-                    tutorialNickname(message.getPlayer(), message.getText());
+                    messages.sendMessage(MainText.TUTORIAL_NO_RUSH.text(message.getPlayer().getLanguage()), message.getUserId());
                 }
+                break;
+            case TUTORIAL_NICKNAME:
+                tutorialNickname(message.getPlayer(), message.getText());
                 break;
             case TUTORIAL_MOVEMENT:
                 if (command == Command.MOVE) {
                     return false;
                 } else {
-                    messages.sendMessage(MainText.TUTORIAL_NO_RUSH.text(), message.getUserId());
+                    messages.sendMessage(MainText.TUTORIAL_NO_RUSH.text(message.getPlayer().getLanguage()), message.getUserId());
                 }
                 break;
             case TUTORIAL_STATS:
@@ -52,18 +69,18 @@ public class GameTutorial {
                     messages.sendMessage(playerService.getPlayerInfo(message.getUserId()), message.getUserId(), true);
                     tutorialStats(message.getPlayer());
                 } else {
-                    messages.sendMessage(MainText.TUTORIAL_NO_RUSH.text(), message.getUserId());
+                    messages.sendMessage(MainText.TUTORIAL_NO_RUSH.text(message.getPlayer().getLanguage()), message.getUserId());
                 }
                 break;
             case TUTORIAL_STATS_UP:
                 if (command == Command.SKILLS) {
-                    messages.sendMessage(MainText.TUTORIAL_STUCK.text(), message.getUserId());
+                    messages.sendMessage(MainText.TUTORIAL_STUCK.text(message.getPlayer().getLanguage()), message.getUserId());
                 } else {
-                    messages.sendMessage(MainText.TUTORIAL_NO_RUSH.text(), message.getUserId());
+                    messages.sendMessage(MainText.TUTORIAL_NO_RUSH.text(message.getPlayer().getLanguage()), message.getUserId());
                 }
                 break;
             default:
-                messages.sendMessage(MainText.COMMAND_NOT_DEVELOPED.text(), message.getUserId());
+                messages.sendMessage(MainText.COMMAND_NOT_DEVELOPED.text(message.getPlayer().getLanguage()), message.getUserId());
         }
         return true;
     }
@@ -73,7 +90,7 @@ public class GameTutorial {
         player.setup();
         playerService.update(player);
         messages.sendMessage(
-                MainText.MEET_NEW_PLAYER.text(),
+                MainText.MEET_NEW_PLAYER.text(player.getLanguage()),
                 player.getExternalId(),
                 true
         );
@@ -88,10 +105,11 @@ public class GameTutorial {
         playerService.update(player);
         messages.sendMessage(
                 MainText.NICKNAME_SET.text(
+                        player.getLanguage(),
                         player.getNickname(),
                         locationService.findByName(GameSettings.FIRST_FOREST_LOCATION.get()).getName()
                 ),
-                KeyboardManager.getReplyByButtons(new ArrayList<>(Collections.singleton(ReplyButtons.MOVE))),
+                KeyboardManager.getReplyByButtons(new ArrayList<>(Collections.singleton(ReplyButton.MOVE))),
                 player.getExternalId()
         );
     }
@@ -99,13 +117,14 @@ public class GameTutorial {
     void tutorialMovement(Player player) {
         player.setAdditionalStatus(PlayerStatusExtended.TUTORIAL_STATS);
         playerService.update(player);
-        ArrayList<ReplyButtons> buttons = new ArrayList<>();
-        buttons.add(ReplyButtons.ME);
-        buttons.add(ReplyButtons.MOVE);
+        ArrayList<ReplyButton> buttons = new ArrayList<>();
+        buttons.add(ReplyButton.ME);
+        buttons.add(ReplyButton.MOVE);
         messages.sendMessage(
                 MainText.GUARD_LESSON_ONE.text(
+                        player.getLanguage(),
                         player.getNickname(),
-                        ReplyButtons.ME.getLabel()
+                        ReplyButton.ME.getLabel()
                 ),
                 KeyboardManager.getReplyByButtons(buttons),
                 player.getExternalId()
@@ -116,8 +135,8 @@ public class GameTutorial {
         player.setAdditionalStatus(PlayerStatusExtended.TUTORIAL_STATS_UP);
         playerService.update(player);
         messages.sendMessage(
-                MainText.GUARD_LESSON_TWO.text(),
-                KeyboardManager.getReplyByButtons(new ArrayList<>(Collections.singleton(ReplyButtons.SKILLS))),
+                MainText.GUARD_LESSON_TWO.text(player.getLanguage()),
+                KeyboardManager.getReplyByButtons(new ArrayList<>(Collections.singleton(ReplyButton.SKILLS))),
                 player.getExternalId()
         );
     }

@@ -9,5 +9,6 @@ public enum Command {
     MOVE,
     SKILLS,
     START,
-    UP
+    UP,
+    LANG
 }

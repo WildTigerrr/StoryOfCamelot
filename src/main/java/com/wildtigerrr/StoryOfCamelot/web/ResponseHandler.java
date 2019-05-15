@@ -7,7 +7,8 @@ import com.wildtigerrr.StoryOfCamelot.bin.base.GameMovement;
 import com.wildtigerrr.StoryOfCamelot.bin.base.GameTutorial;
 import com.wildtigerrr.StoryOfCamelot.bin.enums.Command;
 import com.wildtigerrr.StoryOfCamelot.bin.enums.MainText;
-import com.wildtigerrr.StoryOfCamelot.bin.enums.ReplyButtons;
+import com.wildtigerrr.StoryOfCamelot.bin.enums.ReplyButton;
+import com.wildtigerrr.StoryOfCamelot.bin.service.StringUtils;
 import com.wildtigerrr.StoryOfCamelot.database.schema.Player;
 import com.wildtigerrr.StoryOfCamelot.database.schema.enums.PlayerStatus;
 import com.wildtigerrr.StoryOfCamelot.database.schema.enums.PlayerStatusExtended;
@@ -128,13 +129,13 @@ public class ResponseHandler {
                 messages.sendMessage(playerService.getPlayerInfo(message.getUserId()), message.getUserId(), true);
                 break;
             case SKILLS:
-                messages.sendMessage(MainText.COMMAND_NOT_DEVELOPED.text(), message.getUserId(), true);
+                messages.sendMessage(MainText.COMMAND_NOT_DEVELOPED.text(message.getPlayer().getLanguage()), message.getUserId(), true);
                 break;
             case NICKNAME:
                 if (commandParts.length > 1) {
                     gameMain.setNickname(message.getPlayer(), commandParts[1]);
                 } else {
-                    messages.sendMessage(MainText.NICKNAME_EMPTY.text(), message.getUserId(), true);
+                    messages.sendMessage(MainText.NICKNAME_EMPTY.text(message.getPlayer().getLanguage()), message.getUserId(), true);
                 }
                 break;
             case ADD:
@@ -172,12 +173,12 @@ public class ResponseHandler {
                     if (message.isQuery()) {
                         messages.sendMessageEdit(
                                 message.getMessageId(),
-                                MainText.ALREADY_MOVING.text(),
+                                MainText.ALREADY_MOVING.text(message.getPlayer().getLanguage()),
                                 message.getUserId(),
                                 true
                         );
                     } else {
-                        messages.sendMessage(MainText.ALREADY_MOVING.text(), message.getUserId());
+                        messages.sendMessage(MainText.ALREADY_MOVING.text(message.getPlayer().getLanguage()), message.getUserId());
                     }
                 } else if (message.isQuery()) {
                     movementService.moveToLocation(message, commandParts[1]);
@@ -199,28 +200,28 @@ public class ResponseHandler {
                 if (message.getPlayer().isNew()) {
                     tutorial.tutorialStart(message.getPlayer());
                 } else {
-                    messages.sendMessage(MainText.PROPOSITION_EXPIRED.text(), message.getUserId());
+                    messages.sendMessage(MainText.PROPOSITION_EXPIRED.text(message.getPlayer().getLanguage()), message.getUserId());
                 }
                 return true;
             case UP:
                 commandParts = message.getText().split("_", 3);
-                if (commandParts.length == 3 && commandParts[1].length() == 1 && isNumeric(commandParts[2])) {
+                if (commandParts.length == 3 && commandParts[1].length() == 1 && StringUtils.isNumeric(commandParts[2])) {
                     Stats stat = Stats.getStat(commandParts[1]);
                     if (stat == null) {
-                        messages.sendMessage(MainText.STAT_INVALID.text(), message.getUserId());
+                        messages.sendMessage(MainText.STAT_INVALID.text(message.getPlayer().getLanguage()), message.getUserId());
                         return true;
                     } else {
                         Player player = message.getPlayer();
-                        String result = player.raiseStat(stat, Integer.valueOf(commandParts[2]));
-                        if (!result.equals(MainText.STAT_INVALID.text())) playerService.update(player);
+                        String result = player.raiseStat(stat, Integer.valueOf(commandParts[2]), player.getLanguage());
+                        if (!result.equals(MainText.STAT_INVALID.text(message.getPlayer().getLanguage()))) playerService.update(player);
                         messages.sendMessage(result, message.getUserId());
                     }
                 } else {
-                    messages.sendMessage(MainText.COMMAND_INVALID.text(), message.getUserId());
+                    messages.sendMessage(MainText.COMMAND_INVALID.text(message.getPlayer().getLanguage()), message.getUserId());
                 }
                 return true;
             default:
-                messages.sendMessage(MainText.COMMAND_NOT_DEFINED.text(), message.getUserId(), true);
+                messages.sendMessage(MainText.COMMAND_NOT_DEFINED.text(message.getPlayer().getLanguage()), message.getUserId(), true);
                 return false;
         }
         return true;
@@ -237,15 +238,8 @@ public class ResponseHandler {
                 return null;
             }
         } else {
-            return ReplyButtons.buttonToCommand(text);
+            return ReplyButton.buttonToCommand(text);
         }
-    }
-
-    public static boolean isNumeric(String str) {
-        for (char c : str.toCharArray()) {
-            if (!Character.isDigit(c)) return false;
-        }
-        return true;
     }
 
 }

@@ -1,10 +1,12 @@
 package com.wildtigerrr.StoryOfCamelot.database.schema;
 
+import com.wildtigerrr.StoryOfCamelot.bin.enums.Language;
 import com.wildtigerrr.StoryOfCamelot.bin.enums.MainText;
 import com.wildtigerrr.StoryOfCamelot.bin.exceptions.SOCInvalidDataException;
 import com.wildtigerrr.StoryOfCamelot.database.schema.enums.PlayerStatus;
 import com.wildtigerrr.StoryOfCamelot.database.schema.enums.PlayerStatusExtended;
 import com.wildtigerrr.StoryOfCamelot.database.schema.enums.Stats;
+import org.apache.commons.codec.language.bm.Lang;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -21,6 +23,8 @@ public class Player {
     private Integer id;
     private String externalId;
     private String nickname;
+    @Enumerated(EnumType.STRING)
+    private Language language;
     @Enumerated(EnumType.STRING)
     private PlayerStatus status;
     @Enumerated(EnumType.STRING)
@@ -88,6 +92,14 @@ public class Player {
         this.additionalStatus = additionalStatus;
     }
 
+    public Language getLanguage() {
+        return language;
+    }
+
+    public void setLanguage(Language language) {
+        this.language = language;
+    }
+
     // ------------------- CONSTRUCTORS ----------------------------------------------------------------------------- //
 
     protected Player() {
@@ -99,8 +111,9 @@ public class Player {
         this.location = location;
         isNew = externalId.equals(nickname);
         level = 1;
+        language = Language.RUS;
         status = PlayerStatus.TUTORIAL;
-        additionalStatus = PlayerStatusExtended.TUTORIAL_NICKNAME;
+        additionalStatus = PlayerStatusExtended.LANGUAGE_CHOOSE;
         unassignedPoints = getDefaultPoints() + 5;
         strength = 1;
         health = 1;
@@ -161,8 +174,8 @@ public class Player {
 
     // ------------------- LEVEL UP MECHANIC ------------------------------------------------------------------------ //
 
-    public String raiseStat(Stats stat, Integer quantity) {
-        if (quantity > unassignedPoints) return MainText.STAT_INSUFFICIENT_POINTS.text();
+    public String raiseStat(Stats stat, Integer quantity, Language lang) {
+        if (quantity > unassignedPoints) return MainText.STAT_INSUFFICIENT_POINTS.text(lang);
         int newQuantity;
         switch (stat) {
             case STRENGTH:
@@ -200,13 +213,13 @@ public class Player {
                 newQuantity = luck;
                 break;
             default:
-                return MainText.STAT_INVALID.text();
+                return MainText.STAT_INVALID.text(lang);
         }
         unassignedPoints -= quantity;
-        return MainText.STAT_UP.text(stat.what().substring(0, 1).toUpperCase() + stat.what().substring(1), String.valueOf(newQuantity));
+        return MainText.STAT_UP.text(lang, stat.what().substring(0, 1).toUpperCase() + stat.what().substring(1), String.valueOf(newQuantity));
     }
 
-    public ArrayList<String> addStatExp(Integer exp, Stats stat) throws SOCInvalidDataException {
+    public ArrayList<String> addStatExp(Integer exp, Stats stat, Language lang) throws SOCInvalidDataException {
         ArrayList<String> events = new ArrayList<>();
         Boolean up = isStatUp(stat, exp);
         while (up) {
@@ -214,37 +227,37 @@ public class Player {
                 case STRENGTH:
                     strengthExp -= getExpToNextStatUp(strength);
                     strength++;
-                    events.add(MainText.STAT_UP.text(Stats.STRENGTH.which(), String.valueOf(strength)));
+                    events.add(MainText.STAT_UP.text(lang, Stats.STRENGTH.which(), String.valueOf(strength)));
                     break;
                 case HEALTH:
                     healthExp -= getExpToNextStatUp(health);
                     health++;
-                    events.add(MainText.STAT_UP.text(Stats.HEALTH.which(), String.valueOf(health)));
+                    events.add(MainText.STAT_UP.text(lang, Stats.HEALTH.which(), String.valueOf(health)));
                     break;
                 case AGILITY:
                     agilityExp -= getExpToNextStatUp(agility);
                     agility++;
-                    events.add(MainText.STAT_UP.text(Stats.AGILITY.which(), String.valueOf(agility)));
+                    events.add(MainText.STAT_UP.text(lang, Stats.AGILITY.which(), String.valueOf(agility)));
                     break;
                 case CHARISMA:
                     charismaExp -= getExpToNextStatUp(charisma);
                     charisma++;
-                    events.add(MainText.STAT_UP.text(Stats.CHARISMA.which(), String.valueOf(charisma)));
+                    events.add(MainText.STAT_UP.text(lang, Stats.CHARISMA.which(), String.valueOf(charisma)));
                     break;
                 case INTELLIGENCE:
                     intelligenceExp -= getExpToNextStatUp(intelligence);
                     intelligence++;
-                    events.add(MainText.STAT_UP.text(Stats.INTELLIGENCE.which(), String.valueOf(intelligence)));
+                    events.add(MainText.STAT_UP.text(lang, Stats.INTELLIGENCE.which(), String.valueOf(intelligence)));
                     break;
                 case ENDURANCE:
                     enduranceExp -= getExpToNextStatUp(endurance);
                     endurance++;
-                    events.add(MainText.STAT_UP.text(Stats.ENDURANCE.which(), String.valueOf(endurance)));
+                    events.add(MainText.STAT_UP.text(lang, Stats.ENDURANCE.which(), String.valueOf(endurance)));
                     break;
             }
             if (isLevelUp()) {
                 levelUp();
-                events.add(MainText.LEVEL_UP.text(String.valueOf(getLevel())));
+                events.add(MainText.LEVEL_UP.text(lang, String.valueOf(getLevel())));
             }
             up = isStatUp(stat, 0);
         }
