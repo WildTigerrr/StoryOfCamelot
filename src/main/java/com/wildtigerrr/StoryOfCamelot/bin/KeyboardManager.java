@@ -23,7 +23,7 @@ public class KeyboardManager {
         int buttonsCounter = 0;
         for (Language lang : Language.values()) {
             buttonsCounter++;
-            if (buttonsCounter > 3) {
+            if (buttonsCounter > 2) {
                 rowList.add(buttonsRow);
                 buttonsRow = new ArrayList<>();
                 buttonsCounter = 1;
