@@ -1,8 +1,8 @@
 package com.wildtigerrr.StoryOfCamelot.bin.enums;
 
 public enum Language {
-    RUS ( Emoji.FLAG_RUSSIA + " Русский"),
-    UKR ( Emoji.FLAG_UKRAINE + " Українська");
+    RUS ( Emoji.FLAG_RUSSIA.getCode() + " Русский"),
+    UKR ( Emoji.FLAG_UKRAINE.getCode() + " Українська");
 
     private final String name;
 
