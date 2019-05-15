@@ -33,7 +33,12 @@ public class GameTutorial {
         switch (message.getPlayer().getAdditionalStatus()) {
             case LANGUAGE_CHOOSE:
                 if (!message.isQuery() && (command == Command.START || message.getPlayer().isNew())) {
-                    gameMain.sendLanguageSelector(message.getUserId(), message.getPlayer().getLanguage());
+                    Language lang = Language.ENG;
+                    String langCode = message.getLanguage().substring(0, Math.min(message.getLanguage().length(), 2));
+                    // List - https://datahub.io/core/language-codes/r/3.html
+                    if (langCode.equals("ru")) lang = Language.RUS;
+                    else if (langCode.equals("uk")) lang = Language.UKR;
+                    gameMain.sendLanguageSelector(message.getUserId(), lang);
                 } else if (message.isQuery() && command == Command.LANG) {
                     String[] commandParts = message.getText().split(" ", 2);
                     if (StringUtils.isNumeric(commandParts[1]) && Integer.valueOf(commandParts[1]) < Language.values().length) {

@@ -81,16 +81,8 @@ public class ResponseHandler {
     }
 
     private void logSender(UpdateWrapper message) {
-        String log = "New message, User:"
-                + (message.getFirstName() == null ? "" : " " + message.getFirstName())
-                + (message.getLastName() == null ? "" : " " + message.getLastName())
-                + " (id" + message.getUserId() + ")"
-                + (message.getUsername() == null ? "" : ", also known as " + message.getUsername())
-                + ", wrote a message: " + message.getText();
-        System.out.println(log);
-
         if (!message.getUserId().equals(BotConfig.WEBHOOK_ADMIN_ID)) {
-            messages.sendMessageToAdmin(log);
+            messages.sendMessageToAdmin(message.toString());
         }
     }
 

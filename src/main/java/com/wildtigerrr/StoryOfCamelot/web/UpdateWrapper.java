@@ -52,7 +52,7 @@ public class UpdateWrapper {
         return username;
     }
 
-    String getLanguage() {
+    public String getLanguage() {
         return language;
     }
 
