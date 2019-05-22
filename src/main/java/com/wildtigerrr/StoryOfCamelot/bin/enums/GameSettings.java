@@ -2,10 +2,10 @@ package com.wildtigerrr.StoryOfCamelot.bin.enums;
 
 public enum GameSettings {
     DEFAULT_LOCATION (
-            Emoji.CIRCUS_TENT.getCode() + " Торговая Площадь"
+            NameTranslation.TRADING_SQUARE.getSystemName()
     ),
     FIRST_FOREST_LOCATION (
-            Emoji.EVERGREEN_TREE.getCode() + " Лес"
+            NameTranslation.FOREST.getSystemName()
     );
 
     private final String text;

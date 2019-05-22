@@ -1,6 +1,5 @@
 package com.wildtigerrr.StoryOfCamelot.database;
 
-import com.wildtigerrr.StoryOfCamelot.bin.enums.Emoji;
 import com.wildtigerrr.StoryOfCamelot.bin.enums.NameTranslation;
 import com.wildtigerrr.StoryOfCamelot.database.schema.*;
 import com.wildtigerrr.StoryOfCamelot.database.schema.enums.ItemQuality;
@@ -130,21 +129,21 @@ public class DatabaseInteraction {
 
     private HashMap<String, Location> getLocations(HashMap<String, FileLink> filesMap) {
         return new HashMap<String, Location>() {{
-            put("forest", new Location("forest", NameTranslation.FOREST, filesMap.get("forest-test")));
-            put("thicket", new Location("thicket", NameTranslation.THICKET, filesMap.get("thicket")));
-            put("cave", new Location("cave", NameTranslation.CAVE, null));
-            put("square", new Location("square", NameTranslation.TRADING_SQUARE, filesMap.get("merchants-square")));
+            put(NameTranslation.FOREST.getSystemName(), new Location(NameTranslation.FOREST, filesMap.get("forest-test")));
+            put(NameTranslation.THICKET.getSystemName(), new Location(NameTranslation.THICKET, filesMap.get("thicket")));
+            put(NameTranslation.CAVE.getSystemName(), new Location(NameTranslation.CAVE, null));
+            put(NameTranslation.TRADING_SQUARE.getSystemName(), new Location(NameTranslation.TRADING_SQUARE, filesMap.get("merchants-square")));
         }};
     }
 
     private HashMap<String, Integer> getLocationDistances() {
         return new HashMap<String, Integer>() {{
-            put("square*forest", 10);
-            put("forest*square", 10);
-            put("forest*thicket", 30);
-            put("thicket*forest", 30);
-            put("cave*forest", 5);
-            put("forest*cave", 5);
+            put(NameTranslation.TRADING_SQUARE.getSystemName() + "*" + NameTranslation.FOREST.getSystemName(), 10);
+            put(NameTranslation.FOREST.getSystemName() + "*" + NameTranslation.TRADING_SQUARE.getSystemName(), 10);
+            put(NameTranslation.FOREST.getSystemName() + "*" + NameTranslation.THICKET.getSystemName(), 30);
+            put(NameTranslation.THICKET.getSystemName() + "*" + NameTranslation.FOREST.getSystemName(), 30);
+            put(NameTranslation.CAVE.getSystemName() + "*" + NameTranslation.FOREST.getSystemName(), 5);
+            put(NameTranslation.FOREST.getSystemName() + "*" + NameTranslation.CAVE.getSystemName(), 5);
         }};
     }
 
@@ -157,10 +156,10 @@ public class DatabaseInteraction {
 
     private HashMap<String, ArrayList<String>> getPossibleLocationsMapping() {
         return new HashMap<String, ArrayList<String>>() {{
-            put("forest", new ArrayList<String>() {{
+            put(NameTranslation.FOREST.getSystemName(), new ArrayList<String>() {{
                 add("Flying Sword");
             }});
-            put("thicket", new ArrayList<String>() {{
+            put(NameTranslation.THICKET.getSystemName(), new ArrayList<String>() {{
                 add("Flying Sword");
                 add("Super Flying Sword");
             }});
