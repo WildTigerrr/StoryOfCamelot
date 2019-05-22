@@ -35,7 +35,7 @@ public class LocationServiceImpl implements LocationService {
     public HashMap<String, Location> create(ArrayList<Location> locations) {
         List<Location> newLocations = (List<Location>) locationDao.saveAll(locations);
         HashMap<String, Location> locationsMap = new HashMap<>();
-        for (Location loc : newLocations) locationsMap.put(loc.getName(), loc);
+        for (Location loc : newLocations) locationsMap.put(loc.getSystemName(), loc);
         return locationsMap;
     }
 
@@ -71,7 +71,7 @@ public class LocationServiceImpl implements LocationService {
     @Override
     public HashMap<String, Location> getAllAsMap() {
         HashMap<String, Location> locationsMap = new HashMap<>();
-        for (Location location : getAll()) locationsMap.put(location.getName(), location);
+        for (Location location : getAll()) locationsMap.put(location.getSystemName(), location);
         return locationsMap;
     }
 }
