@@ -5,6 +5,6 @@ import org.springframework.data.repository.CrudRepository;
 
 public interface LocationDao extends CrudRepository<Location, Integer> {
 
-    Location findByName(String name);
+    Location findBySystemName(String name);
 
 }

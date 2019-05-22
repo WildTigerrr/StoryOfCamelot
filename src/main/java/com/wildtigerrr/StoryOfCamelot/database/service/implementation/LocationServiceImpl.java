@@ -55,7 +55,7 @@ public class LocationServiceImpl implements LocationService {
 
     @Override
     public Location findByName(String locationName) {
-        return locationDao.findByName(locationName);
+        return locationDao.findBySystemName(locationName);
     }
 
     @Override

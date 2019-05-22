@@ -13,6 +13,7 @@ public class Location {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
+    private String systemName;
     @Enumerated(EnumType.STRING)
     private NameTranslation name;
     private Boolean hasStores;
@@ -30,12 +31,14 @@ public class Location {
     }
 
     public Location(NameTranslation locationName, FileLink imageLink) {
+        this.systemName = locationName.getSystemName();
         this.name = locationName;
         this.imageLink = imageLink;
         this.hasStores = false;
     }
 
     public Location(NameTranslation locationName, FileLink imageLink, Boolean hasStores) {
+        this.systemName = locationName.getSystemName();
         this.name = locationName;
         this.imageLink = imageLink;
         this.hasStores = hasStores;
@@ -46,7 +49,7 @@ public class Location {
     }
 
     public String getSystemName() {
-        return name.getSystemName();
+        return systemName;
     }
 
     public String getName(Language lang) {
