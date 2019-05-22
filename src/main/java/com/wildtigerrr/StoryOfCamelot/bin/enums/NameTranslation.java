@@ -7,19 +7,19 @@ public enum NameTranslation {
             Emoji.EVERGREEN_TREE.getCode() + " Ліс"
     ),
     THICKET(
-            "",
+            Emoji.EVERGREEN_TREE.getCode() + " Thicket",
             Emoji.EVERGREEN_TREE.getCode() + " Дебри",
-            ""
+            Emoji.EVERGREEN_TREE.getCode() + " Нетрі"
     ),
     CAVE(
-            "",
+            Emoji.BAT.getCode() + " Mythical Cave",
             Emoji.BAT.getCode() + " Таинственная Пещера",
-            ""
+            Emoji.BAT.getCode() + " Загадкова Печера"
     ),
     TRADING_SQUARE(
-            "",
+            Emoji.CIRCUS_TENT.getCode() + " Merchant Square",
             Emoji.CIRCUS_TENT.getCode() + " Торговая Площадь",
-            ""
+            Emoji.CIRCUS_TENT.getCode() + " Торгівельна Площа"
     );
     private final String nameENG;
     private final String nameRUS;

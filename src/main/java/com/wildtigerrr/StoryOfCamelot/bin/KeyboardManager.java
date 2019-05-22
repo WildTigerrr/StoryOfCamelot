@@ -38,7 +38,7 @@ public class KeyboardManager {
         return keyboard;
     }
 
-    public static InlineKeyboardMarkup getKeyboardForLocations(ArrayList<Location> nearLocations) {
+    public static InlineKeyboardMarkup getKeyboardForLocations(ArrayList<Location> nearLocations, Language lang) {
         InlineKeyboardMarkup keyboard = new InlineKeyboardMarkup();
         InlineKeyboardButton button;
         List<InlineKeyboardButton> buttonsRow = new ArrayList<>();
@@ -52,7 +52,7 @@ public class KeyboardManager {
                 buttonsCounter = 1;
             }
             button = new InlineKeyboardButton();
-            button.setText(loc.getName());
+            button.setText(loc.getName(lang));
             button.setCallbackData("/move " + loc.getId());
             buttonsRow.add(button);
         }

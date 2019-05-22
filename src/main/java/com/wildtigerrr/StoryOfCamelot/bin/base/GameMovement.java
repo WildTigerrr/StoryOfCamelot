@@ -53,7 +53,7 @@ public class GameMovement {
         if (!nearLocations.isEmpty()) {
             messages.sendMessage(
                     MainText.LOCATION_SELECT.text(player.getLanguage()),
-                    KeyboardManager.getKeyboardForLocations(nearLocations),
+                    KeyboardManager.getKeyboardForLocations(nearLocations, player.getLanguage()),
                     player.getExternalId()
             );
         } else {
