@@ -158,8 +158,8 @@ public enum MainText {
             "Спізнився ти, хлопче"),
     PLAYER_NOT_EXIST(0,
             "You don't have a player yet.",
-            "You don't have a player yet.",
-            "You don't have a player yet.");
+            "У вас ещё нет игрока.",
+            "У вас ще немає гравця.");
 
     private final String textRUS;
     private final String textUKR;

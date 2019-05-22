@@ -78,7 +78,7 @@ public class GameMovement {
                 );
                 return;
             }
-            String newText = MainText.LOCATION_SELECTED.text(message.getPlayer().getLanguage(), location.getName());
+            String newText = MainText.LOCATION_SELECTED.text(message.getPlayer().getLanguage(), location.getName(message.getPlayer().getLanguage()));
             Calendar calendar = Calendar.getInstance();
             calendar.add(Calendar.SECOND, distance);
             if (!TimeDependentActions.scheduleMove(
@@ -110,14 +110,14 @@ public class GameMovement {
         if (location.getImageLink() != null) {
             InputStream stream = amazonClient.getObject(location.getImageLink().getLocation());
             messages.sendImage(
-                    location.getName(),
+                    location.getSystemName(),
                     stream,
                     player.getExternalId(),
-                    MainText.LOCATION_ARRIVED.text(player.getLanguage(), location.getName())
+                    MainText.LOCATION_ARRIVED.text(player.getLanguage(), location.getName(player.getLanguage()))
             );
         } else {
             messages.sendMessage(
-                    MainText.LOCATION_ARRIVED.text(player.getLanguage(), location.getName()),
+                    MainText.LOCATION_ARRIVED.text(player.getLanguage(), location.getName(player.getLanguage())),
                     player.getExternalId()
             );
         }

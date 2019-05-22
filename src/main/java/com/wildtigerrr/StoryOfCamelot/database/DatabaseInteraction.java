@@ -1,6 +1,7 @@
 package com.wildtigerrr.StoryOfCamelot.database;
 
 import com.wildtigerrr.StoryOfCamelot.bin.enums.Emoji;
+import com.wildtigerrr.StoryOfCamelot.bin.enums.NameTranslation;
 import com.wildtigerrr.StoryOfCamelot.database.schema.*;
 import com.wildtigerrr.StoryOfCamelot.database.schema.enums.ItemQuality;
 import com.wildtigerrr.StoryOfCamelot.database.schema.enums.ItemSubType;
@@ -129,21 +130,21 @@ public class DatabaseInteraction {
 
     private HashMap<String, Location> getLocations(HashMap<String, FileLink> filesMap) {
         return new HashMap<String, Location>() {{
-            put("Лес", new Location(Emoji.EVERGREEN_TREE.getCode() + " Лес", filesMap.get("forest-test")));
-            put("Дебри", new Location(Emoji.EVERGREEN_TREE.getCode() + " Дебри", filesMap.get("thicket")));
-            put("Таинственная Пещера", new Location(Emoji.BAT.getCode() + " Таинственная Пещера", null));
-            put("Торговая Площадь", new Location(Emoji.CIRCUS_TENT.getCode() + " Торговая Площадь", filesMap.get("merchants-square")));
+            put("forest", new Location("forest", NameTranslation.FOREST, filesMap.get("forest-test")));
+            put("thicket", new Location("thicket", NameTranslation.THICKET, filesMap.get("thicket")));
+            put("cave", new Location("cave", NameTranslation.CAVE, null));
+            put("square", new Location("square", NameTranslation.TRADING_SQUARE, filesMap.get("merchants-square")));
         }};
     }
 
     private HashMap<String, Integer> getLocationDistances() {
         return new HashMap<String, Integer>() {{
-            put("Торговая Площадь*Лес", 10);
-            put("Лес*Торговая Площадь", 10);
-            put("Лес*Дебри", 30);
-            put("Дебри*Лес", 30);
-            put("Таинственная Пещера*Лес", 5);
-            put("Лес*Таинственная Пещера", 5);
+            put("square*forest", 10);
+            put("forest*square", 10);
+            put("forest*thicket", 30);
+            put("thicket*forest", 30);
+            put("cave*forest", 5);
+            put("forest*cave", 5);
         }};
     }
 
@@ -156,10 +157,10 @@ public class DatabaseInteraction {
 
     private HashMap<String, ArrayList<String>> getPossibleLocationsMapping() {
         return new HashMap<String, ArrayList<String>>() {{
-            put("Лес", new ArrayList<String>() {{
+            put("forest", new ArrayList<String>() {{
                 add("Flying Sword");
             }});
-            put("Дебри", new ArrayList<String>() {{
+            put("thicket", new ArrayList<String>() {{
                 add("Flying Sword");
                 add("Super Flying Sword");
             }});

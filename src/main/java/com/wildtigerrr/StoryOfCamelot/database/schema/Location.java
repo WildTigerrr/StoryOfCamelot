@@ -1,5 +1,8 @@
 package com.wildtigerrr.StoryOfCamelot.database.schema;
 
+import com.wildtigerrr.StoryOfCamelot.bin.enums.Language;
+import com.wildtigerrr.StoryOfCamelot.bin.enums.NameTranslation;
+
 import javax.persistence.*;
 import java.util.List;
 
@@ -10,7 +13,9 @@ public class Location {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
-    private String name;
+    private String systemName;
+    @Enumerated(EnumType.STRING)
+    private NameTranslation name;
     private Boolean hasStores;
 
     @ManyToOne(optional = true)
@@ -25,13 +30,15 @@ public class Location {
     protected Location() {
     }
 
-    public Location(String locationName, FileLink imageLink) {
+    public Location(String systemName, NameTranslation locationName, FileLink imageLink) {
+        this.systemName = systemName;
         this.name = locationName;
         this.imageLink = imageLink;
         this.hasStores = false;
     }
 
-    public Location(String locationName, FileLink imageLink, Boolean hasStores) {
+    public Location(String systemName, NameTranslation locationName, FileLink imageLink, Boolean hasStores) {
+        this.systemName = systemName;
         this.name = locationName;
         this.imageLink = imageLink;
         this.hasStores = hasStores;
@@ -41,11 +48,15 @@ public class Location {
         return id;
     }
 
-    public String getName() {
-        return name;
+    public String getSystemName() {
+        return systemName;
     }
 
-    public void setName(String name) {
+    public String getName(Language lang) {
+        return name.getName(lang);
+    }
+
+    public void setName(NameTranslation name) {
         this.name = name;
     }
 

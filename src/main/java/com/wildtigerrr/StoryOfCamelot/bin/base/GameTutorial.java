@@ -112,7 +112,7 @@ public class GameTutorial {
                 MainText.NICKNAME_SET.text(
                         player.getLanguage(),
                         player.getNickname(),
-                        locationService.findByName(GameSettings.FIRST_FOREST_LOCATION.get()).getName()
+                        locationService.findByName(GameSettings.FIRST_FOREST_LOCATION.get()).getName(player.getLanguage())
                 ),
                 KeyboardManager.getReplyByButtons(new ArrayList<>(Collections.singleton(ReplyButton.MOVE))),
                 player.getExternalId()
