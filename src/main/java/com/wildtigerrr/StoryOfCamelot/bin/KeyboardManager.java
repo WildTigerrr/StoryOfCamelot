@@ -28,11 +28,18 @@ public class KeyboardManager {
         if (freePoints > 1) {
             if (freePoints > 4) {
                 addings.add("5");
-                buttonsLine = 3;
+                if (freePoints > 24) {
+                    addings.add("25");
+                    buttonsLine = 4;
+                } else {
+                    buttonsLine = 3;
+                }
             } else {
                 buttonsLine = 2;
             }
-            addings.add("" + freePoints);
+            if (freePoints != 5 && freePoints != 25) {
+                addings.add("" + freePoints);
+            }
         }
         int buttonsCounter = 0;
         for (Stats stat : Stats.values()) {
@@ -45,7 +52,7 @@ public class KeyboardManager {
                 }
                 button = new InlineKeyboardButton();
                 button.setText(stat.emoji() + "+" + val);
-                button.setSwitchInlineQueryCurrentChat("/up_" + stat.getCharacter().toLowerCase() + "_" + val);
+                button.setCallbackData("/up_" + stat.getCharacter().toLowerCase() + "_" + val);
                 buttonsRow.add(button);
             }
         }
