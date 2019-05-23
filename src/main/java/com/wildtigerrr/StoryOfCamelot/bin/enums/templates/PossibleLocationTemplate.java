@@ -8,7 +8,7 @@ public enum PossibleLocationTemplate {
             LocationTemplate.FOREST.systemName(),
             new ArrayList<String>() {
                 {
-                    add("Flying Sword");
+                    add(MobTemplate.FLYING_SWORD.name());
                 }
             }
     ),
@@ -16,8 +16,8 @@ public enum PossibleLocationTemplate {
             LocationTemplate.THICKET.systemName(),
             new ArrayList<String>() {
                 {
-                    add("Flying Sword");
-                    add("Super Flying Sword");
+                    add(MobTemplate.FLYING_SWORD.name());
+                    add(MobTemplate.SUPER_FLYING_SWORD.name());
                 }
             }
     );
