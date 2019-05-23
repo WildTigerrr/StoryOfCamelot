@@ -1,5 +1,9 @@
 package com.wildtigerrr.StoryOfCamelot.database.schema;
 
+import com.wildtigerrr.StoryOfCamelot.bin.enums.Language;
+import com.wildtigerrr.StoryOfCamelot.bin.enums.NameTranslation;
+import com.wildtigerrr.StoryOfCamelot.bin.enums.templates.MobTemplate;
+
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -11,7 +15,9 @@ public class Mob {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
-    private String name;
+    private String systemName;
+    @Enumerated(EnumType.STRING)
+    private NameTranslation name;
     private Integer level;
     private Integer damage;
     private Integer hitpointsMax;
@@ -30,7 +36,21 @@ public class Mob {
     protected Mob() {
     }
 
-    public Mob(String name, Integer level, Integer damage, Integer hitpointsMax, Integer defence, Integer agility, FileLink imageLink) {
+    public Mob(MobTemplate template) {
+        this(
+                template.name(),
+                template.getName(),
+                template.getLevel(),
+                template.getDamage(),
+                template.getHitpoints(),
+                template.getDefence(),
+                template.getAgility(),
+                template.getFileLink()
+        );
+    }
+
+    public Mob(String systemName, NameTranslation name, Integer level, Integer damage, Integer hitpointsMax, Integer defence, Integer agility, FileLink imageLink) {
+        this.systemName = systemName;
         this.name = name;
         this.level = level;
         this.damage = damage;
@@ -44,11 +64,15 @@ public class Mob {
         return id;
     }
 
-    public String getName() {
-        return name;
+    public String getSystemName() {
+        return systemName;
     }
 
-    public void setName(String name) {
+    public String getName(Language lang) {
+        return name.getName(lang);
+    }
+
+    public void setName(NameTranslation name) {
         this.name = name;
     }
 

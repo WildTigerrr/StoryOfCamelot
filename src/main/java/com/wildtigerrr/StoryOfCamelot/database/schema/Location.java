@@ -2,6 +2,7 @@ package com.wildtigerrr.StoryOfCamelot.database.schema;
 
 import com.wildtigerrr.StoryOfCamelot.bin.enums.Language;
 import com.wildtigerrr.StoryOfCamelot.bin.enums.NameTranslation;
+import com.wildtigerrr.StoryOfCamelot.bin.enums.templates.LocationTemplate;
 
 import javax.persistence.*;
 import java.util.List;
@@ -30,18 +31,11 @@ public class Location {
     protected Location() {
     }
 
-    public Location(NameTranslation locationName, FileLink imageLink) {
-        this.systemName = locationName.getSystemName();
-        this.name = locationName;
-        this.imageLink = imageLink;
-        this.hasStores = false;
-    }
-
-    public Location(NameTranslation locationName, FileLink imageLink, Boolean hasStores) {
-        this.systemName = locationName.getSystemName();
-        this.name = locationName;
-        this.imageLink = imageLink;
-        this.hasStores = hasStores;
+    public Location(LocationTemplate locationTemplate) {
+        this.systemName = locationTemplate.systemName();
+        this.name = locationTemplate.getTranslations();
+        this.imageLink = locationTemplate.getFileLink();
+        this.hasStores = locationTemplate.hasStores();
     }
 
     public Integer getId() {

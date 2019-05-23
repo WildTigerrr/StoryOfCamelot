@@ -35,7 +35,7 @@ public class MobServiceImpl implements MobService {
     public HashMap<String, Mob> create(ArrayList<Mob> mobs) {
         List<Mob> newMobs = (List<Mob>) mobDao.saveAll(mobs);
         HashMap<String, Mob> mobsMap = new HashMap<>();
-        for (Mob mob : newMobs) mobsMap.put(mob.getName(), mob);
+        for (Mob mob : newMobs) mobsMap.put(mob.getSystemName(), mob);
         return mobsMap;
     }
 

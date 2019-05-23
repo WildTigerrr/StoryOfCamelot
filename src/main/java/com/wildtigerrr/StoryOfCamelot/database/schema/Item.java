@@ -1,5 +1,6 @@
 package com.wildtigerrr.StoryOfCamelot.database.schema;
 
+import com.wildtigerrr.StoryOfCamelot.bin.enums.templates.ItemsTemplate;
 import com.wildtigerrr.StoryOfCamelot.database.schema.enums.ItemQuality;
 import com.wildtigerrr.StoryOfCamelot.database.schema.enums.ItemSubType;
 
@@ -28,12 +29,19 @@ public class Item {
     protected Item() {
     }
 
+    public Item(ItemsTemplate template) {
+        this(
+                template.getValue(),
+                template.getDurability(),
+                template.getPrice(),
+                template.getSubType(),
+                template.getQuality(),
+                template.getFileLink()
+        );
+    }
+
     public Item(Double value, Integer durability, Double price, ItemSubType type, ItemQuality quality) {
-        this.value = value;
-        this.durability = durability;
-        this.price = price;
-        this.type = type;
-        this.quality = quality;
+        this(value, durability, price, type, quality, null);
     }
 
     public Item(Double value, Integer durability, Double price, ItemSubType type, ItemQuality quality, FileLink imageLink) {
