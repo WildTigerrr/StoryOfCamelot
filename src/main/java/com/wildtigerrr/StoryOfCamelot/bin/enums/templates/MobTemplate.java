@@ -8,16 +8,15 @@ import java.util.HashMap;
 
 public enum MobTemplate {
     FLYING_SWORD(
-            NameTranslation.FLYING_SWORD,
+            NameTranslation.MOB_FLYING_SWORD,
             1, 2, 3, 0, 0,
             FileLinkTemplate.FLYING_SWORD
     ),
     SUPER_FLYING_SWORD(
-            NameTranslation.SUPER_FLYING_SWORD,
+            NameTranslation.MOB_SUPER_FLYING_SWORD,
             2, 2, 7, 2, 2,
             FileLinkTemplate.FLYING_SWORD
-    )
-    ;
+    );
 
     private final NameTranslation name;
     private final int level;

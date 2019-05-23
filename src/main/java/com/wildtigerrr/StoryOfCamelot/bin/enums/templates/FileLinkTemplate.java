@@ -17,17 +17,14 @@ public enum FileLinkTemplate {
             "images/locations/the-merchants-square.png"
     ),
 
-
     // MOBS
     FLYING_SWORD(
             "images/items/weapons/swords/sword-test.png"
     );
 
-    private final String link;
     private FileLink fileLink;
 
     FileLinkTemplate(@NotNull String link) {
-        this.link = link;
         this.fileLink = new FileLink(this.name(), link);
     }
 

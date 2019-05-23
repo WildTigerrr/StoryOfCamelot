@@ -2,22 +2,22 @@ package com.wildtigerrr.StoryOfCamelot.bin.enums;
 
 public enum NameTranslation {
     // LOCATIONS
-    FOREST(
+    LOC_FOREST(
             Emoji.EVERGREEN_TREE.getCode() + " Forest",
             Emoji.EVERGREEN_TREE.getCode() + " Лес",
             Emoji.EVERGREEN_TREE.getCode() + " Ліс"
     ),
-    THICKET(
+    LOC_THICKET(
             Emoji.EVERGREEN_TREE.getCode() + " Thicket",
             Emoji.EVERGREEN_TREE.getCode() + " Дебри",
             Emoji.EVERGREEN_TREE.getCode() + " Нетрі"
     ),
-    CAVE(
+    LOC_CAVE(
             Emoji.BAT.getCode() + " Mythical Cave",
             Emoji.BAT.getCode() + " Таинственная Пещера",
             Emoji.BAT.getCode() + " Загадкова Печера"
     ),
-    TRADING_SQUARE(
+    LOC_TRADING_SQUARE(
             Emoji.CIRCUS_TENT.getCode() + " Merchant Square",
             Emoji.CIRCUS_TENT.getCode() + " Торговая Площадь",
             Emoji.CIRCUS_TENT.getCode() + " Торгівельна Площа"
@@ -25,17 +25,33 @@ public enum NameTranslation {
 
 
     // MOBS
-    FLYING_SWORD(
+    MOB_FLYING_SWORD(
             "Flying Sword",
             "Летающий Меч",
             "Літаюча шабля"
     ),
-    SUPER_FLYING_SWORD(
+    MOB_SUPER_FLYING_SWORD(
             "Super Flying Sword",
             "Острый Летающий Меч",
             "Гостра Літаюча Шабля"
-    )
-    ;
+    ),
+
+    // BUTTONS
+    BUTTON_MOVE(
+            Emoji.FOOTPRINTS.getCode() + "Go ahead",
+            Emoji.FOOTPRINTS.getCode() + "В путь",
+            Emoji.FOOTPRINTS.getCode() + "До перемог"
+    ),
+    BUTTON_SKILLS(
+            Emoji.SKILLS.getCode() + "Skills",
+            Emoji.SKILLS.getCode() + "Навыки",
+            Emoji.SKILLS.getCode() + "Навички"
+    ),
+    BUTTON_ME(
+            Emoji.SCROLL.getCode() + "Chronicle",
+            Emoji.SCROLL.getCode() + "Летопись",
+            Emoji.SCROLL.getCode() + "Літопис"
+    );
 
     private final String nameENG;
     private final String nameRUS;

@@ -3,37 +3,36 @@ package com.wildtigerrr.StoryOfCamelot.bin.enums.templates;
 import java.util.HashMap;
 
 public enum LocationDistanceTemplate {
-    TRADESQUARE_FOREST(
-            LocationTemplate.TRADING_SQUARE.systemName(),
-            LocationTemplate.FOREST.systemName(),
+    TRADE_SQUARE_FOREST(
+            LocationTemplate.TRADING_SQUARE.name(),
+            LocationTemplate.FOREST.name(),
             10
     ),
-    FOREST_TRADESQUARE(
-            LocationTemplate.FOREST.systemName(),
-            LocationTemplate.TRADING_SQUARE.systemName(),
+    FOREST_TRADE_SQUARE(
+            LocationTemplate.FOREST.name(),
+            LocationTemplate.TRADING_SQUARE.name(),
             10
     ),
     FOREST_THICKET(
-            LocationTemplate.FOREST.systemName(),
-            LocationTemplate.THICKET.systemName(),
+            LocationTemplate.FOREST.name(),
+            LocationTemplate.THICKET.name(),
             30
     ),
     THICKET_FOREST(
-            LocationTemplate.THICKET.systemName(),
-            LocationTemplate.FOREST.systemName(),
+            LocationTemplate.THICKET.name(),
+            LocationTemplate.FOREST.name(),
             30
     ),
     FOREST_CAVE(
-            LocationTemplate.FOREST.systemName(),
-            LocationTemplate.CAVE.systemName(),
+            LocationTemplate.FOREST.name(),
+            LocationTemplate.CAVE.name(),
             5
     ),
     CAVE_FOREST(
-            LocationTemplate.CAVE.systemName(),
-            LocationTemplate.FOREST.systemName(),
+            LocationTemplate.CAVE.name(),
+            LocationTemplate.FOREST.name(),
             5
-    )
-    ;
+    );
     private final String start;
     private final String finish;
     private final Integer distance;

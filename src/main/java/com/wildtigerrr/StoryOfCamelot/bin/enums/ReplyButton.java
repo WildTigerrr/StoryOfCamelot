@@ -1,24 +1,24 @@
 package com.wildtigerrr.StoryOfCamelot.bin.enums;
 
 public enum ReplyButton {
-    MOVE(Emoji.FOOTPRINTS.getCode() + "В путь"),
-    SKILLS(Emoji.SKILLS.getCode() + "Навыки"),
-    ME(Emoji.SCROLL.getCode() + "Летопись");
+    MOVE(NameTranslation.BUTTON_MOVE),
+    SKILLS(NameTranslation.BUTTON_SKILLS),
+    ME(NameTranslation.BUTTON_ME);
 
-    private final String label;
+    private final NameTranslation label;
 
-    ReplyButton(String label) {
+    ReplyButton(NameTranslation label) {
         this.label = label;
     }
 
-    public String getLabel() {
-        return label;
+    public String getLabel(Language lang) {
+        return label.getName(lang);
     }
 
-    public static Command buttonToCommand(String text) {
-        if (text.equals(ReplyButton.MOVE.getLabel())) return Command.MOVE;
-        else if (text.equals(ReplyButton.ME.getLabel())) return Command.ME;
-        else if (text.equals(ReplyButton.SKILLS.getLabel())) return Command.SKILLS;
+    public static Command buttonToCommand(String text, Language lang) {
+        if (text.equals(ReplyButton.MOVE.getLabel(lang))) return Command.MOVE;
+        else if (text.equals(ReplyButton.ME.getLabel(lang))) return Command.ME;
+        else if (text.equals(ReplyButton.SKILLS.getLabel(lang))) return Command.SKILLS;
         return null;
     }
 }

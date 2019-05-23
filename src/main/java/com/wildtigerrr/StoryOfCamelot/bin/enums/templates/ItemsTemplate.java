@@ -17,14 +17,6 @@ public enum ItemsTemplate {
             FileLinkTemplate.FLYING_SWORD
     );
 
-    //    private ArrayList<Item> getItems(HashMap<String, FileLink> filesMap) {
-//        return new ArrayList<>(
-//                Arrays.asList(
-//                        new Item(10.0, 100, 10.0, ItemSubType.SWORD, ItemQuality.COMMON, filesMap.get("sword-test"))
-//                        , new Item(15.0, 150, 25.0, ItemSubType.SWORD, ItemQuality.UNCOMMON, filesMap.get("sword-test"))
-//                )
-//        );
-//    }
     private final double value;
     private final int durability;
     private final double price;

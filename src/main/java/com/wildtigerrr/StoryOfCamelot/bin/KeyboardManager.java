@@ -61,12 +61,12 @@ public class KeyboardManager {
         return keyboard;
     }
 
-    public static ReplyKeyboardMarkup getReplyByButtons(ArrayList<ReplyButton> buttons) {
+    public static ReplyKeyboardMarkup getReplyByButtons(ArrayList<ReplyButton> buttons, Language lang) {
         ReplyKeyboardMarkup keyboard = new ReplyKeyboardMarkup();
         List<KeyboardRow> keyboardMarkup = new ArrayList<>();
         KeyboardRow keyboardRow = new KeyboardRow();
         for (ReplyButton button : buttons) {
-            keyboardRow.add(button.getLabel());
+            keyboardRow.add(button.getLabel(lang));
         }
         keyboardMarkup.add(keyboardRow);
         keyboard.setKeyboard(keyboardMarkup);

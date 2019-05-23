@@ -29,7 +29,7 @@ public class GameTutorial {
     private LocationServiceImpl locationService;
 
     public Boolean proceedTutorial(UpdateWrapper message) {
-        Command command = ResponseHandler.messageToCommand(message.getText());
+        Command command = ResponseHandler.messageToCommand(message.getText(), message.getPlayer().getLanguage());
         switch (message.getPlayer().getAdditionalStatus()) {
             case LANGUAGE_CHOOSE:
                 if (!message.isQuery() && (command == Command.START || message.getPlayer().isNew())) {
@@ -114,7 +114,7 @@ public class GameTutorial {
                         player.getNickname(),
                         locationService.findByName(GameSettings.FIRST_FOREST_LOCATION.get()).getName(player.getLanguage())
                 ),
-                KeyboardManager.getReplyByButtons(new ArrayList<>(Collections.singleton(ReplyButton.MOVE))),
+                KeyboardManager.getReplyByButtons(new ArrayList<>(Collections.singleton(ReplyButton.MOVE)), player.getLanguage()),
                 player.getExternalId()
         );
     }
@@ -128,10 +128,9 @@ public class GameTutorial {
         messages.sendMessage(
                 MainText.GUARD_LESSON_ONE.text(
                         player.getLanguage(),
-                        player.getNickname(),
-                        ReplyButton.ME.getLabel()
+                        player.getNickname()
                 ),
-                KeyboardManager.getReplyByButtons(buttons),
+                KeyboardManager.getReplyByButtons(buttons, player.getLanguage()),
                 player.getExternalId()
         );
     }
@@ -141,7 +140,7 @@ public class GameTutorial {
         playerService.update(player);
         messages.sendMessage(
                 MainText.GUARD_LESSON_TWO.text(player.getLanguage()),
-                KeyboardManager.getReplyByButtons(new ArrayList<>(Collections.singleton(ReplyButton.SKILLS))),
+                KeyboardManager.getReplyByButtons(new ArrayList<>(Collections.singleton(ReplyButton.SKILLS)), player.getLanguage()),
                 player.getExternalId()
         );
     }

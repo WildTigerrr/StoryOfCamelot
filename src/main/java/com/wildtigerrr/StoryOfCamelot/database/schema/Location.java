@@ -32,7 +32,7 @@ public class Location {
     }
 
     public Location(LocationTemplate locationTemplate) {
-        this.systemName = locationTemplate.systemName();
+        this.systemName = locationTemplate.name();
         this.name = locationTemplate.getTranslations();
         this.imageLink = locationTemplate.getFileLink();
         this.hasStores = locationTemplate.hasStores();

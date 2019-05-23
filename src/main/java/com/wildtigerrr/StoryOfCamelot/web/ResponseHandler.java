@@ -6,6 +6,7 @@ import com.wildtigerrr.StoryOfCamelot.bin.base.GameMain;
 import com.wildtigerrr.StoryOfCamelot.bin.base.GameMovement;
 import com.wildtigerrr.StoryOfCamelot.bin.base.GameTutorial;
 import com.wildtigerrr.StoryOfCamelot.bin.enums.Command;
+import com.wildtigerrr.StoryOfCamelot.bin.enums.Language;
 import com.wildtigerrr.StoryOfCamelot.bin.enums.MainText;
 import com.wildtigerrr.StoryOfCamelot.bin.enums.ReplyButton;
 import com.wildtigerrr.StoryOfCamelot.bin.service.StringUtils;
@@ -113,7 +114,7 @@ public class ResponseHandler {
     private Boolean performCommand(UpdateWrapper message) {
         if (message.getPlayer().getStatus() == PlayerStatus.TUTORIAL && tutorial.proceedTutorial(message)) return true;
 
-        Command command = messageToCommand(message.getText());
+        Command command = messageToCommand(message.getText(), message.getPlayer().getLanguage());
         if (command == null) return false;
         String[] commandParts = message.getText().split(" ", 2);
         switch (command) {
@@ -219,7 +220,7 @@ public class ResponseHandler {
         return true;
     }
 
-    public static Command messageToCommand(String text) {
+    public static Command messageToCommand(String text, Language lang) {
         if (text == null || text.length() == 0) return null;
         if (text.startsWith("/")) {
             try {
@@ -230,7 +231,7 @@ public class ResponseHandler {
                 return null;
             }
         } else {
-            return ReplyButton.buttonToCommand(text);
+            return ReplyButton.buttonToCommand(text, lang);
         }
     }
 
