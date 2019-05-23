@@ -122,7 +122,7 @@ public class ResponseHandler {
                 messages.sendMessage(playerService.getPlayerInfo(message.getUserId()), message.getUserId(), true);
                 break;
             case SKILLS:
-                messages.sendMessage(MainText.COMMAND_NOT_DEVELOPED.text(message.getPlayer().getLanguage()), message.getUserId(), true);
+                gameMain.sendSkillWindow(message.getPlayer());
                 break;
             case NICKNAME:
                 if (commandParts.length > 1) {
@@ -162,22 +162,7 @@ public class ResponseHandler {
                 }
                 break;
             case MOVE:
-                if (message.getPlayer().getStatus() == PlayerStatus.MOVEMENT) {
-                    if (message.isQuery()) {
-                        messages.sendMessageEdit(
-                                message.getMessageId(),
-                                MainText.ALREADY_MOVING.text(message.getPlayer().getLanguage()),
-                                message.getUserId(),
-                                true
-                        );
-                    } else {
-                        messages.sendMessage(MainText.ALREADY_MOVING.text(message.getPlayer().getLanguage()), message.getUserId());
-                    }
-                } else if (message.isQuery()) {
-                    movementService.moveToLocation(message, commandParts[1]);
-                } else { // if (commandParts.length < 2)
-                    movementService.sendAvailableLocations(message.getPlayer());
-                }
+                movementService.handleMove(message);
                 break;
             case SEND:
                 commandParts = message.getText().split(" ", 3);

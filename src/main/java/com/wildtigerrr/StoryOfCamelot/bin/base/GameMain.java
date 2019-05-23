@@ -93,6 +93,10 @@ public class GameMain {
         return player;
     }
 
+    public void sendSkillWindow(Player player) {
+        messages.sendMessage(player.getStatMenu(), KeyboardManager.getKeyboardForStatUp(player.getUnassignedPoints()), player.getExternalId());
+    }
+
     public void statUp(UpdateWrapper message) {
         String[] commandParts = message.getText().split("_", 3);
         if (commandParts.length == 3 && commandParts[1].length() == 1 && StringUtils.isNumeric(commandParts[2])) {
@@ -103,8 +107,12 @@ public class GameMain {
                 Player player = message.getPlayer();
                 String result = player.raiseStat(stat, Integer.valueOf(commandParts[2]), player.getLanguage());
                 if (!result.equals(MainText.STAT_INVALID.text(message.getPlayer().getLanguage()))) playerService.update(player);
-                messages.sendMessage(result, message.getUserId());
-//                tutorial.tutorialStatsUpTwo(player);
+                if (player.getUnassignedPoints() == 0) {
+                    messages.sendMessageEdit(message.getMessageId(), player.getStatMenu(), player.getExternalId(), false);
+                    tutorial.tutorialStatsRaised(message.getPlayer());
+                } else {
+                    messages.sendMessageEdit(message.getMessageId(), player.getStatMenu(), KeyboardManager.getKeyboardForStatUp(player.getUnassignedPoints()), player.getExternalId(), false);
+                }
             }
         } else {
             messages.sendMessage(MainText.COMMAND_INVALID.text(message.getPlayer().getLanguage()), message.getUserId());

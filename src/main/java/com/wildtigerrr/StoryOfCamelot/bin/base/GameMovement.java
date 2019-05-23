@@ -6,6 +6,7 @@ import com.wildtigerrr.StoryOfCamelot.bin.enums.MainText;
 import com.wildtigerrr.StoryOfCamelot.bin.service.ScheduledAction;
 import com.wildtigerrr.StoryOfCamelot.database.schema.Location;
 import com.wildtigerrr.StoryOfCamelot.database.schema.Player;
+import com.wildtigerrr.StoryOfCamelot.database.schema.enums.PlayerStatus;
 import com.wildtigerrr.StoryOfCamelot.database.schema.enums.PlayerStatusExtended;
 import com.wildtigerrr.StoryOfCamelot.database.schema.enums.Stats;
 import com.wildtigerrr.StoryOfCamelot.database.service.implementation.LocationNearServiceImpl;
@@ -46,6 +47,26 @@ public class GameMovement {
     @Autowired
     GameMovement(AmazonClient amazonClient) {
         this.amazonClient = amazonClient;
+    }
+
+    public void handleMove(UpdateWrapper message) {
+        if (message.getPlayer().getStatus() == PlayerStatus.MOVEMENT) {
+            if (message.isQuery()) {
+                messages.sendMessageEdit(
+                        message.getMessageId(),
+                        MainText.ALREADY_MOVING.text(message.getPlayer().getLanguage()),
+                        message.getUserId(),
+                        true
+                );
+            } else {
+                messages.sendMessage(MainText.ALREADY_MOVING.text(message.getPlayer().getLanguage()), message.getUserId());
+            }
+        } else if (message.isQuery()) {
+            String[] commandParts = message.getText().split(" ", 2);
+            moveToLocation(message, commandParts[1]);
+        } else { // if (commandParts.length < 2)
+            sendAvailableLocations(message.getPlayer());
+        }
     }
 
     public void sendAvailableLocations(Player player) {

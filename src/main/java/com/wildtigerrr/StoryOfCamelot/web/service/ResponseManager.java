@@ -59,7 +59,11 @@ public class ResponseManager {
     }
 
     public void sendMessageEdit(Integer messageId, String newText, String userId, Boolean useMarkdown) {
-        proceedMessageEdit(messageId, newText, userId, useMarkdown);
+        proceedMessageEdit(messageId, null, newText, userId, useMarkdown);
+    }
+
+    public void sendMessageEdit(Integer messageId, String newText, InlineKeyboardMarkup keyboard, String userId, Boolean useMarkdown) {
+        proceedMessageEdit(messageId, keyboard, newText, userId, useMarkdown);
     }
 
     private void proceedMessageSend(String text, ReplyKeyboard keyboard, String userId, Boolean useMarkdown) {
@@ -128,7 +132,7 @@ public class ResponseManager {
         }
     }
 
-    private void proceedMessageEdit(Integer messageId, String newText, String userId, Boolean useMarkdown) {
+    private void proceedMessageEdit(Integer messageId, InlineKeyboardMarkup keyboard, String newText, String userId, Boolean useMarkdown) {
         if (alreadyRedirected == null || !alreadyRedirected) alreadyRedirected = true;
         else return;
 
@@ -137,7 +141,8 @@ public class ResponseManager {
         messageEdit.setChatId(userId);
         messageEdit.setText(newText);
         messageEdit.enableMarkdown(useMarkdown);
-
+        if (keyboard != null)
+            messageEdit.setReplyMarkup(keyboard);
         try {
             webHook.execute(messageEdit);
             alreadyRedirected = false;

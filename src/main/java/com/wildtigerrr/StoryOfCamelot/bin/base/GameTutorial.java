@@ -79,7 +79,7 @@ public class GameTutorial {
                 break;
             case TUTORIAL_STATS_UP:
                 if (command == Command.SKILLS) {
-                    tutorialStatsUpTwo(message.getPlayer());
+                    tutorialStatsUp(message.getPlayer());
 //                    messages.sendMessage(MainText.TUTORIAL_STUCK.text(message.getPlayer().getLanguage()), message.getUserId());
                 } else {
                     messages.sendMessage(MainText.TUTORIAL_NO_RUSH.text(message.getPlayer().getLanguage()), message.getUserId());
@@ -143,7 +143,7 @@ public class GameTutorial {
         );
     }
 
-    public void tutorialStats(Player player) {
+    private void tutorialStats(Player player) {
         player.setAdditionalStatus(PlayerStatusExtended.TUTORIAL_STATS_UP);
         playerService.update(player);
         messages.sendMessage(
@@ -153,48 +153,20 @@ public class GameTutorial {
         );
     }
 
-    public void tutorialStatsUp(Player player) {
+    private void tutorialStatsUp(Player player) {
         player.setAdditionalStatus(PlayerStatusExtended.TUTORIAL_STATS_UP_2);
         playerService.update(player);
-        messages.sendMessage(getStatMenu(player), player.getExternalId());
+        gameMain.sendSkillWindow(player);
     }
 
-    public void tutorialStatsUpTwo(Player player) {
-        player.setAdditionalStatus(PlayerStatusExtended.TUTORIAL_STATS_UP_2);
-        playerService.update(player);
-        messages.sendMessage(getStatMenuTwo(player), KeyboardManager.getKeyboardForStatUp(player.getUnassignedPoints()), player.getExternalId());
+    void tutorialStatsRaised(Player player) {
+        // TODO Tutorial
+        messages.sendMessage(
+                MainText.GUARD_LESSON_TWO.text(player.getLanguage()),
+                player.getExternalId()
+        );
     }
 
-    private String getStatMenuTwo(Player player) {
-        int unassigned = player.getUnassignedPoints();
-        return  player.getNickname() + ", " + player.getLevel() + " уровень (+" + unassigned + ")"
-                + "\n\n" + Emoji.STRENGTH.getCode() + "Cила: " + player.getStrength()
-                + "\n" + Emoji.HEALTH.getCode() + "Здоровье: " + player.getHealth()
-                + "\n" + Emoji.AGILITY.getCode() + "Ловкость: " + player.getAgility()
-                + "\n" + Emoji.CHARISMA.getCode() + "Харизма: " + player.getCharisma()
-                + "\n" + Emoji.INTELLIGENCE.getCode() + "Интеллект: " + player.getIntelligence()
-                + "\n" + Emoji.ENDURANCE.getCode() + "Выносливость: " + player.getEndurance()
-                + "\n" + Emoji.LUCK.getCode() + "Удача: " + player.getLuck();
-    }
 
-    private String getStatMenu(Player player) {
-        int unassigned = player.getUnassignedPoints();
-        return  player.getNickname() + ", " + player.getLevel() + " уровень (+" + unassigned + ")"
-                + "\n\n" + Emoji.STRENGTH.getCode() + "Cила: " + player.getStrength()
-                + "\n" + "/up_s_1   " + (unassigned > 4 ? "/up_s_5   " : "") + "/up_s_" + player.getUnassignedPoints()
-                + "\n" + Emoji.HEALTH.getCode() + "Здоровье: " + player.getHealth()
-                + "\n" + "/up_h_1   " + (unassigned > 4 ? "/up_h_5   " : "") + "/up_h_" + player.getUnassignedPoints()
-                + "\n" + Emoji.AGILITY.getCode() + "Ловкость: " + player.getAgility()
-                + "\n" + "/up_a_1   " + (unassigned > 4 ? "/up_a_5   " : "") + "/up_a_" + player.getUnassignedPoints()
-                + "\n" + Emoji.CHARISMA.getCode() + "Харизма: " + player.getCharisma()
-                + "\n" + "/up_c_1   " + (unassigned > 4 ? "/up_c_5   " : "") + "/up_c_" + player.getUnassignedPoints()
-                + "\n" + Emoji.INTELLIGENCE.getCode() + "Интеллект: " + player.getIntelligence()
-                + "\n" + "/up_i_1   " + (unassigned > 4 ? "/up_i_5   " : "") + "/up_i_" + player.getUnassignedPoints()
-                + "\n" + Emoji.ENDURANCE.getCode() + "Выносливость: " + player.getEndurance()
-                + "\n" + "/up_e_1   " + (unassigned > 4 ? "/up_e_5   " : "") + "/up_e_" + player.getUnassignedPoints()
-                + "\n" + Emoji.LUCK.getCode() + "Удача: " + player.getLuck()
-                + "\n" + "/up_l_1   " + (unassigned > 4 ? "/up_l_5   " : "") + "/up_l_" + player.getUnassignedPoints()
-                + "\n\nТакже можно ввести любое число в заданном формате, не более " + unassigned + ".";
-    }
 
 }

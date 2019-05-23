@@ -457,17 +457,29 @@ public class Player {
 
     @Override
     public String toString() {
-        return "Если память тебя не подводит, то:"
-                + "\n*" + this.nickname + "*, " + this.level + " уровень (" + (getTotalStats() - getAssignedPoints()) + "/" + getStatsToNextLevelUp() + ")"
+        return MainText.IF_I_REMEMBER.text(language) + ":"
+                + "\n*" + this.nickname + "*, " + this.level + " " + MainText.LEVEL.text(language).toLowerCase() + " (" + (getTotalStats() - getAssignedPoints()) + "/" + getStatsToNextLevelUp() + ")"
                 + (getUnassignedPoints() > 0 ? " (+" + getUnassignedPoints() + ")" : "")
-                + "\n*Сила:* " + this.strength + " (" + this.strengthExp + "/" + getExpToNextStatUp(this.strength) + ")"
-                + "\n*Здоровье:* " + this.health + " (" + this.healthExp + "/" + getExpToNextStatUp(this.health) + ")"
-                + "\n*Ловкость:* " + this.agility + " (" + this.agilityExp + "/" + getExpToNextStatUp(this.agility) + ")"
-                + "\n*Харизмa:* " + this.charisma + " (" + this.charismaExp + "/" + getExpToNextStatUp(this.charisma) + ")"
-                + "\n*Интеллект:* " + this.intelligence + " (" + this.intelligenceExp + "/" + getExpToNextStatUp(this.intelligence) + ")"
-                + "\n*Выносливость:* " + this.endurance + " (" + this.enduranceExp + "/" + getExpToNextStatUp(this.endurance) + ")"
-                + "\n*Удача:* " + this.luck
-                + "\n\n_Что же ещё известно?_";
+                + "\n*" + Stats.STRENGTH.what(language)     + ":* " + this.strength     + " (" + this.strengthExp     + "/" + getExpToNextStatUp(this.strength)     + ")"
+                + "\n*" + Stats.HEALTH.what(language)       + ":* " + this.health       + " (" + this.healthExp       + "/" + getExpToNextStatUp(this.health)       + ")"
+                + "\n*" + Stats.AGILITY.what(language)      + ":* " + this.agility      + " (" + this.agilityExp      + "/" + getExpToNextStatUp(this.agility)      + ")"
+                + "\n*" + Stats.CHARISMA.what(language)     + ":* " + this.charisma     + " (" + this.charismaExp     + "/" + getExpToNextStatUp(this.charisma)     + ")"
+                + "\n*" + Stats.INTELLIGENCE.what(language) + ":* " + this.intelligence + " (" + this.intelligenceExp + "/" + getExpToNextStatUp(this.intelligence) + ")"
+                + "\n*" + Stats.ENDURANCE.what(language)    + ":* " + this.endurance    + " (" + this.enduranceExp    + "/" + getExpToNextStatUp(this.endurance)    + ")"
+                + "\n*" + Stats.LUCK.what(language)         + ":* " + this.luck
+                + "\n\n_" + MainText.WHAT_ELSE_WE_KNOW.text(language) + "?_";
+    }
+
+    public String getStatMenu() {
+        int unassigned = getUnassignedPoints();
+        return  nickname + ", " + level + MainText.LEVEL.text(language).toLowerCase() + " (+" + unassigned + ")"
+                + "\n\n" + Stats.STRENGTH.emoji()     + Stats.STRENGTH.what(language) + ": "     + strength
+                + "\n"   + Stats.HEALTH.emoji()       + Stats.HEALTH.what(language) + ": "       + health
+                + "\n"   + Stats.AGILITY.emoji()      + Stats.AGILITY.what(language) + ": "      + agility
+                + "\n"   + Stats.CHARISMA.emoji()     + Stats.CHARISMA.what(language) + ": "     + charisma
+                + "\n"   + Stats.INTELLIGENCE.emoji() + Stats.INTELLIGENCE.what(language) + ": " + intelligence
+                + "\n"   + Stats.ENDURANCE.emoji()    + Stats.ENDURANCE.what(language) + ": "    + endurance
+                + "\n"   + Stats.LUCK.emoji()         + Stats.LUCK.what(language) + ": "         + luck;
     }
 
     public static int getNicknameLengthMax() {
