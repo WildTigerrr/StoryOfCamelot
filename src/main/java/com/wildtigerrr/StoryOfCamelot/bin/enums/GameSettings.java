@@ -4,10 +4,10 @@ import com.wildtigerrr.StoryOfCamelot.bin.enums.templates.LocationTemplate;
 
 public enum GameSettings {
     DEFAULT_LOCATION (
-            LocationTemplate.TRADING_SQUARE.systemName()
+            LocationTemplate.TRADING_SQUARE.name()
     ),
     FIRST_FOREST_LOCATION (
-            LocationTemplate.FOREST.systemName()
+            LocationTemplate.FOREST.name()
     );
 
     private final String text;
