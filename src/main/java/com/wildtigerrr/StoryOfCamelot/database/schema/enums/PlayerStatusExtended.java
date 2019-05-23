@@ -8,6 +8,7 @@ public enum  PlayerStatusExtended {
     TUTORIAL_MOVEMENT(3),
     TUTORIAL_STATS(4),
     TUTORIAL_STATS_UP(5),
+    TUTORIAL_STATS_UP_2(6),
 
     BAN_DAY(101),
     BAN_WEEK(102),

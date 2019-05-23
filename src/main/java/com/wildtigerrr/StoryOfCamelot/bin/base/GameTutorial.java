@@ -71,7 +71,7 @@ public class GameTutorial {
                 break;
             case TUTORIAL_STATS:
                 if (command == Command.ME) {
-                    messages.sendMessage(playerService.getPlayerInfo(message.getUserId()), message.getUserId(), true);
+                    messages.sendMessage(message.getPlayer().toString(), message.getUserId(), true);
                     tutorialStats(message.getPlayer());
                 } else {
                     messages.sendMessage(MainText.TUTORIAL_NO_RUSH.text(message.getPlayer().getLanguage()), message.getUserId());
@@ -84,6 +84,12 @@ public class GameTutorial {
                     messages.sendMessage(MainText.TUTORIAL_NO_RUSH.text(message.getPlayer().getLanguage()), message.getUserId());
                 }
                 break;
+            case TUTORIAL_STATS_UP_2:
+                if (command == Command.UP) {
+                    tutorialStatsUp(message.getPlayer());
+                } else {
+                    messages.sendMessage(MainText.TUTORIAL_NO_RUSH.text(message.getPlayer().getLanguage()), message.getUserId());
+                }
             default:
                 messages.sendMessage(MainText.COMMAND_NOT_DEVELOPED.text(message.getPlayer().getLanguage()), message.getUserId());
         }
@@ -143,6 +149,34 @@ public class GameTutorial {
                 KeyboardManager.getReplyByButtons(new ArrayList<>(Collections.singleton(ReplyButton.SKILLS)), player.getLanguage()),
                 player.getExternalId()
         );
+    }
+
+    public void tutorialStatsUp(Player player) {
+        player.setAdditionalStatus(PlayerStatusExtended.TUTORIAL_STATS_UP_2);
+        playerService.update(player);
+        messages.sendMessage(getStatMenu(player), player.getExternalId());
+    }
+
+    private String getStatMenu(Player player) {
+        int unassigned = player.getUnassignedPoints();
+        return "*" + player.getNickname() + "*, " + player.getLevel() + " (+" + unassigned + ")"
+                + "\n\n" + Emoji.STRENGTH.getCode() + "Cила: " + player.getStrength()
+                + "\n" + "/up_s_1 " + (unassigned > 4 ? "/up_s_5 " : "") + "/up_s_" + player.getUnassignedPoints()
+                + "\n" + Emoji.HEALTH.getCode() + "Здоровье: " + player.getHealth()
+                + "\n" + "/up_h_1 " + (unassigned > 4 ? "/up_h_5 " : "") + "/up_h_" + player.getUnassignedPoints()
+                + "\n" + Emoji.AGILITY.getCode() + "Ловкость: " + player.getAgility()
+                + "\n" + "/up_a_1 " + (unassigned > 4 ? "/up_a_5 " : "") + "/up_a_" + player.getUnassignedPoints()
+                + "\n" + Emoji.CHARISMA.getCode() + "Харизма: " + player.getCharisma()
+                + "\n" + "/up_c_1 " + (unassigned > 4 ? "/up_c_5 " : "") + "/up_c_" + player.getUnassignedPoints()
+                + "\n" + Emoji.INTELLIGENCE.getCode() + "Интеллект: " + player.getIntelligence()
+                + "\n" + "/up_i_1 " + (unassigned > 4 ? "/up_i_5 " : "") + "/up_i_" + player.getUnassignedPoints()
+                + "\n" + Emoji.ENDURANCE.getCode() + "Выносливость: " + player.getEndurance()
+                + "\n" + "/up_e_1 " + (unassigned > 4 ? "/up_e_5 " : "") + "/up_e_" + player.getUnassignedPoints()
+                + "\n" + Emoji.LUCK.getCode() + "Удача: " + player.getLuck()
+                + "\n" + "/up_l_1 " + (unassigned > 4 ? "/up_l_5 " : "") + "/up_l_" + player.getUnassignedPoints()
+                + "\n\nТакже можно ввести любое число в заданном формате, не более " + unassigned + "."
+
+                ;
     }
 
 }

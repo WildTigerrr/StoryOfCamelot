@@ -8,7 +8,13 @@ public enum Emoji {
     BAT(EmojiParser.parseToUnicode("\uD83E\uDD87")),
 
     // SKILLS
-
+    STRENGTH(EmojiParser.parseToUnicode(":muscle:")),
+    HEALTH(EmojiParser.parseToUnicode(":heart:")),
+    AGILITY(EmojiParser.parseToUnicode("\uD83E\uDD38")),
+    CHARISMA(EmojiParser.parseToUnicode(":performing_arts:")),
+    INTELLIGENCE(EmojiParser.parseToUnicode(":mortar_board:")),
+    ENDURANCE(EmojiParser.parseToUnicode(":runner:")),
+    LUCK(EmojiParser.parseToUnicode(":four_leaf_clover:")),
 
     // BUTTONS
     FOOTPRINTS(EmojiParser.parseToUnicode(":footprints:")),

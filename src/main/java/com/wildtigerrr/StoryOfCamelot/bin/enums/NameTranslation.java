@@ -36,6 +36,7 @@ public enum NameTranslation {
             "Гостра Літаюча Шабля"
     ),
 
+
     // BUTTONS
     BUTTON_MOVE(
             Emoji.FOOTPRINTS.getCode() + "Go ahead",
