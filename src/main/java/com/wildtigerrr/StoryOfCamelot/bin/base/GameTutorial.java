@@ -91,6 +91,7 @@ public class GameTutorial {
                 } else {
                     messages.sendMessage(MainText.TUTORIAL_NO_RUSH.text(message.getPlayer().getLanguage()), message.getUserId());
                 }
+                break;
             default:
                 messages.sendMessage(MainText.COMMAND_NOT_DEVELOPED.text(message.getPlayer().getLanguage()), message.getUserId());
         }

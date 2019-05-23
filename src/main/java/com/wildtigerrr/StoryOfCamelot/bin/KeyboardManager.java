@@ -25,13 +25,13 @@ public class KeyboardManager {
         int buttonsLine = 1;
         ArrayList<String> addings = new ArrayList<>();
         addings.add("1");
-        if (freePoints > 1) {
-            addings.add("" + freePoints);
-            buttonsLine = 2;
-        }
         if (freePoints > 4) {
             addings.add("5");
             buttonsLine = 3;
+        }
+        if (freePoints > 1) {
+            addings.add("" + freePoints);
+            buttonsLine = 2;
         }
         int buttonsCounter = 0;
         for (Stats stat : Stats.values()) {
