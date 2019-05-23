@@ -107,7 +107,7 @@ public class GameMain {
                 Player player = message.getPlayer();
                 String result = player.raiseStat(stat, Integer.valueOf(commandParts[2]), player.getLanguage());
                 if (!result.equals(MainText.STAT_INVALID.text(message.getPlayer().getLanguage()))) playerService.update(player);
-                messages.sendCallbackAnswer("" + message.getMessageId(), result);
+                messages.sendCallbackAnswer(message.getQueryId(), result);
                 if (player.getUnassignedPoints() == 0) {
                     messages.sendMessageEdit(message.getMessageId(), player.getStatMenu(), player.getExternalId(), false);
                     tutorial.tutorialStatsRaised(message.getPlayer());

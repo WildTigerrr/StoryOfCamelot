@@ -9,6 +9,7 @@ public class UpdateWrapper {
     private String message;
     private String userId;
     private int messageId;
+    private String queryId;
     private String firstName;
     private String lastName;
     private String username;
@@ -23,6 +24,7 @@ public class UpdateWrapper {
         this.firstName = user.getFirstName();
         this.userId = isQuery ? update.getCallbackQuery().getMessage().getChatId().toString() : user.getId().toString();
         this.messageId = isQuery ? update.getCallbackQuery().getMessage().getMessageId() : update.getMessage().getMessageId();
+        this.queryId = update.getCallbackQuery().getId();
         this.lastName = user.getLastName();
         this.username = user.getUserName();
         this.language = user.getLanguageCode();
@@ -39,6 +41,10 @@ public class UpdateWrapper {
 
     public int getMessageId() {
         return messageId;
+    }
+
+    public String getQueryId() {
+        return queryId;
     }
 
     String getFirstName() {
