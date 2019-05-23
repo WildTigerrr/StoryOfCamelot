@@ -216,7 +216,7 @@ public class Player {
                 return MainText.STAT_INVALID.text(lang);
         }
         unassignedPoints -= quantity;
-        return MainText.STAT_UP.text(lang, stat.what().substring(0, 1).toUpperCase() + stat.what().substring(1), String.valueOf(newQuantity));
+        return MainText.STAT_UP.text(lang, stat.whatLowercase(lang).substring(0, 1).toUpperCase() + stat.whatLowercase(lang).substring(1), String.valueOf(newQuantity));
     }
 
     public ArrayList<String> addStatExp(Integer exp, Stats stat, Language lang) throws SOCInvalidDataException {
@@ -227,32 +227,32 @@ public class Player {
                 case STRENGTH:
                     strengthExp -= getExpToNextStatUp(strength);
                     strength++;
-                    events.add(MainText.STAT_UP.text(lang, Stats.STRENGTH.which(), String.valueOf(strength)));
+                    events.add(MainText.STAT_UP.text(lang, stat.whichLowercase(lang), String.valueOf(strength)));
                     break;
                 case HEALTH:
                     healthExp -= getExpToNextStatUp(health);
                     health++;
-                    events.add(MainText.STAT_UP.text(lang, Stats.HEALTH.which(), String.valueOf(health)));
+                    events.add(MainText.STAT_UP.text(lang, stat.whichLowercase(lang), String.valueOf(health)));
                     break;
                 case AGILITY:
                     agilityExp -= getExpToNextStatUp(agility);
                     agility++;
-                    events.add(MainText.STAT_UP.text(lang, Stats.AGILITY.which(), String.valueOf(agility)));
+                    events.add(MainText.STAT_UP.text(lang, stat.whichLowercase(lang), String.valueOf(agility)));
                     break;
                 case CHARISMA:
                     charismaExp -= getExpToNextStatUp(charisma);
                     charisma++;
-                    events.add(MainText.STAT_UP.text(lang, Stats.CHARISMA.which(), String.valueOf(charisma)));
+                    events.add(MainText.STAT_UP.text(lang, stat.whichLowercase(lang), String.valueOf(charisma)));
                     break;
                 case INTELLIGENCE:
                     intelligenceExp -= getExpToNextStatUp(intelligence);
                     intelligence++;
-                    events.add(MainText.STAT_UP.text(lang, Stats.INTELLIGENCE.which(), String.valueOf(intelligence)));
+                    events.add(MainText.STAT_UP.text(lang, stat.whichLowercase(lang), String.valueOf(intelligence)));
                     break;
                 case ENDURANCE:
                     enduranceExp -= getExpToNextStatUp(endurance);
                     endurance++;
-                    events.add(MainText.STAT_UP.text(lang, Stats.ENDURANCE.which(), String.valueOf(endurance)));
+                    events.add(MainText.STAT_UP.text(lang, stat.whichLowercase(lang), String.valueOf(endurance)));
                     break;
             }
             if (isLevelUp()) {

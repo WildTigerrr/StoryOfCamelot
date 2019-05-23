@@ -79,7 +79,7 @@ public class GameTutorial {
                 break;
             case TUTORIAL_STATS_UP:
                 if (command == Command.SKILLS) {
-                    tutorialStatsUp(message.getPlayer());
+                    tutorialStatsUpTwo(message.getPlayer());
 //                    messages.sendMessage(MainText.TUTORIAL_STUCK.text(message.getPlayer().getLanguage()), message.getUserId());
                 } else {
                     messages.sendMessage(MainText.TUTORIAL_NO_RUSH.text(message.getPlayer().getLanguage()), message.getUserId());
@@ -158,6 +158,24 @@ public class GameTutorial {
         messages.sendMessage(getStatMenu(player), player.getExternalId());
     }
 
+    public void tutorialStatsUpTwo(Player player) {
+        player.setAdditionalStatus(PlayerStatusExtended.TUTORIAL_STATS_UP_2);
+        playerService.update(player);
+        messages.sendMessage(getStatMenuTwo(player), KeyboardManager.getKeyboardForStatUp(player.getUnassignedPoints()), player.getExternalId());
+    }
+
+    private String getStatMenuTwo(Player player) {
+        int unassigned = player.getUnassignedPoints();
+        return  player.getNickname() + ", " + player.getLevel() + " уровень (+" + unassigned + ")"
+                + "\n\n" + Emoji.STRENGTH.getCode() + "Cила: " + player.getStrength()
+                + "\n" + Emoji.HEALTH.getCode() + "Здоровье: " + player.getHealth()
+                + "\n" + Emoji.AGILITY.getCode() + "Ловкость: " + player.getAgility()
+                + "\n" + Emoji.CHARISMA.getCode() + "Харизма: " + player.getCharisma()
+                + "\n" + Emoji.INTELLIGENCE.getCode() + "Интеллект: " + player.getIntelligence()
+                + "\n" + Emoji.ENDURANCE.getCode() + "Выносливость: " + player.getEndurance()
+                + "\n" + Emoji.LUCK.getCode() + "Удача: " + player.getLuck();
+    }
+
     private String getStatMenu(Player player) {
         int unassigned = player.getUnassignedPoints();
         return  player.getNickname() + ", " + player.getLevel() + " уровень (+" + unassigned + ")"
@@ -175,9 +193,7 @@ public class GameTutorial {
                 + "\n" + "/up_e_1   " + (unassigned > 4 ? "/up_e_5   " : "") + "/up_e_" + player.getUnassignedPoints()
                 + "\n" + Emoji.LUCK.getCode() + "Удача: " + player.getLuck()
                 + "\n" + "/up_l_1   " + (unassigned > 4 ? "/up_l_5   " : "") + "/up_l_" + player.getUnassignedPoints()
-                + "\n\nТакже можно ввести любое число в заданном формате, не более " + unassigned + "."
-
-                ;
+                + "\n\nТакже можно ввести любое число в заданном формате, не более " + unassigned + ".";
     }
 
 }

@@ -104,6 +104,7 @@ public class GameMain {
                 String result = player.raiseStat(stat, Integer.valueOf(commandParts[2]), player.getLanguage());
                 if (!result.equals(MainText.STAT_INVALID.text(message.getPlayer().getLanguage()))) playerService.update(player);
                 messages.sendMessage(result, message.getUserId());
+//                tutorial.tutorialStatsUpTwo(player);
             }
         } else {
             messages.sendMessage(MainText.COMMAND_INVALID.text(message.getPlayer().getLanguage()), message.getUserId());
