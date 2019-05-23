@@ -22,7 +22,7 @@ public class KeyboardManager {
         InlineKeyboardButton button;
         List<InlineKeyboardButton> buttonsRow = new ArrayList<>();
         List<List<InlineKeyboardButton>> rowList = new ArrayList<>();
-        int buttonsLine = 4;
+
         ArrayList<String> addings = new ArrayList<>();
         addings.add("1");
         if (freePoints > 1) {
@@ -30,16 +30,15 @@ public class KeyboardManager {
                 addings.add("5");
                 if (freePoints > 24) {
                     addings.add("25");
-                    buttonsLine = 4;
-                } else {
-                    buttonsLine = 3;
                 }
-            } else {
-                buttonsLine = 2;
             }
             if (freePoints != 5 && freePoints != 25) {
                 addings.add("" + freePoints);
             }
+        }
+        int buttonsLine = 3;
+        if (addings.size() != 1) {
+            buttonsLine = addings.size();
         }
         int buttonsCounter = 0;
         for (Stats stat : Stats.values()) {
