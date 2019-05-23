@@ -151,7 +151,7 @@ public enum MainText {
             "Рівень"
     ),
     STAT_UP(2,
-            "p1 level raised to p2",
+            "Level of p1 raised to p2",
             "Уровень p1 повышен до p2",
             "Рівень p1 виріс до p2"),
     STAT_INVALID(0,

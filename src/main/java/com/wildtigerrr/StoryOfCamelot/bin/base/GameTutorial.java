@@ -162,7 +162,7 @@ public class GameTutorial {
     void tutorialStatsRaised(Player player) {
         // TODO Tutorial
         messages.sendMessage(
-                MainText.GUARD_LESSON_TWO.text(player.getLanguage()),
+                MainText.GUARD_LESSON_THREE.text(player.getLanguage()),
                 player.getExternalId()
         );
     }

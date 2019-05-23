@@ -216,7 +216,7 @@ public class Player {
                 return MainText.STAT_INVALID.text(lang);
         }
         unassignedPoints -= quantity;
-        return MainText.STAT_UP.text(lang, stat.whatLowercase(lang).substring(0, 1).toUpperCase() + stat.whatLowercase(lang).substring(1), String.valueOf(newQuantity));
+        return MainText.STAT_UP.text(lang, stat.whichLowercase(lang), String.valueOf(newQuantity));
     }
 
     public ArrayList<String> addStatExp(Integer exp, Stats stat, Language lang) throws SOCInvalidDataException {
@@ -472,7 +472,7 @@ public class Player {
 
     public String getStatMenu() {
         int unassigned = getUnassignedPoints();
-        return  nickname + ", " + level + MainText.LEVEL.text(language).toLowerCase() + " (+" + unassigned + ")"
+        return  nickname + ", " + level + " " + MainText.LEVEL.text(language).toLowerCase() + " (+" + unassigned + ")"
                 + "\n\n" + Stats.STRENGTH.emoji()     + Stats.STRENGTH.what(language) + ": "     + strength
                 + "\n"   + Stats.HEALTH.emoji()       + Stats.HEALTH.what(language) + ": "       + health
                 + "\n"   + Stats.AGILITY.emoji()      + Stats.AGILITY.what(language) + ": "      + agility
