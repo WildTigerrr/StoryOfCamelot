@@ -22,20 +22,23 @@ public class KeyboardManager {
         InlineKeyboardButton button;
         List<InlineKeyboardButton> buttonsRow = new ArrayList<>();
         List<List<InlineKeyboardButton>> rowList = new ArrayList<>();
+        int buttonsLine = 4;
         ArrayList<String> addings = new ArrayList<>();
         addings.add("1");
         if (freePoints > 1) {
+            if (freePoints > 4) {
+                addings.add("5");
+                buttonsLine = 3;
+            } else {
+                buttonsLine = 2;
+            }
             addings.add("" + freePoints);
         }
-        if (freePoints > 4) {
-            addings.add("5");
-        }
-
         int buttonsCounter = 0;
         for (Stats stat : Stats.values()) {
             for (String val : addings) {
                 buttonsCounter++;
-                if (buttonsCounter > addings.size()) {
+                if (buttonsCounter > buttonsLine) {
                     rowList.add(buttonsRow);
                     buttonsRow = new ArrayList<>();
                     buttonsCounter = 1;
