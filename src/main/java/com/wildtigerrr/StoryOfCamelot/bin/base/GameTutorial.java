@@ -160,7 +160,7 @@ public class GameTutorial {
 
     private String getStatMenu(Player player) {
         int unassigned = player.getUnassignedPoints();
-        return  player.getNickname() + ", " + player.getLevel() + " (+" + unassigned + ")"
+        return  player.getNickname() + ", " + player.getLevel() + " уровень (+" + unassigned + ")"
                 + "\n\n" + Emoji.STRENGTH.getCode() + "Cила: " + player.getStrength()
                 + "\n" + "/up_s_1   " + (unassigned > 4 ? "/up_s_5   " : "") + "/up_s_" + player.getUnassignedPoints()
                 + "\n" + Emoji.HEALTH.getCode() + "Здоровье: " + player.getHealth()
