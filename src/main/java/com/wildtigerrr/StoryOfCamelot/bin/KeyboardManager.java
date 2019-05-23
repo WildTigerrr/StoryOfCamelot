@@ -45,7 +45,7 @@ public class KeyboardManager {
                 }
                 button = new InlineKeyboardButton();
                 button.setText(stat.emoji() + "+" + val);
-                button.setCallbackData("/up_" + stat.getCharacter().toLowerCase() + "_" + val);
+                button.setSwitchInlineQueryCurrentChat("/up_" + stat.getCharacter().toLowerCase() + "_" + val);
                 buttonsRow.add(button);
             }
         }
