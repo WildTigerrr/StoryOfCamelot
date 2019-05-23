@@ -5,11 +5,13 @@ import com.wildtigerrr.StoryOfCamelot.bin.enums.GameSettings;
 import com.wildtigerrr.StoryOfCamelot.bin.enums.Language;
 import com.wildtigerrr.StoryOfCamelot.bin.enums.MainText;
 import com.wildtigerrr.StoryOfCamelot.bin.exceptions.SOCInvalidDataException;
+import com.wildtigerrr.StoryOfCamelot.bin.service.StringUtils;
 import com.wildtigerrr.StoryOfCamelot.database.schema.Player;
 import com.wildtigerrr.StoryOfCamelot.database.schema.enums.PlayerStatusExtended;
 import com.wildtigerrr.StoryOfCamelot.database.schema.enums.Stats;
 import com.wildtigerrr.StoryOfCamelot.database.service.implementation.LocationServiceImpl;
 import com.wildtigerrr.StoryOfCamelot.database.service.implementation.PlayerServiceImpl;
+import com.wildtigerrr.StoryOfCamelot.web.UpdateWrapper;
 import com.wildtigerrr.StoryOfCamelot.web.service.ResponseManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -89,6 +91,23 @@ public class GameMain {
             e.printStackTrace();
         }
         return player;
+    }
+
+    public void statUp(UpdateWrapper message) {
+        String[] commandParts = message.getText().split("_", 3);
+        if (commandParts.length == 3 && commandParts[1].length() == 1 && StringUtils.isNumeric(commandParts[2])) {
+            Stats stat = Stats.getStat(commandParts[1]);
+            if (stat == null) {
+                messages.sendMessage(MainText.STAT_INVALID.text(message.getPlayer().getLanguage()), message.getUserId());
+            } else {
+                Player player = message.getPlayer();
+                String result = player.raiseStat(stat, Integer.valueOf(commandParts[2]), player.getLanguage());
+                if (!result.equals(MainText.STAT_INVALID.text(message.getPlayer().getLanguage()))) playerService.update(player);
+                messages.sendMessage(result, message.getUserId());
+            }
+        } else {
+            messages.sendMessage(MainText.COMMAND_INVALID.text(message.getPlayer().getLanguage()), message.getUserId());
+        }
     }
 
 }

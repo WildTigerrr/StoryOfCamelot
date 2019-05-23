@@ -79,14 +79,15 @@ public class GameTutorial {
                 break;
             case TUTORIAL_STATS_UP:
                 if (command == Command.SKILLS) {
-                    messages.sendMessage(MainText.TUTORIAL_STUCK.text(message.getPlayer().getLanguage()), message.getUserId());
+                    tutorialStatsUp(message.getPlayer());
+//                    messages.sendMessage(MainText.TUTORIAL_STUCK.text(message.getPlayer().getLanguage()), message.getUserId());
                 } else {
                     messages.sendMessage(MainText.TUTORIAL_NO_RUSH.text(message.getPlayer().getLanguage()), message.getUserId());
                 }
                 break;
             case TUTORIAL_STATS_UP_2:
                 if (command == Command.UP) {
-                    tutorialStatsUp(message.getPlayer());
+                    gameMain.statUp(message);
                 } else {
                     messages.sendMessage(MainText.TUTORIAL_NO_RUSH.text(message.getPlayer().getLanguage()), message.getUserId());
                 }

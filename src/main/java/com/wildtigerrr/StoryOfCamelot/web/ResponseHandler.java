@@ -197,21 +197,7 @@ public class ResponseHandler {
                 }
                 return true;
             case UP:
-                commandParts = message.getText().split("_", 3);
-                if (commandParts.length == 3 && commandParts[1].length() == 1 && StringUtils.isNumeric(commandParts[2])) {
-                    Stats stat = Stats.getStat(commandParts[1]);
-                    if (stat == null) {
-                        messages.sendMessage(MainText.STAT_INVALID.text(message.getPlayer().getLanguage()), message.getUserId());
-                        return true;
-                    } else {
-                        Player player = message.getPlayer();
-                        String result = player.raiseStat(stat, Integer.valueOf(commandParts[2]), player.getLanguage());
-                        if (!result.equals(MainText.STAT_INVALID.text(message.getPlayer().getLanguage()))) playerService.update(player);
-                        messages.sendMessage(result, message.getUserId());
-                    }
-                } else {
-                    messages.sendMessage(MainText.COMMAND_INVALID.text(message.getPlayer().getLanguage()), message.getUserId());
-                }
+                gameMain.statUp(message);
                 return true;
             default:
                 messages.sendMessage(MainText.COMMAND_NOT_DEFINED.text(message.getPlayer().getLanguage()), message.getUserId(), true);
