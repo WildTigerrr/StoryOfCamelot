@@ -4,6 +4,7 @@ import com.wildtigerrr.StoryOfCamelot.web.BotConfig;
 import com.wildtigerrr.StoryOfCamelot.web.WebHookHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.telegram.telegrambots.meta.api.methods.AnswerCallbackQuery;
 import org.telegram.telegrambots.meta.api.methods.send.SendDocument;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
@@ -64,6 +65,18 @@ public class ResponseManager {
 
     public void sendMessageEdit(Integer messageId, String newText, InlineKeyboardMarkup keyboard, String userId, Boolean useMarkdown) {
         proceedMessageEdit(messageId, keyboard, newText, userId, useMarkdown);
+    }
+
+    public void sendCallbackAnswer(String queryId, String text, Boolean isAlert) {
+        proceedAnswerCallback(queryId, text, isAlert);
+    }
+
+    public void sendCallbackAnswer(String queryId, String text) {
+        proceedAnswerCallback(queryId, text, false);
+    }
+
+    public void sendCallbackAnswer(String queryId) {
+        proceedAnswerCallback(queryId, null, false);
     }
 
     private void proceedMessageSend(String text, ReplyKeyboard keyboard, String userId, Boolean useMarkdown) {
@@ -145,6 +158,24 @@ public class ResponseManager {
             messageEdit.setReplyMarkup(keyboard);
         try {
             webHook.execute(messageEdit);
+            alreadyRedirected = false;
+        } catch (TelegramApiException e) {
+            sendMessageToAdmin(e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    private void proceedAnswerCallback(String queryId, String text,Boolean isAlert) {
+        if (alreadyRedirected == null || !alreadyRedirected) alreadyRedirected = true;
+        else return;
+
+        AnswerCallbackQuery answerCallbackQuery = new AnswerCallbackQuery();
+        answerCallbackQuery.setCallbackQueryId(queryId);
+        answerCallbackQuery.setShowAlert(isAlert);
+        if (text != null)
+            answerCallbackQuery.setText(text);
+        try {
+            webHook.execute(answerCallbackQuery);
             alreadyRedirected = false;
         } catch (TelegramApiException e) {
             sendMessageToAdmin(e.getMessage());
