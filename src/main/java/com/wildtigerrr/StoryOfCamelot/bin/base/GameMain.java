@@ -42,7 +42,8 @@ public class GameMain {
         if (players.size() > 10)
             players = players.subList(players.size() - 10, players.size());
         AtomicInteger index = new AtomicInteger();
-        String top = players.stream()
+        String top = "Топ игроков: \n\n" +
+                players.stream()
                 .map(pl -> pl.toStatString(index.incrementAndGet()))
                 .collect(Collectors.joining());
         messages.sendMessage(
