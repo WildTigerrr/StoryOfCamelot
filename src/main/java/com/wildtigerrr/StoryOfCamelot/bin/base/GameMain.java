@@ -17,6 +17,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
 
 @Service
 public class GameMain {
@@ -29,6 +33,23 @@ public class GameMain {
     private PlayerServiceImpl playerService;
     @Autowired
     private LocationServiceImpl locationService;
+
+    public void getTopPlayers(String userId) {
+        List<Player> players = playerService.getAll();
+        players = players.stream()
+                .sorted()
+                .collect(Collectors.toList());
+        if (players.size() > 10)
+            players = players.subList(players.size() - 10, players.size());
+        AtomicInteger index = new AtomicInteger();
+        String top = players.stream()
+                .map(pl -> pl.toStatString(index.getAndIncrement()))
+                .collect(Collectors.joining());
+        messages.sendMessage(
+                top,
+                userId
+        );
+    }
 
     public void sendLanguageSelector(String userId, Language lang) {
         messages.sendMessage(
@@ -70,7 +91,7 @@ public class GameMain {
 
     public Player addExperience(Player player, Stats stat, int experience, Boolean sendExperienceGet) {
         try {
-            ArrayList<String> eventList = player.addStatExp(
+            List<String> eventList = player.addStatExp(
                     experience,
                     stat,
                     player.getLanguage()

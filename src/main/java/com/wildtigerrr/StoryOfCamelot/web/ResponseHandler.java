@@ -180,10 +180,13 @@ public class ResponseHandler {
                 } else {
                     messages.sendMessage(MainText.PROPOSITION_EXPIRED.text(message.getPlayer().getLanguage()), message.getUserId());
                 }
-                return true;
+                break;
             case UP:
                 gameMain.statUp(message);
-                return true;
+                break;
+            case TOP:
+                gameMain.getTopPlayers(message.getUserId());
+                break;
             default:
                 messages.sendMessage(MainText.COMMAND_NOT_DEFINED.text(message.getPlayer().getLanguage()), message.getUserId(), true);
                 return false;
