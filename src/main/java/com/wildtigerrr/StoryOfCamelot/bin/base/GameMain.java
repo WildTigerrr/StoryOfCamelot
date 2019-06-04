@@ -36,6 +36,8 @@ public class GameMain {
 
     public void getTopPlayers(String userId) {
         List<Player> players = playerService.getAll();
+        System.out.println("Sorting:");
+        players.stream().sorted().forEach(System.out::println);
         players = players.stream()
                 .sorted()
                 .collect(Collectors.toList());
