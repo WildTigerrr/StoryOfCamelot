@@ -14,8 +14,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 
-import static java.util.Comparator.comparing;
-import static java.util.Comparator.reverseOrder;
+import static java.util.Comparator.*;
 
 @Entity
 @Table(name = "player")
@@ -512,8 +511,8 @@ public class Player implements Comparable<Player> {
     }
 
     private static Comparator<Player> getComparator(){
-        return comparing(Player::getLevel)
-                .thenComparing(Player::getTotalStats, reverseOrder());
+        return comparingInt(Player::getLevel)
+                .thenComparingInt(Player::getTotalStats);
     }
 
     // ================================================ END SERVICE ================================================= //
