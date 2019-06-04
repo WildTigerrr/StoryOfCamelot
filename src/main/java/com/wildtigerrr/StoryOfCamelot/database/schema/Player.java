@@ -475,7 +475,7 @@ public class Player implements Comparable<Player> {
     }
 
     public String toStatString(int index) {
-        return index + ". " + this.nickname + ", " + getLevel() + "\n";
+        return index + ". " + this.nickname + ", " + getLevel()  + " (" + getTotalStats() + ")" + "\n";
     }
 
     public String getStatMenu() {
