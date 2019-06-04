@@ -507,7 +507,10 @@ public class Player implements Comparable<Player> {
 
     @Override
     public int compareTo(Player p) {
-        return getComparator().compare(this, p);
+        int result = getComparator().compare(this, p);
+        System.out.println("Comparing: " + this.toStatString(0) +
+                " with " + p.toStatString(1) + ": " + result);
+        return result;
     }
 
     private static Comparator<Player> getComparator(){
