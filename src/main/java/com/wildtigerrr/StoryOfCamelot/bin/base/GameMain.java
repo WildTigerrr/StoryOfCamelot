@@ -36,25 +36,16 @@ public class GameMain {
 
     public void getTopPlayers(String userId) {
         List<Player> players = playerService.getAll();
-        System.out.println("Sorting:");
-        players.stream().sorted().forEach(System.out::println);
         players = players.stream()
                 .sorted()
                 .collect(Collectors.toList());
-        System.out.println("Sorted:");
-        players.forEach(System.out::println);
         if (players.size() > 10)
             players = players.subList(players.size() - 10, players.size());
-        System.out.println("Splitted:");
-        players.forEach(System.out::println);
         AtomicInteger index = new AtomicInteger();
         String top = "Топ игроков: \n\n" +
                 players.stream()
                 .map(pl -> pl.toStatString(index.incrementAndGet()))
                 .collect(Collectors.joining());
-        System.out.println("Stringified:");
-        players.forEach(System.out::println);
-        System.out.println(top);
         messages.sendMessage(
                 top,
                 userId

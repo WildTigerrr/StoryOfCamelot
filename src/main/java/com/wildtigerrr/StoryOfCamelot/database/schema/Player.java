@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Objects;
 
 import static java.util.Comparator.comparing;
+import static java.util.Comparator.reverseOrder;
 
 @Entity
 @Table(name = "player")
@@ -507,15 +508,12 @@ public class Player implements Comparable<Player> {
 
     @Override
     public int compareTo(Player p) {
-        int result = getComparator().compare(this, p);
-        System.out.println("Comparing: " + this.toStatString(0) +
-                " with " + p.toStatString(1) + ": " + result);
-        return result;
+        return getComparator().compare(this, p);
     }
 
     private static Comparator<Player> getComparator(){
         return comparing(Player::getLevel)
-                .thenComparing(Player::getTotalStats).reversed();
+                .thenComparing(Player::getTotalStats, reverseOrder());
     }
 
     // ================================================ END SERVICE ================================================= //
