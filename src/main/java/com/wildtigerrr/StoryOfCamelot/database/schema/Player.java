@@ -515,7 +515,7 @@ public class Player implements Comparable<Player> {
 
     private static Comparator<Player> getComparator(){
         return comparing(Player::getLevel)
-                .thenComparing(Player::getTotalStats);
+                .thenComparing(Player::getTotalStats).reversed();
     }
 
     // ================================================ END SERVICE ================================================= //
