@@ -27,6 +27,10 @@ public class ResponseManager {
         proceedMessageSend(text, null, BotConfig.WEBHOOK_ADMIN_ID, false);
     }
 
+    public void postMessageToAdminChannel(String text) {
+        proceedMessageSend(text, null, BotConfig.ADMIN_CHANNEL_ID, false);
+    }
+
     public void sendMessage(String text, String userId) {
         proceedMessageSend(text, null, userId, false);
     }

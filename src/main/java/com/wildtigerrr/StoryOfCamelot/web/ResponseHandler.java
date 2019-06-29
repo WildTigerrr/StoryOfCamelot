@@ -107,6 +107,10 @@ public class ResponseHandler {
                 messages.sendMessage("Туториал перезапущен", message.getUserId());
                 return true;
             }
+            case "/id": {
+                messages.sendMessageToAdmin("User Id: " + message.getUserId() + ", Chat Id: " + message.getChatId());
+                return true;
+            }
         }
         return false;
     }

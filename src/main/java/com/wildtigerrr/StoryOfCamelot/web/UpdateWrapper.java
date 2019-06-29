@@ -8,6 +8,7 @@ public class UpdateWrapper {
 
     private String message;
     private String userId;
+    private Long chatId;
     private int messageId;
     private String queryId;
     private String firstName;
@@ -23,6 +24,7 @@ public class UpdateWrapper {
         if (this.message.contains("@story_of_camelot_bot")) this.message = this.message.replace("@story_of_camelot_bot", "").trim();
         this.firstName = user.getFirstName();
         this.userId = isQuery ? update.getCallbackQuery().getMessage().getChatId().toString() : user.getId().toString();
+        this.chatId = isQuery ? update.getCallbackQuery().getMessage().getChatId() : update.getMessage().getChatId();
         this.messageId = isQuery ? update.getCallbackQuery().getMessage().getMessageId() : update.getMessage().getMessageId();
         this.queryId = isQuery ? update.getCallbackQuery().getId() : null;
         this.lastName = user.getLastName();
@@ -37,6 +39,10 @@ public class UpdateWrapper {
 
     public String getUserId() {
         return userId;
+    }
+
+    public Long getChatId() {
+        return chatId;
     }
 
     public int getMessageId() {

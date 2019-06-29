@@ -3,43 +3,49 @@ package com.wildtigerrr.StoryOfCamelot.database.schema.enums;
 import com.wildtigerrr.StoryOfCamelot.bin.enums.Emoji;
 import com.wildtigerrr.StoryOfCamelot.bin.enums.Language;
 import com.wildtigerrr.StoryOfCamelot.bin.enums.NameTranslation;
-import org.apache.commons.codec.language.bm.Lang;
 
 public enum Stats {
     STRENGTH(
             NameTranslation.SKILL_STRENGTH_WHICH,
             NameTranslation.SKILL_STRENGTH_WHAT,
-            Emoji.STRENGTH.getCode(), "S"
+            Emoji.STRENGTH.getCode(), "S",
+            "strength", "strengthExp"
     ),
     HEALTH(
             NameTranslation.SKILL_HEALTH_WHICH,
             NameTranslation.SKILL_HEALTH_WHAT,
-            Emoji.HEALTH.getCode(), "H"
+            Emoji.HEALTH.getCode(), "H",
+            "health", "healthExp"
     ),
     AGILITY(
             NameTranslation.SKILL_AGILITY_WHICH,
             NameTranslation.SKILL_AGILITY_WHAT,
-            Emoji.AGILITY.getCode(), "A"
+            Emoji.AGILITY.getCode(), "A",
+            "agility", "agilityExp"
     ),
     CHARISMA(
             NameTranslation.SKILL_CHARISMA_WHICH,
             NameTranslation.SKILL_CHARISMA_WHAT,
-            Emoji.CHARISMA.getCode(), "C"
+            Emoji.CHARISMA.getCode(), "C",
+            "charisma", "charismaExp"
     ),
     INTELLIGENCE(
             NameTranslation.SKILL_INTELLIGENCE_WHICH,
             NameTranslation.SKILL_INTELLIGENCE_WHAT,
-            Emoji.INTELLIGENCE.getCode(), "I"
+            Emoji.INTELLIGENCE.getCode(), "I",
+            "intelligence", "intelligenceExp"
     ),
     ENDURANCE(
             NameTranslation.SKILL_ENDURANCE_WHICH,
             NameTranslation.SKILL_ENDURANCE_WHAT,
-            Emoji.ENDURANCE.getCode(), "E"
+            Emoji.ENDURANCE.getCode(), "E",
+            "endurance", "enduranceExp"
     ),
     LUCK(
             NameTranslation.SKILL_LUCK_WHICH,
             NameTranslation.SKILL_LUCK_WHAT,
-            Emoji.LUCK.getCode(), "L"
+            Emoji.LUCK.getCode(), "L",
+            "luck", null
     );
 
 
@@ -47,12 +53,16 @@ public enum Stats {
     private final NameTranslation what;
     private final String emoji;
     private final String character;
+    private final String fieldName;
+    private final String expFieldName;
 
-    Stats(NameTranslation which, NameTranslation what, String emoji, String character) {
+    Stats(NameTranslation which, NameTranslation what, String emoji, String character, String fieldName, String expFieldName) {
         this.which = which;
         this.what = what;
         this.emoji = emoji;
         this.character = character;
+        this.fieldName = fieldName;
+        this.expFieldName = expFieldName;
     }
 
     public String emoji() {

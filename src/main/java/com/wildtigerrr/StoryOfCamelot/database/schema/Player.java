@@ -9,6 +9,7 @@ import com.wildtigerrr.StoryOfCamelot.database.schema.enums.Stats;
 import org.apache.commons.codec.language.bm.Lang;
 
 import javax.persistence.*;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -157,7 +158,7 @@ public class Player {
     // ------------------- LEVEL UP CALCULATION ------------------------------------------------------------------------ //
 
     private int getExpToNextStatUp(Integer currentLevel) {
-        return  (int) Math.pow(currentLevel + 1, 2);
+        return (int) Math.pow(currentLevel + 1, 2);
     }
 
     private int getStatsToNextLevelUp() {
@@ -217,6 +218,26 @@ public class Player {
         }
         unassignedPoints -= quantity;
         return MainText.STAT_UP.text(lang, stat.whichLowercase(lang), String.valueOf(newQuantity));
+    }
+
+    public ArrayList<String> addStatExpByName(Integer exp, Stats stat, Language lang) throws SOCInvalidDataException, NoSuchFieldException {
+        ArrayList<String> events = new ArrayList<>();
+        if (stat == Stats.LUCK) {
+            events.add(MainText.STAT_CANNOT_BE_RAISED.text(lang, stat.which(lang)));
+        }
+        Boolean up = isStatUp(stat, exp);
+        if (up) {
+            Field expField = Player.class.getDeclaredField("strengthExp");
+        }
+        while (up) {
+
+            if (isLevelUp()) {
+                levelUp();
+                events.add(MainText.LEVEL_UP.text(lang, String.valueOf(getLevel())));
+            }
+            up = isStatUp(stat, 0);
+        }
+        return events;
     }
 
     public ArrayList<String> addStatExp(Integer exp, Stats stat, Language lang) throws SOCInvalidDataException {
@@ -460,26 +481,26 @@ public class Player {
         return MainText.IF_I_REMEMBER.text(language) + ":"
                 + "\n*" + this.nickname + "*, " + this.level + " " + MainText.LEVEL.text(language).toLowerCase() + " (" + (getTotalStats() - getAssignedPoints()) + "/" + getStatsToNextLevelUp() + ")"
                 + (getUnassignedPoints() > 0 ? " (+" + getUnassignedPoints() + ")" : "")
-                + "\n*" + Stats.STRENGTH.what(language)     + ":* " + this.strength     + " (" + this.strengthExp     + "/" + getExpToNextStatUp(this.strength)     + ")"
-                + "\n*" + Stats.HEALTH.what(language)       + ":* " + this.health       + " (" + this.healthExp       + "/" + getExpToNextStatUp(this.health)       + ")"
-                + "\n*" + Stats.AGILITY.what(language)      + ":* " + this.agility      + " (" + this.agilityExp      + "/" + getExpToNextStatUp(this.agility)      + ")"
-                + "\n*" + Stats.CHARISMA.what(language)     + ":* " + this.charisma     + " (" + this.charismaExp     + "/" + getExpToNextStatUp(this.charisma)     + ")"
+                + "\n*" + Stats.STRENGTH.what(language) + ":* " + this.strength + " (" + this.strengthExp + "/" + getExpToNextStatUp(this.strength) + ")"
+                + "\n*" + Stats.HEALTH.what(language) + ":* " + this.health + " (" + this.healthExp + "/" + getExpToNextStatUp(this.health) + ")"
+                + "\n*" + Stats.AGILITY.what(language) + ":* " + this.agility + " (" + this.agilityExp + "/" + getExpToNextStatUp(this.agility) + ")"
+                + "\n*" + Stats.CHARISMA.what(language) + ":* " + this.charisma + " (" + this.charismaExp + "/" + getExpToNextStatUp(this.charisma) + ")"
                 + "\n*" + Stats.INTELLIGENCE.what(language) + ":* " + this.intelligence + " (" + this.intelligenceExp + "/" + getExpToNextStatUp(this.intelligence) + ")"
-                + "\n*" + Stats.ENDURANCE.what(language)    + ":* " + this.endurance    + " (" + this.enduranceExp    + "/" + getExpToNextStatUp(this.endurance)    + ")"
-                + "\n*" + Stats.LUCK.what(language)         + ":* " + this.luck
+                + "\n*" + Stats.ENDURANCE.what(language) + ":* " + this.endurance + " (" + this.enduranceExp + "/" + getExpToNextStatUp(this.endurance) + ")"
+                + "\n*" + Stats.LUCK.what(language) + ":* " + this.luck
                 + "\n\n_" + MainText.WHAT_ELSE_WE_KNOW.text(language) + "?_";
     }
 
     public String getStatMenu() {
         int unassigned = getUnassignedPoints();
-        return  nickname + ", " + level + " " + MainText.LEVEL.text(language).toLowerCase() + " (+" + unassigned + ")"
-                + "\n\n" + Stats.STRENGTH.emoji()     + Stats.STRENGTH.what(language) + ": "     + strength
-                + "\n"   + Stats.HEALTH.emoji()       + Stats.HEALTH.what(language) + ": "       + health
-                + "\n"   + Stats.AGILITY.emoji()      + Stats.AGILITY.what(language) + ": "      + agility
-                + "\n"   + Stats.CHARISMA.emoji()     + Stats.CHARISMA.what(language) + ": "     + charisma
-                + "\n"   + Stats.INTELLIGENCE.emoji() + Stats.INTELLIGENCE.what(language) + ": " + intelligence
-                + "\n"   + Stats.ENDURANCE.emoji()    + Stats.ENDURANCE.what(language) + ": "    + endurance
-                + "\n"   + Stats.LUCK.emoji()         + Stats.LUCK.what(language) + ": "         + luck;
+        return nickname + ", " + level + " " + MainText.LEVEL.text(language).toLowerCase() + " (+" + unassigned + ")"
+                + "\n\n" + Stats.STRENGTH.emoji() + Stats.STRENGTH.what(language) + ": " + strength
+                + "\n" + Stats.HEALTH.emoji() + Stats.HEALTH.what(language) + ": " + health
+                + "\n" + Stats.AGILITY.emoji() + Stats.AGILITY.what(language) + ": " + agility
+                + "\n" + Stats.CHARISMA.emoji() + Stats.CHARISMA.what(language) + ": " + charisma
+                + "\n" + Stats.INTELLIGENCE.emoji() + Stats.INTELLIGENCE.what(language) + ": " + intelligence
+                + "\n" + Stats.ENDURANCE.emoji() + Stats.ENDURANCE.what(language) + ": " + endurance
+                + "\n" + Stats.LUCK.emoji() + Stats.LUCK.what(language) + ": " + luck;
     }
 
     public static int getNicknameLengthMax() {
