@@ -11,9 +11,13 @@ import org.springframework.stereotype.Controller;
 public class StoryOfCamelotApplication {
 
     public static void main(String[] args) throws Exception {
-        SpringApplication.run(StoryOfCamelotApplication.class, args);
-        new ResponseManager().postMessageToAdminChannel("Bot Started");
-        addShutdownHook();
+        try {
+            SpringApplication.run(StoryOfCamelotApplication.class, args);
+            new ResponseManager().postMessageToAdminChannel("Bot Started");
+            addShutdownHook();
+        } catch (Exception e) {
+            new ResponseManager().postMessageToAdminChannel("Exception during startup: " + e.getMessage());
+        }
     }
 
     // Actions before restart
