@@ -2,6 +2,7 @@ package com.wildtigerrr.StoryOfCamelot.bin;
 
 import com.wildtigerrr.StoryOfCamelot.bin.base.GameMovement;
 import com.wildtigerrr.StoryOfCamelot.bin.enums.ActionType;
+import com.wildtigerrr.StoryOfCamelot.bin.exceptions.SOCInvalidDataException;
 import com.wildtigerrr.StoryOfCamelot.web.service.ResponseManager;
 import com.wildtigerrr.StoryOfCamelot.bin.service.ScheduledAction;
 import org.apache.commons.io.IOUtils;
@@ -82,6 +83,7 @@ public class TimeDependentActions {
     }
 
     private static void restoreValues() {
+        int i = 1/0;
         try {
             InputStream stream = fileService.getFile("temp/BackupValues"); // If file not found > AmazonS3Exception
             if (stream != null) {
