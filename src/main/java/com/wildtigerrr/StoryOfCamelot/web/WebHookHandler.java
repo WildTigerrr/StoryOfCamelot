@@ -18,6 +18,8 @@ public class WebHookHandler extends TelegramWebhookBot {
             responseHandler.handleMessage(new UpdateWrapper(update, false));
         } else if (update.hasCallbackQuery()) {
             responseHandler.handleMessage(new UpdateWrapper(update, true));
+        } else {
+            System.out.println(update);
         }
         return null;
     }
