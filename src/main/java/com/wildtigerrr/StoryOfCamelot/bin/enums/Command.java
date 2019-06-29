@@ -10,5 +10,6 @@ public enum Command {
     SKILLS,
     START,
     UP,
-    LANG
+    LANG,
+    TOP
 }

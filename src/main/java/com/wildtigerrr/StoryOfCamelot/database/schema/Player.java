@@ -11,11 +11,15 @@ import org.apache.commons.codec.language.bm.Lang;
 import javax.persistence.*;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
+
+import static java.util.Comparator.*;
 
 @Entity
 @Table(name = "player")
-public class Player {
+public class Player implements Comparable<Player> {
 
     // ==================================================== MAIN ==================================================== //
 
@@ -107,7 +111,7 @@ public class Player {
     }
 
     public Player(String externalId, String nickname, Location location) {
-        this.externalId = externalId;
+        this.externalId = Objects.requireNonNull(externalId);
         this.nickname = nickname;
         this.location = location;
         isNew = externalId.equals(nickname);
@@ -491,6 +495,10 @@ public class Player {
                 + "\n\n_" + MainText.WHAT_ELSE_WE_KNOW.text(language) + "?_";
     }
 
+    public String toStatString(int index) {
+        return index + ". " + this.nickname + ", " + getLevel()  + " (" + getTotalStats() + ")" + "\n";
+    }
+
     public String getStatMenu() {
         int unassigned = getUnassignedPoints();
         return nickname + ", " + level + " " + MainText.LEVEL.text(language).toLowerCase() + " (+" + unassigned + ")"
@@ -516,6 +524,16 @@ public class Player {
     public static Boolean containsSpecialCharacters(String newNickname) {
         String updated = newNickname.replaceAll(" {2,}", " ").replaceAll("[*_`\\\\/]", "");
         return !newNickname.equals(updated);
+    }
+
+    @Override
+    public int compareTo(Player p) {
+        return getComparator().compare(this, p);
+    }
+
+    private static Comparator<Player> getComparator(){
+        return comparing(Player::getLevel, reverseOrder())
+                .thenComparing(Player::getTotalStats, reverseOrder());
     }
 
     // ================================================ END SERVICE ================================================= //
