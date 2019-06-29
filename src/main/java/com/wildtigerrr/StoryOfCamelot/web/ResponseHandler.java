@@ -108,10 +108,13 @@ public class ResponseHandler {
                 return true;
             }
             case "/id": {
-                int i = 1/0;
                 messages.sendMessageToAdmin("User Id: " + message.getUserId() + ", Chat Id: " + message.getChatId());
                 return true;
             }
+        }
+        if (message.getText().startsWith("/ping")) {
+            messages.postMessageToAdminChannel(message.getText(), true);
+            return true;
         }
         return false;
     }
