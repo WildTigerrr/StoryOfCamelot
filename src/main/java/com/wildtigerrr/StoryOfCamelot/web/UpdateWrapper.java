@@ -19,6 +19,8 @@ public class UpdateWrapper {
     private Player player;
     private Boolean isQuery;
 
+    // TODO Add escaped entire Update for debug and logs
+
     UpdateWrapper(Update update, Boolean isQuery) {
         User user = isQuery ? update.getCallbackQuery().getMessage().getFrom() : update.getMessage().getFrom();
         this.message = StringUtils.escape(isQuery ? update.getCallbackQuery().getData() : update.getMessage().getText().trim());
