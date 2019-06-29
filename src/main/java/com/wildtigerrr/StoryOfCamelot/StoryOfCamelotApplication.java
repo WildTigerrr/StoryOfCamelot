@@ -12,7 +12,7 @@ public class StoryOfCamelotApplication {
 
     public static void main(String[] args) throws Exception {
         SpringApplication.run(StoryOfCamelotApplication.class, args);
-        new ResponseManager().sendMessageToAdmin("Bot Started");
+        new ResponseManager().postMessageToAdminChannel("Bot Started");
         addShutdownHook();
     }
 
@@ -20,7 +20,7 @@ public class StoryOfCamelotApplication {
     private static void addShutdownHook() {
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             TimeDependentActions.backupValues();
-            new ResponseManager().sendMessageToAdmin("Bot Shutting Down");
+            new ResponseManager().postMessageToAdminChannel("Bot Shutting Down");
         }));
     }
 

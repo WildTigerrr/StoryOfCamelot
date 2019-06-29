@@ -8,7 +8,7 @@ public class BotConfig {
     public static String BOT_NAME = "WildTigerrr";
 
     public static String WEBHOOK_ADMIN_ID = "413316947";
-    public static String ADMIN_CHANNEL_ID = "ADMIN_CHANNEL_ID";
+    public static String ADMIN_CHANNEL_ID = "-1001419651307";
 
     public static int BATTLE_RANDOM = 5; // From 1 - ±100% to 100 - ±1%
 
