@@ -9,4 +9,12 @@ public class StringUtils {
         return true;
     }
 
+    public static String escape(String str) {
+        return str == null ? null : str
+                .replace("_", "\\_")
+                .replace("*", "\\*")
+                .replace("[", "\\[")
+                .replace("`", "\\`");
+    }
+
 }
