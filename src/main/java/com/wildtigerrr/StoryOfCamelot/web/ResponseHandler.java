@@ -108,6 +108,7 @@ public class ResponseHandler {
                 return true;
             }
             case "/id": {
+                int i = 1/0;
                 messages.sendMessageToAdmin("User Id: " + message.getUserId() + ", Chat Id: " + message.getChatId());
                 return true;
             }

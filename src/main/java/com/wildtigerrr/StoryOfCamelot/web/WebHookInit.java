@@ -20,7 +20,17 @@ public class WebHookInit {
         try {
             handler.onWebhookUpdateReceived(update);
         } catch (Exception e) {
-            new ResponseManager().postMessageToAdminChannel("Exception during runtime: " + e.getMessage() + "; \n\nDuring working on message: " + StringUtils.escape(update.toString()), true);
+            try {
+                new ResponseManager().postMessageToAdminChannel(
+                        "Exception during runtime: `" + e.getMessage() + "`; " +
+                                "\n\nDuring working on message: `" + new UpdateWrapper(update, update.hasCallbackQuery()) + "`",
+                        true);
+            } catch (Exception e1) {
+                new ResponseManager().postMessageToAdminChannel(
+                        "Exception on creating UpdateWrapper in exception handle: `" + StringUtils.escape(e1.getMessage()) + "`",
+                        true);
+            }
+
         }
     }
 
