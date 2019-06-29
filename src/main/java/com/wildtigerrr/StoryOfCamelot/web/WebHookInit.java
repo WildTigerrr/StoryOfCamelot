@@ -19,9 +19,8 @@ public class WebHookInit {
         try {
             handler.onWebhookUpdateReceived(update);
         } catch (Exception e) {
-            new ResponseManager().postMessageToAdminChannel("Exception during runtime: " + e.getMessage() + "; During working on message: " + update);
+            new ResponseManager().postMessageToAdminChannel("Exception during runtime: " + e.getMessage() + "; \n\nDuring working on message: " + update, true);
         }
-
     }
 
 }
