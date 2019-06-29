@@ -6,6 +6,7 @@ import com.wildtigerrr.StoryOfCamelot.bin.enums.Language;
 import com.wildtigerrr.StoryOfCamelot.bin.enums.MainText;
 import com.wildtigerrr.StoryOfCamelot.bin.exceptions.SOCInvalidDataException;
 import com.wildtigerrr.StoryOfCamelot.bin.service.StringUtils;
+import com.wildtigerrr.StoryOfCamelot.bin.translation.TranslationManager;
 import com.wildtigerrr.StoryOfCamelot.database.schema.Player;
 import com.wildtigerrr.StoryOfCamelot.database.schema.enums.PlayerStatusExtended;
 import com.wildtigerrr.StoryOfCamelot.database.schema.enums.Stats;
@@ -16,9 +17,7 @@ import com.wildtigerrr.StoryOfCamelot.web.service.ResponseManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
@@ -33,6 +32,8 @@ public class GameMain {
     private PlayerServiceImpl playerService;
     @Autowired
     private LocationServiceImpl locationService;
+    @Autowired
+    private TranslationManager translation;
 
     public void getTopPlayers(String userId) {
         List<Player> players = playerService.getAll();
@@ -52,9 +53,9 @@ public class GameMain {
         );
     }
 
-    public void sendLanguageSelector(String userId, Language lang) {
+    public void sendLanguageSelector(String userId, Language lang) { // MainText.LANGUAGE_SELECT.text(lang)
         messages.sendMessage(
-                MainText.LANGUAGE_SELECT.text(lang),
+                translation.get(lang).languageSelectPrompt(),
                 KeyboardManager.getKeyboardForLanguageSelect(),
                 userId
         );
