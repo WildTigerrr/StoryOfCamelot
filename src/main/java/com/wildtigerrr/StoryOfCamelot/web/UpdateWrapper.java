@@ -1,5 +1,6 @@
 package com.wildtigerrr.StoryOfCamelot.web;
 
+import com.wildtigerrr.StoryOfCamelot.bin.service.StringUtils;
 import com.wildtigerrr.StoryOfCamelot.database.schema.Player;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.User;
@@ -20,7 +21,7 @@ public class UpdateWrapper {
 
     UpdateWrapper(Update update, Boolean isQuery) {
         User user = isQuery ? update.getCallbackQuery().getMessage().getFrom() : update.getMessage().getFrom();
-        this.message = isQuery ? update.getCallbackQuery().getData() : update.getMessage().getText().trim();
+        this.message = StringUtils.escape(isQuery ? update.getCallbackQuery().getData() : update.getMessage().getText().trim());
         if (this.message.contains("@story_of_camelot_bot")) this.message = this.message.replace("@story_of_camelot_bot", "").trim();
         this.firstName = user.getFirstName();
         this.userId = isQuery ? update.getCallbackQuery().getMessage().getChatId().toString() : user.getId().toString();
