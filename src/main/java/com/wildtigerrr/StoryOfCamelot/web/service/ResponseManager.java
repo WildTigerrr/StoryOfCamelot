@@ -31,6 +31,10 @@ public class ResponseManager {
         proceedMessageSend(text, null, BotConfig.ADMIN_CHANNEL_ID, false);
     }
 
+    public void postMessageToAdminChannel(String text, Boolean applyMarkup) {
+        proceedMessageSend(text, null, BotConfig.ADMIN_CHANNEL_ID, applyMarkup);
+    }
+
     public void sendMessage(String text, String userId) {
         proceedMessageSend(text, null, userId, false);
     }
