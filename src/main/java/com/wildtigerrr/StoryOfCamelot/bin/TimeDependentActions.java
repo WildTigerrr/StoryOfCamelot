@@ -83,7 +83,6 @@ public class TimeDependentActions {
     }
 
     private static void restoreValues() {
-        int i = 1/0;
         try {
             InputStream stream = fileService.getFile("temp/BackupValues"); // If file not found > AmazonS3Exception
             if (stream != null) {
