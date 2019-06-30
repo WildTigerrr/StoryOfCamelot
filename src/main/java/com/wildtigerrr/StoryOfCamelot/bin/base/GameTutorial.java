@@ -3,6 +3,7 @@ package com.wildtigerrr.StoryOfCamelot.bin.base;
 import com.wildtigerrr.StoryOfCamelot.bin.KeyboardManager;
 import com.wildtigerrr.StoryOfCamelot.bin.enums.*;
 import com.wildtigerrr.StoryOfCamelot.bin.service.StringUtils;
+import com.wildtigerrr.StoryOfCamelot.bin.translation.TranslationManager;
 import com.wildtigerrr.StoryOfCamelot.database.schema.Player;
 import com.wildtigerrr.StoryOfCamelot.database.schema.enums.PlayerStatusExtended;
 import com.wildtigerrr.StoryOfCamelot.database.service.implementation.LocationServiceImpl;
@@ -27,6 +28,8 @@ public class GameTutorial {
     private PlayerServiceImpl playerService;
     @Autowired
     private LocationServiceImpl locationService;
+    @Autowired
+    private TranslationManager translation;
 
     public Boolean proceedTutorial(UpdateWrapper message) {
         Command command = ResponseHandler.messageToCommand(message.getText(), message.getPlayer().getLanguage());
@@ -47,16 +50,16 @@ public class GameTutorial {
                         player.setAdditionalStatus(PlayerStatusExtended.TUTORIAL_NICKNAME);
                         messages.sendMessageEdit(
                                 message.getMessageId(),
-                                MainText.LANGUAGE_SELECTED.text(player.getLanguage()),
+                                translation.get(player.getLanguage()).languageSelected(), //MainText.LANGUAGE_SELECTED.text(player.getLanguage()),
                                 message.getUserId(),
                                 true
                         );
                         tutorialStart(player);
                     } else {
-                        messages.sendMessage(MainText.COMMAND_INVALID.text(message.getPlayer().getLanguage()), message.getUserId());
+                        messages.sendMessage(translation.get(message.getPlayer().getLanguage()).commandInvalid(), message.getUserId()); // MainText.COMMAND_INVALID.text(message.getPlayer().getLanguage())
                     }
                 } else {
-                    messages.sendMessage(MainText.TUTORIAL_NO_RUSH.text(message.getPlayer().getLanguage()), message.getUserId());
+                    messages.sendMessage(translation.get(message.getPlayer().getLanguage()).tutorialNoRush(), message.getUserId()); // MainText.TUTORIAL_NO_RUSH.text(message.getPlayer().getLanguage())
                 }
                 break;
             case TUTORIAL_NICKNAME:
@@ -66,7 +69,8 @@ public class GameTutorial {
                 if (command == Command.MOVE) {
                     return false;
                 } else {
-                    messages.sendMessage(MainText.TUTORIAL_NO_RUSH.text(message.getPlayer().getLanguage()), message.getUserId());
+                    noRush(message.getPlayer().getLanguage(), message.getUserId());
+                    // messages.sendMessage(translation.get(message.getPlayer().getLanguage()).tutorialNoRush(), message.getUserId()); // MainText.TUTORIAL_NO_RUSH.text(message.getPlayer().getLanguage())
                 }
                 break;
             case TUTORIAL_STATS:
@@ -74,28 +78,31 @@ public class GameTutorial {
                     messages.sendMessage(message.getPlayer().toString(), message.getUserId(), true);
                     tutorialStats(message.getPlayer());
                 } else {
-                    messages.sendMessage(MainText.TUTORIAL_NO_RUSH.text(message.getPlayer().getLanguage()), message.getUserId());
+                    noRush(message.getPlayer().getLanguage(), message.getUserId()); // MainText.TUTORIAL_NO_RUSH.text(message.getPlayer().getLanguage())
                 }
                 break;
             case TUTORIAL_STATS_UP:
                 if (command == Command.SKILLS) {
                     tutorialStatsUp(message.getPlayer());
-//                    messages.sendMessage(MainText.TUTORIAL_STUCK.text(message.getPlayer().getLanguage()), message.getUserId());
                 } else {
-                    messages.sendMessage(MainText.TUTORIAL_NO_RUSH.text(message.getPlayer().getLanguage()), message.getUserId());
+                    noRush(message.getPlayer().getLanguage(), message.getUserId()); // MainText.TUTORIAL_NO_RUSH.text(message.getPlayer().getLanguage())
                 }
                 break;
             case TUTORIAL_STATS_UP_2:
                 if (command == Command.UP) {
                     gameMain.statUp(message);
                 } else {
-                    messages.sendMessage(MainText.TUTORIAL_NO_RUSH.text(message.getPlayer().getLanguage()), message.getUserId());
+                    noRush(message.getPlayer().getLanguage(), message.getUserId()); // MainText.TUTORIAL_NO_RUSH.text(message.getPlayer().getLanguage())
                 }
                 break;
             default:
-                messages.sendMessage(MainText.COMMAND_NOT_DEVELOPED.text(message.getPlayer().getLanguage()), message.getUserId());
+                messages.sendMessage(translation.get(message.getPlayer().getLanguage()).commandNotDeveloped(), message.getUserId()); // MainText.COMMAND_NOT_DEVELOPED.text(message.getPlayer().getLanguage())
         }
         return true;
+    }
+
+    private void noRush(Language lang, String userId) {
+        messages.sendMessage(translation.get(lang).tutorialNoRush(), userId);
     }
 
     public void tutorialStart(Player player) {
@@ -103,7 +110,8 @@ public class GameTutorial {
         player.setup();
         playerService.update(player);
         messages.sendMessage(
-                MainText.MEET_NEW_PLAYER.text(player.getLanguage()),
+                //MainText.MEET_NEW_PLAYER.text(player.getLanguage()),
+                translation.get(player.getLanguage()).tutorialMeetNewPlayer(),
                 player.getExternalId(),
                 true
         );
@@ -117,8 +125,12 @@ public class GameTutorial {
         player.setAdditionalStatus(PlayerStatusExtended.TUTORIAL_MOVEMENT);
         playerService.update(player);
         messages.sendMessage(
-                MainText.NICKNAME_SET.text(
-                        player.getLanguage(),
+                //MainText.NICKNAME_SET.text(
+                //        player.getLanguage(),
+                //        player.getNickname(),
+                //        locationService.findByName(GameSettings.FIRST_FOREST_LOCATION.get()).getName(player.getLanguage())
+                //),
+                translation.get(player.getLanguage()).tutorialNicknameSet(
                         player.getNickname(),
                         locationService.findByName(GameSettings.FIRST_FOREST_LOCATION.get()).getName(player.getLanguage())
                 ),
@@ -134,10 +146,11 @@ public class GameTutorial {
         buttons.add(ReplyButton.ME);
         buttons.add(ReplyButton.MOVE);
         messages.sendMessage(
-                MainText.GUARD_LESSON_ONE.text(
-                        player.getLanguage(),
-                        player.getNickname()
-                ),
+                //MainText.GUARD_LESSON_ONE.text(
+                //        player.getLanguage(),
+                //        player.getNickname()
+                //),
+                translation.get(player.getLanguage()).tutorialGuardLessonOne(player.getNickname()),
                 KeyboardManager.getReplyByButtons(buttons, player.getLanguage()),
                 player.getExternalId()
         );
@@ -147,7 +160,8 @@ public class GameTutorial {
         player.setAdditionalStatus(PlayerStatusExtended.TUTORIAL_STATS_UP);
         playerService.update(player);
         messages.sendMessage(
-                MainText.GUARD_LESSON_TWO.text(player.getLanguage()),
+                //MainText.GUARD_LESSON_TWO.text(player.getLanguage()),
+                translation.get(player.getLanguage()).tutorialGuardLessonTwo(),
                 KeyboardManager.getReplyByButtons(new ArrayList<>(Collections.singleton(ReplyButton.SKILLS)), player.getLanguage()),
                 player.getExternalId()
         );
@@ -162,7 +176,8 @@ public class GameTutorial {
     void tutorialStatsRaised(Player player) {
         // TODO Tutorial
         messages.sendMessage(
-                MainText.GUARD_LESSON_THREE.text(player.getLanguage()),
+                //MainText.GUARD_LESSON_THREE.text(player.getLanguage()),
+                translation.get(player.getLanguage()).tutorialGuardLessonThree(),
                 player.getExternalId()
         );
     }
