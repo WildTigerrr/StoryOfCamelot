@@ -23,6 +23,7 @@ import static java.util.Comparator.*;
 @Table(name = "player")
 public class Player implements Comparable<Player> {
 
+    @Transient
     @Autowired
     private TranslationManager translation;
 
