@@ -1,5 +1,6 @@
 package com.wildtigerrr.StoryOfCamelot.database.service.template;
 
+import com.wildtigerrr.StoryOfCamelot.bin.enums.Language;
 import com.wildtigerrr.StoryOfCamelot.database.schema.Player;
 
 import java.util.ArrayList;
@@ -14,5 +15,5 @@ public interface PlayerService {
     Player findByNickname(String nickname);
     Player update(Player player);
     List<Player> getAll();
-    String getPlayerInfo(String externalId);
+    String getPlayerInfo(String externalId, Language lang);
 }

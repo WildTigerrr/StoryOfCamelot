@@ -10,6 +10,7 @@ import com.wildtigerrr.StoryOfCamelot.bin.enums.Language;
 import com.wildtigerrr.StoryOfCamelot.bin.enums.MainText;
 import com.wildtigerrr.StoryOfCamelot.bin.enums.ReplyButton;
 import com.wildtigerrr.StoryOfCamelot.bin.service.StringUtils;
+import com.wildtigerrr.StoryOfCamelot.bin.translation.TranslationManager;
 import com.wildtigerrr.StoryOfCamelot.database.schema.Player;
 import com.wildtigerrr.StoryOfCamelot.database.schema.enums.PlayerStatus;
 import com.wildtigerrr.StoryOfCamelot.database.schema.enums.PlayerStatusExtended;
@@ -38,6 +39,8 @@ public class ResponseHandler {
     private ResponseManager messages;
     @Autowired
     private GameMovement movementService;
+    @Autowired
+    private TranslationManager translation;
 
     void handleMessage(UpdateWrapper message) {
         message.setPlayer(gameMain.getPlayer(message.getUserId()));
@@ -127,7 +130,7 @@ public class ResponseHandler {
         String[] commandParts = message.getText().split(" ", 2);
         switch (command) {
             case ME:
-                messages.sendMessage(playerService.getPlayerInfo(message.getUserId()), message.getUserId(), true);
+                messages.sendMessage(playerService.getPlayerInfo(message.getUserId(), message.getPlayer().getLanguage()), message.getUserId(), true);
                 break;
             case SKILLS:
                 gameMain.sendSkillWindow(message.getPlayer());
@@ -136,7 +139,7 @@ public class ResponseHandler {
                 if (commandParts.length > 1) {
                     gameMain.setNickname(message.getPlayer(), commandParts[1]);
                 } else {
-                    messages.sendMessage(MainText.NICKNAME_EMPTY.text(message.getPlayer().getLanguage()), message.getUserId(), true);
+                    messages.sendMessage(translation.get(message.getPlayer().getLanguage()).nicknameEmpty(), message.getUserId(), true); // MainText.NICKNAME_EMPTY.text(message.getPlayer().getLanguage())
                 }
                 break;
             case ADD:
@@ -186,7 +189,7 @@ public class ResponseHandler {
                 if (message.getPlayer().isNew()) {
                     tutorial.tutorialStart(message.getPlayer());
                 } else {
-                    messages.sendMessage(MainText.PROPOSITION_EXPIRED.text(message.getPlayer().getLanguage()), message.getUserId());
+                    messages.sendMessage(translation.get(message.getPlayer().getLanguage()).propositionExpired(), message.getUserId()); // MainText.PROPOSITION_EXPIRED.text(message.getPlayer().getLanguage())
                 }
                 break;
             case UP:
@@ -196,7 +199,7 @@ public class ResponseHandler {
                 gameMain.getTopPlayers(message.getUserId());
                 break;
             default:
-                messages.sendMessage(MainText.COMMAND_NOT_DEFINED.text(message.getPlayer().getLanguage()), message.getUserId(), true);
+                messages.sendMessage(translation.get(message.getPlayer().getLanguage()).commandNotDefined(), message.getUserId(), true); // MainText.COMMAND_NOT_DEFINED.text(message.getPlayer().getLanguage())
                 return false;
         }
         return true;

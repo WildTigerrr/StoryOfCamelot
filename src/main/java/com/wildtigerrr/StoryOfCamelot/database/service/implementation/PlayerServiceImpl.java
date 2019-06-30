@@ -2,6 +2,7 @@ package com.wildtigerrr.StoryOfCamelot.database.service.implementation;
 
 import com.wildtigerrr.StoryOfCamelot.bin.enums.Language;
 import com.wildtigerrr.StoryOfCamelot.bin.enums.MainText;
+import com.wildtigerrr.StoryOfCamelot.bin.translation.TranslationManager;
 import com.wildtigerrr.StoryOfCamelot.database.dataaccessobject.PlayerDao;
 import com.wildtigerrr.StoryOfCamelot.database.schema.Player;
 import com.wildtigerrr.StoryOfCamelot.database.service.template.PlayerService;
@@ -17,6 +18,8 @@ public class PlayerServiceImpl implements PlayerService {
 
     @Autowired
     private PlayerDao playerDao;
+    @Autowired
+    private TranslationManager translation;
 
     @Override
     public synchronized Player create(Player player) {
@@ -68,12 +71,12 @@ public class PlayerServiceImpl implements PlayerService {
     }
 
     @Override
-    public String getPlayerInfo(String externalId) {
+    public String getPlayerInfo(String externalId, Language lang) {
         Player player = findByExternalId(externalId);
         if (player != null) {
             return player.toString();
         } else {
-            return MainText.PLAYER_NOT_EXIST.text(Language.RUS);
+            return translation.get(lang).playerNotExist(); // MainText.PLAYER_NOT_EXIST.text(Language.RUS);
         }
     }
 }

@@ -3,10 +3,12 @@ package com.wildtigerrr.StoryOfCamelot.database.schema;
 import com.wildtigerrr.StoryOfCamelot.bin.enums.Language;
 import com.wildtigerrr.StoryOfCamelot.bin.enums.MainText;
 import com.wildtigerrr.StoryOfCamelot.bin.exceptions.SOCInvalidDataException;
+import com.wildtigerrr.StoryOfCamelot.bin.translation.TranslationManager;
 import com.wildtigerrr.StoryOfCamelot.database.schema.enums.PlayerStatus;
 import com.wildtigerrr.StoryOfCamelot.database.schema.enums.PlayerStatusExtended;
 import com.wildtigerrr.StoryOfCamelot.database.schema.enums.Stats;
 import org.apache.commons.codec.language.bm.Lang;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.persistence.*;
 import java.lang.reflect.Field;
@@ -20,6 +22,9 @@ import static java.util.Comparator.*;
 @Entity
 @Table(name = "player")
 public class Player implements Comparable<Player> {
+
+    @Autowired
+    private TranslationManager translation;
 
     // ==================================================== MAIN ==================================================== //
 
@@ -180,7 +185,7 @@ public class Player implements Comparable<Player> {
     // ------------------- LEVEL UP MECHANIC ------------------------------------------------------------------------ //
 
     public String raiseStat(Stats stat, Integer quantity, Language lang) {
-        if (quantity > unassignedPoints) return MainText.STAT_INSUFFICIENT_POINTS.text(lang);
+        if (quantity > unassignedPoints) return translation.get(lang).statInsufficientPoints() ;// MainText.STAT_INSUFFICIENT_POINTS.text(lang);
         int newQuantity;
         switch (stat) {
             case STRENGTH:
@@ -218,16 +223,17 @@ public class Player implements Comparable<Player> {
                 newQuantity = luck;
                 break;
             default:
-                return MainText.STAT_INVALID.text(lang);
+                return translation.get(lang).statInvalid(); // MainText.STAT_INVALID.text(lang);
         }
         unassignedPoints -= quantity;
-        return MainText.STAT_UP.text(lang, stat.whichLowercase(lang), String.valueOf(newQuantity));
+//        return MainText.STAT_UP.text(lang, stat.whichLowercase(lang), String.valueOf(newQuantity));
+        return translation.get(lang).statUp(stat.whichLowercase(lang), String.valueOf(newQuantity));
     }
 
     public ArrayList<String> addStatExpByName(Integer exp, Stats stat, Language lang) throws SOCInvalidDataException, NoSuchFieldException {
         ArrayList<String> events = new ArrayList<>();
         if (stat == Stats.LUCK) {
-            events.add(MainText.STAT_CANNOT_BE_RAISED.text(lang, stat.which(lang)));
+            events.add(translation.get(lang).statCannotBeRaised(stat.which(lang))); // MainText.STAT_CANNOT_BE_RAISED.text(lang, stat.which(lang))
         }
         Boolean up = isStatUp(stat, exp);
         if (up) {
@@ -237,7 +243,7 @@ public class Player implements Comparable<Player> {
 
             if (isLevelUp()) {
                 levelUp();
-                events.add(MainText.LEVEL_UP.text(lang, String.valueOf(getLevel())));
+                events.add(translation.get(lang).levelUp(String.valueOf(getLevel()))); // MainText.LEVEL_UP.text(lang, String.valueOf(getLevel()))
             }
             up = isStatUp(stat, 0);
         }
@@ -247,46 +253,54 @@ public class Player implements Comparable<Player> {
     public ArrayList<String> addStatExp(Integer exp, Stats stat, Language lang) throws SOCInvalidDataException {
         ArrayList<String> events = new ArrayList<>();
         Boolean up = isStatUp(stat, exp);
+        String currentValue;
         while (up) {
             switch (stat) {
                 case STRENGTH:
                     strengthExp -= getExpToNextStatUp(strength);
                     strength++;
-                    events.add(MainText.STAT_UP.text(lang, stat.whichLowercase(lang), String.valueOf(strength)));
+                    currentValue = String.valueOf(strength);
                     break;
                 case HEALTH:
                     healthExp -= getExpToNextStatUp(health);
                     health++;
-                    events.add(MainText.STAT_UP.text(lang, stat.whichLowercase(lang), String.valueOf(health)));
+                    currentValue = String.valueOf(health);
                     break;
                 case AGILITY:
                     agilityExp -= getExpToNextStatUp(agility);
                     agility++;
-                    events.add(MainText.STAT_UP.text(lang, stat.whichLowercase(lang), String.valueOf(agility)));
+                    currentValue = String.valueOf(agility);
                     break;
                 case CHARISMA:
                     charismaExp -= getExpToNextStatUp(charisma);
                     charisma++;
-                    events.add(MainText.STAT_UP.text(lang, stat.whichLowercase(lang), String.valueOf(charisma)));
+                    currentValue = String.valueOf(charisma);
                     break;
                 case INTELLIGENCE:
                     intelligenceExp -= getExpToNextStatUp(intelligence);
                     intelligence++;
-                    events.add(MainText.STAT_UP.text(lang, stat.whichLowercase(lang), String.valueOf(intelligence)));
+                    currentValue = String.valueOf(intelligence);
                     break;
                 case ENDURANCE:
                     enduranceExp -= getExpToNextStatUp(endurance);
                     endurance++;
-                    events.add(MainText.STAT_UP.text(lang, stat.whichLowercase(lang), String.valueOf(endurance)));
+                    currentValue = String.valueOf(endurance);
                     break;
+                default:
+                    throw new SOCInvalidDataException("Invalid stat: " + stat);
             }
+            events.add(statUp(lang, stat.whichLowercase(lang), currentValue)); // MainText.STAT_UP.text(lang, stat.whichLowercase(lang), currentValue)
             if (isLevelUp()) {
                 levelUp();
-                events.add(MainText.LEVEL_UP.text(lang, String.valueOf(getLevel())));
+                events.add(translation.get(lang).levelUp(String.valueOf(getLevel()))); // MainText.LEVEL_UP.text(lang, String.valueOf(getLevel()))
             }
             up = isStatUp(stat, 0);
         }
         return events;
+    }
+
+    private String statUp(Language lang, String statName, String value) {
+        return translation.get(lang).statUp(statName, value);
     }
 
     private Boolean isStatUp(Stats stat, Integer newExp) throws SOCInvalidDataException {
@@ -481,9 +495,9 @@ public class Player implements Comparable<Player> {
     // ================================================== SERVICE =================================================== //
 
     @Override
-    public String toString() {
-        return MainText.IF_I_REMEMBER.text(language) + ":"
-                + "\n*" + this.nickname + "*, " + this.level + " " + MainText.LEVEL.text(language).toLowerCase() + " (" + (getTotalStats() - getAssignedPoints()) + "/" + getStatsToNextLevelUp() + ")"
+    public String toString() { // MainText.IF_I_REMEMBER.text(language) MainText.LEVEL.text(language) MainText.WHAT_ELSE_WE_KNOW.text(language)
+        return  translation.get(language).ifIRemember() + ":"
+                + "\n*" + this.nickname + "*, " + this.level + " " + translation.get(language).level().toLowerCase() + " (" + (getTotalStats() - getAssignedPoints()) + "/" + getStatsToNextLevelUp() + ")"
                 + (getUnassignedPoints() > 0 ? " (+" + getUnassignedPoints() + ")" : "")
                 + "\n*" + Stats.STRENGTH.what(language) + ":* " + this.strength + " (" + this.strengthExp + "/" + getExpToNextStatUp(this.strength) + ")"
                 + "\n*" + Stats.HEALTH.what(language) + ":* " + this.health + " (" + this.healthExp + "/" + getExpToNextStatUp(this.health) + ")"
@@ -492,7 +506,7 @@ public class Player implements Comparable<Player> {
                 + "\n*" + Stats.INTELLIGENCE.what(language) + ":* " + this.intelligence + " (" + this.intelligenceExp + "/" + getExpToNextStatUp(this.intelligence) + ")"
                 + "\n*" + Stats.ENDURANCE.what(language) + ":* " + this.endurance + " (" + this.enduranceExp + "/" + getExpToNextStatUp(this.endurance) + ")"
                 + "\n*" + Stats.LUCK.what(language) + ":* " + this.luck
-                + "\n\n_" + MainText.WHAT_ELSE_WE_KNOW.text(language) + "?_";
+                + "\n\n_" + translation.get(language).whatElseWeKnow() + "?_";
     }
 
     public String toStatString(int index) {
@@ -500,8 +514,8 @@ public class Player implements Comparable<Player> {
     }
 
     public String getStatMenu() {
-        int unassigned = getUnassignedPoints();
-        return nickname + ", " + level + " " + MainText.LEVEL.text(language).toLowerCase() + " (+" + unassigned + ")"
+        int unassigned = getUnassignedPoints(); // MainText.LEVEL.text(language)
+        return nickname + ", " + level + " " + translation.get(language).level().toLowerCase() + " (+" + unassigned + ")"
                 + "\n\n" + Stats.STRENGTH.emoji() + Stats.STRENGTH.what(language) + ": " + strength
                 + "\n" + Stats.HEALTH.emoji() + Stats.HEALTH.what(language) + ": " + health
                 + "\n" + Stats.AGILITY.emoji() + Stats.AGILITY.what(language) + ": " + agility
