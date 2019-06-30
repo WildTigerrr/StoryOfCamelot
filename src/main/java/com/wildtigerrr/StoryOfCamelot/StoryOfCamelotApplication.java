@@ -17,6 +17,7 @@ public class StoryOfCamelotApplication {
             addShutdownHook();
         } catch (Exception e) {
             new ResponseManager().postMessageToAdminChannel("Exception during startup: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 
