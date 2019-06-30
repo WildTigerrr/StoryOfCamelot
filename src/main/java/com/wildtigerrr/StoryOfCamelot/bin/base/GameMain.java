@@ -96,7 +96,8 @@ public class GameMain {
             List<String> eventList = player.addStatExp(
                     experience,
                     stat,
-                    player.getLanguage()
+                    player.getLanguage(),
+                    translation
             );
             if (eventList != null && !eventList.isEmpty()) {
                 for (String event : eventList) {
@@ -117,7 +118,7 @@ public class GameMain {
     }
 
     public void sendSkillWindow(Player player) {
-        messages.sendMessage(player.getStatMenu(), KeyboardManager.getKeyboardForStatUp(player.getUnassignedPoints()), player.getExternalId());
+        messages.sendMessage(player.getStatMenu(translation), KeyboardManager.getKeyboardForStatUp(player.getUnassignedPoints()), player.getExternalId());
     }
 
     public void statUp(UpdateWrapper message) {
@@ -128,14 +129,14 @@ public class GameMain {
                 messages.sendMessage(translation.get(message.getPlayer().getLanguage()).statInvalid(), message.getUserId()); // MainText.STAT_INVALID.text(message.getPlayer().getLanguage())
             } else {
                 Player player = message.getPlayer();
-                String result = player.raiseStat(stat, Integer.valueOf(commandParts[2]), player.getLanguage());
+                String result = player.raiseStat(stat, Integer.valueOf(commandParts[2]), player.getLanguage(), translation);
                 if (!result.equals(translation.get(message.getPlayer().getLanguage()).statInvalid() )) playerService.update(player); // MainText.STAT_INVALID.text(message.getPlayer().getLanguage())
                 messages.sendCallbackAnswer(message.getQueryId(), result);
                 if (player.getUnassignedPoints() == 0) {
-                    messages.sendMessageEdit(message.getMessageId(), player.getStatMenu(), player.getExternalId(), false);
+                    messages.sendMessageEdit(message.getMessageId(), player.getStatMenu(translation), player.getExternalId(), false);
                     tutorial.tutorialStatsRaised(message.getPlayer());
                 } else {
-                    messages.sendMessageEdit(message.getMessageId(), player.getStatMenu(), KeyboardManager.getKeyboardForStatUp(player.getUnassignedPoints()), player.getExternalId(), false);
+                    messages.sendMessageEdit(message.getMessageId(), player.getStatMenu(translation), KeyboardManager.getKeyboardForStatUp(player.getUnassignedPoints()), player.getExternalId(), false);
                 }
             }
         } else {
