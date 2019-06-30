@@ -23,7 +23,7 @@ public class UpdateWrapper {
 
     UpdateWrapper(Update update, Boolean isQuery) {
         User user = isQuery ? update.getCallbackQuery().getMessage().getFrom() : update.getMessage().getFrom();
-        this.message = StringUtils.escape(isQuery ? update.getCallbackQuery().getData() : update.getMessage().getText().trim());
+        this.message = isQuery ? update.getCallbackQuery().getData() : StringUtils.escape(update.getMessage().getText().trim());
         if (this.message.contains("@StoryOfCamelotBot")) this.message = this.message.replace("@StoryOfCamelotBot", "").trim();
         this.firstName = user.getFirstName();
         this.userId = isQuery ? update.getCallbackQuery().getMessage().getChatId().toString() : user.getId().toString();
