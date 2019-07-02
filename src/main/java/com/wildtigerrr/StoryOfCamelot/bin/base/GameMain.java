@@ -3,7 +3,6 @@ package com.wildtigerrr.StoryOfCamelot.bin.base;
 import com.wildtigerrr.StoryOfCamelot.bin.KeyboardManager;
 import com.wildtigerrr.StoryOfCamelot.bin.enums.GameSettings;
 import com.wildtigerrr.StoryOfCamelot.bin.enums.Language;
-import com.wildtigerrr.StoryOfCamelot.bin.enums.MainText;
 import com.wildtigerrr.StoryOfCamelot.bin.exceptions.SOCInvalidDataException;
 import com.wildtigerrr.StoryOfCamelot.bin.service.StringUtils;
 import com.wildtigerrr.StoryOfCamelot.bin.translation.TranslationManager;
@@ -53,7 +52,7 @@ public class GameMain {
         );
     }
 
-    public void sendLanguageSelector(String userId, Language lang) { // MainText.LANGUAGE_SELECT.text(lang)
+    public void sendLanguageSelector(String userId, Language lang) {
         messages.sendMessage(
                 translation.get(lang).languageSelectPrompt(),
                 KeyboardManager.getKeyboardForLanguageSelect(),
@@ -74,19 +73,19 @@ public class GameMain {
     public void setNickname(Player player, String newName) {
         String message;
         if (Player.containsSpecialCharacters(newName)) {
-            message = translation.get(player.getLanguage()).nicknameWrongSymbols(); // MainText.NICKNAME_WRONG.text(player.getLanguage());
+            message = translation.get(player.getLanguage()).nicknameWrongSymbols();
         } else if (!player.setNickname(newName)) {
-            message = translation.get(player.getLanguage()).nicknameTooLong(String.valueOf(Player.getNicknameLengthMax())); // MainText.NICKNAME_LONG.text(player.getLanguage(),  String.valueOf(Player.getNicknameLengthMax()));
+            message = translation.get(player.getLanguage()).nicknameTooLong(String.valueOf(Player.getNicknameLengthMax()));
         } else if (player.getNickname().isEmpty()) {
-            message = translation.get(player.getLanguage()).nicknameEmpty(); // MainText.NICKNAME_EMPTY.text(player.getLanguage());
+            message = translation.get(player.getLanguage()).nicknameEmpty();
         } else if (playerService.findByNickname(player.getNickname()) != null) {
-            message = translation.get(player.getLanguage()).nicknameDuplicate(player.getNickname()); // MainText.NICKNAME_DUPLICATE.text(player.getLanguage(), player.getNickname());
+            message = translation.get(player.getLanguage()).nicknameDuplicate(player.getNickname());
         } else if (player.getAdditionalStatus() == PlayerStatusExtended.TUTORIAL_NICKNAME) {
             tutorial.tutorialSetNickname(player);
             return;
         } else {
             playerService.update(player);
-            message = translation.get(player.getLanguage()).nicknameChanged(player.getNickname()); // MainText.NICKNAME_CHANGED.text(player.getLanguage(), player.getNickname());
+            message = translation.get(player.getLanguage()).nicknameChanged(player.getNickname());
         }
         messages.sendMessage(message, player.getExternalId(), true);
     }
@@ -126,11 +125,11 @@ public class GameMain {
         if (commandParts.length == 3 && commandParts[1].length() == 1 && StringUtils.isNumeric(commandParts[2])) {
             Stats stat = Stats.getStat(commandParts[1]);
             if (stat == null) {
-                messages.sendMessage(translation.get(message.getPlayer().getLanguage()).statInvalid(), message.getUserId()); // MainText.STAT_INVALID.text(message.getPlayer().getLanguage())
+                messages.sendMessage(translation.get(message.getPlayer().getLanguage()).statInvalid(), message.getUserId());
             } else {
                 Player player = message.getPlayer();
                 String result = player.raiseStat(stat, Integer.valueOf(commandParts[2]), player.getLanguage(), translation);
-                if (!result.equals(translation.get(message.getPlayer().getLanguage()).statInvalid() )) playerService.update(player); // MainText.STAT_INVALID.text(message.getPlayer().getLanguage())
+                if (!result.equals(translation.get(message.getPlayer().getLanguage()).statInvalid() )) playerService.update(player);
                 messages.sendCallbackAnswer(message.getQueryId(), result);
                 if (player.getUnassignedPoints() == 0) {
                     messages.sendMessageEdit(message.getMessageId(), player.getStatMenu(translation), player.getExternalId(), false);
@@ -140,8 +139,12 @@ public class GameMain {
                 }
             }
         } else {
-            messages.sendMessage(translation.get(message.getPlayer().getLanguage()).commandInvalid(), message.getUserId()); // MainText.COMMAND_INVALID.text(message.getPlayer().getLanguage())
+            messages.sendMessage(translation.get(message.getPlayer().getLanguage()).commandInvalid(), message.getUserId());
         }
+    }
+
+    public void fight(UpdateWrapper message) {
+        messages.sendMessage("Да будет бой!", message.getUserId());
     }
 
 }

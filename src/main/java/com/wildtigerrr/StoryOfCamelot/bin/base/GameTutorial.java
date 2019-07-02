@@ -69,6 +69,13 @@ public class GameTutorial {
                     noRush(message.getPlayer().getLanguage(), message.getUserId());
                 }
                 break;
+            case TUTORIAL_FIGHT:
+                if (command == Command.FIGHT) {
+                    gameMain.fight(message);
+                } else {
+                    noRush(message.getPlayer().getLanguage(), message.getUserId());
+                }
+                break;
             default:
                 messages.sendMessage(translation.get(message.getPlayer().getLanguage()).commandNotDeveloped(), message.getUserId());
         }

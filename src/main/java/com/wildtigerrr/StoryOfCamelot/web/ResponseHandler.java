@@ -135,6 +135,9 @@ public class ResponseHandler {
             case SKILLS:
                 gameMain.sendSkillWindow(message.getPlayer());
                 break;
+            case FIGHT:
+                gameMain.fight(message);
+                break;
             case NICKNAME:
                 if (commandParts.length > 1) {
                     gameMain.setNickname(message.getPlayer(), commandParts[1]);

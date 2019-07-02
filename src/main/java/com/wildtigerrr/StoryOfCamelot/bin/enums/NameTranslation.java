@@ -54,9 +54,9 @@ public enum NameTranslation {
             Emoji.SCROLL.getCode() + "Літопис"
     ),
     BUTTON_FIGHT(
-            Emoji.SCROLL.getCode() + "Fight",
-            Emoji.SCROLL.getCode() + "В бой",
-            Emoji.SCROLL.getCode() + "У бiй"
+            Emoji.FIGHT.getCode() + "Fight",
+            Emoji.FIGHT.getCode() + "В бой",
+            Emoji.FIGHT.getCode() + "У бiй"
     ),
 
 
