@@ -1,6 +1,10 @@
 package com.wildtigerrr.StoryOfCamelot.bin.translation;
 
+import com.wildtigerrr.StoryOfCamelot.bin.enums.Language;
+
 public interface Translation {
+
+    Language getCurrentLanguage();
 
     static String replaceOne(String text, String p1) {
         return text.replace("p1", p1);

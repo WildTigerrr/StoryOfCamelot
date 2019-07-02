@@ -3,7 +3,8 @@ package com.wildtigerrr.StoryOfCamelot.bin.enums;
 public enum ReplyButton {
     MOVE(NameTranslation.BUTTON_MOVE),
     SKILLS(NameTranslation.BUTTON_SKILLS),
-    ME(NameTranslation.BUTTON_ME);
+    ME(NameTranslation.BUTTON_ME),
+    FIGHT(NameTranslation.BUTTON_FIGHT);
 
     private final NameTranslation label;
 
@@ -19,6 +20,7 @@ public enum ReplyButton {
         if (text.equals(ReplyButton.MOVE.getLabel(lang))) return Command.MOVE;
         else if (text.equals(ReplyButton.ME.getLabel(lang))) return Command.ME;
         else if (text.equals(ReplyButton.SKILLS.getLabel(lang))) return Command.SKILLS;
+        else if (text.equals(ReplyButton.FIGHT.getLabel(lang))) return Command.FIGHT;
         return null;
     }
 }

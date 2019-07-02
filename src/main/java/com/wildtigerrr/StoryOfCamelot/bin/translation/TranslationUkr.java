@@ -1,9 +1,15 @@
 package com.wildtigerrr.StoryOfCamelot.bin.translation;
 
 import com.wildtigerrr.StoryOfCamelot.bin.enums.Language;
+import com.wildtigerrr.StoryOfCamelot.bin.enums.NameTranslation;
 import com.wildtigerrr.StoryOfCamelot.bin.enums.ReplyButton;
 
 public class TranslationUkr implements Translation {
+
+    @Override
+    public Language getCurrentLanguage() {
+        return Language.UKR;
+    }
 
     @Override
     public String languageSelectPrompt() {
@@ -58,7 +64,8 @@ public class TranslationUkr implements Translation {
     public String tutorialGuardLessonThree() {
         return
                 "Ось, теперь справжній козак. Ну, майже. Для початку непогано." +
-                        "\n\nТеперь потрібно перевірити тебе у справжньому бою. Зачекай, ця функція ще не готова.";
+                        "\n\nТеперь потрібно перевірити тебе у справжньому бою. " +
+                        "Здається, цей " + NameTranslation.MOB_FLYING_SWORD.getName(getCurrentLanguage()) + " підкрадається до тебе не просто так.";
     }
 
     @Override

@@ -53,6 +53,11 @@ public enum NameTranslation {
             Emoji.SCROLL.getCode() + "Летопись",
             Emoji.SCROLL.getCode() + "Літопис"
     ),
+    BUTTON_FIGHT(
+            Emoji.SCROLL.getCode() + "Fight",
+            Emoji.SCROLL.getCode() + "В бой",
+            Emoji.SCROLL.getCode() + "У бiй"
+    ),
 
 
     // SKILLS

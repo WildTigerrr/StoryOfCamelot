@@ -11,5 +11,6 @@ public enum Command {
     START,
     UP,
     LANG,
-    TOP
+    TOP,
+    FIGHT
 }
