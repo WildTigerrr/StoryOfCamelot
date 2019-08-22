@@ -10,8 +10,7 @@ public enum Language {
     RUS(Emoji.FLAG_RUSSIA.getCode(), "language.rus", new Locale("ru", "RU")),
     UKR(Emoji.FLAG_UKRAINE.getCode(), "language.ukr", new Locale("uk", "UA"));
 
-    @Autowired
-    private TranslationManager translations;
+    private static TranslationManager translations = new TranslationManager();
 
     private final String smile;
     private final String namePath;
