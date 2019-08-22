@@ -2,7 +2,10 @@ package com.wildtigerrr.StoryOfCamelot.bin.enums;
 
 import com.wildtigerrr.StoryOfCamelot.bin.translation.TranslationManager;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
+import java.util.EnumSet;
 import java.util.Locale;
 
 public enum Language {
@@ -10,20 +13,31 @@ public enum Language {
     RUS(Emoji.FLAG_RUSSIA.getCode(), "language.rus", new Locale("ru", "RU")),
     UKR(Emoji.FLAG_UKRAINE.getCode(), "language.ukr", new Locale("uk", "UA"));
 
-    private static TranslationManager translations = new TranslationManager();
+    @Component
+    public static class TranslationInjector {
+        @Autowired
+        private TranslationManager translations;
+        @PostConstruct
+        public void postConstruct() {
+            Language.setTranslationManager(translations);
+        }
+    }
 
-    private final String smile;
+
+    private final String name;
     private final String namePath;
     private final Locale locale;
 
-    Language(String smile, String namePath, Locale locale) {
-        this.smile = smile;
+    private static TranslationManager translations;
+
+    Language(String name, String namePath, Locale locale) {
+        this.name = name;
         this.namePath = namePath;
         this.locale = locale;
     }
 
     public String getName() {
-        return smile + " " + translations.getMessage(namePath);
+        return name + " " + translations.getMessage(namePath);
     }
 
     public Locale getLocale() {
@@ -32,5 +46,9 @@ public enum Language {
 
     public static Locale getDefaultLocale() {
         return RUS.getLocale();
+    }
+
+    private static void setTranslationManager(TranslationManager translationManager) {
+        translations = translationManager;
     }
 }
