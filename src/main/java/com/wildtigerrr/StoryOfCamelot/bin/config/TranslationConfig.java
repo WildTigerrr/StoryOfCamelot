@@ -15,7 +15,11 @@ public class TranslationConfig {
     @Bean
     public ResourceBundleMessageSource messageSource() {
         ResourceBundleMessageSource messageSource = new ResourceBundleMessageSource();
-        messageSource.setBasenames("message");
+        messageSource.setBasenames(
+                "messages/message"
+                , "messages/label"
+                , "messages/entity"
+        );
         messageSource.setDefaultEncoding("UTF-8");
         return messageSource;
     }
