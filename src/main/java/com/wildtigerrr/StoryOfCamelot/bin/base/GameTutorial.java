@@ -118,9 +118,9 @@ public class GameTutorial {
     public void tutorialStart(Player player) {
         System.out.println("New player");
         player.setup();
-        playerService.update(player);
+        playerService.update(player); // translation.get(player.getLanguage()).tutorialMeetNewPlayer(),
         messages.sendMessage(
-                translation.get(player.getLanguage()).tutorialMeetNewPlayer(),
+                translation.getMessage("tutorial.player.welcome", player.getLanguage()),
                 player.getExternalId(),
                 true
         );
