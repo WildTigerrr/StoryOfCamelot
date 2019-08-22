@@ -14,6 +14,7 @@ import com.wildtigerrr.StoryOfCamelot.database.service.implementation.PlayerServ
 import com.wildtigerrr.StoryOfCamelot.web.UpdateWrapper;
 import com.wildtigerrr.StoryOfCamelot.web.service.ResponseManager;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -52,9 +53,9 @@ public class GameMain {
         );
     }
 
-    public void sendLanguageSelector(String userId, Language lang) {
+    public void sendLanguageSelector(String userId, Language lang) {// translation.get(lang).languageSelectPrompt(),
         messages.sendMessage(
-                translation.get(lang).languageSelectPrompt(),
+                translation.getMessage("tutorial.lang.choose", lang),
                 KeyboardManager.getKeyboardForLanguageSelect(),
                 userId
         );
@@ -145,6 +146,9 @@ public class GameMain {
 
     public void fight(UpdateWrapper message) {
         messages.sendMessage("Да будет бой!", message.getUserId());
+
+        // TODO Allow actions by statuses (class to compare)
+        // TODO New status (new table?) with current situation
     }
 
 }

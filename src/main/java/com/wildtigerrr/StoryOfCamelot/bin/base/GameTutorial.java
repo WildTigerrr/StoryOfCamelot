@@ -96,13 +96,13 @@ public class GameTutorial {
             gameMain.sendLanguageSelector(message.getUserId(), lang);
         } else if (message.isQuery() && command == Command.LANG) {
             String[] commandParts = message.getText().split(" ", 2);
-            if (StringUtils.isNumeric(commandParts[1]) && Integer.valueOf(commandParts[1]) < Language.values().length) {
+            if (StringUtils.isNumeric(commandParts[1]) && (Integer.parseInt(commandParts[1]) < Language.values().length)) {
                 Player player = message.getPlayer();
-                player.setLanguage(Language.values()[Integer.valueOf(commandParts[1])]);
-                player.setAdditionalStatus(PlayerStatusExtended.TUTORIAL_NICKNAME);
+                player.setLanguage(Language.values()[Integer.parseInt(commandParts[1])]);
+                player.setAdditionalStatus(PlayerStatusExtended.TUTORIAL_NICKNAME); //translation.get(player.getLanguage()).languageSelected(),
                 messages.sendMessageEdit(
                         message.getMessageId(),
-                        translation.get(player.getLanguage()).languageSelected(),
+                        translation.getMessage("tutorial.lang.selected", player.getLanguage(), new Object[] {player.getLanguage().getName()}),
                         message.getUserId(),
                         true
                 );
