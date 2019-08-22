@@ -5,24 +5,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
-import java.util.EnumSet;
 import java.util.Locale;
 
 public enum Language {
     ENG(Emoji.FLAG_ENGLAND.getCode(), "language.eng", Locale.ENGLISH),
     RUS(Emoji.FLAG_RUSSIA.getCode(), "language.rus", new Locale("ru", "RU")),
     UKR(Emoji.FLAG_UKRAINE.getCode(), "language.ukr", new Locale("uk", "UA"));
-
-    @Component
-    public static class TranslationInjector {
-        @Autowired
-        private TranslationManager translations;
-        @PostConstruct
-        public void postConstruct() {
-            Language.setTranslationManager(translations);
-        }
-    }
-
 
     private final String name;
     private final String namePath;
@@ -46,6 +34,16 @@ public enum Language {
 
     public static Locale getDefaultLocale() {
         return RUS.getLocale();
+    }
+
+    @Component
+    public static class TranslationInjector {
+        @Autowired
+        private TranslationManager translations;
+        @PostConstruct
+        public void postConstruct() {
+            Language.setTranslationManager(translations);
+        }
     }
 
     private static void setTranslationManager(TranslationManager translationManager) {
