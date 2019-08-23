@@ -6,6 +6,7 @@ import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
+import java.util.Locale;
 
 @Service
 public class TranslationManager {
@@ -37,11 +38,19 @@ public class TranslationManager {
     }
 
     public String getMessage(String code, Language lang) {
-        return messageSource.getMessage(code, null, "Oops!", lang.getLocale());
+        return getMessage(code, lang.getLocale());
+    }
+
+    public String getMessage(String code, Locale locale) {
+        return getMessage(code, locale, null);
     }
 
     public String getMessage(String code, Language lang, Object[] args) {
-        return messageSource.getMessage(code, args, "Oops!", lang.getLocale());
+        return getMessage(code, lang.getLocale(), args);
+    }
+
+    public String getMessage(String code, Locale locale, Object[] args) {
+        return messageSource.getMessage(code, args, "Oops!", locale);
     }
 
 }

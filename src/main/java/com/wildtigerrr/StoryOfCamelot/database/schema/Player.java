@@ -1,7 +1,6 @@
 package com.wildtigerrr.StoryOfCamelot.database.schema;
 
 import com.wildtigerrr.StoryOfCamelot.bin.enums.Language;
-import com.wildtigerrr.StoryOfCamelot.bin.enums.MainText;
 import com.wildtigerrr.StoryOfCamelot.bin.exceptions.SOCInvalidDataException;
 import com.wildtigerrr.StoryOfCamelot.bin.service.SpringManager;
 import com.wildtigerrr.StoryOfCamelot.bin.translation.TranslationManager;
