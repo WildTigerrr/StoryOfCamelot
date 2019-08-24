@@ -10,88 +10,88 @@ public enum NameTranslation {
     // LOCATIONS
     LOC_FOREST(
             Emoji.EVERGREEN_TREE.getCode() + " ",
-            "entity.location.forest"
+            "location.forest"
     ),
     LOC_THICKET(
             Emoji.EVERGREEN_TREE.getCode() + " ",
-            "entity.location.thicket"
+            "location.thicket"
     ),
     LOC_CAVE(
             Emoji.BAT.getCode() + " ",
-            "entity.location.cave.mythical"
+            "location.cave.mythical"
     ),
     LOC_TRADING_SQUARE(
             Emoji.CIRCUS_TENT.getCode() + " ",
-            "entity.location.town.merchant-square"
+            "location.town.merchant-square"
     ),
 
 
     // MOBS
     MOB_FLYING_SWORD(
-            "entity.mob.aggressive.flying-sword"
+            "mob.aggressive.flying-sword"
     ),
     MOB_SUPER_FLYING_SWORD(
-            "entity.mob.aggressive.super-flying-sword"
+            "mob.aggressive.super-flying-sword"
     ),
 
 
     // BUTTONS
     BUTTON_MOVE(
-            Emoji.FOOTPRINTS.getCode(), "entity.button.move"
+            Emoji.FOOTPRINTS.getCode(), "button.move"
     ),
     BUTTON_SKILLS(
-            Emoji.SKILLS.getCode(), "entity.button.skills"
+            Emoji.SKILLS.getCode(), "button.skills"
     ),
     BUTTON_ME(
-            Emoji.SCROLL.getCode(), "entity.button.me"
+            Emoji.SCROLL.getCode(), "button.me"
     ),
     BUTTON_FIGHT(
-            Emoji.FIGHT.getCode(), "entity.button.fight"
+            Emoji.FIGHT.getCode(), "button.fight"
     ),
 
 
     // SKILLS
     SKILL_STRENGTH_WHAT(
-            "label.skill.name.what.strength"
+            "skill.name.what.strength"
     ),
     SKILL_STRENGTH_WHICH(
-            "label.skill.name.which.strength"
+            "skill.name.which.strength"
     ),
     SKILL_HEALTH_WHAT(
-            "label.skill.name.what.health"
+            "skill.name.what.health"
     ),
     SKILL_HEALTH_WHICH(
-            "label.skill.name.which.health"
+            "skill.name.which.health"
     ),
     SKILL_AGILITY_WHAT(
-            "label.skill.name.what.agility"
+            "skill.name.what.agility"
     ),
     SKILL_AGILITY_WHICH(
-            "label.skill.name.which.agility"
+            "skill.name.which.agility"
     ),
     SKILL_CHARISMA_WHAT(
-            "label.skill.name.what.charisma"
+            "skill.name.what.charisma"
     ),
     SKILL_CHARISMA_WHICH(
-            "label.skill.name.which.charisma"
+            "skill.name.which.charisma"
     ),
     SKILL_INTELLIGENCE_WHAT(
-            "label.skill.name.what.intelligence"
+            "skill.name.what.intelligence"
     ),
     SKILL_INTELLIGENCE_WHICH(
-            "label.skill.name.which.intelligence"
+            "skill.name.which.intelligence"
     ),
     SKILL_ENDURANCE_WHAT(
-            "label.skill.name.what.endurance"
+            "skill.name.what.endurance"
     ),
     SKILL_ENDURANCE_WHICH(
-            "label.skill.name.which.endurance"
+            "skill.name.which.endurance"
     ),
     SKILL_LUCK_WHAT(
-            "label.skill.name.what.luck"
+            "skill.name.what.luck"
     ),
     SKILL_LUCK_WHICH(
-            "label.skill.name.which.luck"
+            "skill.name.which.luck"
     )
     ;
 
