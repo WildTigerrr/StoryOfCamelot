@@ -134,10 +134,13 @@ public class GameTutorial {
         player.setAdditionalStatus(PlayerStatusExtended.TUTORIAL_MOVEMENT);
         playerService.update(player);
         messages.sendMessage(
-                translation.get(player.getLanguage()).tutorialNicknameSet(
-                        player.getNickname(),
-                        locationService.findByName(GameSettings.FIRST_FOREST_LOCATION.get()).getName(player.getLanguage())
-                ),
+                translation.getMessage(
+                        "tutorial.player.nickname.accept",
+                        player.getLanguage(),
+                        new Object[]{
+                                player.getNickname(),
+                                locationService.findByName(GameSettings.FIRST_FOREST_LOCATION.get()).getName(player.getLanguage())
+                        }),
                 KeyboardManager.getReplyByButtons(new ArrayList<>(Collections.singleton(ReplyButton.MOVE)), player.getLanguage()),
                 player.getExternalId()
         );
