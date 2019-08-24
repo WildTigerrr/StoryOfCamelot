@@ -10,11 +10,11 @@ public enum NameTranslation {
     // LOCATIONS
     LOC_FOREST(
             Emoji.EVERGREEN_TREE.getCode() + " ",
-            "location.forest"
+            "location.wild.forest"
     ),
     LOC_THICKET(
             Emoji.EVERGREEN_TREE.getCode() + " ",
-            "location.thicket"
+            "location.wild.thicket"
     ),
     LOC_CAVE(
             Emoji.BAT.getCode() + " ",
