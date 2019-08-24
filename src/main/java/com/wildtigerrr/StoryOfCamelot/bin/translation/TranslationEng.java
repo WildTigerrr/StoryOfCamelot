@@ -122,8 +122,10 @@ public class TranslationEng implements Translation {
 
     @Override
     public String nicknameDuplicate(String newNickname) {
-        return
-                "Прошу прощения, но я уже знаю одного *p1*, ты не мог бы уточнить?";
+        return Translation.replaceOne(
+                "Прошу прощения, но я уже знаю одного *p1*, ты не мог бы уточнить?",
+                newNickname
+        );
     }
 
     @Override

@@ -122,8 +122,10 @@ public class TranslationUkr implements Translation {
 
     @Override
     public String nicknameDuplicate(String newNickname) {
-        return
-                "Вибачаюсь, але я вже знаю одного *p1*, ти не міг би конкретизувати?";
+        return Translation.replaceOne(
+                "Вибачаюсь, але я вже знаю одного *p1*, ти не міг би конкретизувати?",
+                newNickname
+        );
     }
 
     @Override
