@@ -1,10 +1,15 @@
 package com.wildtigerrr.StoryOfCamelot.bin.service;
 
 import com.wildtigerrr.StoryOfCamelot.bin.enums.ActionType;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.HashMap;
 
 public class ScheduledAction {
+
+    private static final Logger log = LogManager.getLogger(ScheduledAction.class);
+
     public ActionType type;
     public String target;
     public String additionalValue;
@@ -37,9 +42,9 @@ public class ScheduledAction {
         this.target = actionValues.get("target").replace("\'", "");
         this.additionalValue = actionValues.get("additionalValue").replace("\'", "");
         this.timestamp = Long.valueOf(actionValues.get("timestamp"));
-        this.playerId = Integer.valueOf(actionValues.get("playerId"));
+        this.playerId = Integer.parseInt(actionValues.get("playerId"));
 
-        System.out.println(stringifiedAction);
+        log.trace("Created action from: " + stringifiedAction);
     }
 
     private HashMap<String, String> parse(String action) {

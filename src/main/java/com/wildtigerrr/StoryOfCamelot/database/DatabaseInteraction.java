@@ -3,6 +3,8 @@ package com.wildtigerrr.StoryOfCamelot.database;
 import com.wildtigerrr.StoryOfCamelot.bin.enums.templates.*;
 import com.wildtigerrr.StoryOfCamelot.database.schema.*;
 import com.wildtigerrr.StoryOfCamelot.database.service.implementation.*;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,9 +14,10 @@ import java.util.*;
 @Service
 public class DatabaseInteraction {
 
+    private static final Logger log = LogManager.getLogger(DatabaseInteraction.class);
+
     @PostConstruct
     public void init() {
-        System.out.println("DB fill");
         insertInitialData();
     }
 
@@ -53,6 +56,7 @@ public class DatabaseInteraction {
     }
 
     private void insertInitialData() {
+        log.debug("Inserting initial DB data");
         insertFileLinks();
 //        HashMap<String, FileLink> filesMap = new HashMap<>();
         for (FileLink link : fileLinkService.getAll()) {
@@ -62,19 +66,23 @@ public class DatabaseInteraction {
         HashMap<String, Location> locations = insertLocations();
         insertMobs(locations);
         insertItems();
+        log.debug("Database Initialized");
     }
 
     private void insertFileLinks() {
+        log.debug("Inserting File links");
         ArrayList<FileLink> initialFileLinks = FileLinkTemplate.getFileLinks();
         fileLinkService.create(initialFileLinks);
     }
 
     private void insertItems() {
+        log.debug("Inserting Items");
         ArrayList<Item> initialItems = ItemsTemplate.getItems();
         itemService.create(initialItems);
     }
 
     private void insertMobs(HashMap<String, Location> locations) {
+        log.debug("Inserting Mobs");
         HashMap<String, Mob> initialMobsMap = MobTemplate.getMobs();
         HashMap<String, ArrayList<String>> locationsMapping = PossibleLocationTemplate.getPossibleLocationsMapping();
         for (String locationName : locationsMapping.keySet()) {
@@ -94,6 +102,7 @@ public class DatabaseInteraction {
     }
 
     private HashMap<String, Location> insertLocations() {
+        log.debug("Inserting Locations");
         HashMap<String, Integer> initialDistances = LocationDistanceTemplate.getLocationDistances();
         HashMap<String, Location> initialLocations = LocationTemplate.getLocations();
 

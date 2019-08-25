@@ -46,8 +46,6 @@ public class ResponseHandler {
 
     void handleMessage(UpdateWrapper message) {
         message.setPlayer(gameMain.getPlayer(message.getUserId()));
-        System.out.println("Working with message: " + message);
-//        if (message.getPlayer().getS);
         logSender(message);
         if (message.getUserId().equals(BotConfig.WEBHOOK_ADMIN_ID) && performAdminCommands(message)) return;
         else if (performCommand(message)) return;
@@ -56,39 +54,31 @@ public class ResponseHandler {
             return;
         }
         String answer = "Я не знаю как это обработать: " + message.getText();
-        System.out.println("Answer: " + answer);
+        log.debug("Answer: " + answer);
         messages.sendMessage(answer, message.getUserId(), false);
     }
 
     private void sendTestImage(String userId) {
         messages.sendMessage("Нужно бы забраться повыше и осмотреться...", userId);
         String docName = "Test name";
-        InputStream result = null;
         try {
-            result = imageService.overlayImages(
-                    imageService.getFile("images/locations/forest-test.png"),
-                    imageService.getFile("images/items/weapons/swords/sword-test.png")
+            InputStream result = imageService.overlayImages(
+                    "images/locations/forest-test.png",
+                    "images/items/weapons/swords/sword-test.png"
             );
+            File file = imageService.inputStreamToFile(result, docName, ".png");
+            if (file != null) {
+                messages.sendImage(file, userId);
+            }
         } catch (IOException e) {
-            ResponseManager.postMessageToAdminChannelOnStart(e.getMessage());
-            log.error(e.getMessage(), e);
-        }
-        File file = null;
-        try {
-            file = imageService.inputStreamToFile(result, docName, ".png");
-        } catch (IOException e) {
-            messages.sendMessageToAdmin(e.getMessage());
-            e.printStackTrace();
-        }
-        if (file != null) {
-//            sendDocument(file, userId);
-            messages.sendImage(file, userId);
+            handleError(e.getMessage(), e);
         }
     }
 
     private void logSender(UpdateWrapper message) {
+        log.debug("Working with message: " + message);
         if (!message.getUserId().equals(BotConfig.WEBHOOK_ADMIN_ID)) {
-            messages.sendMessageToAdmin(message.toString());
+            messages.postMessageToAdminChannel(message.toString());
         }
     }
 
@@ -113,7 +103,7 @@ public class ResponseHandler {
                 return true;
             }
             case "/id": {
-                messages.sendMessageToAdmin("User Id: " + message.getUserId() + ", Chat Id: " + message.getChatId());
+                messages.postMessageToAdminChannel("User Id: " + message.getUserId() + ", Chat Id: " + message.getChatId());
                 return true;
             }
         }
@@ -158,8 +148,7 @@ public class ResponseHandler {
                     );
                     playerService.update(player);
                 } catch (IllegalArgumentException e) {
-                    messages.sendMessageToAdmin("Не верная характеристика: " + values[0].toUpperCase());
-                    System.out.println("Error, IllegalArgumentException - Не верная характеристика: " + values[0].toUpperCase());
+                    handleError("Wrong Stat" + values[0].toUpperCase(), e);
                 }
                 break;
             case ACTION:
@@ -223,6 +212,11 @@ public class ResponseHandler {
         } else {
             return ReplyButton.buttonToCommand(text, lang);
         }
+    }
+
+    private void handleError(String message, Exception e) {
+        log.error(message, e);
+        messages.postMessageToAdminChannel(message);
     }
 
 }

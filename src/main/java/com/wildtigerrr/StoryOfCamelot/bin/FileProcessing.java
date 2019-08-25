@@ -53,6 +53,12 @@ public class FileProcessing {
         ImageIO.write(imageBack, "png", os);
         return new ByteArrayInputStream(os.toByteArray());
     }
+    public InputStream overlayImages(String pathBack, String pathFront) throws IOException {
+        return overlayImages(
+                getFile(pathBack),
+                getFile(pathFront)
+        );
+    }
 
     public File inputStreamToFile(InputStream stream, String name, String extension) throws IOException {
         if (stream == null) return null;

@@ -11,6 +11,8 @@ import com.wildtigerrr.StoryOfCamelot.database.service.implementation.PlayerServ
 import com.wildtigerrr.StoryOfCamelot.web.ResponseHandler;
 import com.wildtigerrr.StoryOfCamelot.web.UpdateWrapper;
 import com.wildtigerrr.StoryOfCamelot.web.service.ResponseManager;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +22,8 @@ import java.util.List;
 
 @Service
 public class GameTutorial {
+
+    private static final Logger log = LogManager.getLogger(GameTutorial.class);
 
     @Autowired
     private ResponseManager messages;
@@ -117,7 +121,7 @@ public class GameTutorial {
     }
 
     public void tutorialStart(Player player) {
-        System.out.println("New player");
+        log.info("New Player: " + player);
         player.setup();
         playerService.update(player); // translation.get(player.getLanguage()).tutorialMeetNewPlayer(),
         messages.sendMessage(

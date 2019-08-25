@@ -2,6 +2,8 @@ package com.wildtigerrr.StoryOfCamelot.web;
 
 import com.wildtigerrr.StoryOfCamelot.bin.service.StringUtils;
 import com.wildtigerrr.StoryOfCamelot.web.service.ResponseManager;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -11,6 +13,8 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 
 @RestController
 public class WebHookInit {
+
+    private static final Logger log = LogManager.getLogger(WebHookInit.class);
 
     @Autowired
     private WebHookHandler handler;
@@ -28,17 +32,17 @@ public class WebHookInit {
 
     private void onError(Update update, Exception e) {
         try {
-            messages.sendErrorReport(
+            sendErrorReport(
                     "Exception during runtime: `" + e.getMessage() + "`; " +
-                            "\n\nDuring working on message: `" + new UpdateWrapper(update, update.hasCallbackQuery()) + "`",
-                    e, true
-            );
+                    "\n\nDuring working on message: `" + new UpdateWrapper(update, update.hasCallbackQuery()) + "`", e);
         } catch (Exception e1) {
-            messages.sendErrorReport(
-                    "Exception on creating UpdateWrapper in exception handle: `" + StringUtils.escape(e1.getMessage()) + "`",
-                    e1, true
-            );
+            sendErrorReport("Exception on creating UpdateWrapper in exception handle: `" + StringUtils.escape(e1.getMessage()) + "`", e);
         }
+    }
+
+    private void sendErrorReport(String message, Exception e) {
+        log.error(message, e);
+        messages.postMessageToAdminChannel(message, true);
     }
 
 }

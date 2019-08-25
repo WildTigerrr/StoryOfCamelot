@@ -8,12 +8,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.AnswerCallbackQuery;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
-import org.telegram.telegrambots.meta.api.methods.PartialBotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.send.SendDocument;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText;
-import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboard;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
@@ -30,19 +28,17 @@ public class ResponseManager {
     private WebHookHandler webHook;
     private Boolean alreadyRedirected = false;
 
-    public void sendErrorReport(Exception e) {
-        log.error(e.getMessage(), e);
-        postMessageToAdminChannelOnStart(e.getMessage());
-    }
-
     public void sendErrorReport(String message, Exception e, Boolean applyMarkup) {
         log.error(message, e);
         postMessageToAdminChannel(e.getMessage(), applyMarkup);
     }
-
-    public void sendMessageToAdmin(String text) {
-        proceedMessageSend(text, null, BotConfig.WEBHOOK_ADMIN_ID, false);
+    public void sendErrorReport(String message, Exception e) {
+        sendErrorReport(message, e, false);
     }
+    public void sendErrorReport(Exception e) {
+        sendErrorReport(e.getMessage(), e, false);
+    }
+
 
     public static void postMessageToAdminChannelOnStart(String text, Boolean applyMarkup) {
         new ResponseManager().proceedMessageSend(text, null, BotConfig.ADMIN_CHANNEL_ID, applyMarkup);
@@ -51,22 +47,21 @@ public class ResponseManager {
         postMessageToAdminChannelOnStart(text, false);
     }
 
+
     public void postMessageToAdminChannel(String text, Boolean applyMarkup) {
         proceedMessageSend(text, null, BotConfig.ADMIN_CHANNEL_ID, applyMarkup);
     }
-
     public void postMessageToAdminChannel(String text) {
         postMessageToAdminChannel(text, false);
     }
 
+
     public void sendMessage(String text, ReplyKeyboard keyboard, String userId) {
         proceedMessageSend(text, keyboard, userId, true);
     }
-
     public void sendMessage(String text, String userId, Boolean useMarkdown) {
         proceedMessageSend(text, null, userId, useMarkdown);
     }
-
     public void sendMessage(String text, String userId) {
         sendMessage(text, userId, false);
     }
@@ -78,6 +73,7 @@ public class ResponseManager {
     public void sendImage(String fileName, InputStream stream, String userId) {
         sendImage(fileName, stream, userId, null);
     }
+
 
     public void sendImage(File file, String userId, String caption) {
         proceedImageSend(file, null, null, userId, caption);
@@ -191,7 +187,7 @@ public class ResponseManager {
         log.error("Exception On Sending Message", e);
         log.error("Attempt to retry: " + !alreadyRedirected);
         if (isRedirected()) return;
-        sendMessageToAdmin(e.getMessage());
+        postMessageToAdminChannel(e.getMessage());
     }
 
     private Boolean isRedirected() {
