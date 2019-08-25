@@ -17,13 +17,16 @@
         <Logger name="com.mkyong" level="debug" additivity="false">
             <AppenderRef ref="LogToFile"/>
             <AppenderRef ref="LogToConsole"/>
+            <AppenderRef ref="LogToHerokuConsole"/>
         </Logger>
         <Logger name="org.springframework.boot" level="error" additivity="false">
             <AppenderRef ref="LogToConsole"/>
+            <AppenderRef ref="LogToHerokuConsole"/>
         </Logger>
         <Root level="error">
             <AppenderRef ref="LogToFile"/>
             <AppenderRef ref="LogToConsole"/>
+            <AppenderRef ref="LogToHerokuConsole"/>
         </Root>
     </Loggers>
 </Configuration>
