@@ -7,11 +7,13 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.AnswerCallbackQuery;
+import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.PartialBotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.send.SendDocument;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText;
+import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboard;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
@@ -152,7 +154,7 @@ public class ResponseManager {
     }
 
 
-    private void execute(PartialBotApiMethod method) {
+    private void execute(BotApiMethod method) {
         try {
             webHook.execute(method);
         } catch (NullPointerException e) {
@@ -161,8 +163,22 @@ public class ResponseManager {
             handleError(e);
         }
     }
+    private void execute(SendPhoto method) {
+        try {
+            webHook.execute(method);
+        } catch (TelegramApiException e) {
+            handleError(e);
+        }
+    }
+    private void execute(SendDocument method) {
+        try {
+            webHook.execute(method);
+        } catch (TelegramApiException e) {
+            handleError(e);
+        }
+    }
 
-    private void executeBeforeAutowiring(PartialBotApiMethod method) {
+    private void executeBeforeAutowiring(BotApiMethod method) {
         log.warn("Spring Startup Error (Autowired Services not initialized)");
         try {
             new WebHookHandler().execute(method);
