@@ -74,6 +74,10 @@ public class TimeDependentActions {
     @PostConstruct
     public void restoreValuesFromBackup() {
         logger.debug("Logger: TimeDependentActions > Processing Restore");
+        logger.info("Logger: TimeDependentActions > Processing Restore");
+        logger.error("Logger: TimeDependentActions > Processing Restore");
+        logger.fatal("Logger: TimeDependentActions > Processing Restore");
+        logger.warn("Logger: TimeDependentActions > Processing Restore");
         System.out.println("TimeDependentActions > restoreValuesFromBackup: Attempt to restore values from backup");
         restoreValues();
         System.out.println("TimeDependentActions > restoreValuesFromBackup: Attempt finished");
