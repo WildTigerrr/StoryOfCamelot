@@ -26,16 +26,16 @@ public class WebHookInit {
 
     private void onError(Update update, Exception e) {
         try {
-            ResponseManager.postMessageToAdminChannel(
+            ResponseManager.sendErrorReport(
                     "Exception during runtime: `" + e.getMessage() + "`; " +
                             "\n\nDuring working on message: `" + new UpdateWrapper(update, update.hasCallbackQuery()) + "`",
-                    true);
-            e.printStackTrace();
+                    e, true
+            );
         } catch (Exception e1) {
-            ResponseManager.postMessageToAdminChannel(
+            ResponseManager.sendErrorReport(
                     "Exception on creating UpdateWrapper in exception handle: `" + StringUtils.escape(e1.getMessage()) + "`",
-                    true);
-            e.printStackTrace();
+                    e1, true
+            );
         }
     }
 

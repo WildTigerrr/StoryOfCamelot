@@ -2,9 +2,12 @@ package com.wildtigerrr.StoryOfCamelot.web.service;
 
 import com.wildtigerrr.StoryOfCamelot.web.BotConfig;
 import com.wildtigerrr.StoryOfCamelot.web.WebHookHandler;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.AnswerCallbackQuery;
+import org.telegram.telegrambots.meta.api.methods.PartialBotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.send.SendDocument;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
@@ -19,20 +22,40 @@ import java.io.InputStream;
 @Service
 public class ResponseManager {
 
+    private static final Logger log = LogManager.getLogger(ResponseManager.class);
+
     @Autowired
     private WebHookHandler webHook;
-    private Boolean alreadyRedirected;
+    private Boolean alreadyRedirected = false;
+
+    public void sendErrorReport(Exception e) {
+        log.error(e.getMessage(), e);
+        postMessageToAdminChannel(e.getMessage());
+    }
+
+    public static void sendErrorReport(String message, Exception e, Boolean applyMarkup) {
+        log.error(message, e);
+        postMessageToAdminChannelNonWired(e.getMessage(), applyMarkup);
+    }
 
     public void sendMessageToAdmin(String text) {
         proceedMessageSend(text, null, BotConfig.WEBHOOK_ADMIN_ID, false);
     }
 
-    public static void postMessageToAdminChannel(String text) {
+    public static void postMessageToAdminChannelNonWired(String text) {
         new ResponseManager().proceedMessageSend(text, null, BotConfig.ADMIN_CHANNEL_ID, false);
     }
 
-    public static void postMessageToAdminChannel(String text, Boolean applyMarkup) {
+    public static void postMessageToAdminChannelNonWired(String text, Boolean applyMarkup) {
         new ResponseManager().proceedMessageSend(text, null, BotConfig.ADMIN_CHANNEL_ID, applyMarkup);
+    }
+
+    public void postMessageToAdminChannel(String text) {
+        proceedMessageSend(text, null, BotConfig.ADMIN_CHANNEL_ID, false);
+    }
+
+    public void postMessageToAdminChannel(String text, Boolean applyMarkup) {
+        proceedMessageSend(text, null, BotConfig.ADMIN_CHANNEL_ID, applyMarkup);
     }
 
     public void sendMessage(String text, String userId) {
@@ -88,107 +111,83 @@ public class ResponseManager {
     }
 
     private void proceedMessageSend(String text, ReplyKeyboard keyboard, String userId, Boolean useMarkdown) {
-        if (alreadyRedirected == null || !alreadyRedirected) alreadyRedirected = true;
-        else return;
-
-        SendMessage message = new SendMessage();
-        message.enableMarkdown(useMarkdown);
-        message.setChatId(userId);
-        message.setText(text);
-        if (keyboard != null)
-            message.setReplyMarkup(keyboard);
-        try {
-            webHook.execute(message);
-            alreadyRedirected = false;
-        } catch (NullPointerException e) {
-            System.out.println("Spring Startup Error (Autowired Services not initialized)");
-            try {
-                new WebHookHandler().execute(message);
-            } catch (TelegramApiException ex) {
-                sendMessageToAdmin(e.getMessage());
-                ex.printStackTrace();
-            }
-        } catch (TelegramApiException e) {
-            sendMessageToAdmin(e.getMessage());
-            e.printStackTrace();
-        }
+        SendMessage message = new SendMessage()
+                .enableMarkdown(useMarkdown)
+                .setChatId(userId)
+                .setText(text)
+                .setReplyMarkup(keyboard);
+        execute(message);
     }
 
     private void proceedImageSend(File file, String fileName, InputStream stream, String userId, String caption) {
-        if (alreadyRedirected == null || !alreadyRedirected) alreadyRedirected = true;
-        else return;
-
-        SendPhoto newMessage = new SendPhoto();
+        SendPhoto newMessage = new SendPhoto()
+                .setCaption(caption)
+                .setChatId(userId);
         if (file != null) {
             newMessage.setPhoto(file);
         } else if (stream != null) {
             newMessage.setPhoto(fileName, stream);
         }
-        if (caption != null && !caption.equals("")) {
-            newMessage.setCaption(caption);
-        }
-        newMessage.setChatId(userId);
-
-        try {
-            webHook.execute(newMessage);
-            alreadyRedirected = false;
-        } catch (TelegramApiException e) {
-            sendMessageToAdmin(e.getMessage());
-            e.printStackTrace();
-        }
+        execute(newMessage);
     }
 
     private void proceedDocumentSend(File file, String userId) {
-        if (alreadyRedirected == null || !alreadyRedirected) alreadyRedirected = true;
-        else return;
-
-        SendDocument sendMessage = new SendDocument().setDocument(file);
-        sendMessage.setChatId(userId);
-        try {
-            webHook.execute(sendMessage);
-            alreadyRedirected = false;
-        } catch (TelegramApiException e) {
-            sendMessageToAdmin(e.getMessage());
-            e.printStackTrace();
-        }
+        SendDocument sendMessage = new SendDocument()
+                .setDocument(file)
+                .setChatId(userId);
+        execute(sendMessage);
     }
 
     private void proceedMessageEdit(Integer messageId, InlineKeyboardMarkup keyboard, String newText, String userId, Boolean useMarkdown) {
-        if (alreadyRedirected == null || !alreadyRedirected) alreadyRedirected = true;
-        else return;
-
-        EditMessageText messageEdit = new EditMessageText();
-        messageEdit.setMessageId(messageId);
-        messageEdit.setChatId(userId);
-        messageEdit.setText(newText);
-        messageEdit.enableMarkdown(useMarkdown);
-        if (keyboard != null)
-            messageEdit.setReplyMarkup(keyboard);
-        try {
-            webHook.execute(messageEdit);
-            alreadyRedirected = false;
-        } catch (TelegramApiException e) {
-            sendMessageToAdmin(e.getMessage());
-            e.printStackTrace();
-        }
+        EditMessageText messageEdit = new EditMessageText()
+                .setMessageId(messageId)
+                .setChatId(userId)
+                .setText(newText)
+                .enableMarkdown(useMarkdown)
+                .setReplyMarkup(keyboard);
+        execute(messageEdit);
     }
 
     private void proceedAnswerCallback(String queryId, String text,Boolean isAlert) {
-        if (alreadyRedirected == null || !alreadyRedirected) alreadyRedirected = true;
-        else return;
+        AnswerCallbackQuery answerCallbackQuery = new AnswerCallbackQuery()
+                .setCallbackQueryId(queryId)
+                .setShowAlert(isAlert)
+                .setText(text);
+        execute(answerCallbackQuery);
+    }
 
-        AnswerCallbackQuery answerCallbackQuery = new AnswerCallbackQuery();
-        answerCallbackQuery.setCallbackQueryId(queryId);
-        answerCallbackQuery.setShowAlert(isAlert);
-        if (text != null)
-            answerCallbackQuery.setText(text);
+    private void execute(PartialBotApiMethod method) {
         try {
-            webHook.execute(answerCallbackQuery);
-            alreadyRedirected = false;
+            webHook.execute(method);
+        } catch (NullPointerException e) {
+            executeBeforeAutowiring(method);
         } catch (TelegramApiException e) {
-            sendMessageToAdmin(e.getMessage());
-            e.printStackTrace();
+            handleError(e);
         }
+    }
+
+    private void executeBeforeAutowiring(PartialBotApiMethod method) {
+        log.warn("Spring Startup Error (Autowired Services not initialized)");
+        try {
+            new WebHookHandler().execute(method);
+        } catch (TelegramApiException ex) {
+            handleError(ex);
+        }
+    }
+
+    private void handleError(TelegramApiException e) {
+        log.error("Exception On Sending Message", e);
+        log.error("Attempt to retry: " + !alreadyRedirected);
+        if (isRedirected()) return;
+        sendMessageToAdmin(e.getMessage());
+    }
+
+    private Boolean isRedirected() {
+        if (!alreadyRedirected) {
+            alreadyRedirected = true;
+            return false;
+        }
+        return true;
     }
 
 }

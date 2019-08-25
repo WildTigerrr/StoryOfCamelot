@@ -15,6 +15,8 @@ import com.wildtigerrr.StoryOfCamelot.database.schema.enums.PlayerStatusExtended
 import com.wildtigerrr.StoryOfCamelot.database.schema.enums.Stats;
 import com.wildtigerrr.StoryOfCamelot.database.service.implementation.PlayerServiceImpl;
 import com.wildtigerrr.StoryOfCamelot.web.service.ResponseManager;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,6 +26,8 @@ import java.io.InputStream;
 
 @Service
 public class ResponseHandler {
+
+    private static final Logger log = LogManager.getLogger(ResponseHandler.class);
 
     @Autowired
     private GameMain gameMain;
@@ -66,8 +70,8 @@ public class ResponseHandler {
                     imageService.getFile("images/items/weapons/swords/sword-test.png")
             );
         } catch (IOException e) {
-            messages.sendMessageToAdmin(e.getMessage());
-            e.printStackTrace();
+            ResponseManager.postMessageToAdminChannelNonWired(e.getMessage());
+            log.error(e.getMessage(), e);
         }
         File file = null;
         try {
@@ -114,7 +118,7 @@ public class ResponseHandler {
             }
         }
         if (message.getText().startsWith("/ping")) {
-            ResponseManager.postMessageToAdminChannel(message.getText(), true);
+            messages.postMessageToAdminChannel(message.getText(), true);
             return true;
         }
         return false;

@@ -12,11 +12,13 @@ import org.springframework.stereotype.Controller;
 @SpringBootApplication
 public class StoryOfCamelotApplication {
 
-    private static final Logger logger = LogManager.getLogger(StoryOfCamelotApplication.class);
+    private static final Logger log = LogManager.getLogger(StoryOfCamelotApplication.class);
+
+    // TODO Add S3 Appender, for example https://github.com/bluedenim/log4j-s3-search
 
 
     public static void main(String[] args) {
-        logger.info("Starting Application");
+        log.info("Starting Application");
         try {
             SpringApplication.run(StoryOfCamelotApplication.class, args);
             onAfterRun();
@@ -26,22 +28,22 @@ public class StoryOfCamelotApplication {
     }
 
     private static void onAfterRun() {
-        logger.debug("Sending Application Started Notification");
-        ResponseManager.postMessageToAdminChannel("Bot Started");
+        log.debug("Sending Application Started Notification");
+        ResponseManager.postMessageToAdminChannelNonWired("Bot Started");
         addShutdownHook();
-        logger.info("Application Started Successfully");
+        log.info("Application Started Successfully");
     }
 
     private static void onRunFailure(Exception e) {
-        logger.debug("Sending Startup Failure Notification");
-        ResponseManager.postMessageToAdminChannel("Exception during startup: " + e.getMessage());
-        logger.fatal(e);
+        log.debug("Sending Startup Failure Notification");
+        ResponseManager.postMessageToAdminChannelNonWired("Exception during startup: " + e.getMessage());
+        log.fatal(e);
     }
 
     private static void onBeforeRestart() {
-        logger.warn("Restarting Heroku Server");
+        log.warn("Restarting Heroku Server");
         TimeDependentActions.backupValues();
-        ResponseManager.postMessageToAdminChannel("Bot Shutting Down");
+        ResponseManager.postMessageToAdminChannelNonWired("Bot Shutting Down");
     }
 
     private static void addShutdownHook() {

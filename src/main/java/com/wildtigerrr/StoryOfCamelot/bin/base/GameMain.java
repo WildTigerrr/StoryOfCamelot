@@ -13,6 +13,8 @@ import com.wildtigerrr.StoryOfCamelot.database.service.implementation.LocationSe
 import com.wildtigerrr.StoryOfCamelot.database.service.implementation.PlayerServiceImpl;
 import com.wildtigerrr.StoryOfCamelot.web.UpdateWrapper;
 import com.wildtigerrr.StoryOfCamelot.web.service.ResponseManager;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,6 +24,8 @@ import java.util.stream.Collectors;
 
 @Service
 public class GameMain {
+
+    private static final Logger log = LogManager.getLogger(GameMain.class);
 
     @Autowired
     private ResponseManager messages;
@@ -110,8 +114,7 @@ public class GameMain {
             }
             return player;
         } catch (SOCInvalidDataException e) {
-            messages.sendMessageToAdmin(e.getMessage());
-            e.printStackTrace();
+            messages.sendErrorReport(e);
         }
         return player;
     }

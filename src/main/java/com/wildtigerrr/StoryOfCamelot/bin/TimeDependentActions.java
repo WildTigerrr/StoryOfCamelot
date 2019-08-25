@@ -2,7 +2,6 @@ package com.wildtigerrr.StoryOfCamelot.bin;
 
 import com.wildtigerrr.StoryOfCamelot.bin.base.GameMovement;
 import com.wildtigerrr.StoryOfCamelot.bin.enums.ActionType;
-import com.wildtigerrr.StoryOfCamelot.bin.exceptions.SOCInvalidDataException;
 import com.wildtigerrr.StoryOfCamelot.web.service.ResponseManager;
 import com.wildtigerrr.StoryOfCamelot.bin.service.ScheduledAction;
 import org.apache.commons.io.IOUtils;
@@ -26,7 +25,7 @@ import java.util.concurrent.TimeUnit;
 @DependsOn({"filesProcessing", "amazonClient"})
 public class TimeDependentActions {
 
-    private static final Logger logger = LogManager.getLogger(TimeDependentActions.class);
+    private static final Logger log = LogManager.getLogger(TimeDependentActions.class);
 
     private static ArrayList<String> actions = new ArrayList<>();
     private static HashMap<Long, ScheduledAction> scheduledActionMap = new HashMap<>();
@@ -73,17 +72,17 @@ public class TimeDependentActions {
 
     @PostConstruct
     public void restoreValuesFromBackup() {
-        logger.debug("Attempt to restore values from backup");
+        log.debug("Attempt to restore values from backup");
         restoreValues();
-        logger.info("Actions Restored Successfully");
+        log.info("Actions Restored Successfully");
     }
 
     public static void backupValues() {
-        logger.debug("Creating Actions Backup");
+        log.debug("Creating Actions Backup");
         String data = "actions===" + actionsToString() + "|||"
                 + "scheduledActionMap===" + scheduledActionMapToString();
         fileService.saveFile("temp/", "BackupValues", data);
-        logger.info("Actions Backup Created");
+        log.info("Actions Backup Created");
     }
 
     private static void restoreValues() {
@@ -91,7 +90,7 @@ public class TimeDependentActions {
             InputStream stream = fileService.getFile("temp/BackupValues"); // If file not found > AmazonS3Exception
             if (stream != null) {
                 String values = IOUtils.toString(stream, StandardCharsets.UTF_8);
-                logger.debug("Values To Restore: " + values);
+                log.debug("Values To Restore: " + values);
                 String[] line;
                 for (String str : values.split("\\|\\|\\|")) {
                     line = str.split("===", 2);
@@ -107,7 +106,7 @@ public class TimeDependentActions {
                 }
             }
         } catch (IOException e) {
-            logger.error("Error During Restoring Actions", e);
+            log.error("Error During Restoring Actions", e);
         }
     }
 
@@ -122,11 +121,11 @@ public class TimeDependentActions {
     }
 
     public static void getAll() {
-        messages.sendMessageToAdmin(scheduledActionMapToString());
+        ResponseManager.postMessageToAdminChannelNonWired(scheduledActionMapToString());
     }
 
     private static String scheduledActionMapToString() {
-        logger.debug("Actions Map: " + scheduledActionMap);
+        log.debug("Actions Map: " + scheduledActionMap);
         if (scheduledActionMap == null || scheduledActionMap.isEmpty()) {
             return "null";
         }
@@ -134,7 +133,7 @@ public class TimeDependentActions {
         for (Long key : scheduledActionMap.keySet()) {
             data.append(";").append(scheduledActionMap.get(key).toString());
         }
-        logger.debug("Scheduled: " + data);
+        log.debug("Scheduled: " + data);
         data.deleteCharAt(0);
         return data.toString();
     }
@@ -159,7 +158,7 @@ public class TimeDependentActions {
     }
 
     private static String actionsToString() {
-        logger.debug("Actions: " + actions);
+        log.debug("Actions: " + actions);
         if (actions == null || actions.isEmpty()) {
             return "null";
         }
@@ -167,7 +166,7 @@ public class TimeDependentActions {
         for (String action : actions) {
             data.append(";").append(action);
         }
-        logger.debug("Scheduled: " + data);
+        log.debug("Scheduled: " + data);
         data.deleteCharAt(0);
         return data.toString();
     }
@@ -179,7 +178,7 @@ public class TimeDependentActions {
     }
 
     private static void check() {
-        logger.debug("Checking Active Actions");
+        log.debug("Checking Active Actions");
         if (scheduledActionMap.isEmpty()) {
             cancel();
         } else {
@@ -200,7 +199,7 @@ public class TimeDependentActions {
                         playerToScheduled.put(playerId, playerActions);
                     }
                     iterator.remove();
-                    logger.debug("Action Finished");
+                    log.debug("Action Finished");
                 }
             }
             if (scheduledActionMap.isEmpty()) cancel();
