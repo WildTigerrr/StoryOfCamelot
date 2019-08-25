@@ -18,7 +18,9 @@ public class StoryOfCamelotApplication {
     public static void main(String[] args) {
         logger.debug("Logger enabled");
         try {
+            logger.debug("Logger enabled 2");
             SpringApplication.run(StoryOfCamelotApplication.class, args);
+            logger.debug("Logger enabled 3");
             onAfterRun();
         } catch (Exception e) {
             onRunFailure(e);
@@ -27,6 +29,7 @@ public class StoryOfCamelotApplication {
 
     private static void onAfterRun() {
         ResponseManager.postMessageToAdminChannel("Bot Started");
+        logger.debug("Logger enabled 4");
         addShutdownHook();
     }
 

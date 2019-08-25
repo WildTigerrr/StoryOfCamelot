@@ -84,16 +84,11 @@ public class TimeDependentActions {
     }
 
     public static void backupValues() {
-        logger.debug("Logger: TimeDependentActions > Processing Backup");
-        logger.info("Logger: TimeDependentActions > Processing Backup");
-        logger.error("Logger: TimeDependentActions > Processing Backup");
-        logger.fatal("Logger: TimeDependentActions > Processing Backup");
-        logger.warn("Logger: TimeDependentActions > Processing Backup");
-        System.out.println("TimeDependentActions > backupValues: Creating backup");
+        logger.info("backupValues: Creating backup");
         String data = "actions===" + actionsToString() + "|||"
                 + "scheduledActionMap===" + scheduledActionMapToString();
         fileService.saveFile("temp/", "BackupValues", data);
-        System.out.println("TimeDependentActions > backupValues: Backup created");
+        logger.info("backupValues: Backup created");
     }
 
     private static void restoreValues() {
