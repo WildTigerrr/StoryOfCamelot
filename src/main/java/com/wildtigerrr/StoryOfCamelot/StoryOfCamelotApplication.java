@@ -2,15 +2,25 @@ package com.wildtigerrr.StoryOfCamelot;
 
 import com.wildtigerrr.StoryOfCamelot.web.service.ResponseManager;
 import com.wildtigerrr.StoryOfCamelot.bin.TimeDependentActions;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.stereotype.Controller;
+import org.telegram.telegrambots.meta.logging.BotLogger;
+
+import java.util.logging.ConsoleHandler;
+import java.util.logging.Level;
 
 @Controller
 @SpringBootApplication
 public class StoryOfCamelotApplication {
 
+    private static final Logger logger = LogManager.getLogger(StoryOfCamelotApplication.class);
+
+
     public static void main(String[] args) {
+        logger.debug("Logger enabled");
         try {
             SpringApplication.run(StoryOfCamelotApplication.class, args);
             onAfterRun();
