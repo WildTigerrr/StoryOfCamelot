@@ -21,7 +21,7 @@ Configuration:
 
   Loggers:
     logger:
-      - name: com.mkyong
+      - name: com.wildtigerrr.StoryOfCamelot
         level: debug
         additivity: false
         AppenderRef:
