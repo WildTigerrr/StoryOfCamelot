@@ -6,6 +6,8 @@ import com.wildtigerrr.StoryOfCamelot.bin.exceptions.SOCInvalidDataException;
 import com.wildtigerrr.StoryOfCamelot.web.service.ResponseManager;
 import com.wildtigerrr.StoryOfCamelot.bin.service.ScheduledAction;
 import org.apache.commons.io.IOUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Service;
@@ -23,6 +25,8 @@ import java.util.concurrent.TimeUnit;
 @Service
 @DependsOn({"filesProcessing", "amazonClient"})
 public class TimeDependentActions {
+
+    private static final Logger logger = LogManager.getLogger(TimeDependentActions.class);
 
     private static ArrayList<String> actions = new ArrayList<>();
     private static HashMap<Long, ScheduledAction> scheduledActionMap = new HashMap<>();
@@ -69,12 +73,14 @@ public class TimeDependentActions {
 
     @PostConstruct
     public void restoreValuesFromBackup() {
+        logger.debug("Logger: TimeDependentActions > Processing Restore");
         System.out.println("TimeDependentActions > restoreValuesFromBackup: Attempt to restore values from backup");
         restoreValues();
         System.out.println("TimeDependentActions > restoreValuesFromBackup: Attempt finished");
     }
 
     public static void backupValues() {
+        logger.debug("Logger: TimeDependentActions > Processing Backup");
         System.out.println("TimeDependentActions > backupValues: Creating backup");
         String data = "actions===" + actionsToString() + "|||"
                 + "scheduledActionMap===" + scheduledActionMapToString();

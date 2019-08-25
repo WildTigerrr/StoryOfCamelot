@@ -7,10 +7,6 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.stereotype.Controller;
-import org.telegram.telegrambots.meta.logging.BotLogger;
-
-import java.util.logging.ConsoleHandler;
-import java.util.logging.Level;
 
 @Controller
 @SpringBootApplication
