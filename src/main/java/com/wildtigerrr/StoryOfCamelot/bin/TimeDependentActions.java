@@ -73,22 +73,17 @@ public class TimeDependentActions {
 
     @PostConstruct
     public void restoreValuesFromBackup() {
-        logger.debug("Logger: TimeDependentActions > Processing Restore");
-        logger.info("Logger: TimeDependentActions > Processing Restore");
-        logger.error("Logger: TimeDependentActions > Processing Restore");
-        logger.fatal("Logger: TimeDependentActions > Processing Restore");
-        logger.warn("Logger: TimeDependentActions > Processing Restore");
-        System.out.println("TimeDependentActions > restoreValuesFromBackup: Attempt to restore values from backup");
+        logger.debug("Attempt to restore values from backup");
         restoreValues();
-        System.out.println("TimeDependentActions > restoreValuesFromBackup: Attempt finished");
+        logger.info("Actions Restored Successfully");
     }
 
     public static void backupValues() {
-        logger.info("backupValues: Creating backup");
+        logger.debug("Creating Actions Backup");
         String data = "actions===" + actionsToString() + "|||"
                 + "scheduledActionMap===" + scheduledActionMapToString();
         fileService.saveFile("temp/", "BackupValues", data);
-        logger.info("backupValues: Backup created");
+        logger.info("Actions Backup Created");
     }
 
     private static void restoreValues() {
@@ -96,7 +91,7 @@ public class TimeDependentActions {
             InputStream stream = fileService.getFile("temp/BackupValues"); // If file not found > AmazonS3Exception
             if (stream != null) {
                 String values = IOUtils.toString(stream, StandardCharsets.UTF_8);
-                System.out.println(values);
+                logger.debug("Values To Restore: " + values);
                 String[] line;
                 for (String str : values.split("\\|\\|\\|")) {
                     line = str.split("===", 2);
@@ -112,7 +107,7 @@ public class TimeDependentActions {
                 }
             }
         } catch (IOException e) {
-            System.out.println("Exception: " + e.getMessage());
+            logger.error("Error During Restoring Actions", e);
         }
     }
 
@@ -131,16 +126,15 @@ public class TimeDependentActions {
     }
 
     private static String scheduledActionMapToString() {
-        System.out.println(scheduledActionMap);
+        logger.debug("Actions Map: " + scheduledActionMap);
         if (scheduledActionMap == null || scheduledActionMap.isEmpty()) {
-            System.out.println("Scheduled actions is empty");
             return "null";
         }
         StringBuilder data = new StringBuilder();
         for (Long key : scheduledActionMap.keySet()) {
             data.append(";").append(scheduledActionMap.get(key).toString());
         }
-        System.out.println("Scheduled: " + data);
+        logger.debug("Scheduled: " + data);
         data.deleteCharAt(0);
         return data.toString();
     }
@@ -165,16 +159,15 @@ public class TimeDependentActions {
     }
 
     private static String actionsToString() {
-        System.out.println(actions);
+        logger.debug("Actions: " + actions);
         if (actions == null || actions.isEmpty()) {
-            System.out.println("Actions");
             return "null";
         }
         StringBuilder data = new StringBuilder();
         for (String action : actions) {
             data.append(";").append(action);
         }
-        System.out.println("Actions: " + data);
+        logger.debug("Scheduled: " + data);
         data.deleteCharAt(0);
         return data.toString();
     }
@@ -186,7 +179,7 @@ public class TimeDependentActions {
     }
 
     private static void check() {
-        System.out.println("Checking...");
+        logger.debug("Checking Active Actions");
         if (scheduledActionMap.isEmpty()) {
             cancel();
         } else {
@@ -207,7 +200,7 @@ public class TimeDependentActions {
                         playerToScheduled.put(playerId, playerActions);
                     }
                     iterator.remove();
-                    System.out.println("Item removed");
+                    logger.debug("Action Finished");
                 }
             }
             if (scheduledActionMap.isEmpty()) cancel();

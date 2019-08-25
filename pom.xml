@@ -85,31 +85,26 @@
             <version>5.4.2.Final</version>
         </dependency>
         <!-- https://mvnrepository.com/artifact/com.amazonaws/aws-java-sdk-s3 -->
-        <dependency>
+        <dependency> <!-- S3 Storage -->
             <groupId>com.amazonaws</groupId>
             <artifactId>aws-java-sdk-s3</artifactId>
             <version>1.11.538</version>
         </dependency>
         <!-- https://mvnrepository.com/artifact/com.vdurmont/emoji-java -->
-        <dependency>
+        <dependency> <!-- Emojis -->
             <groupId>com.vdurmont</groupId>
             <artifactId>emoji-java</artifactId>
             <version>3.1.3</version>
         </dependency>
-        <dependency>
+        <dependency> <!-- Logging -->
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-log4j2</artifactId>
         </dependency>
-        <dependency>
+        <dependency> <!-- Async Logging -->
             <groupId>com.lmax</groupId>
             <artifactId>disruptor</artifactId>
             <version>3.4.2</version>
         </dependency>
-        <dependency>
-            <groupId>com.fasterxml.jackson.dataformat</groupId>
-            <artifactId>jackson-dataformat-yaml</artifactId>
-        </dependency>
-
 
 
 
