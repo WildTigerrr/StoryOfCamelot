@@ -1,1 +1,1 @@
-web: java -jar target/StoryOfCamelot-1.0.jar
+web: java -log4j2.contextSelector=org.apache.logging.log4j.core.async.AsyncLoggerContextSelector -jar target/StoryOfCamelot-1.0.jar
