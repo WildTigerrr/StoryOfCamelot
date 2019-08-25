@@ -16,11 +16,9 @@ public class StoryOfCamelotApplication {
 
 
     public static void main(String[] args) {
-        logger.debug("Logger enabled");
+        logger.info("Starting Application");
         try {
-            logger.debug("Logger enabled 2");
             SpringApplication.run(StoryOfCamelotApplication.class, args);
-            logger.debug("Logger enabled 3");
             onAfterRun();
         } catch (Exception e) {
             onRunFailure(e);
@@ -28,17 +26,20 @@ public class StoryOfCamelotApplication {
     }
 
     private static void onAfterRun() {
+        logger.debug("Sending Application Started Notification");
         ResponseManager.postMessageToAdminChannel("Bot Started");
-        logger.debug("Logger enabled 4");
         addShutdownHook();
+        logger.info("Application Started Successfully");
     }
 
     private static void onRunFailure(Exception e) {
+        logger.debug("Sending Startup Failure Notification");
         ResponseManager.postMessageToAdminChannel("Exception during startup: " + e.getMessage());
-        e.printStackTrace();
+        logger.fatal(e);
     }
 
     private static void onBeforeRestart() {
+        logger.warn("Restarting Heroku Server");
         TimeDependentActions.backupValues();
         ResponseManager.postMessageToAdminChannel("Bot Shutting Down");
     }
