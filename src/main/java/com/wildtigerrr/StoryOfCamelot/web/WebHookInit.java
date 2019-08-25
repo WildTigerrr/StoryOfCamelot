@@ -14,6 +14,8 @@ public class WebHookInit {
 
     @Autowired
     private WebHookHandler handler;
+    @Autowired
+    private ResponseManager messages;
 
     @RequestMapping(value = "/webhook", method = RequestMethod.POST)
     public void webhook(@RequestBody Update update) {
@@ -26,13 +28,13 @@ public class WebHookInit {
 
     private void onError(Update update, Exception e) {
         try {
-            ResponseManager.sendErrorReport(
+            messages.sendErrorReport(
                     "Exception during runtime: `" + e.getMessage() + "`; " +
                             "\n\nDuring working on message: `" + new UpdateWrapper(update, update.hasCallbackQuery()) + "`",
                     e, true
             );
         } catch (Exception e1) {
-            ResponseManager.sendErrorReport(
+            messages.sendErrorReport(
                     "Exception on creating UpdateWrapper in exception handle: `" + StringUtils.escape(e1.getMessage()) + "`",
                     e1, true
             );

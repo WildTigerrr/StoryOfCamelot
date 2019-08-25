@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 @Service
 public class GameTutorial {
@@ -149,9 +150,12 @@ public class GameTutorial {
     void tutorialMovement(Player player) {
         player.setAdditionalStatus(PlayerStatusExtended.TUTORIAL_STATS);
         playerService.update(player);
-        ArrayList<ReplyButton> buttons = new ArrayList<>();
-        buttons.add(ReplyButton.ME);
-        buttons.add(ReplyButton.MOVE);
+        List<ReplyButton> buttons = new ArrayList<ReplyButton>(){
+            {
+                add(ReplyButton.ME);
+                add(ReplyButton.MOVE);
+            }
+        };
         messages.sendMessage(
                 translation.get(player.getLanguage()).tutorialGuardLessonOne(player.getNickname()),
                 KeyboardManager.getReplyByButtons(buttons, player.getLanguage()),

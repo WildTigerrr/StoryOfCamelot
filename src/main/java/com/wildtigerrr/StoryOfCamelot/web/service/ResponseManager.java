@@ -30,85 +30,84 @@ public class ResponseManager {
 
     public void sendErrorReport(Exception e) {
         log.error(e.getMessage(), e);
-        postMessageToAdminChannel(e.getMessage());
+        postMessageToAdminChannelOnStart(e.getMessage());
     }
 
-    public static void sendErrorReport(String message, Exception e, Boolean applyMarkup) {
+    public void sendErrorReport(String message, Exception e, Boolean applyMarkup) {
         log.error(message, e);
-        postMessageToAdminChannelNonWired(e.getMessage(), applyMarkup);
+        postMessageToAdminChannel(e.getMessage(), applyMarkup);
     }
 
     public void sendMessageToAdmin(String text) {
         proceedMessageSend(text, null, BotConfig.WEBHOOK_ADMIN_ID, false);
     }
 
-    public static void postMessageToAdminChannelNonWired(String text) {
-        new ResponseManager().proceedMessageSend(text, null, BotConfig.ADMIN_CHANNEL_ID, false);
-    }
-
-    public static void postMessageToAdminChannelNonWired(String text, Boolean applyMarkup) {
+    public static void postMessageToAdminChannelOnStart(String text, Boolean applyMarkup) {
         new ResponseManager().proceedMessageSend(text, null, BotConfig.ADMIN_CHANNEL_ID, applyMarkup);
     }
-
-    public void postMessageToAdminChannel(String text) {
-        proceedMessageSend(text, null, BotConfig.ADMIN_CHANNEL_ID, false);
+    public static void postMessageToAdminChannelOnStart(String text) {
+        postMessageToAdminChannelOnStart(text, false);
     }
 
     public void postMessageToAdminChannel(String text, Boolean applyMarkup) {
         proceedMessageSend(text, null, BotConfig.ADMIN_CHANNEL_ID, applyMarkup);
     }
 
-    public void sendMessage(String text, String userId) {
-        proceedMessageSend(text, null, userId, false);
-    }
-
-    public void sendMessage(String text, String userId, Boolean useMarkdown) {
-        proceedMessageSend(text, null, userId, useMarkdown);
+    public void postMessageToAdminChannel(String text) {
+        postMessageToAdminChannel(text, false);
     }
 
     public void sendMessage(String text, ReplyKeyboard keyboard, String userId) {
         proceedMessageSend(text, keyboard, userId, true);
     }
 
-    public void sendImage(File file, String userId) {
-        proceedImageSend(file, null, null, userId, null);
+    public void sendMessage(String text, String userId, Boolean useMarkdown) {
+        proceedMessageSend(text, null, userId, useMarkdown);
+    }
+
+    public void sendMessage(String text, String userId) {
+        sendMessage(text, userId, false);
+    }
+
+
+    public void sendImage(String fileName, InputStream stream, String userId, String caption) {
+        proceedImageSend(null, fileName, stream, userId, caption);
+    }
+    public void sendImage(String fileName, InputStream stream, String userId) {
+        sendImage(fileName, stream, userId, null);
     }
 
     public void sendImage(File file, String userId, String caption) {
         proceedImageSend(file, null, null, userId, caption);
     }
-
-    public void sendImage(String fileName, InputStream stream, String userId) {
-        proceedImageSend(null, fileName, stream, userId, null);
+    public void sendImage(File file, String userId) {
+        sendImage(file, userId, null);
     }
 
-    public void sendImage(String fileName, InputStream stream, String userId, String caption) {
-        proceedImageSend(null, fileName, stream, userId, caption);
-    }
 
     public void sendDocument(File file, String userId) {
         proceedDocumentSend(file, userId);
     }
 
-    public void sendMessageEdit(Integer messageId, String newText, String userId, Boolean useMarkdown) {
-        proceedMessageEdit(messageId, null, newText, userId, useMarkdown);
-    }
 
     public void sendMessageEdit(Integer messageId, String newText, InlineKeyboardMarkup keyboard, String userId, Boolean useMarkdown) {
         proceedMessageEdit(messageId, keyboard, newText, userId, useMarkdown);
     }
+    public void sendMessageEdit(Integer messageId, String newText, String userId, Boolean useMarkdown) {
+        sendMessageEdit(messageId, newText, null, userId, useMarkdown);
+    }
+
 
     public void sendCallbackAnswer(String queryId, String text, Boolean isAlert) {
         proceedAnswerCallback(queryId, text, isAlert);
     }
-
     public void sendCallbackAnswer(String queryId, String text) {
-        proceedAnswerCallback(queryId, text, false);
+        sendCallbackAnswer(queryId, text, false);
+    }
+    public void sendCallbackAnswer(String queryId) {
+        sendCallbackAnswer(queryId, null, false);
     }
 
-    public void sendCallbackAnswer(String queryId) {
-        proceedAnswerCallback(queryId, null, false);
-    }
 
     private void proceedMessageSend(String text, ReplyKeyboard keyboard, String userId, Boolean useMarkdown) {
         SendMessage message = new SendMessage()
@@ -118,7 +117,6 @@ public class ResponseManager {
                 .setReplyMarkup(keyboard);
         execute(message);
     }
-
     private void proceedImageSend(File file, String fileName, InputStream stream, String userId, String caption) {
         SendPhoto newMessage = new SendPhoto()
                 .setCaption(caption)
@@ -130,14 +128,12 @@ public class ResponseManager {
         }
         execute(newMessage);
     }
-
     private void proceedDocumentSend(File file, String userId) {
         SendDocument sendMessage = new SendDocument()
                 .setDocument(file)
                 .setChatId(userId);
         execute(sendMessage);
     }
-
     private void proceedMessageEdit(Integer messageId, InlineKeyboardMarkup keyboard, String newText, String userId, Boolean useMarkdown) {
         EditMessageText messageEdit = new EditMessageText()
                 .setMessageId(messageId)
@@ -147,7 +143,6 @@ public class ResponseManager {
                 .setReplyMarkup(keyboard);
         execute(messageEdit);
     }
-
     private void proceedAnswerCallback(String queryId, String text,Boolean isAlert) {
         AnswerCallbackQuery answerCallbackQuery = new AnswerCallbackQuery()
                 .setCallbackQueryId(queryId)
@@ -155,6 +150,7 @@ public class ResponseManager {
                 .setText(text);
         execute(answerCallbackQuery);
     }
+
 
     private void execute(PartialBotApiMethod method) {
         try {

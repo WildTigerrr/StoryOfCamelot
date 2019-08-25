@@ -29,21 +29,21 @@ public class StoryOfCamelotApplication {
 
     private static void onAfterRun() {
         log.debug("Sending Application Started Notification");
-        ResponseManager.postMessageToAdminChannelNonWired("Bot Started");
+        ResponseManager.postMessageToAdminChannelOnStart("Bot Started");
         addShutdownHook();
         log.info("Application Started Successfully");
     }
 
     private static void onRunFailure(Exception e) {
         log.debug("Sending Startup Failure Notification");
-        ResponseManager.postMessageToAdminChannelNonWired("Exception during startup: " + e.getMessage());
+        ResponseManager.postMessageToAdminChannelOnStart("Exception during startup: " + e.getMessage());
         log.fatal(e);
     }
 
     private static void onBeforeRestart() {
         log.warn("Restarting Heroku Server");
         TimeDependentActions.backupValues();
-        ResponseManager.postMessageToAdminChannelNonWired("Bot Shutting Down");
+        ResponseManager.postMessageToAdminChannelOnStart("Bot Shutting Down");
     }
 
     private static void addShutdownHook() {

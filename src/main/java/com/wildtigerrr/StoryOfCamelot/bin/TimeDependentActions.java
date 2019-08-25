@@ -121,7 +121,7 @@ public class TimeDependentActions {
     }
 
     public static void getAll() {
-        ResponseManager.postMessageToAdminChannelNonWired(scheduledActionMapToString());
+        ResponseManager.postMessageToAdminChannelOnStart(scheduledActionMapToString());
     }
 
     private static String scheduledActionMapToString() {

@@ -106,7 +106,7 @@ public class KeyboardManager {
         return keyboard;
     }
 
-    public static ReplyKeyboardMarkup getReplyByButtons(ArrayList<ReplyButton> buttons, Language lang) {
+    public static ReplyKeyboardMarkup getReplyByButtons(List<ReplyButton> buttons, Language lang) {
         ReplyKeyboardMarkup keyboard = new ReplyKeyboardMarkup();
         List<KeyboardRow> keyboardMarkup = new ArrayList<>();
         KeyboardRow keyboardRow = new KeyboardRow();

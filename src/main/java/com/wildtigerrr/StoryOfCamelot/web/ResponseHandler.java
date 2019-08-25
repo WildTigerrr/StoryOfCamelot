@@ -70,7 +70,7 @@ public class ResponseHandler {
                     imageService.getFile("images/items/weapons/swords/sword-test.png")
             );
         } catch (IOException e) {
-            ResponseManager.postMessageToAdminChannelNonWired(e.getMessage());
+            ResponseManager.postMessageToAdminChannelOnStart(e.getMessage());
             log.error(e.getMessage(), e);
         }
         File file = null;
