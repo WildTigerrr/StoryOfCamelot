@@ -21,13 +21,13 @@ public class WebHookInit {
             handler.onWebhookUpdateReceived(update);
         } catch (Exception e) {
             try {
-                new ResponseManager().postMessageToAdminChannel(
+                ResponseManager.postMessageToAdminChannel(
                         "Exception during runtime: `" + e.getMessage() + "`; " +
                                 "\n\nDuring working on message: `" + new UpdateWrapper(update, update.hasCallbackQuery()) + "`",
                         true);
                 e.printStackTrace();
             } catch (Exception e1) {
-                new ResponseManager().postMessageToAdminChannel(
+                ResponseManager.postMessageToAdminChannel(
                         "Exception on creating UpdateWrapper in exception handle: `" + StringUtils.escape(e1.getMessage()) + "`",
                         true);
                 e.printStackTrace();

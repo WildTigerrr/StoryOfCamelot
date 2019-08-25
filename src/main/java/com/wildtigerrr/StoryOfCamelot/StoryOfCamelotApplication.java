@@ -10,23 +10,32 @@ import org.springframework.stereotype.Controller;
 @SpringBootApplication
 public class StoryOfCamelotApplication {
 
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) {
         try {
             SpringApplication.run(StoryOfCamelotApplication.class, args);
-            new ResponseManager().postMessageToAdminChannel("Bot Started");
-            addShutdownHook();
+            onAfterRun();
         } catch (Exception e) {
-            new ResponseManager().postMessageToAdminChannel("Exception during startup: " + e.getMessage());
-            e.printStackTrace();
+            onRunFailure(e);
         }
     }
 
-    // Actions before restart
+    private static void onAfterRun() {
+        ResponseManager.postMessageToAdminChannel("Bot Started");
+        addShutdownHook();
+    }
+
+    private static void onRunFailure(Exception e) {
+        ResponseManager.postMessageToAdminChannel("Exception during startup: " + e.getMessage());
+        e.printStackTrace();
+    }
+
+    private static void onBeforeRestart() {
+        TimeDependentActions.backupValues();
+        ResponseManager.postMessageToAdminChannel("Bot Shutting Down");
+    }
+
     private static void addShutdownHook() {
-        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-            TimeDependentActions.backupValues();
-            new ResponseManager().postMessageToAdminChannel("Bot Shutting Down");
-        }));
+        Runtime.getRuntime().addShutdownHook(new Thread(StoryOfCamelotApplication::onBeforeRestart));
     }
 
 }

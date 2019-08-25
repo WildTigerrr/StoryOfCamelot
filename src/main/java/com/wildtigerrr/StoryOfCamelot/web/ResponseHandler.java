@@ -114,7 +114,7 @@ public class ResponseHandler {
             }
         }
         if (message.getText().startsWith("/ping")) {
-            messages.postMessageToAdminChannel(message.getText(), true);
+            ResponseManager.postMessageToAdminChannel(message.getText(), true);
             return true;
         }
         return false;

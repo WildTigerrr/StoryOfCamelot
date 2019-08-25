@@ -27,12 +27,12 @@ public class ResponseManager {
         proceedMessageSend(text, null, BotConfig.WEBHOOK_ADMIN_ID, false);
     }
 
-    public void postMessageToAdminChannel(String text) {
-        proceedMessageSend(text, null, BotConfig.ADMIN_CHANNEL_ID, false);
+    public static void postMessageToAdminChannel(String text) {
+        new ResponseManager().proceedMessageSend(text, null, BotConfig.ADMIN_CHANNEL_ID, false);
     }
 
-    public void postMessageToAdminChannel(String text, Boolean applyMarkup) {
-        proceedMessageSend(text, null, BotConfig.ADMIN_CHANNEL_ID, applyMarkup);
+    public static void postMessageToAdminChannel(String text, Boolean applyMarkup) {
+        new ResponseManager().proceedMessageSend(text, null, BotConfig.ADMIN_CHANNEL_ID, applyMarkup);
     }
 
     public void sendMessage(String text, String userId) {
