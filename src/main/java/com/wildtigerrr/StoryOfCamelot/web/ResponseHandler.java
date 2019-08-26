@@ -22,7 +22,6 @@ import org.springframework.stereotype.Service;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 
 @Service
 public class ResponseHandler {
@@ -62,11 +61,12 @@ public class ResponseHandler {
         messages.sendMessage("Нужно бы забраться повыше и осмотреться...", userId);
         String docName = "Test name";
         try {
-            InputStream result = imageService.overlayImages(
+            File file = imageService.getOverlaidImagesAsFile(
                     "images/locations/forest-test.png",
-                    "images/items/weapons/swords/sword-test.png"
+                    "images/items/weapons/swords/sword-test.png",
+                    docName,
+                    ".png"
             );
-            File file = imageService.inputStreamToFile(result, docName, ".png");
             if (file != null) {
                 messages.sendImage(file, userId);
             }

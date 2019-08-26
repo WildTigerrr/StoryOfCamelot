@@ -32,21 +32,22 @@ public class FileProcessing {
     public void saveFile(String path, String name, File file) {
         amazonClient.saveFile(path + name, file);
     }
+
     public void saveFile(String path, String name, String data) {
         amazonClient.saveString(path + name, data);
     }
 
-    public InputStream overlayImages(InputStream inputBack, InputStream inputFront) throws IOException {
-        BufferedImage imageBack;
-        BufferedImage imageFront;
-        imageBack = ImageIO.read(inputBack);
-        imageFront = ImageIO.read(inputFront);
-        overlayImages(imageBack, imageFront);
-        ByteArrayOutputStream os = new ByteArrayOutputStream();
-        ImageIO.write(imageBack, "png", os);
-        return new ByteArrayInputStream(os.toByteArray());
+    public File getOverlaidImagesAsFile(String pathBack, String pathFront, String name, String extension) throws IOException {
+        return inputStreamToFile(
+                bufferedImageToInputStream(
+                        overlayImages(pathBack, pathFront)
+                ),
+                name,
+                extension
+        );
     }
-    public InputStream overlayImages(String pathBack, String pathFront) throws IOException {
+
+    private BufferedImage overlayImages(String pathBack, String pathFront) throws IOException {
         return overlayImages(
                 getFile(pathBack),
                 getFile(pathFront)
@@ -58,18 +59,34 @@ public class FileProcessing {
         Path path;
         path = Files.createTempFile(name, extension);
         if (path != null) {
-            FileOutputStream out = new FileOutputStream(path.toFile());
-            byte[] buffer = new byte[1024];
-            int len;
-            while ((len = stream.read(buffer)) != -1) {
-                out.write(buffer, 0, len);
-            }
+            inputStreamToFileOutputStream(stream, path);
             return path.toFile();
         }
         return null;
     }
 
-    private BufferedImage overlayImages(BufferedImage imageBack, BufferedImage imageFront) {
+    private void inputStreamToFileOutputStream(InputStream stream, Path path) throws IOException {
+        FileOutputStream out = new FileOutputStream(path.toFile());
+        byte[] buffer = new byte[1024];
+        int len;
+        while ((len = stream.read(buffer)) != -1) {
+            out.write(buffer, 0, len);
+        }
+    }
+
+    private InputStream bufferedImageToInputStream(BufferedImage image) throws IOException {
+        ByteArrayOutputStream os = new ByteArrayOutputStream();
+        ImageIO.write(image, "png", os);
+        return new ByteArrayInputStream(os.toByteArray());
+    }
+
+    private BufferedImage overlayImages(InputStream inputBack, InputStream inputFront) throws IOException {
+        BufferedImage imageBack = ImageIO.read(inputBack);
+        overlayImages(imageBack, ImageIO.read(inputFront));
+        return imageBack;
+    }
+
+    private void overlayImages(BufferedImage imageBack, BufferedImage imageFront) {
         Graphics2D g = imageBack.createGraphics();
         g.setRenderingHint(
                 RenderingHints.KEY_ANTIALIASING,
@@ -78,7 +95,6 @@ public class FileProcessing {
         g.drawImage(imageBack, 0, 0, null);
         g.drawImage(imageFront, 0, 0, null);
         g.dispose();
-        return imageBack;
     }
 
 }
