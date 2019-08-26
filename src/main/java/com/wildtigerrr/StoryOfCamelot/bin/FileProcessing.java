@@ -41,14 +41,7 @@ public class FileProcessing {
         BufferedImage imageFront;
         imageBack = ImageIO.read(inputBack);
         imageFront = ImageIO.read(inputFront);
-        Graphics2D g = imageBack.createGraphics();
-        g.setRenderingHint(
-                RenderingHints.KEY_ANTIALIASING,
-                RenderingHints.VALUE_ANTIALIAS_ON
-        );
-        g.drawImage(imageBack, 0, 0, null);
-        g.drawImage(imageFront, 0, 0, null);
-        g.dispose();
+        overlayImages(imageBack, imageFront);
         ByteArrayOutputStream os = new ByteArrayOutputStream();
         ImageIO.write(imageBack, "png", os);
         return new ByteArrayInputStream(os.toByteArray());
@@ -74,6 +67,18 @@ public class FileProcessing {
             return path.toFile();
         }
         return null;
+    }
+
+    private BufferedImage overlayImages(BufferedImage imageBack, BufferedImage imageFront) {
+        Graphics2D g = imageBack.createGraphics();
+        g.setRenderingHint(
+                RenderingHints.KEY_ANTIALIASING,
+                RenderingHints.VALUE_ANTIALIAS_ON
+        );
+        g.drawImage(imageBack, 0, 0, null);
+        g.drawImage(imageFront, 0, 0, null);
+        g.dispose();
+        return imageBack;
     }
 
 }
