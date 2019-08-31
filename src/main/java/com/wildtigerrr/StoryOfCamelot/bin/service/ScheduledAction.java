@@ -1,14 +1,12 @@
 package com.wildtigerrr.StoryOfCamelot.bin.service;
 
 import com.wildtigerrr.StoryOfCamelot.bin.enums.ActionType;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import lombok.extern.log4j.Log4j2;
 
 import java.util.HashMap;
 
+@Log4j2
 public class ScheduledAction {
-
-    private static final Logger log = LogManager.getLogger(ScheduledAction.class);
 
     public ActionType type;
     public String target;

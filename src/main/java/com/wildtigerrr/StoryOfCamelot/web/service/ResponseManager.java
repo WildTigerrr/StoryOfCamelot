@@ -2,8 +2,7 @@ package com.wildtigerrr.StoryOfCamelot.web.service;
 
 import com.wildtigerrr.StoryOfCamelot.web.BotConfig;
 import com.wildtigerrr.StoryOfCamelot.web.WebHookHandler;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.AnswerCallbackQuery;
@@ -19,10 +18,9 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import java.io.File;
 import java.io.InputStream;
 
+@Log4j2
 @Service
 public class ResponseManager {
-
-    private static final Logger log = LogManager.getLogger(ResponseManager.class);
 
     @Autowired
     private WebHookHandler webHook;

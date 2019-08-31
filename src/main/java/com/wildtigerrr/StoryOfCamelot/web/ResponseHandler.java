@@ -15,18 +15,16 @@ import com.wildtigerrr.StoryOfCamelot.database.schema.enums.PlayerStatusExtended
 import com.wildtigerrr.StoryOfCamelot.database.schema.enums.Stats;
 import com.wildtigerrr.StoryOfCamelot.database.service.implementation.PlayerServiceImpl;
 import com.wildtigerrr.StoryOfCamelot.web.service.ResponseManager;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
 import java.io.IOException;
 
+@Log4j2
 @Service
 public class ResponseHandler {
-
-    private static final Logger log = LogManager.getLogger(ResponseHandler.class);
 
     @Autowired
     private GameMain gameMain;

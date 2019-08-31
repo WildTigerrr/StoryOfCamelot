@@ -2,17 +2,15 @@ package com.wildtigerrr.StoryOfCamelot;
 
 import com.wildtigerrr.StoryOfCamelot.web.service.ResponseManager;
 import com.wildtigerrr.StoryOfCamelot.bin.TimeDependentActions;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.stereotype.Controller;
 
+@Log4j2
 @Controller
 @SpringBootApplication
 public class StoryOfCamelotApplication {
-
-    private static final Logger log = LogManager.getLogger(StoryOfCamelotApplication.class);
 
     // TODO Add S3 Appender, for example https://github.com/bluedenim/log4j-s3-search
 

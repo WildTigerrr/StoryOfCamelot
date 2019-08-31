@@ -4,9 +4,8 @@ import com.wildtigerrr.StoryOfCamelot.bin.base.GameMovement;
 import com.wildtigerrr.StoryOfCamelot.bin.enums.ActionType;
 import com.wildtigerrr.StoryOfCamelot.web.service.ResponseManager;
 import com.wildtigerrr.StoryOfCamelot.bin.service.ScheduledAction;
+import lombok.extern.log4j.Log4j2;
 import org.apache.commons.io.IOUtils;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Service;
@@ -21,11 +20,10 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
+@Log4j2
 @Service
 @DependsOn({"filesProcessing", "amazonClient"})
 public class TimeDependentActions {
-
-    private static final Logger log = LogManager.getLogger(TimeDependentActions.class);
 
     private static ArrayList<String> actions = new ArrayList<>();
     private static HashMap<Long, ScheduledAction> scheduledActionMap = new HashMap<>();
@@ -183,27 +181,44 @@ public class TimeDependentActions {
             cancel();
         } else {
             Iterator<Map.Entry<Long, ScheduledAction>> iterator = scheduledActionMap.entrySet().iterator();
-            ArrayList<Long> playerActions;
-            Integer playerId;
             Long currentTime = Calendar.getInstance().getTimeInMillis();
             while (iterator.hasNext()) {
                 Map.Entry<Long, ScheduledAction> entry = iterator.next();
-                if (currentTime > entry.getKey()) {
-                    movement.sendLocationUpdate(scheduledActionMap.get(entry.getKey()));
-                    playerId = entry.getValue().playerId;
-                    playerActions = playerToScheduled.get(playerId);
-                    playerActions.remove(entry.getValue().timestamp);
-                    if (playerActions.isEmpty()) {
-                        playerToScheduled.remove(playerId);
-                    } else {
-                        playerToScheduled.put(playerId, playerActions);
-                    }
-                    iterator.remove();
-                    log.debug("Action Finished");
-                }
+                if (checkCurrentAction(entry, currentTime)) iterator.remove();
             }
             if (scheduledActionMap.isEmpty()) cancel();
         }
+    }
+
+    private Map<Long, ArrayList<Long>> outerMap = new HashMap<>();
+
+    private void three() {
+        Map<Integer, Long> internalMap = new HashMap<>();
+        internalMap.put(1, 1L);
+        for (Integer i : internalMap.keySet()) {
+            checkList(outerMap.get(internalMap.get(i)));
+        }
+    }
+    private void checkList(ArrayList<Long> outerList) {
+        // do actions
+    }
+
+    private static Boolean checkCurrentAction(
+            Map.Entry<Long, ScheduledAction> actionEntry,
+            Long currentTime
+    ) {
+        if (currentTime < actionEntry.getKey()) return false;
+        movement.sendLocationUpdate(scheduledActionMap.get(actionEntry.getKey()));
+        Integer playerId = actionEntry.getValue().playerId;
+        ArrayList<Long> playerActions = playerToScheduled.get(playerId);
+        playerActions.remove(actionEntry.getValue().timestamp);
+        if (playerActions.isEmpty()) {
+            playerToScheduled.remove(playerId);
+        } else {
+            playerToScheduled.put(playerId, playerActions);
+        }
+        log.debug("Action Finished");
+        return true;
     }
 
     private static ScheduledExecutorService scheduledExecutorService;

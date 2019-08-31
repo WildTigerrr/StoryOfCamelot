@@ -13,8 +13,7 @@ import com.wildtigerrr.StoryOfCamelot.database.service.implementation.LocationSe
 import com.wildtigerrr.StoryOfCamelot.database.service.implementation.PlayerServiceImpl;
 import com.wildtigerrr.StoryOfCamelot.web.UpdateWrapper;
 import com.wildtigerrr.StoryOfCamelot.web.service.ResponseManager;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,10 +21,9 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
+@Log4j2
 @Service
 public class GameMain {
-
-    private static final Logger log = LogManager.getLogger(GameMain.class);
 
     @Autowired
     private ResponseManager messages;

@@ -3,18 +3,16 @@ package com.wildtigerrr.StoryOfCamelot.database;
 import com.wildtigerrr.StoryOfCamelot.bin.enums.templates.*;
 import com.wildtigerrr.StoryOfCamelot.database.schema.*;
 import com.wildtigerrr.StoryOfCamelot.database.service.implementation.*;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
 import java.util.*;
 
+@Log4j2
 @Service
 public class DatabaseInteraction {
-
-    private static final Logger log = LogManager.getLogger(DatabaseInteraction.class);
 
     @PostConstruct
     public void init() {
