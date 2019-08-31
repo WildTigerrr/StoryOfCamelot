@@ -1,10 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Configuration status="DEBUG">
+    <Properties>
+        <Property name="LOG_PATTERN">
+            LOG %-5level (on %logger{36}) - %msg%n
+        </Property>
+        <!-- Date = %d{HH:mm:ss.SSS} -->
+        <!-- Thread: [%t] -->
+    </Properties>
     <Appenders>
         <Console name="LogToConsole" target="SYSTEM_OUT">
-            <PatternLayout pattern="LOG4J2 - %-5level %logger{36} - %msg%n"/>
-            <!-- Date = %d{HH:mm:ss.SSS} -->
-            <!-- Thread: [%t] -->
+            <PatternLayout pattern="${LOG_PATTERN}"/>
         </Console>
         <File name="LogToFile" fileName="logs/app.log">
             <PatternLayout>
