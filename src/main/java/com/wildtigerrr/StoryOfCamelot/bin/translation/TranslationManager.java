@@ -1,5 +1,6 @@
 package com.wildtigerrr.StoryOfCamelot.bin.translation;
 
+import com.wildtigerrr.StoryOfCamelot.bin.enums.Emoji;
 import com.wildtigerrr.StoryOfCamelot.bin.enums.Language;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
@@ -7,6 +8,8 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
 import java.util.Locale;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Service
 public class TranslationManager {
@@ -50,7 +53,26 @@ public class TranslationManager {
     }
 
     public String getMessage(String code, Locale locale, Object[] args) {
-        return messageSource.getMessage(code, args, "Oops!", locale);
+        String message = messageSource.getMessage(code, args, "Oops!", locale);
+        if (message != null) {
+            return applyEmoji(message);
+        } else return null;
+    }
+
+    private String applyEmoji(String message) {
+        if (!message.contains("[emj:")) {
+            return message;
+        }
+        Pattern pattern = Pattern.compile("\\[emj:(.*?)]");
+        Matcher matcher = pattern.matcher(message);
+        if (matcher.find()) {
+            message = matcher.replaceAll(matchResult -> getAppropriateEmoji(matchResult.group(1)));
+        }
+        return message;
+    }
+
+    private String getAppropriateEmoji(String name) {
+        return Emoji.valueOf(name).getCode();
     }
 
 }
