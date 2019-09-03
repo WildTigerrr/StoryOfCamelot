@@ -92,6 +92,7 @@ public class Mob implements Fighter {
 
     @Override
     public boolean isAlive() {
+        if (hitpoints == null) hitpoints = hitpointsMax;
         return hitpoints > 0;
     }
 
