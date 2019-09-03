@@ -152,7 +152,7 @@ public class GameMain {
     }
 
     public void fight(UpdateWrapper message) {
-        messages.sendMessage("Да будет бой!", message.getUserId());
+        messages.sendMessage(translation.getMessage("battle.start", message.getPlayer().getLanguage()), message.getUserId());
         long time = System.currentTimeMillis();
         Mob mob = mobService.getAll().get(0);
 
@@ -161,7 +161,6 @@ public class GameMain {
         for (String logRow : battleLog) {
             history.append(logRow).append("\n");
         }
-        history.append("\nProcessed in ").append(System.currentTimeMillis() - time).append("ms");
         messages.sendMessage(history.toString(), message.getUserId());
 
         // TODO Allow actions by statuses (class to compare)
