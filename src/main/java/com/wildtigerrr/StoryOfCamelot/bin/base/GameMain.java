@@ -1,15 +1,18 @@
 package com.wildtigerrr.StoryOfCamelot.bin.base;
 
+import com.wildtigerrr.StoryOfCamelot.bin.BattleHandler;
 import com.wildtigerrr.StoryOfCamelot.bin.KeyboardManager;
 import com.wildtigerrr.StoryOfCamelot.bin.enums.GameSettings;
 import com.wildtigerrr.StoryOfCamelot.bin.enums.Language;
 import com.wildtigerrr.StoryOfCamelot.bin.exceptions.SOCInvalidDataException;
 import com.wildtigerrr.StoryOfCamelot.bin.service.StringUtils;
 import com.wildtigerrr.StoryOfCamelot.bin.translation.TranslationManager;
+import com.wildtigerrr.StoryOfCamelot.database.schema.Mob;
 import com.wildtigerrr.StoryOfCamelot.database.schema.Player;
 import com.wildtigerrr.StoryOfCamelot.database.schema.enums.PlayerStatusExtended;
 import com.wildtigerrr.StoryOfCamelot.database.schema.enums.Stats;
 import com.wildtigerrr.StoryOfCamelot.database.service.implementation.LocationServiceImpl;
+import com.wildtigerrr.StoryOfCamelot.database.service.implementation.MobServiceImpl;
 import com.wildtigerrr.StoryOfCamelot.database.service.implementation.PlayerServiceImpl;
 import com.wildtigerrr.StoryOfCamelot.web.UpdateWrapper;
 import com.wildtigerrr.StoryOfCamelot.web.service.ResponseManager;
@@ -35,6 +38,10 @@ public class GameMain {
     private LocationServiceImpl locationService;
     @Autowired
     private TranslationManager translation;
+    @Autowired
+    private MobServiceImpl mobService;
+    @Autowired
+    private BattleHandler battleHandler;
 
     public void getTopPlayers(String userId) {
         List<Player> players = playerService.getAll();
@@ -146,6 +153,16 @@ public class GameMain {
 
     public void fight(UpdateWrapper message) {
         messages.sendMessage("Да будет бой!", message.getUserId());
+        long time = System.currentTimeMillis();
+        Mob mob = mobService.getAll().get(0);
+
+        List<String> battleLog = battleHandler.fight(message.getPlayer(), mob, message.getPlayer().getLanguage());
+        StringBuilder history = new StringBuilder();
+        for (String logRow : battleLog) {
+            history.append(logRow).append("\n");
+        }
+        history.append("\nProcessed in ").append(System.currentTimeMillis() - time).append("ms");
+        messages.sendMessage(history.toString(), message.getUserId());
 
         // TODO Allow actions by statuses (class to compare)
         // TODO New status (new table?) with current situation

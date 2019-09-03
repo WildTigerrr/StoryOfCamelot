@@ -3,6 +3,7 @@ package com.wildtigerrr.StoryOfCamelot.database.schema;
 import com.wildtigerrr.StoryOfCamelot.bin.enums.Language;
 import com.wildtigerrr.StoryOfCamelot.bin.enums.NameTranslation;
 import com.wildtigerrr.StoryOfCamelot.bin.enums.templates.MobTemplate;
+import com.wildtigerrr.StoryOfCamelot.database.interfaces.Fighter;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -10,7 +11,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "mob")
-public class Mob {
+public class Mob implements Fighter {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -20,6 +21,7 @@ public class Mob {
     private NameTranslation name;
     private Integer level;
     private Integer damage;
+    private Integer hitpoints;
     private Integer hitpointsMax;
     private Integer defence;
     private Integer agility;
@@ -88,8 +90,26 @@ public class Mob {
         return damage;
     }
 
+    @Override
+    public boolean isAlive() {
+        return hitpoints > 0;
+    }
+
+    @Override
+    public void applyDamage(int damage) {
+        setHitpoints(hitpoints -= damage);
+    }
+
     public void setDamage(Integer damage) {
         this.damage = damage;
+    }
+
+    public Integer getHitpoints() {
+        return hitpoints;
+    }
+
+    public void setHitpoints(Integer hitpoints) {
+        this.hitpoints = hitpoints;
     }
 
     public Integer getHitpointsMax() {
@@ -102,6 +122,11 @@ public class Mob {
 
     public Integer getDefence() {
         return defence;
+    }
+
+    @Override
+    public Integer getHealth() {
+        return getHitpoints();
     }
 
     public void setDefence(Integer defence) {

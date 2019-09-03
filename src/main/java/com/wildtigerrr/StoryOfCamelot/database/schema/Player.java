@@ -4,6 +4,7 @@ import com.wildtigerrr.StoryOfCamelot.bin.enums.Language;
 import com.wildtigerrr.StoryOfCamelot.bin.exceptions.SOCInvalidDataException;
 import com.wildtigerrr.StoryOfCamelot.bin.service.SpringManager;
 import com.wildtigerrr.StoryOfCamelot.bin.translation.TranslationManager;
+import com.wildtigerrr.StoryOfCamelot.database.interfaces.Fighter;
 import com.wildtigerrr.StoryOfCamelot.database.schema.enums.PlayerStatus;
 import com.wildtigerrr.StoryOfCamelot.database.schema.enums.PlayerStatusExtended;
 import com.wildtigerrr.StoryOfCamelot.database.schema.enums.Stats;
@@ -19,7 +20,7 @@ import static java.util.Comparator.*;
 
 @Entity
 @Table(name = "player")
-public class Player implements Comparable<Player> {
+public class Player implements Comparable<Player>, Fighter {
 
     // ==================================================== MAIN ==================================================== //
 
@@ -406,6 +407,31 @@ public class Player implements Comparable<Player> {
     private Integer damage;
     private Integer speed;
     private Integer hunger;
+
+    @Override
+    public Integer getDamage() {
+        return getStrength();
+    }
+
+    @Override
+    public Integer getDefence() {
+        return getEndurance();
+    }
+
+    @Override
+    public String getName(Language lang) {
+        return nickname;
+    }
+
+    @Override
+    public boolean isAlive() {
+        return health > 0;
+    }
+
+    @Override
+    public void applyDamage(int damage) {
+        health -= damage;
+    }
 
     // TODO Battle stats methods
 

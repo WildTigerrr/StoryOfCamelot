@@ -10,6 +10,8 @@ public class BotConfig {
     public static String WEBHOOK_ADMIN_ID = "413316947";
     public static String ADMIN_CHANNEL_ID = "-1001419651307";
 
-    public static int BATTLE_RANDOM = 5; // From 1 - ±100% to 100 - ±1%
+    public final static int DAMAGE_RANDOM = 60; // In %
+    public final static float ARMOR_EFFECTIVENESS = 33.0f;
+    public final static float CRIT_MULTIPLIER = 1.5f;
 
 }
