@@ -2,6 +2,7 @@ package com.wildtigerrr.StoryOfCamelot.bin;
 
 import com.wildtigerrr.StoryOfCamelot.bin.base.GameMovement;
 import com.wildtigerrr.StoryOfCamelot.bin.enums.ActionType;
+import com.wildtigerrr.StoryOfCamelot.bin.service.Scheduler;
 import com.wildtigerrr.StoryOfCamelot.web.service.ResponseManager;
 import com.wildtigerrr.StoryOfCamelot.bin.service.ScheduledAction;
 import lombok.extern.log4j.Log4j2;
@@ -15,10 +16,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
-import java.util.concurrent.TimeUnit;
 
 @Log4j2
 @Service
@@ -27,11 +25,11 @@ public class TimeDependentActions {
 
     private static ArrayList<String> actions = new ArrayList<>();
     private static HashMap<Long, ScheduledAction> scheduledActionMap = new HashMap<>();
-    private static HashMap<Integer, ArrayList<Long>> playerToScheduled = new HashMap<>();
+    private static HashMap<Integer, List<Long>> playerToScheduled = new HashMap<>();
 
     public static Boolean scheduleMove(int playerId, Long timestamp, String target, String distance) {
         while (scheduledActionMap.containsKey(timestamp)) timestamp++;
-        ArrayList<Long> playerActions;
+        List<Long> playerActions;
         if (playerToScheduled.containsKey(playerId)) {
             playerActions = playerToScheduled.get(playerId);
             for (Long key : playerActions) {
@@ -53,7 +51,7 @@ public class TimeDependentActions {
                 target,
                 distance
         ));
-        startCheck();
+        startActionsCheck();
         return true;
     }
 
@@ -142,7 +140,7 @@ public class TimeDependentActions {
         if (data == null) return;
         ArrayList<String> values = new ArrayList<>(Arrays.asList(data.split(";")));
         ScheduledAction action;
-        ArrayList<Long> schedules;
+        List<Long> schedules;
         for (String value : values) {
             action = new ScheduledAction(value);
             scheduledActionMap.put(action.timestamp, action);
@@ -152,7 +150,7 @@ public class TimeDependentActions {
                 playerToScheduled.put(action.playerId, schedules);
             }
         }
-        startCheck();
+        startActionsCheck();
     }
 
     private static String actionsToString() {
@@ -178,39 +176,25 @@ public class TimeDependentActions {
     private static void check() {
         log.debug("Checking Active Actions");
         if (scheduledActionMap.isEmpty()) {
-            cancel();
+            cancelActionsCheck();
         } else {
             Iterator<Map.Entry<Long, ScheduledAction>> iterator = scheduledActionMap.entrySet().iterator();
             Long currentTime = Calendar.getInstance().getTimeInMillis();
             while (iterator.hasNext()) {
-                Map.Entry<Long, ScheduledAction> entry = iterator.next();
-                if (checkCurrentAction(entry, currentTime)) iterator.remove();
+                if (processCurrentAction(iterator.next(), currentTime)) iterator.remove();
             }
-            if (scheduledActionMap.isEmpty()) cancel();
+            if (scheduledActionMap.isEmpty()) cancelActionsCheck();
         }
     }
 
-    private Map<Long, ArrayList<Long>> outerMap = new HashMap<>();
-
-    private void three() {
-        Map<Integer, Long> internalMap = new HashMap<>();
-        internalMap.put(1, 1L);
-        for (Integer i : internalMap.keySet()) {
-            checkList(outerMap.get(internalMap.get(i)));
-        }
-    }
-    private void checkList(ArrayList<Long> outerList) {
-        // do actions
-    }
-
-    private static Boolean checkCurrentAction(
+    private static Boolean processCurrentAction(
             Map.Entry<Long, ScheduledAction> actionEntry,
             Long currentTime
     ) {
         if (currentTime < actionEntry.getKey()) return false;
         movement.sendLocationUpdate(scheduledActionMap.get(actionEntry.getKey()));
-        Integer playerId = actionEntry.getValue().playerId;
-        ArrayList<Long> playerActions = playerToScheduled.get(playerId);
+        int playerId = actionEntry.getValue().playerId;
+        List<Long> playerActions = playerToScheduled.get(playerId);
         playerActions.remove(actionEntry.getValue().timestamp);
         if (playerActions.isEmpty()) {
             playerToScheduled.remove(playerId);
@@ -221,23 +205,14 @@ public class TimeDependentActions {
         return true;
     }
 
-    private static ScheduledExecutorService scheduledExecutorService;
     private static ScheduledFuture<?> task;
 
-    private static void startCheck() {
-        if (task == null || task.isCancelled()) schedule();
+    private static void startActionsCheck() {
+        if (!Scheduler.isActive(task)) task = Scheduler.schedule(TimeDependentActions::check);
     }
 
-    private static void cancel() {
-        task.cancel(true);
-    }
-
-    private static void schedule() {
-        if (scheduledExecutorService == null) {
-            scheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
-        }
-        task = scheduledExecutorService.scheduleAtFixedRate(
-                TimeDependentActions::check, 5, 5, TimeUnit.SECONDS);
+    private static void cancelActionsCheck() {
+        Scheduler.cancel(task);
     }
 
 }
