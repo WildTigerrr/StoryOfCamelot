@@ -180,6 +180,7 @@ public class TimeDependentActions {
         } else {
             Iterator<Map.Entry<Long, ScheduledAction>> iterator = scheduledActionMap.entrySet().iterator();
             Long currentTime = Calendar.getInstance().getTimeInMillis();
+            log.debug("Processign on: " + currentTime);
             while (iterator.hasNext()) {
                 if (processCurrentAction(iterator.next(), currentTime)) iterator.remove();
             }
@@ -191,8 +192,11 @@ public class TimeDependentActions {
             Map.Entry<Long, ScheduledAction> actionEntry,
             Long currentTime
     ) {
+        log.error("Action: " + actionEntry.getValue());
         if (currentTime < actionEntry.getKey()) return false;
+        log.debug("Updating location...");
         movement.sendLocationUpdate(scheduledActionMap.get(actionEntry.getKey()));
+        log.debug("Location updated");
         int playerId = actionEntry.getValue().playerId;
         List<Long> playerActions = playerToScheduled.get(playerId);
         playerActions.remove(actionEntry.getValue().timestamp);
@@ -209,10 +213,12 @@ public class TimeDependentActions {
 
     private static void startActionsCheck() {
         if (!Scheduler.isActive(task)) task = Scheduler.schedule(TimeDependentActions::check);
+        log.info("Start checking");
     }
 
     private static void cancelActionsCheck() {
         Scheduler.cancel(task);
+        log.info("Stop checking");
     }
 
 }
