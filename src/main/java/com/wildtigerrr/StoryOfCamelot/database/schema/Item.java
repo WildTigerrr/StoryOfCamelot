@@ -3,15 +3,20 @@ package com.wildtigerrr.StoryOfCamelot.database.schema;
 import com.wildtigerrr.StoryOfCamelot.bin.enums.templates.ItemsTemplate;
 import com.wildtigerrr.StoryOfCamelot.database.schema.enums.ItemQuality;
 import com.wildtigerrr.StoryOfCamelot.database.schema.enums.ItemSubType;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.*;
 
 @Entity
 @Table(name = "item")
+@Getter @Setter
 public class Item {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @Setter(AccessLevel.NONE)
     private Integer id;
     private Double value; // Defence, Damage, Speed etc
     private Integer durability;
@@ -53,63 +58,4 @@ public class Item {
         this.imageLink = imageLink;
     }
 
-    public Integer getId() {
-        return id;
-    }
-
-    public Double getValue() {
-        return value;
-    }
-
-    public void setValue(Double value) {
-        this.value = value;
-    }
-
-    public Integer getDurability() {
-        return durability;
-    }
-
-    public void setDurability(Integer durability) {
-        this.durability = durability;
-    }
-
-    public Double getPrice() {
-        return price;
-    }
-
-    public void setPrice(Double price) {
-        this.price = price;
-    }
-
-    public Boolean getStackable() {
-        return isStackable;
-    }
-
-    public void setStackable(Boolean stackable) {
-        isStackable = stackable;
-    }
-
-    public ItemSubType getType() {
-        return type;
-    }
-
-    public void setType(ItemSubType type) {
-        this.type = type;
-    }
-
-    public ItemQuality getQuality() {
-        return quality;
-    }
-
-    public void setQuality(ItemQuality quality) {
-        this.quality = quality;
-    }
-
-    public FileLink getImageLink() {
-        return imageLink;
-    }
-
-    public void setImageLink(FileLink imageLink) {
-        this.imageLink = imageLink;
-    }
 }

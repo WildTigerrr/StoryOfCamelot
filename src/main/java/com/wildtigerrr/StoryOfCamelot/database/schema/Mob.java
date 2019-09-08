@@ -4,6 +4,9 @@ import com.wildtigerrr.StoryOfCamelot.bin.enums.Language;
 import com.wildtigerrr.StoryOfCamelot.bin.enums.NameTranslation;
 import com.wildtigerrr.StoryOfCamelot.bin.enums.templates.MobTemplate;
 import com.wildtigerrr.StoryOfCamelot.database.interfaces.Fighter;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -11,10 +14,12 @@ import java.util.List;
 
 @Entity
 @Table(name = "mob")
+@Getter @Setter
 public class Mob implements Fighter {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @Setter(AccessLevel.NONE)
     private Integer id;
     private String systemName;
     @Enumerated(EnumType.STRING)
@@ -62,32 +67,8 @@ public class Mob implements Fighter {
         this.imageLink = imageLink;
     }
 
-    public Integer getId() {
-        return id;
-    }
-
-    public String getSystemName() {
-        return systemName;
-    }
-
     public String getName(Language lang) {
         return name.getName(lang);
-    }
-
-    public void setName(NameTranslation name) {
-        this.name = name;
-    }
-
-    public Integer getLevel() {
-        return level;
-    }
-
-    public void setLevel(Integer level) {
-        this.level = level;
-    }
-
-    public Integer getDamage() {
-        return damage;
     }
 
     @Override
@@ -101,53 +82,9 @@ public class Mob implements Fighter {
         setHitpoints(hitpoints -= damage);
     }
 
-    public void setDamage(Integer damage) {
-        this.damage = damage;
-    }
-
-    public Integer getHitpoints() {
-        return hitpoints;
-    }
-
-    public void setHitpoints(Integer hitpoints) {
-        this.hitpoints = hitpoints;
-    }
-
-    public Integer getHitpointsMax() {
-        return hitpointsMax;
-    }
-
-    public void setHitpointsMax(Integer hitpointsMax) {
-        this.hitpointsMax = hitpointsMax;
-    }
-
-    public Integer getDefence() {
-        return defence;
-    }
-
     @Override
     public Integer getHealth() {
         return getHitpoints();
-    }
-
-    public void setDefence(Integer defence) {
-        this.defence = defence;
-    }
-
-    public Integer getAgility() {
-        return agility;
-    }
-
-    public void setAgility(Integer agility) {
-        this.agility = agility;
-    }
-
-    public List<PossibleLocation> getPossibleLocations() {
-        return possibleLocations;
-    }
-
-    public void setPossibleLocations(List<PossibleLocation> possibleLocations) {
-        this.possibleLocations = possibleLocations;
     }
 
     public Mob addPossibleLocation(PossibleLocation possibleLocation) {
@@ -159,11 +96,4 @@ public class Mob implements Fighter {
         this.possibleLocations.remove(possibleLocation);
     }
 
-    public FileLink getImageLink() {
-        return imageLink;
-    }
-
-    public void setImageLink(FileLink imageLink) {
-        this.imageLink = imageLink;
-    }
 }

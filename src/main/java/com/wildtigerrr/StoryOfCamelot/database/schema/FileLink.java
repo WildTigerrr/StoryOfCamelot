@@ -1,13 +1,19 @@
 package com.wildtigerrr.StoryOfCamelot.database.schema;
 
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.Setter;
+
 import javax.persistence.*;
 
 @Entity
 @Table(name = "file_link")
+@Getter @Setter
 public class FileLink {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @Setter(AccessLevel.NONE)
     private Integer id;
 
     private String fileName;
@@ -19,26 +25,6 @@ public class FileLink {
     public FileLink(String fileName, String location) {
         this.fileName = fileName;
         this.location = location;
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public String getLocation() {
-        return location;
-    }
-
-    public void setLocation(String location) {
-        this.location = location;
-    }
-
-    public String getFileName() {
-        return fileName;
-    }
-
-    public void setFileName(String fileName) {
-        this.fileName = fileName;
     }
 
     @Override

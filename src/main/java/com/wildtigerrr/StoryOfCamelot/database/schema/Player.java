@@ -8,6 +8,9 @@ import com.wildtigerrr.StoryOfCamelot.database.interfaces.Fighter;
 import com.wildtigerrr.StoryOfCamelot.database.schema.enums.PlayerStatus;
 import com.wildtigerrr.StoryOfCamelot.database.schema.enums.PlayerStatusExtended;
 import com.wildtigerrr.StoryOfCamelot.database.schema.enums.Stats;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.lang.reflect.Field;
@@ -20,14 +23,17 @@ import static java.util.Comparator.*;
 
 @Entity
 @Table(name = "player")
+@Getter @Setter
 public class Player implements Comparable<Player>, Fighter {
 
     // ==================================================== MAIN ==================================================== //
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @Setter(AccessLevel.NONE)
     private Integer id;
-    private String externalId;
+    private String externalId; // TODO Admin method for setting another external Id
+    @Setter(AccessLevel.NONE)
     private String nickname;
     @Enumerated(EnumType.STRING)
     private Language language;
@@ -38,23 +44,6 @@ public class Player implements Comparable<Player>, Fighter {
 
     // ------------------- GETTERS AND SETTERS ---------------------------------------------------------------------- //
 
-    public Integer getId() {
-        return id;
-    }
-
-    public String getExternalId() {
-        return externalId;
-    }
-
-    // TODO Admin method for setting another external Id
-    public void setExternalId(String externalId) {
-        this.externalId = externalId;
-    }
-
-    public String getNickname() {
-        return nickname;
-    }
-
     public Boolean setNickname(String nickname) {
         if (nickname.length() > getNicknameLengthMax()) {
             return false;
@@ -62,10 +51,6 @@ public class Player implements Comparable<Player>, Fighter {
             this.nickname = nickname;
             return true;
         }
-    }
-
-    public PlayerStatus getStatus() {
-        return status;
     }
 
     public void ban() {
@@ -88,22 +73,6 @@ public class Player implements Comparable<Player>, Fighter {
         } else {
             status = PlayerStatus.TUTORIAL;
         }
-    }
-
-    public PlayerStatusExtended getAdditionalStatus() {
-        return additionalStatus;
-    }
-
-    public void setAdditionalStatus(PlayerStatusExtended additionalStatus) {
-        this.additionalStatus = additionalStatus;
-    }
-
-    public Language getLanguage() {
-        return language;
-    }
-
-    public void setLanguage(Language language) {
-        this.language = language;
     }
 
     // ------------------- CONSTRUCTORS ----------------------------------------------------------------------------- //
@@ -141,6 +110,7 @@ public class Player implements Comparable<Player>, Fighter {
 
     // ================================================ LEVEL SYSTEM ================================================ //
 
+    @Setter(AccessLevel.NONE)
     private Integer level;
 
     private Integer unassignedPoints;
@@ -313,10 +283,6 @@ public class Player implements Comparable<Player>, Fighter {
 
     // ------------------- GETTERS AND SETTERS ---------------------------------------------------------------------- //
 
-    public Integer getLevel() {
-        return level;
-    }
-
     private void levelUp() {
         level++;
         unassignedPoints += 5;
@@ -368,34 +334,6 @@ public class Player implements Comparable<Player>, Fighter {
             default:
                 throw new SOCInvalidDataException("Unknown Player stat: " + stat.name());
         }
-    }
-
-    public Integer getStrength() {
-        return strength;
-    }
-
-    public Integer getHealth() {
-        return health;
-    }
-
-    public Integer getAgility() {
-        return agility;
-    }
-
-    public Integer getCharisma() {
-        return charisma;
-    }
-
-    public Integer getIntelligence() {
-        return intelligence;
-    }
-
-    public Integer getEndurance() {
-        return endurance;
-    }
-
-    public Integer getLuck() {
-        return luck;
     }
 
     // ============================================== END LEVEL SYSTEM ============================================== //
@@ -453,14 +391,6 @@ public class Player implements Comparable<Player>, Fighter {
     @JoinColumn(name = "location_id")
     private Location location;
 
-    public Location getLocation() {
-        return location;
-    }
-
-    public void setLocation(Location location) {
-        this.location = location;
-    }
-
     public void moveTo(Location targetLocation) {
         setLocation(targetLocation);
     }
@@ -479,20 +409,12 @@ public class Player implements Comparable<Player>, Fighter {
     private FileLink imageLink;
 
     public Boolean isNew() {
-        return isNew;
+        return getIsNew();
     }
 
     public void setup() {
         this.isNew = false;
         this.level = 1;
-    }
-
-    public List<Backpack> getBackpacks() {
-        return backpacks;
-    }
-
-    public void setBackpacks(List<Backpack> backpacks) {
-        this.backpacks = backpacks;
     }
 
     public void addBackpack(Backpack backpack) {
@@ -503,15 +425,6 @@ public class Player implements Comparable<Player>, Fighter {
     public void removeBackpack(Backpack backpack) {
         this.backpacks.remove(backpack);
     }
-
-    public FileLink getImageLink() {
-        return imageLink;
-    }
-
-    public void setImageLink(FileLink imageLink) {
-        this.imageLink = imageLink;
-    }
-
 
     // ================================================== SERVICE =================================================== //
 

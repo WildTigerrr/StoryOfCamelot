@@ -1,15 +1,22 @@
 package com.wildtigerrr.StoryOfCamelot.database.schema;
 
 import com.wildtigerrr.StoryOfCamelot.database.schema.enums.ItemStatus;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.*;
 
 @Entity
 @Table(name = "backpack")
+@Getter @Setter
 public class Backpack {
+
+    // TODO Backpack - junction, BackpackItem as item
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @Setter(AccessLevel.NONE)
     private Integer id;
     @ManyToOne
     private Player player;
@@ -33,55 +40,4 @@ public class Backpack {
         this.status = status;
     }
 
-    public Integer getId() {
-        return id;
-    }
-
-    public Player getPlayer() {
-        return player;
-    }
-
-    public void setPlayer(Player player) {
-        this.player = player;
-    }
-
-    public Item getItem() {
-        return item;
-    }
-
-    public void setItem(Item item) {
-        this.item = item;
-    }
-
-    public Integer getCurrentDurability() {
-        return currentDurability;
-    }
-
-    public void setCurrentDurability(Integer currentDurability) {
-        this.currentDurability = currentDurability;
-    }
-
-    public Integer getQuantity() {
-        return quantity;
-    }
-
-    public void setQuantity(Integer quantity) {
-        this.quantity = quantity;
-    }
-
-    public ItemStatus getStatus() {
-        return status;
-    }
-
-    public void setStatus(ItemStatus status) {
-        this.status = status;
-    }
-
-    public Boolean getDeleted() {
-        return isDeleted;
-    }
-
-    public void setDeleted(Boolean deleted) {
-        isDeleted = deleted;
-    }
 }
