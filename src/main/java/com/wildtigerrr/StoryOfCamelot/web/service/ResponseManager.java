@@ -77,6 +77,7 @@ public class ResponseManager {
         proceedImageSend(file, null, null, userId, caption);
     }
     public void sendImage(File file, String userId) {
+        if (file == null || userId == null) return;
         sendImage(file, userId, null);
     }
 

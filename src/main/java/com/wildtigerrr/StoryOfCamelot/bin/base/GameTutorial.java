@@ -35,7 +35,7 @@ public class GameTutorial {
     private TranslationManager translation;
 
     public Boolean proceedTutorial(UpdateWrapper message) {
-        Command command = ResponseHandler.messageToCommand(message.getText(), message.getPlayer().getLanguage());
+        Command command = message.getCommand();
         switch (message.getPlayer().getAdditionalStatus()) {
             case LANGUAGE_CHOOSE:
                 tutorialLanguageSelect(command, message);

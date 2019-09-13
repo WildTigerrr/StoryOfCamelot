@@ -6,8 +6,6 @@ import com.wildtigerrr.StoryOfCamelot.bin.base.GameMain;
 import com.wildtigerrr.StoryOfCamelot.bin.base.GameMovement;
 import com.wildtigerrr.StoryOfCamelot.bin.base.GameTutorial;
 import com.wildtigerrr.StoryOfCamelot.bin.enums.Command;
-import com.wildtigerrr.StoryOfCamelot.bin.enums.Language;
-import com.wildtigerrr.StoryOfCamelot.bin.enums.ReplyButton;
 import com.wildtigerrr.StoryOfCamelot.bin.translation.TranslationManager;
 import com.wildtigerrr.StoryOfCamelot.database.schema.Player;
 import com.wildtigerrr.StoryOfCamelot.database.schema.enums.PlayerStatus;
@@ -42,14 +40,26 @@ public class ResponseHandler {
     private TranslationManager translation;
 
     void handleMessage(UpdateWrapper message) {
-        message.setPlayer(gameMain.getPlayer(message.getUserId()));
+        setPlayerToMessage(message);
         logSender(message);
-        if (message.getUserId().equals(BotConfig.WEBHOOK_ADMIN_ID) && performAdminCommands(message)) return;
-        else if (performCommand(message)) return;
-        else if (message.getPlayer().getExternalId().equals(message.getPlayer().getNickname())) {
-            gameMain.setNickname(message.getPlayer(), message.getText());
-            return;
-        }
+        executeCommand(message);
+    }
+
+    private void setPlayerToMessage(UpdateWrapper message) {
+        message.setPlayer(gameMain.getPlayer(message.getUserId()));
+    }
+
+    private void executeCommand(UpdateWrapper message) {
+        if (executeAdminCommand(message)) return;
+        else if (executePlayerCommand(message)) return;
+        else commandNotExecuted(message);
+    }
+
+    private boolean executeAdminCommand(UpdateWrapper message) {
+        return message.getUserId().equals(BotConfig.WEBHOOK_ADMIN_ID) && performAdminCommands(message);
+    }
+
+    private void commandNotExecuted(UpdateWrapper message) {
         String answer = "Я не знаю как это обработать: " + message.getText();
         log.debug("Answer: " + answer);
         messages.sendMessage(answer, message.getUserId(), false);
@@ -65,9 +75,7 @@ public class ResponseHandler {
                     docName,
                     ".png"
             );
-            if (file != null) {
-                messages.sendImage(file, userId);
-            }
+            messages.sendImage(file, userId);
         } catch (IOException e) {
             handleError(e.getMessage(), e);
         }
@@ -86,22 +94,15 @@ public class ResponseHandler {
                 sendTestImage(message.getUserId());
                 return true;
             case "/tutorial off": {
-                Player player = message.getPlayer();
-                player.activate();
-                playerService.update(player);
-                messages.sendMessage("Туториал отключен", message.getUserId());
+                disableTutorial(message.getPlayer());
                 return true;
             }
             case "/tutorial on": {
-                Player player = message.getPlayer();
-                player.setAdditionalStatus(PlayerStatusExtended.TUTORIAL_NICKNAME);
-                player.stop();
-                playerService.update(player);
-                messages.sendMessage("Туториал перезапущен", message.getUserId());
+                enableTutorial(message.getPlayer());
                 return true;
             }
             case "/id": {
-                messages.postMessageToAdminChannel("User Id: " + message.getUserId() + ", Chat Id: " + message.getChatId());
+                sendIdsToAdminChannel(message.getUserId(), message.getChatId());
                 return true;
             }
         }
@@ -112,15 +113,15 @@ public class ResponseHandler {
         return false;
     }
 
-    private Boolean performCommand(UpdateWrapper message) {
+    private Boolean executePlayerCommand(UpdateWrapper message) {
         if (message.getPlayer().getStatus() == PlayerStatus.TUTORIAL && tutorial.proceedTutorial(message)) return true;
 
-        Command command = messageToCommand(message.getText(), message.getPlayer().getLanguage());
+        Command command = message.getCommand();
         if (command == null) return false;
         String[] commandParts = message.getText().split(" ", 2);
         switch (command) {
             case ME:
-                messages.sendMessage(playerService.getPlayerInfo(message.getUserId(), message.getPlayer().getLanguage()), message.getUserId(), true);
+                sendPlayerInfo(message);
                 break;
             case SKILLS:
                 gameMain.sendSkillWindow(message.getPlayer());
@@ -129,60 +130,22 @@ public class ResponseHandler {
                 gameMain.fight(message);
                 break;
             case NICKNAME:
-                if (commandParts.length > 1) {
-                    gameMain.setNickname(message.getPlayer(), commandParts[1]);
-                } else {
-                    messages.sendMessage(translation.get(message.getPlayer().getLanguage()).nicknameEmpty(), message.getUserId(), true); // MainText.NICKNAME_EMPTY.text(message.getPlayer().getLanguage())
-                }
+                updateNickname(message, commandParts);
                 break;
             case ADD:
-                String[] values = commandParts[1].split(" ", 2);
-                try {
-                    Player player = gameMain.addExperience(
-                            message.getPlayer(),
-                            Stats.valueOf(values[0].toUpperCase()),
-                            Integer.parseInt(values[1]),
-                            true
-                    );
-                    playerService.update(player);
-                } catch (IllegalArgumentException e) {
-                    handleError("Wrong Stat" + values[0].toUpperCase(), e);
-                }
+                addStatPoints(message.getPlayer(), commandParts);
                 break;
             case ACTION:
-                if (commandParts.length <= 1) return true;
-                commandParts = message.getText().split(" ", 3);
-                switch (commandParts[1]) {
-                    case "add":
-                        TimeDependentActions.addElement(commandParts[2]);
-                        break;
-                    case "remove":
-                        TimeDependentActions.removeFirst();
-                        break;
-                    case "get":
-                        TimeDependentActions.getAll();
-                        break;
-                }
+                proceedTimeAction(message.getText(), commandParts);
                 break;
             case MOVE:
                 movementService.handleMove(message);
                 break;
             case SEND:
-                commandParts = message.getText().split(" ", 3);
-                Player receiver = playerService.findByExternalId(commandParts[1]);
-                if (receiver != null) {
-                    messages.sendMessage(commandParts[2], commandParts[1]);
-                } else {
-                    messages.sendMessage(commandParts[2], commandParts[1]);
-//                    messages.sendMessage("Пользователь не найден", message.getUserId());
-                }
+                sendMessageToUser(message.getText(), commandParts);
                 break;
             case START:
-                if (message.getPlayer().isNew()) {
-                    tutorial.tutorialStart(message.getPlayer());
-                } else {
-                    messages.sendMessage(translation.get(message.getPlayer().getLanguage()).propositionExpired(), message.getUserId()); // MainText.PROPOSITION_EXPIRED.text(message.getPlayer().getLanguage())
-                }
+                startGame(message);
                 break;
             case UP:
                 gameMain.statUp(message);
@@ -191,24 +154,95 @@ public class ResponseHandler {
                 gameMain.getTopPlayers(message.getUserId());
                 break;
             default:
-                messages.sendMessage(translation.get(message.getPlayer().getLanguage()).commandNotDefined(), message.getUserId(), true); // MainText.COMMAND_NOT_DEFINED.text(message.getPlayer().getLanguage())
+                messages.sendMessage(translation.get(message.getPlayer().getLanguage()).commandNotDefined(), message.getUserId(), true);
                 return false;
         }
         return true;
     }
 
-    public static Command messageToCommand(String text, Language lang) {
-        if (text == null || text.length() == 0) return null;
-        if (text.startsWith("/")) {
-            try {
-                String[] commandParts = text.split(" ", 2);
-                return Command.valueOf(commandParts[0].substring(1).toUpperCase());
-            } catch (IllegalArgumentException e) {
-                if (text.startsWith("/up")) return Command.UP;
-                return null;
-            }
+    private void disableTutorial(Player player) {
+        player.activate();
+        playerService.update(player);
+        messages.sendMessage("Туториал отключен", player.getExternalId());
+    }
+
+    private void enableTutorial(Player player) {
+        player.setAdditionalStatus(PlayerStatusExtended.TUTORIAL_NICKNAME);
+        player.stop();
+        playerService.update(player);
+        messages.sendMessage("Туториал перезапущен", player.getExternalId());
+    }
+
+    private void sendIdsToAdminChannel(String userId, long chatId) {
+        messages.postMessageToAdminChannel("User Id: " + userId + ", Chat Id: " + chatId);
+    }
+
+    private void sendPlayerInfo(UpdateWrapper message) {
+        messages.sendMessage(
+                playerService.getPlayerInfo(
+                        message.getUserId(),
+                        message.getPlayer().getLanguage()
+                ),
+                message.getUserId(),
+                true
+        );
+    }
+
+    private void updateNickname(UpdateWrapper message, String[] commandParts) {
+        if (commandParts.length > 1) {
+            gameMain.setNickname(message.getPlayer(), commandParts[1]);
         } else {
-            return ReplyButton.buttonToCommand(text, lang);
+            messages.sendMessage(translation.get(message.getPlayer().getLanguage()).nicknameEmpty(), message.getUserId(), true);
+        }
+    }
+
+    private void addStatPoints(Player player, String[] commandParts) {
+        String[] values = commandParts[1].split(" ", 2);
+        try {
+            player = gameMain.addExperience(
+                    player,
+                    Stats.valueOf(values[0].toUpperCase()),
+                    Integer.parseInt(values[1]),
+                    true
+            );
+            playerService.update(player);
+        } catch (IllegalArgumentException e) {
+            handleError("Wrong Stat" + values[0].toUpperCase(), e);
+        }
+    }
+
+    private void proceedTimeAction(String message, String[] commandParts) {
+        if (commandParts.length <= 1) return;
+        commandParts = message.split(" ", 3);
+        switch (commandParts[1]) {
+            case "add":
+                TimeDependentActions.addElement(commandParts[2]);
+                break;
+            case "remove":
+                TimeDependentActions.removeFirst();
+                break;
+            case "get":
+                TimeDependentActions.getAll();
+                break;
+        }
+    }
+
+    private void sendMessageToUser(String message, String[] commandParts) {
+        commandParts = message.split(" ", 3);
+        Player receiver = playerService.findByExternalId(commandParts[1]);
+        if (receiver != null) {
+            messages.sendMessage(commandParts[2], commandParts[1]);
+        } else {
+            messages.sendMessage(commandParts[2], commandParts[1]);
+//                    messages.sendMessage("Пользователь не найден", message.getUserId());
+        }
+    }
+
+    private void startGame(UpdateWrapper message) {
+        if (message.getPlayer().isNew()) {
+            tutorial.tutorialStart(message.getPlayer());
+        } else {
+            messages.sendMessage(translation.get(message.getPlayer().getLanguage()).propositionExpired(), message.getUserId());
         }
     }
 
