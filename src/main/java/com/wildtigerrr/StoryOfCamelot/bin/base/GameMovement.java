@@ -64,12 +64,12 @@ public class GameMovement {
                 messages.sendMessageEdit(
                         message.getMessageId(),
 //                        MainText.ALREADY_MOVING.text(message.getPlayer().getLanguage()),
-                        translation.get(message.getPlayer().getLanguage()).locationChangeInProgress(),
+                        translation.getMessage("movement.location.in-progress", message),
                         message.getUserId(),
                         true
                 );
             } else {
-                messages.sendMessage(translation.get(message.getPlayer().getLanguage()).locationChangeInProgress(), message.getUserId()); // MainText.ALREADY_MOVING.text(message.getPlayer().getLanguage()), message.getUserId()
+                messages.sendMessage(translation.getMessage("movement.location.in-progress", message), message.getUserId());
             }
         } else if (message.isQuery()) {
             String[] commandParts = message.getText().split(" ", 2);
@@ -83,15 +83,13 @@ public class GameMovement {
         ArrayList<Location> nearLocations = locationNearService.getNearLocations(player.getLocation());
         if (!nearLocations.isEmpty()) {
             messages.sendMessage(
-//                    MainText.LOCATION_SELECT.text(player.getLanguage()),
-                    translation.get(player.getLanguage()).locationSelect(),
+                    translation.getMessage("movement.location.select", player),
                     KeyboardManager.getKeyboardForLocations(nearLocations, player.getLanguage()),
                     player.getExternalId()
             );
         } else {
             messages.sendMessage(
-//                    MainText.LOCATION_BLOCKED.text(player.getLanguage()),
-                    translation.get(player.getLanguage()).locationBlocked(),
+                    translation.getMessage("movement.location.blocked", player),
                     player.getExternalId()
             );
         }
@@ -106,14 +104,16 @@ public class GameMovement {
             );
             if (distance == -1) {
                 messages.sendMessage(
-//                        MainText.NO_DIRECT.text(message.getPlayer().getLanguage()),
-                        translation.get(message.getPlayer().getLanguage()).locationNotConnected(),
+                        translation.getMessage("movement.location.no-connection", message),
                         message.getUserId()
                 );
                 return;
             }
-//            String newText = MainText.LOCATION_SELECTED.text(message.getPlayer().getLanguage(), location.getName(message.getPlayer().getLanguage()));
-            String newText = translation.get(message.getPlayer().getLanguage()).locationAccepted(location.getName(message.getPlayer().getLanguage()));
+            String newText = translation.getMessage(
+                    "movement.location.accepted",
+                    message,
+                    new Object[]{location.getName(message.getPlayer().getLanguage())}
+            );
             Calendar calendar = Calendar.getInstance();
             calendar.add(Calendar.SECOND, distance);
             if (!TimeDependentActions.scheduleMove(
@@ -122,7 +122,7 @@ public class GameMovement {
                     locationId,
                     String.valueOf(distance))
             ) {
-                newText = translation.get(message.getPlayer().getLanguage()).locationChangeInProgress(); // MainText.ALREADY_MOVING.text(message.getPlayer().getLanguage());
+                newText = translation.getMessage("movement.location.in-progress", message);
             } else {
                 Player player = message.getPlayer();
                 player.move();
@@ -139,7 +139,7 @@ public class GameMovement {
 
     public void sendLocationUpdate(ScheduledAction action) {
         Player player = playerService.findById(action.playerId);
-        Location location = locationService.findById(Integer.valueOf(action.target));
+        Location location = locationService.findById(Integer.parseInt(action.target));
         player.setLocation(location);
         player.stop();
         if (location.getImageLink() != null) {
@@ -148,13 +148,18 @@ public class GameMovement {
                     location.getSystemName(),
                     stream,
                     player.getExternalId(),
-//                    MainText.LOCATION_ARRIVED.text(player.getLanguage(), location.getName(player.getLanguage()))
-                    translation.get(player.getLanguage()).locationArrived(location.getName(player.getLanguage()))
+                    translation.getMessage(
+                            "movement.location.arrived",
+                            player,
+                            new Object[]{location.getName(player.getLanguage())})
             );
         } else {
             messages.sendMessage(
-//                    MainText.LOCATION_ARRIVED.text(player.getLanguage(), location.getName(player.getLanguage())),
-                    translation.get(player.getLanguage()).locationArrived(location.getName(player.getLanguage())),
+                    translation.getMessage(
+                            "movement.location.arrived",
+                            player,
+                            new Object[]{location.getName(player.getLanguage())}
+                    ),
                     player.getExternalId()
             );
         }
@@ -165,7 +170,7 @@ public class GameMovement {
         gameMain.addExperience(
                 player,
                 Stats.ENDURANCE,
-                Integer.valueOf(action.additionalValue) / 10,
+                Integer.parseInt(action.additionalValue) / 10,
                 true
         );
         playerService.update(player);

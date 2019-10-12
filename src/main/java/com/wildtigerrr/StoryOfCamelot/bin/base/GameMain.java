@@ -62,8 +62,8 @@ public class GameMain {
         AtomicInteger index = new AtomicInteger();
         String top = "Топ игроков: \n\n" +
                 players.stream()
-                .map(pl -> pl.toStatString(index.incrementAndGet()))
-                .collect(Collectors.joining());
+                        .map(pl -> pl.toStatString(index.incrementAndGet()))
+                        .collect(Collectors.joining());
         messages.sendMessage(
                 top,
                 userId
@@ -91,18 +91,19 @@ public class GameMain {
     public void setNickname(Player player, String newName) {
         String message;
         if (Player.containsSpecialCharacters(newName)) {
-            message = translation.get(player.getLanguage()).nicknameWrongSymbols();
+            message = translation.getMessage("player.nickname.wrong-symbols", player);
         } else if (!player.setNickname(newName)) {
-            message = translation.get(player.getLanguage()).nicknameTooLong(String.valueOf(Player.getNicknameLengthMax()));
+            message = translation.getMessage("player.nickname.too-long", player,
+                    new Object[]{String.valueOf(Player.getNicknameLengthMax())});
         } else if (player.getNickname().isEmpty()) {
-            message = translation.get(player.getLanguage()).nicknameEmpty();
+            message = translation.getMessage("player.nickname.empty", player);
         } else if (playerService.findByNickname(player.getNickname()) != null) {
-            message = translation.get(player.getLanguage()).nicknameDuplicate(player.getNickname());
+            message = translation.getMessage("player.nickname.duplicate", player);
         } else if (player.getAdditionalStatus() == PlayerStatusExtended.TUTORIAL_NICKNAME) {
             return;
         } else {
             playerService.update(player);
-            message = translation.get(player.getLanguage()).nicknameChanged(player.getNickname());
+            message = translation.getMessage("player.nickname.accept", player);
         }
         messages.sendMessage(message, player.getExternalId(), true);
     }
@@ -141,26 +142,32 @@ public class GameMain {
         if (commandParts.length == 3 && commandParts[1].length() == 1 && StringUtils.isNumeric(commandParts[2])) {
             Stats stat = Stats.getStat(commandParts[1]);
             if (stat == null) {
-                messages.sendMessage(translation.get(message.getPlayer().getLanguage()).statInvalid(), message.getUserId());
+                messages.sendMessage(translation.getMessage("player.stats.invalid", message), message.getUserId());
             } else {
                 Player player = message.getPlayer();
                 String result = player.raiseStat(stat, Integer.valueOf(commandParts[2]), player.getLanguage(), translation);
-                if (!result.equals(translation.get(message.getPlayer().getLanguage()).statInvalid() )) playerService.update(player);
+                if (!result.equals(translation.getMessage("player.stats.invalid", message)))
+                    playerService.update(player);
                 messages.sendCallbackAnswer(message.getQueryId(), result);
                 if (player.getUnassignedPoints() == 0) {
                     messages.sendMessageEdit(message.getMessageId(), player.getStatMenu(translation), player.getExternalId(), false);
                 } else {
-                    messages.sendMessageEdit(message.getMessageId(), player.getStatMenu(translation), KeyboardManager.getKeyboardForStatUp(player.getUnassignedPoints()), player.getExternalId(), false);
+                    messages.sendMessageEdit(
+                            message.getMessageId(),
+                            player.getStatMenu(translation),
+                            KeyboardManager.getKeyboardForStatUp(player.getUnassignedPoints()),
+                            player.getExternalId(),
+                            false
+                    );
                 }
             }
         } else {
-            messages.sendMessage(translation.get(message.getPlayer().getLanguage()).commandInvalid(), message.getUserId());
+            messages.sendMessage(translation.getMessage("commands.invalid", message), message.getUserId());
         }
     }
 
     public void fight(UpdateWrapper message) {
-        messages.sendMessage(translation.getMessage("battle.start", message.getPlayer().getLanguage()), message.getUserId());
-        long time = System.currentTimeMillis();
+        messages.sendMessage(translation.getMessage("battle.start", message), message.getUserId());
         Mob mob = mobService.getAll().get(0);
 
         List<String> battleLog = battleHandler.fight(message.getPlayer(), mob, message.getPlayer().getLanguage());

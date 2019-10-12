@@ -4,6 +4,7 @@ import com.wildtigerrr.StoryOfCamelot.bin.enums.Command;
 import com.wildtigerrr.StoryOfCamelot.bin.enums.Language;
 import com.wildtigerrr.StoryOfCamelot.bin.enums.ReplyButton;
 import com.wildtigerrr.StoryOfCamelot.web.bot.update.Author;
+import com.wildtigerrr.StoryOfCamelot.web.bot.update.UpdateType;
 import lombok.experimental.UtilityClass;
 import org.telegram.telegrambots.meta.api.objects.PhotoSize;
 import org.telegram.telegrambots.meta.api.objects.Update;
@@ -37,9 +38,25 @@ public class UpdateWrapperUtils {
         }
     }
 
-    public String getUpdateAuthor(Update update) {
+    public String getUpdateAuthorCaption(Update update) {
         User user = update.hasCallbackQuery() ? update.getCallbackQuery().getMessage().getFrom() : update.getMessage().getFrom();
         return new Author(user).toString();
+    }
+
+    public UpdateType defineUpdateType(Update update) {
+        if (update.hasMessage() && update.getMessage().hasText()) return UpdateType.MESSAGE;
+        else if (update.hasCallbackQuery()) return UpdateType.CALLBACK;
+        else if (update.hasEditedMessage()) return UpdateType.MESSAGE_EDIT;
+        else if (update.hasMessage() && update.getMessage().hasPhoto()) return UpdateType.PHOTO;
+        else if (update.hasMessage() && update.getMessage().hasAnimation()) return UpdateType.GIF;
+        else if (update.hasMessage() && update.getMessage().hasAudio()) return UpdateType.AUDIO;
+        else if (update.hasMessage() && update.getMessage().hasContact()) return UpdateType.CONTACT;
+        else if (update.hasMessage() && update.getMessage().hasDocument()) return UpdateType.DOCUMENT;
+        else if (update.hasMessage() && update.getMessage().hasLocation()) return UpdateType.LOCATION;
+        else if (update.hasMessage() && update.getMessage().hasSticker()) return UpdateType.STICKER;
+        else if (update.hasMessage() && update.getMessage().hasVideo()) return UpdateType.VIDEO;
+        else if (update.hasMessage() && update.getMessage().hasVoice()) return UpdateType.VOICE;
+        else return UpdateType.OTHER;
     }
 
 }

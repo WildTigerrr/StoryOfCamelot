@@ -15,10 +15,14 @@ import java.util.Optional;
 @Service
 public class PlayerServiceImpl implements PlayerService {
 
+    private final PlayerDao playerDao;
+    private final TranslationManager translation;
+
     @Autowired
-    private PlayerDao playerDao;
-    @Autowired
-    private TranslationManager translation;
+    public PlayerServiceImpl(PlayerDao playerDao, TranslationManager translation) {
+        this.playerDao = playerDao;
+        this.translation = translation;
+    }
 
     @Override
     public synchronized Player create(Player player) {
@@ -75,7 +79,7 @@ public class PlayerServiceImpl implements PlayerService {
         if (player != null) {
             return player.toString();
         } else {
-            return translation.get(lang).playerNotExist(); // MainText.PLAYER_NOT_EXIST.text(Language.RUS);
+            return translation.getMessage("player.info.not-exist", lang);
         }
     }
 }

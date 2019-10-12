@@ -89,19 +89,22 @@ public class GameTutorial {
                 }
                 break;
             default:
-                messages.sendMessage(translation.get(message.getPlayer().getLanguage()).commandNotDeveloped(), message.getUserId());
+                messages.sendMessage(
+                        translation.getMessage("commands.not-developed", message),
+                        message.getUserId()
+                );
         }
         return true;
     }
 
     private void noRush(Language lang, String userId) {
-        messages.sendMessage(translation.get(lang).tutorialNoRush(), userId);
+        messages.sendMessage(translation.getMessage("tutorial.lessons.no-rush", lang), userId);
     }
 
     private void tutorialLanguageSelect(Command command, UpdateWrapper message) {
         if (!message.isQuery() && (command == Command.START || message.getPlayer().isNew())) {
             Language lang = Language.ENG;
-            String langCode = message.getLanguage().substring(0, Math.min(message.getLanguage().length(), 2));
+            String langCode = message.getTempUpdateLang().substring(0, Math.min(message.getTempUpdateLang().length(), 2));
             // List - https://datahub.io/core/language-codes/r/3.html
             if (langCode.equals("ru")) lang = Language.RUS;
             else if (langCode.equals("uk")) lang = Language.UKR;
@@ -111,19 +114,28 @@ public class GameTutorial {
             if (StringUtils.isNumeric(commandParts[1]) && (Integer.parseInt(commandParts[1]) < Language.values().length)) {
                 Player player = message.getPlayer();
                 player.setLanguage(Language.values()[Integer.parseInt(commandParts[1])]);
-                player.setAdditionalStatus(PlayerStatusExtended.TUTORIAL_NICKNAME); //translation.get(player.getLanguage()).languageSelected(),
+                player.setAdditionalStatus(PlayerStatusExtended.TUTORIAL_NICKNAME);
                 messages.sendMessageEdit(
                         message.getMessageId(),
-                        translation.getMessage("tutorial.lang.selected", player.getLanguage(), new Object[]{player.getLanguage().getName()}),
+                        translation.getMessage("tutorial.lang.selected",
+                                player,
+                                new Object[]{player.getLanguage().getName()}
+                        ),
                         message.getUserId(),
                         true
                 );
                 tutorialStart(player);
             } else {
-                messages.sendMessage(translation.get(message.getPlayer().getLanguage()).commandInvalid(), message.getUserId());
+                messages.sendMessage(
+                        translation.getMessage("commands.invalid", message),
+                        message.getUserId()
+                );
             }
         } else {
-            messages.sendMessage(translation.get(message.getPlayer().getLanguage()).tutorialNoRush(), message.getUserId());
+            messages.sendMessage(
+                    translation.getMessage("tutorial.lessons.no-rush", message),
+                    message.getUserId()
+            );
         }
     }
 
@@ -132,7 +144,7 @@ public class GameTutorial {
         player.setup();
         playerService.update(player); // translation.get(player.getLanguage()).tutorialMeetNewPlayer(),
         messages.sendMessage(
-                translation.getMessage("tutorial.player.welcome", player.getLanguage()),
+                translation.getMessage("tutorial.player.welcome", player),
                 player.getExternalId(),
                 true
         );
@@ -149,7 +161,7 @@ public class GameTutorial {
         messages.sendMessage(
                 translation.getMessage(
                         "tutorial.player.nickname.accept",
-                        player.getLanguage(),
+                        player,
                         new Object[]{
                                 player.getNickname(),
                                 locationService.findByName(GameSettings.FIRST_FOREST_LOCATION.get()).getName(player.getLanguage())
@@ -169,7 +181,9 @@ public class GameTutorial {
             }
         };
         messages.sendMessage(
-                translation.get(player.getLanguage()).tutorialGuardLessonOne(player.getNickname()),
+                translation.getMessage(
+                        "tutorial.lessons.first-profile", player, new Object[]{player.getNickname()}
+                ),
                 KeyboardManager.getReplyByButtons(buttons, player.getLanguage()),
                 player.getExternalId()
         );
@@ -179,7 +193,7 @@ public class GameTutorial {
         player.setAdditionalStatus(PlayerStatusExtended.TUTORIAL_STATS_UP);
         playerService.update(player);
         messages.sendMessage(
-                translation.get(player.getLanguage()).tutorialGuardLessonTwo(),
+                translation.getMessage("tutorial.lessons.two-skillpoints", player),
                 KeyboardManager.getReplyByButtons(new ArrayList<>(Collections.singleton(ReplyButton.SKILLS)), player.getLanguage()),
                 player.getExternalId()
         );
@@ -201,11 +215,10 @@ public class GameTutorial {
         player.setAdditionalStatus(PlayerStatusExtended.TUTORIAL_FIGHT);
         playerService.update(player);
         messages.sendMessage(
-                translation.get(player.getLanguage()).tutorialGuardLessonThree(),
+                translation.getMessage("tutorial.lessons.three-fight", player),
                 KeyboardManager.getReplyByButtons(new ArrayList<>(Collections.singleton(ReplyButton.FIGHT)), player.getLanguage()),
                 player.getExternalId()
         );
     }
-
 
 }

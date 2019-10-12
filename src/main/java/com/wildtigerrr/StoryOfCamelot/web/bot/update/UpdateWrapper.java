@@ -4,9 +4,11 @@ import com.wildtigerrr.StoryOfCamelot.bin.enums.Command;
 import com.wildtigerrr.StoryOfCamelot.bin.service.StringUtils;
 import com.wildtigerrr.StoryOfCamelot.database.schema.Player;
 import com.wildtigerrr.StoryOfCamelot.web.bot.utils.UpdateWrapperUtils;
+import lombok.Getter;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.User;
 
+@Getter
 public class UpdateWrapper {
 
     private String message;
@@ -14,13 +16,16 @@ public class UpdateWrapper {
     private int messageId;
     private String queryId;
     private Author author;
-    private String language;
+    private String tempUpdateLang;
     private Player player;
     private Boolean isQuery;
 
+    private UpdateType updateType;
+
     // TODO Add escaped entire Update for debug and logs
 
-    public UpdateWrapper(Update update, Boolean isQuery) {
+    public UpdateWrapper(Update update) {
+        this.isQuery = update.hasCallbackQuery();
         User user = isQuery ? update.getCallbackQuery().getMessage().getFrom() : update.getMessage().getFrom();
         this.message = isQuery ? update.getCallbackQuery().getData() : StringUtils.escape(update.getMessage().getText().trim());
         if (this.message.contains("@StoryOfCamelotBot")) this.message = this.message.replace("@StoryOfCamelotBot", "").trim();
@@ -29,8 +34,16 @@ public class UpdateWrapper {
         this.chatId = isQuery ? update.getCallbackQuery().getMessage().getChatId() : update.getMessage().getChatId();
         this.messageId = isQuery ? update.getCallbackQuery().getMessage().getMessageId() : update.getMessage().getMessageId();
         this.queryId = isQuery ? update.getCallbackQuery().getId() : null;
-        this.language = user.getLanguageCode();
-        this.isQuery = isQuery;
+        this.tempUpdateLang = user.getLanguageCode();
+        this.updateType = UpdateWrapperUtils.defineUpdateType(update);
+    }
+
+    public boolean isCommand() {
+        return updateType == UpdateType.MESSAGE || updateType == UpdateType.CALLBACK;
+    }
+
+    public boolean isUnsupportedMedia() {
+        return !isCommand() && updateType != UpdateType.OTHER;
     }
 
     public String getText() {
@@ -39,18 +52,6 @@ public class UpdateWrapper {
 
     public String getUserId() {
         return author.getId();
-    }
-
-    public Long getChatId() {
-        return chatId;
-    }
-
-    public int getMessageId() {
-        return messageId;
-    }
-
-    public String getQueryId() {
-        return queryId;
     }
 
     String getFirstName() {
@@ -65,20 +66,12 @@ public class UpdateWrapper {
         return author.getUsername();
     }
 
-    public String getLanguage() {
-        return language;
-    }
-
     public Boolean isQuery() {
         return isQuery;
     }
 
     public void setPlayer(Player player) {
         this.player = player;
-    }
-
-    public Player getPlayer() {
-        return player;
     }
 
     public Command getCommand() {
@@ -88,12 +81,13 @@ public class UpdateWrapper {
     @Override
     public String toString() {
         return "UpdateWrapper{" +
-                "message='" + message + '\'' +
+                " type='" + updateType + '\'' +
+                ", message='" + message + '\'' +
                 ", userId='" + author.getId() + '\'' +
                 ", firstName='" + author.getFirstName() + '\'' +
                 ", lastName='" + author.getLastName() + '\'' +
                 ", username='" + author.getUsername() + '\'' +
-                ", languageCode='" + language + '\'' +
+                ", languageCode='" + tempUpdateLang + '\'' +
                 ", isQuery='" + isQuery + '\'' +
                 '}';
     }

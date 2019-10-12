@@ -13,10 +13,12 @@ import com.wildtigerrr.StoryOfCamelot.database.schema.enums.PlayerStatusExtended
 import com.wildtigerrr.StoryOfCamelot.database.schema.enums.Stats;
 import com.wildtigerrr.StoryOfCamelot.database.service.implementation.PlayerServiceImpl;
 import com.wildtigerrr.StoryOfCamelot.web.bot.update.UpdateWrapper;
+import com.wildtigerrr.StoryOfCamelot.web.bot.utils.UpdateWrapperUtils;
 import com.wildtigerrr.StoryOfCamelot.web.service.ResponseManager;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.telegram.telegrambots.meta.api.objects.Update;
 
 import java.io.File;
 import java.io.IOException;
@@ -50,6 +52,23 @@ public class ResponseHandler {
         this.messages = messages;
         this.movementService = movementService;
         this.translation = translation;
+    }
+
+    void handleUpdate(Update update) {
+        UpdateWrapper message = new UpdateWrapper(update);
+        if (message.isCommand()) handleMessage(message);
+        else if (update.hasMessage() && update.getMessage().hasPhoto()) {
+            messages.sendImage(
+                    UpdateWrapperUtils.getBiggestPhotoId(update),
+                    BotConfig.ADMIN_CHANNEL_ID,
+                    update.getMessage().getCaption() != null ?
+                            update.getMessage().getCaption() + ", " + UpdateWrapperUtils.getUpdateAuthorCaption(update)
+                            : UpdateWrapperUtils.getUpdateAuthorCaption(update)
+            );
+        } else {
+            log.error("Message not supported: " + update.toString());
+            messages.postMessageToAdminChannel("Message not supported: " + update.toString());
+        }
     }
 
     void handleMessage(UpdateWrapper message) {
@@ -167,7 +186,7 @@ public class ResponseHandler {
                 gameMain.getTopPlayers(message.getUserId());
                 break;
             default:
-                messages.sendMessage(translation.get(message.getPlayer().getLanguage()).commandNotDefined(), message.getUserId(), true);
+                messages.sendMessage(translation.getMessage("commands.not-defined", message), message.getUserId(), true);
                 return false;
         }
         return true;
@@ -205,7 +224,7 @@ public class ResponseHandler {
         if (commandParts.length > 1) {
             gameMain.setNickname(message.getPlayer(), commandParts[1]);
         } else {
-            messages.sendMessage(translation.get(message.getPlayer().getLanguage()).nicknameEmpty(), message.getUserId(), true);
+            messages.sendMessage(translation.getMessage("player.nickname.empty", message), message.getUserId(), true);
         }
     }
 
@@ -255,7 +274,7 @@ public class ResponseHandler {
         if (message.getPlayer().isNew()) {
             tutorial.tutorialStart(message.getPlayer());
         } else {
-            messages.sendMessage(translation.get(message.getPlayer().getLanguage()).propositionExpired(), message.getUserId());
+            messages.sendMessage(translation.getMessage("commands.expired", message), message.getUserId());
         }
     }
 
