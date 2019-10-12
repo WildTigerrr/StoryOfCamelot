@@ -132,6 +132,8 @@ public class ResponseManager {
             newMessage.setPhoto(file);
         } else if (stream != null) {
             newMessage.setPhoto(fileName, stream);
+        } else if (fileId != null) {
+            newMessage.setPhoto(fileId);
         }
         execute(newMessage);
     }
