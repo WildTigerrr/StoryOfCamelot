@@ -1,4 +1,4 @@
-package com.wildtigerrr.StoryOfCamelot.web;
+package com.wildtigerrr.StoryOfCamelot.web.bot.update;
 
 import com.wildtigerrr.StoryOfCamelot.bin.enums.Command;
 import com.wildtigerrr.StoryOfCamelot.bin.service.StringUtils;
@@ -10,30 +10,25 @@ import org.telegram.telegrambots.meta.api.objects.User;
 public class UpdateWrapper {
 
     private String message;
-    private String userId;
     private Long chatId;
     private int messageId;
     private String queryId;
-    private String firstName;
-    private String lastName;
-    private String username;
+    private Author author;
     private String language;
     private Player player;
     private Boolean isQuery;
 
     // TODO Add escaped entire Update for debug and logs
 
-    UpdateWrapper(Update update, Boolean isQuery) {
+    public UpdateWrapper(Update update, Boolean isQuery) {
         User user = isQuery ? update.getCallbackQuery().getMessage().getFrom() : update.getMessage().getFrom();
         this.message = isQuery ? update.getCallbackQuery().getData() : StringUtils.escape(update.getMessage().getText().trim());
         if (this.message.contains("@StoryOfCamelotBot")) this.message = this.message.replace("@StoryOfCamelotBot", "").trim();
-        this.firstName = user.getFirstName();
-        this.userId = isQuery ? update.getCallbackQuery().getMessage().getChatId().toString() : user.getId().toString();
+        this.author = new Author(user);
+        if (isQuery) author.setId(update.getCallbackQuery().getMessage().getChatId().toString());
         this.chatId = isQuery ? update.getCallbackQuery().getMessage().getChatId() : update.getMessage().getChatId();
         this.messageId = isQuery ? update.getCallbackQuery().getMessage().getMessageId() : update.getMessage().getMessageId();
         this.queryId = isQuery ? update.getCallbackQuery().getId() : null;
-        this.lastName = user.getLastName();
-        this.username = user.getUserName();
         this.language = user.getLanguageCode();
         this.isQuery = isQuery;
     }
@@ -43,7 +38,7 @@ public class UpdateWrapper {
     }
 
     public String getUserId() {
-        return userId;
+        return author.getId();
     }
 
     public Long getChatId() {
@@ -59,15 +54,15 @@ public class UpdateWrapper {
     }
 
     String getFirstName() {
-        return firstName;
+        return author.getFirstName();
     }
 
     String getLastName() {
-        return lastName;
+        return author.getLastName();
     }
 
     String getUsername() {
-        return username;
+        return author.getUsername();
     }
 
     public String getLanguage() {
@@ -78,7 +73,7 @@ public class UpdateWrapper {
         return isQuery;
     }
 
-    void setPlayer(Player player) {
+    public void setPlayer(Player player) {
         this.player = player;
     }
 
@@ -94,10 +89,10 @@ public class UpdateWrapper {
     public String toString() {
         return "UpdateWrapper{" +
                 "message='" + message + '\'' +
-                ", userId='" + userId + '\'' +
-                ", firstName='" + firstName + '\'' +
-                ", lastName='" + lastName + '\'' +
-                ", username='" + username + '\'' +
+                ", userId='" + author.getId() + '\'' +
+                ", firstName='" + author.getFirstName() + '\'' +
+                ", lastName='" + author.getLastName() + '\'' +
+                ", username='" + author.getUsername() + '\'' +
                 ", languageCode='" + language + '\'' +
                 ", isQuery='" + isQuery + '\'' +
                 '}';
