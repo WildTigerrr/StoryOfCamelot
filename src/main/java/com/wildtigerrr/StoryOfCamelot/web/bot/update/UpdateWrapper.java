@@ -27,15 +27,17 @@ public class UpdateWrapper {
     public UpdateWrapper(Update update) {
         this.isQuery = update.hasCallbackQuery();
         User user = isQuery ? update.getCallbackQuery().getMessage().getFrom() : update.getMessage().getFrom();
-        this.message = isQuery ? update.getCallbackQuery().getData() : StringUtils.escape(update.getMessage().getText().trim());
-        if (this.message.contains("@StoryOfCamelotBot")) this.message = this.message.replace("@StoryOfCamelotBot", "").trim();
+        this.updateType = UpdateWrapperUtils.defineUpdateType(update);
+        if (isCommand()) {
+            this.message = isQuery ? update.getCallbackQuery().getData() : StringUtils.escape(update.getMessage().getText().trim());
+            if (this.message.contains("@StoryOfCamelotBot")) this.message = this.message.replace("@StoryOfCamelotBot", "").trim();
+        }
         this.author = new Author(user);
         if (isQuery) author.setId(update.getCallbackQuery().getMessage().getChatId().toString());
         this.chatId = isQuery ? update.getCallbackQuery().getMessage().getChatId() : update.getMessage().getChatId();
         this.messageId = isQuery ? update.getCallbackQuery().getMessage().getMessageId() : update.getMessage().getMessageId();
         this.queryId = isQuery ? update.getCallbackQuery().getId() : null;
         this.tempUpdateLang = user.getLanguageCode();
-        this.updateType = UpdateWrapperUtils.defineUpdateType(update);
     }
 
     public boolean isCommand() {
