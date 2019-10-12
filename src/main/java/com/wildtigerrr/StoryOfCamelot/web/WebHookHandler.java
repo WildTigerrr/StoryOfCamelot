@@ -1,5 +1,6 @@
 package com.wildtigerrr.StoryOfCamelot.web;
 
+import com.wildtigerrr.StoryOfCamelot.web.bot.utils.UpdateWrapperUtils;
 import com.wildtigerrr.StoryOfCamelot.web.service.ResponseManager;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +37,8 @@ public class WebHookHandler extends TelegramWebhookBot {
             responseHandler.handleMessage(new UpdateWrapper(update, false));
         } else if (update.hasCallbackQuery()) {
             responseHandler.handleMessage(new UpdateWrapper(update, true));
+        } else if (update.hasMessage() && update.getMessage().hasPhoto()) {
+            messages.sendImage(UpdateWrapperUtils.getBiggestPhotoId(update), BotConfig.ADMIN_CHANNEL_ID, update.getMessage().getCaption());
         } else {
             log.error("Message not supported: " + update.toString());
             messages.postMessageToAdminChannel("Message not supported: " + update.toString());

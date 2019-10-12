@@ -19,11 +19,12 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <spring.data>2.1.6.RELEASE</spring.data>
+        <telegrambots.version>4.4.0.1</telegrambots.version>
+        <lombok.version>1.18.10</lombok.version>
 
         <h2.version>1.4.199</h2.version>
         <jupiter.version>5.3.2</jupiter.version>
-        <telegrambots.version>4.4.0.1</telegrambots.version>
-        <lombok.version>1.18.10</lombok.version>
+        <mockito.version>3.0.0</mockito.version>
     </properties>
 
     <dependencies>
@@ -142,9 +143,12 @@
             <version>${jupiter.version}</version>
             <scope>test</scope>
         </dependency>
-
-
-
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <version>${mockito.version}</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <build>

@@ -69,7 +69,7 @@ public class ResponseManager {
 
 
     public void sendImage(String fileName, InputStream stream, String userId, String caption) {
-        proceedImageSend(null, fileName, stream, userId, caption);
+        proceedImageSend(null, fileName, stream, null, userId, caption);
     }
     public void sendImage(String fileName, InputStream stream, String userId) {
         sendImage(fileName, stream, userId, null);
@@ -77,11 +77,18 @@ public class ResponseManager {
 
 
     public void sendImage(File file, String userId, String caption) {
-        proceedImageSend(file, null, null, userId, caption);
+        proceedImageSend(file, null, null, null, userId, caption);
     }
     public void sendImage(File file, String userId) {
         if (file == null || userId == null) return;
         sendImage(file, userId, null);
+    }
+
+    public void sendImage(String fileId, String userId, String caption) {
+        proceedImageSend(null, null, null, fileId, userId, caption);
+    }
+    public void sendImage(String fileId, String userId) {
+        sendImage(fileId, userId, null);
     }
 
 
@@ -117,7 +124,7 @@ public class ResponseManager {
                 .setReplyMarkup(keyboard);
         execute(message);
     }
-    private void proceedImageSend(File file, String fileName, InputStream stream, String userId, String caption) {
+    private void proceedImageSend(File file, String fileName, InputStream stream, String fileId, String userId, String caption) {
         SendPhoto newMessage = new SendPhoto()
                 .setCaption(caption)
                 .setChatId(userId);
