@@ -42,7 +42,9 @@ public class WebHookHandler extends TelegramWebhookBot {
             messages.sendImage(
                     UpdateWrapperUtils.getBiggestPhotoId(update),
                     BotConfig.ADMIN_CHANNEL_ID,
-                    update.getMessage().getCaption() + ", " + UpdateWrapperUtils.getUpdateAuthor(update)
+                    update.getMessage().getCaption() != null ?
+                            update.getMessage().getCaption() + ", " + UpdateWrapperUtils.getUpdateAuthor(update)
+                            : UpdateWrapperUtils.getUpdateAuthor(update)
             );
         } else {
             log.error("Message not supported: " + update.toString());
