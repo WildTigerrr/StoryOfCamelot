@@ -47,10 +47,10 @@ public class UpdateWrapperUtils {
         String lastName;
         String username;
         Author(User user) {
-            this.id = user.getId().toString();
-            this.firstName = user.getFirstName();
-            this.lastName = user.getLastName();
-            this.username = user.getUserName();
+            id = user.getId().toString();
+            firstName = user.getFirstName();
+            lastName = user.getLastName();
+            username = user.getUserName();
         }
 
         @Override
