@@ -1,6 +1,6 @@
 package com.wildtigerrr.StoryOfCamelot.bin;
 
-import com.wildtigerrr.StoryOfCamelot.web.service.AmazonClient;
+import com.wildtigerrr.StoryOfCamelot.web.service.DataProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,27 +14,27 @@ import java.nio.file.Path;
 @Service("filesProcessing")
 public class FileProcessing {
 
-    private AmazonClient amazonClient;
+    private DataProvider dataProvider;
 
     public FileProcessing() {
     }
 
     @SuppressWarnings("unused")
     @Autowired
-    FileProcessing(AmazonClient amazonClient) {
-        this.amazonClient = amazonClient;
+    FileProcessing(DataProvider dataProvider) {
+        this.dataProvider = dataProvider;
     }
 
     public InputStream getFile(String path) {
-        return amazonClient.getObject(path);
+        return dataProvider.getObject(path);
     }
 
     public void saveFile(String path, String name, File file) {
-        amazonClient.saveFile(path + name, file);
+        dataProvider.saveFile(path + name, file);
     }
 
     public void saveFile(String path, String name, String data) {
-        amazonClient.saveString(path + name, data);
+        dataProvider.saveString(path + name, data);
     }
 
     public File getOverlaidImagesAsFile(String pathBack, String pathFront, String name, String extension) throws IOException {

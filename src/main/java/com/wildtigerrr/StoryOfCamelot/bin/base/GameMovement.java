@@ -13,7 +13,7 @@ import com.wildtigerrr.StoryOfCamelot.database.service.implementation.LocationNe
 import com.wildtigerrr.StoryOfCamelot.database.service.implementation.LocationServiceImpl;
 import com.wildtigerrr.StoryOfCamelot.database.service.implementation.PlayerServiceImpl;
 import com.wildtigerrr.StoryOfCamelot.web.UpdateWrapper;
-import com.wildtigerrr.StoryOfCamelot.web.service.AmazonClient;
+import com.wildtigerrr.StoryOfCamelot.web.service.DataProvider;
 import com.wildtigerrr.StoryOfCamelot.web.service.ResponseManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,30 +25,37 @@ import java.util.Calendar;
 @Service
 public class GameMovement {
 
-    @Autowired
     private ResponseManager messages;
-    @Autowired
     private GameMain gameMain;
-    @Autowired
     private GameTutorial tutorial;
-    @Autowired
     private LocationServiceImpl locationService;
-    @Autowired
     private LocationNearServiceImpl locationNearService;
-    @Autowired
     private PlayerServiceImpl playerService;
-    private AmazonClient amazonClient;
-    @Autowired
+    private DataProvider dataProvider;
     private TranslationManager translation;
 
-    @SuppressWarnings("unused")
     public GameMovement() {
     }
 
-    @SuppressWarnings("unused")
     @Autowired
-    GameMovement(AmazonClient amazonClient) {
-        this.amazonClient = amazonClient;
+    GameMovement(
+            DataProvider dataProvider,
+            TranslationManager translation,
+            PlayerServiceImpl playerService,
+            LocationNearServiceImpl locationNearService,
+            LocationServiceImpl locationService,
+            GameTutorial tutorial,
+            GameMain gameMain,
+            ResponseManager messages
+    ) {
+        this.dataProvider = dataProvider;
+        this.translation = translation;
+        this.playerService = playerService;
+        this.locationNearService = locationNearService;
+        this.locationService = locationService;
+        this.tutorial = tutorial;
+        this.gameMain = gameMain;
+        this.messages = messages;
     }
 
     public void handleMove(UpdateWrapper message) {
@@ -110,10 +117,10 @@ public class GameMovement {
             Calendar calendar = Calendar.getInstance();
             calendar.add(Calendar.SECOND, distance);
             if (!TimeDependentActions.scheduleMove(
-                            message.getPlayer().getId(),
-                            calendar.getTimeInMillis(),
-                            locationId,
-                            String.valueOf(distance))
+                    message.getPlayer().getId(),
+                    calendar.getTimeInMillis(),
+                    locationId,
+                    String.valueOf(distance))
             ) {
                 newText = translation.get(message.getPlayer().getLanguage()).locationChangeInProgress(); // MainText.ALREADY_MOVING.text(message.getPlayer().getLanguage());
             } else {
@@ -136,7 +143,7 @@ public class GameMovement {
         player.setLocation(location);
         player.stop();
         if (location.getImageLink() != null) {
-            InputStream stream = amazonClient.getObject(location.getImageLink().getLocation());
+            InputStream stream = dataProvider.getObject(location.getImageLink().getLocation());
             messages.sendImage(
                     location.getSystemName(),
                     stream,
