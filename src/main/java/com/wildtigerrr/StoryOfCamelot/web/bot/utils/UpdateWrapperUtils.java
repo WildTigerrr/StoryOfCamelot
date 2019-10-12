@@ -6,6 +6,7 @@ import com.wildtigerrr.StoryOfCamelot.bin.enums.ReplyButton;
 import lombok.experimental.UtilityClass;
 import org.telegram.telegrambots.meta.api.objects.PhotoSize;
 import org.telegram.telegrambots.meta.api.objects.Update;
+import org.telegram.telegrambots.meta.api.objects.User;
 
 import java.util.Comparator;
 import java.util.List;
@@ -32,6 +33,34 @@ public class UpdateWrapperUtils {
             }
         } else {
             return ReplyButton.buttonToCommand(message, language);
+        }
+    }
+
+    public String getUpdateAuthor(Update update) {
+        User user = update.hasCallbackQuery() ? update.getCallbackQuery().getMessage().getFrom() : update.getMessage().getFrom();
+        return new Author(user).toString();
+    }
+
+    class Author {
+        String id;
+        String firstName;
+        String lastName;
+        String username;
+        Author(User user) {
+            this.id = user.getId().toString();
+            this.firstName = user.getFirstName();
+            this.lastName = user.getLastName();
+            this.username = user.getUserName();
+        }
+
+        @Override
+        public String toString() {
+            return "Author{" +
+                    "id='" + id + '\'' +
+                    ", firstName='" + firstName + '\'' +
+                    ", lastName='" + lastName + '\'' +
+                    ", username='" + username + '\'' +
+                    '}';
         }
     }
 
