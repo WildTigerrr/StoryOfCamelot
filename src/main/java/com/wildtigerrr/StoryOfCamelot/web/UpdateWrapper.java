@@ -1,9 +1,9 @@
 package com.wildtigerrr.StoryOfCamelot.web;
 
 import com.wildtigerrr.StoryOfCamelot.bin.enums.Command;
-import com.wildtigerrr.StoryOfCamelot.bin.enums.ReplyButton;
 import com.wildtigerrr.StoryOfCamelot.bin.service.StringUtils;
 import com.wildtigerrr.StoryOfCamelot.database.schema.Player;
+import com.wildtigerrr.StoryOfCamelot.web.bot.utils.UpdateWrapperUtils;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.User;
 
@@ -87,18 +87,7 @@ public class UpdateWrapper {
     }
 
     public Command getCommand() {
-        if (message == null || message.length() == 0) return null;
-        if (message.startsWith("/")) {
-            try {
-                String[] commandParts = message.split(" ", 2);
-                return Command.valueOf(commandParts[0].substring(1).toUpperCase());
-            } catch (IllegalArgumentException e) {
-                if (message.startsWith("/up")) return Command.UP;
-                return null;
-            }
-        } else {
-            return ReplyButton.buttonToCommand(message, player.getLanguage());
-        }
+        return UpdateWrapperUtils.fetchCommandFromMessage(message, player.getLanguage());
     }
 
     @Override
