@@ -33,7 +33,7 @@ public class WebHookInit {
         try {
             sendErrorReport(
                     "Exception during runtime: `" + e.getMessage() + "`; " +
-                    "\n\nDuring working on message: `" + new UpdateWrapper(update, update.hasCallbackQuery()) + "`", e);
+                    "\n\nDuring working on message: `" + new UpdateWrapper(update) + "`", e);
         } catch (Exception e1) {
             sendErrorReport("Exception on creating UpdateWrapper in exception handle: `" + StringUtils.escape(e1.getMessage()) + "`", e);
         }
