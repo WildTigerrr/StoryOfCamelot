@@ -19,7 +19,6 @@ public class FileProcessing {
     public FileProcessing() {
     }
 
-    @SuppressWarnings("unused")
     @Autowired
     FileProcessing(DataProvider dataProvider) {
         this.dataProvider = dataProvider;

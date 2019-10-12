@@ -8,14 +8,27 @@ import org.telegram.telegrambots.bots.TelegramWebhookBot;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
+import javax.annotation.PostConstruct;
+
 @Log4j2
 @Service
 public class WebHookHandler extends TelegramWebhookBot {
 
-    @Autowired
     private ResponseHandler responseHandler;
-    @Autowired
     private ResponseManager messages;
+
+    @Autowired
+    public WebHookHandler(ResponseHandler responseHandler, ResponseManager messages) {
+        this.responseHandler = responseHandler;
+        this.messages = messages;
+    }
+
+    public WebHookHandler() {}
+
+    @PostConstruct
+    public void init() {
+        this.messages.setWebHook(this);
+    }
 
     @Override
     public BotApiMethod onWebhookUpdateReceived(Update update) {

@@ -20,7 +20,6 @@ import java.util.concurrent.ScheduledFuture;
 
 @Log4j2
 @Service
-@DependsOn({"filesProcessing", "amazonClient"})
 public class TimeDependentActions {
 
     private static ArrayList<String> actions = new ArrayList<>();
@@ -57,13 +56,11 @@ public class TimeDependentActions {
 
     private static FileProcessing fileService;
     private static GameMovement movement;
-    private static ResponseManager messages;
 
     @Autowired
-    private TimeDependentActions(FileProcessing fileService, GameMovement gameMovement, ResponseManager responseManager) {
+    private TimeDependentActions(FileProcessing fileService, GameMovement gameMovement) {
         TimeDependentActions.fileService = fileService;
         TimeDependentActions.movement = gameMovement;
-        TimeDependentActions.messages = responseManager;
     }
 
     @PostConstruct

@@ -8,7 +8,6 @@ import com.wildtigerrr.StoryOfCamelot.database.schema.Player;
 import com.wildtigerrr.StoryOfCamelot.database.schema.enums.PlayerStatusExtended;
 import com.wildtigerrr.StoryOfCamelot.database.service.implementation.LocationServiceImpl;
 import com.wildtigerrr.StoryOfCamelot.database.service.implementation.PlayerServiceImpl;
-import com.wildtigerrr.StoryOfCamelot.web.ResponseHandler;
 import com.wildtigerrr.StoryOfCamelot.web.UpdateWrapper;
 import com.wildtigerrr.StoryOfCamelot.web.service.ResponseManager;
 import lombok.extern.log4j.Log4j2;
@@ -23,16 +22,26 @@ import java.util.List;
 @Service
 public class GameTutorial {
 
+    private final ResponseManager messages;
+    private final GameMain gameMain;
+    private final PlayerServiceImpl playerService;
+    private final LocationServiceImpl locationService;
+    private final TranslationManager translation;
+
     @Autowired
-    private ResponseManager messages;
-    @Autowired
-    private GameMain gameMain;
-    @Autowired
-    private PlayerServiceImpl playerService;
-    @Autowired
-    private LocationServiceImpl locationService;
-    @Autowired
-    private TranslationManager translation;
+    public GameTutorial(
+            ResponseManager messages,
+            GameMain gameMain,
+            PlayerServiceImpl playerService,
+            LocationServiceImpl locationService,
+            TranslationManager translation
+    ) {
+        this.messages = messages;
+        this.gameMain = gameMain;
+        this.playerService = playerService;
+        this.locationService = locationService;
+        this.translation = translation;
+    }
 
     public Boolean proceedTutorial(UpdateWrapper message) {
         Command command = message.getCommand();
@@ -60,14 +69,14 @@ public class GameTutorial {
                 break;
             case TUTORIAL_STATS_UP:
                 if (command == Command.SKILLS) {
-                    tutorialStatsUp(message.getPlayer());
+                    tutorialInitiateStatsUp(message.getPlayer());
                 } else {
                     noRush(message.getPlayer().getLanguage(), message.getUserId());
                 }
                 break;
             case TUTORIAL_STATS_UP_2:
                 if (command == Command.UP) {
-                    gameMain.statUp(message);
+                    tutorialProceedStatsUpProgress(message);
                 } else {
                     noRush(message.getPlayer().getLanguage(), message.getUserId());
                 }
@@ -105,7 +114,7 @@ public class GameTutorial {
                 player.setAdditionalStatus(PlayerStatusExtended.TUTORIAL_NICKNAME); //translation.get(player.getLanguage()).languageSelected(),
                 messages.sendMessageEdit(
                         message.getMessageId(),
-                        translation.getMessage("tutorial.lang.selected", player.getLanguage(), new Object[] {player.getLanguage().getName()}),
+                        translation.getMessage("tutorial.lang.selected", player.getLanguage(), new Object[]{player.getLanguage().getName()}),
                         message.getUserId(),
                         true
                 );
@@ -131,6 +140,7 @@ public class GameTutorial {
 
     private void tutorialNickname(Player player, String nickname) {
         gameMain.setNickname(player, nickname);
+        tutorialSetNickname(player);
     }
 
     void tutorialSetNickname(Player player) {
@@ -152,7 +162,7 @@ public class GameTutorial {
     void tutorialMovement(Player player) {
         player.setAdditionalStatus(PlayerStatusExtended.TUTORIAL_STATS);
         playerService.update(player);
-        List<ReplyButton> buttons = new ArrayList<ReplyButton>(){
+        List<ReplyButton> buttons = new ArrayList<ReplyButton>() {
             {
                 add(ReplyButton.ME);
                 add(ReplyButton.MOVE);
@@ -175,13 +185,19 @@ public class GameTutorial {
         );
     }
 
-    private void tutorialStatsUp(Player player) {
+    private void tutorialInitiateStatsUp(Player player) {
         player.setAdditionalStatus(PlayerStatusExtended.TUTORIAL_STATS_UP_2);
         playerService.update(player);
         gameMain.sendSkillWindow(player);
     }
 
-    void tutorialStatsRaised(Player player) {
+    private void tutorialProceedStatsUpProgress(UpdateWrapper message) {
+        gameMain.statUp(message);
+        if (message.getPlayer().getUnassignedPoints() == 0)
+            tutorialStatsRaised(message.getPlayer());
+    }
+
+    private void tutorialStatsRaised(Player player) {
         player.setAdditionalStatus(PlayerStatusExtended.TUTORIAL_FIGHT);
         playerService.update(player);
         messages.sendMessage(
@@ -190,7 +206,6 @@ public class GameTutorial {
                 player.getExternalId()
         );
     }
-
 
 
 }

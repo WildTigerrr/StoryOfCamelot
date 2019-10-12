@@ -24,20 +24,32 @@ import java.io.IOException;
 @Service
 public class ResponseHandler {
 
+    private final GameMain gameMain;
+    private final GameTutorial tutorial;
+    private final PlayerServiceImpl playerService;
+    private final FileProcessing imageService;
+    private final ResponseManager messages;
+    private final GameMovement movementService;
+    private final TranslationManager translation;
+
     @Autowired
-    private GameMain gameMain;
-    @Autowired
-    private GameTutorial tutorial;
-    @Autowired
-    private PlayerServiceImpl playerService;
-    @Autowired
-    private FileProcessing imageService;
-    @Autowired
-    private ResponseManager messages;
-    @Autowired
-    private GameMovement movementService;
-    @Autowired
-    private TranslationManager translation;
+    public ResponseHandler(
+            GameMain gameMain,
+            GameTutorial tutorial,
+            PlayerServiceImpl playerService,
+            FileProcessing imageService,
+            ResponseManager messages,
+            GameMovement movementService,
+            TranslationManager translation
+    ) {
+        this.gameMain = gameMain;
+        this.tutorial = tutorial;
+        this.playerService = playerService;
+        this.imageService = imageService;
+        this.messages = messages;
+        this.movementService = movementService;
+        this.translation = translation;
+    }
 
     void handleMessage(UpdateWrapper message) {
         setPlayerToMessage(message);

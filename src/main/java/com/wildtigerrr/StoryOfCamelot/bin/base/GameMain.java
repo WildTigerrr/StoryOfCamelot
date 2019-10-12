@@ -28,20 +28,29 @@ import java.util.stream.Collectors;
 @Service
 public class GameMain {
 
+    private final ResponseManager messages;
+    private final PlayerServiceImpl playerService;
+    private final LocationServiceImpl locationService;
+    private final TranslationManager translation;
+    private final MobServiceImpl mobService;
+    private final BattleHandler battleHandler;
+
     @Autowired
-    private ResponseManager messages;
-    @Autowired
-    private GameTutorial tutorial;
-    @Autowired
-    private PlayerServiceImpl playerService;
-    @Autowired
-    private LocationServiceImpl locationService;
-    @Autowired
-    private TranslationManager translation;
-    @Autowired
-    private MobServiceImpl mobService;
-    @Autowired
-    private BattleHandler battleHandler;
+    public GameMain(
+            ResponseManager messages,
+            PlayerServiceImpl playerService,
+            LocationServiceImpl locationService,
+            TranslationManager translation,
+            MobServiceImpl mobService,
+            BattleHandler battleHandler
+    ) {
+        this.messages = messages;
+        this.playerService = playerService;
+        this.locationService = locationService;
+        this.translation = translation;
+        this.mobService = mobService;
+        this.battleHandler = battleHandler;
+    }
 
     public void getTopPlayers(String userId) {
         List<Player> players = playerService.getAll();
@@ -90,7 +99,6 @@ public class GameMain {
         } else if (playerService.findByNickname(player.getNickname()) != null) {
             message = translation.get(player.getLanguage()).nicknameDuplicate(player.getNickname());
         } else if (player.getAdditionalStatus() == PlayerStatusExtended.TUTORIAL_NICKNAME) {
-            tutorial.tutorialSetNickname(player);
             return;
         } else {
             playerService.update(player);
@@ -141,7 +149,6 @@ public class GameMain {
                 messages.sendCallbackAnswer(message.getQueryId(), result);
                 if (player.getUnassignedPoints() == 0) {
                     messages.sendMessageEdit(message.getMessageId(), player.getStatMenu(translation), player.getExternalId(), false);
-                    tutorial.tutorialStatsRaised(message.getPlayer());
                 } else {
                     messages.sendMessageEdit(message.getMessageId(), player.getStatMenu(translation), KeyboardManager.getKeyboardForStatUp(player.getUnassignedPoints()), player.getExternalId(), false);
                 }

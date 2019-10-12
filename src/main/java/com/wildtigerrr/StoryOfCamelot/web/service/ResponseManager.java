@@ -22,9 +22,12 @@ import java.io.InputStream;
 @Service
 public class ResponseManager {
 
-    @Autowired
     private WebHookHandler webHook;
     private Boolean alreadyRedirected = false;
+
+    public void setWebHook(WebHookHandler webHookHandler) {
+        this.webHook = webHookHandler;
+    }
 
     public void sendErrorReport(String message, Exception e, Boolean applyMarkup) {
         log.error(message, e);
