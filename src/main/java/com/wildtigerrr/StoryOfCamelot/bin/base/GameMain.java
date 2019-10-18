@@ -4,7 +4,7 @@ import com.wildtigerrr.StoryOfCamelot.bin.BattleHandler;
 import com.wildtigerrr.StoryOfCamelot.bin.KeyboardManager;
 import com.wildtigerrr.StoryOfCamelot.bin.enums.GameSettings;
 import com.wildtigerrr.StoryOfCamelot.bin.enums.Language;
-import com.wildtigerrr.StoryOfCamelot.bin.exceptions.SOCInvalidDataException;
+import com.wildtigerrr.StoryOfCamelot.exception.InvalidInputException;
 import com.wildtigerrr.StoryOfCamelot.bin.service.StringUtils;
 import com.wildtigerrr.StoryOfCamelot.bin.translation.TranslationManager;
 import com.wildtigerrr.StoryOfCamelot.database.schema.Mob;
@@ -127,7 +127,7 @@ public class GameMain {
                 messages.sendMessage("Очков опыта получено: " + experience, player.getExternalId());
             }
             return player;
-        } catch (SOCInvalidDataException e) {
+        } catch (InvalidInputException e) {
             messages.sendErrorReport(e);
         }
         return player;

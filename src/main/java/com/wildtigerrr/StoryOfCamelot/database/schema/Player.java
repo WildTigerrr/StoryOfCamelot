@@ -1,7 +1,7 @@
 package com.wildtigerrr.StoryOfCamelot.database.schema;
 
 import com.wildtigerrr.StoryOfCamelot.bin.enums.Language;
-import com.wildtigerrr.StoryOfCamelot.bin.exceptions.SOCInvalidDataException;
+import com.wildtigerrr.StoryOfCamelot.exception.InvalidInputException;
 import com.wildtigerrr.StoryOfCamelot.bin.service.SpringManager;
 import com.wildtigerrr.StoryOfCamelot.bin.translation.TranslationManager;
 import com.wildtigerrr.StoryOfCamelot.database.interfaces.Fighter;
@@ -196,17 +196,17 @@ public class Player implements Comparable<Player>, Fighter {
         return translation.getMessage("player.stats.stat-up", lang, new Object[]{stat.whichLowercase(lang), String.valueOf(newQuantity)});
     }
 
-    public ArrayList<String> addStatExpByName(Integer exp, Stats stat, Language lang, TranslationManager translation) throws SOCInvalidDataException, NoSuchFieldException {
+    public ArrayList<String> addStatExpByName(Integer exp, Stats stat, Language lang, TranslationManager translation) throws NoSuchFieldException {
         ArrayList<String> events = new ArrayList<>();
         if (stat == Stats.LUCK) {
             events.add(translation.getMessage("player.stats.cannot-be-raised", lang, new Object[]{stat.which(lang)}));
+            return events;
         }
         Boolean up = isStatUp(stat, exp);
         if (up) {
             Field expField = Player.class.getDeclaredField("strengthExp");
         }
         while (up) {
-
             if (isLevelUp()) {
                 levelUp();
                 events.add(translation.getMessage("player.stats.level-up", lang, new Object[]{String.valueOf(getLevel())}));
@@ -216,7 +216,7 @@ public class Player implements Comparable<Player>, Fighter {
         return events;
     }
 
-    public ArrayList<String> addStatExp(Integer exp, Stats stat, Language lang, TranslationManager translation) throws SOCInvalidDataException {
+    public ArrayList<String> addStatExp(Integer exp, Stats stat, Language lang, TranslationManager translation) {
         ArrayList<String> events = new ArrayList<>();
         Boolean up = isStatUp(stat, exp);
         String currentValue;
@@ -253,7 +253,7 @@ public class Player implements Comparable<Player>, Fighter {
                     currentValue = String.valueOf(endurance);
                     break;
                 default:
-                    throw new SOCInvalidDataException("Invalid stat: " + stat);
+                    throw new InvalidInputException("Invalid stat: " + stat);
             }
             events.add(statUp(lang, stat.whichLowercase(lang), currentValue, translation)); // MainText.STAT_UP.text(lang, stat.whichLowercase(lang), currentValue)
             if (isLevelUp()) {
@@ -269,7 +269,7 @@ public class Player implements Comparable<Player>, Fighter {
         return translation.getMessage("player.stats.stat-up", lang, new Object[]{statName, value});
     }
 
-    private Boolean isStatUp(Stats stat, Integer newExp) throws SOCInvalidDataException {
+    private Boolean isStatUp(Stats stat, Integer newExp) {
         return getCurrentStatExp(stat, newExp) >= getExpToNextStatUp(getCurrentStat(stat));
     }
 
@@ -292,7 +292,7 @@ public class Player implements Comparable<Player>, Fighter {
         return unassignedPoints;
     }
 
-    private Integer getCurrentStatExp(Stats stat, Integer exp) throws SOCInvalidDataException {
+    private Integer getCurrentStatExp(Stats stat, Integer exp) throws InvalidInputException {
         switch (stat) {
             case STRENGTH:
                 strengthExp += exp;
@@ -313,11 +313,11 @@ public class Player implements Comparable<Player>, Fighter {
                 enduranceExp += exp;
                 return enduranceExp;
             default:
-                throw new SOCInvalidDataException("Unknown Player stat for exp: " + stat.name());
+                throw new InvalidInputException("Unknown Player stat for exp: " + stat.name());
         }
     }
 
-    private Integer getCurrentStat(Stats stat) throws SOCInvalidDataException {
+    private Integer getCurrentStat(Stats stat) {
         switch (stat) {
             case STRENGTH:
                 return strength;
@@ -332,7 +332,7 @@ public class Player implements Comparable<Player>, Fighter {
             case ENDURANCE:
                 return endurance;
             default:
-                throw new SOCInvalidDataException("Unknown Player stat: " + stat.name());
+                throw new InvalidInputException("Unknown Player stat: " + stat.name());
         }
     }
 
