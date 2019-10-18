@@ -4,6 +4,7 @@ import com.wildtigerrr.StoryOfCamelot.web.BotConfig;
 import com.wildtigerrr.StoryOfCamelot.web.WebHookHandler;
 import com.wildtigerrr.StoryOfCamelot.web.service.ResponseManager;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.AnswerCallbackQuery;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
@@ -20,6 +21,7 @@ import java.io.InputStream;
 
 @Log4j2
 @Service
+@Profile("!test")
 public class TelegramResponseManager implements ResponseManager {
 
     private WebHookHandler webHook;
