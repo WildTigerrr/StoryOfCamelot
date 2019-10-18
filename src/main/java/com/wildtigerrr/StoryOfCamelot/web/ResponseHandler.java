@@ -254,7 +254,7 @@ public class ResponseHandler {
                 TimeDependentActions.removeFirst();
                 break;
             case "get":
-                TimeDependentActions.getAll();
+                messages.postMessageToAdminChannel(TimeDependentActions.getAll());
                 break;
         }
     }

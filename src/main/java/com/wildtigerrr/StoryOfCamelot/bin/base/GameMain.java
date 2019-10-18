@@ -148,7 +148,7 @@ public class GameMain {
                 String result = player.raiseStat(stat, Integer.valueOf(commandParts[2]), player.getLanguage(), translation);
                 if (!result.equals(translation.getMessage("player.stats.invalid", message)))
                     playerService.update(player);
-                messages.sendCallbackAnswer(message.getQueryId(), result);
+                messages.sendAnswer(message.getQueryId(), result);
                 if (player.getUnassignedPoints() == 0) {
                     messages.sendMessageEdit(message.getMessageId(), player.getStatMenu(translation), player.getExternalId(), false);
                 } else {

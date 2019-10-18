@@ -27,7 +27,7 @@ public class WebHookHandler extends TelegramWebhookBot {
 
     @PostConstruct
     public void init() {
-        this.messages.setWebHook(this);
+        this.messages.setExecutor(this);
     }
 
     @Override

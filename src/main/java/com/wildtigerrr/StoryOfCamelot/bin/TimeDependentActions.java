@@ -3,12 +3,10 @@ package com.wildtigerrr.StoryOfCamelot.bin;
 import com.wildtigerrr.StoryOfCamelot.bin.base.GameMovement;
 import com.wildtigerrr.StoryOfCamelot.bin.enums.ActionType;
 import com.wildtigerrr.StoryOfCamelot.bin.service.Scheduler;
-import com.wildtigerrr.StoryOfCamelot.web.service.ResponseManager;
 import com.wildtigerrr.StoryOfCamelot.bin.service.ScheduledAction;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
@@ -113,8 +111,8 @@ public class TimeDependentActions {
         }
     }
 
-    public static void getAll() {
-        ResponseManager.postMessageToAdminChannelOnStart(scheduledActionMapToString());
+    public static String getAll() {
+        return scheduledActionMapToString();
     }
 
     private static String scheduledActionMapToString() {

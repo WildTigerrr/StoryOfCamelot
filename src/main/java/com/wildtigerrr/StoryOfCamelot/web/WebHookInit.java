@@ -15,10 +15,14 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 @RestController
 public class WebHookInit {
 
+    private final WebHookHandler handler;
+    private final ResponseManager messages;
+
     @Autowired
-    private WebHookHandler handler;
-    @Autowired
-    private ResponseManager messages;
+    public WebHookInit(WebHookHandler handler, ResponseManager messages) {
+        this.handler = handler;
+        this.messages = messages;
+    }
 
     @RequestMapping(value = "/webhook", method = RequestMethod.POST)
     public void webhook(@RequestBody Update update) {
