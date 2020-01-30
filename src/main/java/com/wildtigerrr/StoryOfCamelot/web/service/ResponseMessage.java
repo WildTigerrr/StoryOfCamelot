@@ -1,8 +1,6 @@
 package com.wildtigerrr.StoryOfCamelot.web.service;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NonNull;
+import lombok.*;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboard;
 
 import java.io.File;
@@ -30,13 +28,20 @@ public class ResponseMessage {
         this.file = file;
     }
 
-    @Builder
+    @AllArgsConstructor(access = AccessLevel.PRIVATE)
     @Getter
     public class ResponseFile {
         private final File file;
         private final String fileId;
         private final String fileName;
         private final InputStream inputStream;
+    }
+
+    // TODO Make Correct Builder
+    @Builder(builderMethodName = "addFile")
+    public static ResponseFile createFile(File file, String fileId, String fileName, InputStream inputStream) {
+        return new ResponseMessage(ResponseType.TEXT, null, false, null, null, null)
+                .new ResponseFile(file, fileId, fileName, inputStream);
     }
 
 }

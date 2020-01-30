@@ -75,7 +75,7 @@ public class ResponseHandler {
                         .type(ResponseType.PHOTO)
                         .targetId(BotConfig.ADMIN_CHANNEL_ID)
                         .text(UpdateWrapperUtils.getUpdateLogCaption(update))
-                        .file(ResponseMessage.ResponseFile.builder()
+                        .file(ResponseMessage.addFile()
                                 .fileId(UpdateWrapperUtils.getBiggestPhotoId(update))
                                 .build())
                         .build()
