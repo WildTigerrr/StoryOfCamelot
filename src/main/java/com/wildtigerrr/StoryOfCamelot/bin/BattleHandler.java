@@ -16,10 +16,13 @@ import static com.wildtigerrr.StoryOfCamelot.web.BotConfig.*;
 @Service
 public class BattleHandler {
 
-    @Autowired
-    private TranslationManager translation;
-
+    private final TranslationManager translation;
     private final Random random = new Random();
+
+    @Autowired
+    public BattleHandler(TranslationManager translation) {
+        this.translation = translation;
+    }
 
     public List<String> fight(Fighter attacker, Fighter defender, Language lang) {
         List<String> battleLog = new ArrayList<>();
