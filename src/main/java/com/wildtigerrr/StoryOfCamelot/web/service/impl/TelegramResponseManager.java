@@ -3,6 +3,7 @@ package com.wildtigerrr.StoryOfCamelot.web.service.impl;
 import com.wildtigerrr.StoryOfCamelot.web.BotConfig;
 import com.wildtigerrr.StoryOfCamelot.web.WebHookHandler;
 import com.wildtigerrr.StoryOfCamelot.web.service.ResponseManager;
+import com.wildtigerrr.StoryOfCamelot.web.service.ResponseMessage;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
@@ -29,6 +30,13 @@ public class TelegramResponseManager implements ResponseManager {
 
     public void setExecutor(WebHookHandler webHookHandler) {
         this.webHook = webHookHandler;
+    }
+
+    public void sendMessage(ResponseMessage message) {
+        switch (message.getType()) {
+            case TEXT: proceedMessageSend(message.getText(), message.getKeyboard(), message.getTargetId(), message.isApplyMarkup());
+            case PHOTO: sendImage(message);
+        }
     }
 
     public void sendErrorReport(String message, Exception e, Boolean applyMarkup) {
@@ -85,6 +93,16 @@ public class TelegramResponseManager implements ResponseManager {
         sendImage(fileId, userId, null);
     }
 
+    private void sendImage(ResponseMessage message) {
+        if (message.getFile() == null) return;
+        else if (message.getFile().getFileId() != null) {
+            sendImage(message.getFile().getFileId(), message.getTargetId(), message.getText());
+        } else if (message.getFile().getFile() != null) {
+            sendImage(message.getFile().getFile(), message.getTargetId(), message.getText());
+        } else if (message.getFile().getInputStream() != null && message.getFile().getFileName() != null) {
+            sendImage(message.getFile().getFileName(), message.getFile().getInputStream(), message.getTargetId(), message.getText());
+        }
+    }
 
     public void sendDocument(File file, String userId) {
         proceedDocumentSend(file, userId);

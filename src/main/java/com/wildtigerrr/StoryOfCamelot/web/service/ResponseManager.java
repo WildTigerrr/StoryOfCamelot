@@ -11,6 +11,8 @@ public interface ResponseManager {
 
     void setExecutor(WebHookHandler webHookHandler);
 
+    void sendMessage(ResponseMessage message);
+
     void sendErrorReport(String message, Exception e, Boolean applyMarkup);
     void sendErrorReport(String message, Exception e);
     void sendErrorReport(Exception e);

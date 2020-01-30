@@ -15,6 +15,8 @@ import com.wildtigerrr.StoryOfCamelot.database.service.implementation.PlayerServ
 import com.wildtigerrr.StoryOfCamelot.web.bot.update.UpdateWrapper;
 import com.wildtigerrr.StoryOfCamelot.web.bot.utils.UpdateWrapperUtils;
 import com.wildtigerrr.StoryOfCamelot.web.service.ResponseManager;
+import com.wildtigerrr.StoryOfCamelot.web.service.ResponseMessage;
+import com.wildtigerrr.StoryOfCamelot.web.service.ResponseType;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -56,25 +58,41 @@ public class ResponseHandler {
 
     void handleUpdate(Update update) {
         UpdateWrapper message = new UpdateWrapper(update);
-        if (message.isCommand()) handleMessage(message);
-        else if (update.hasMessage() && update.getMessage().hasPhoto()) {
-            messages.sendImage(
-                    UpdateWrapperUtils.getBiggestPhotoId(update),
-                    BotConfig.ADMIN_CHANNEL_ID,
-                    update.getMessage().getCaption() != null ?
-                            update.getMessage().getCaption() + ", " + UpdateWrapperUtils.getUpdateAuthorCaption(update)
-                            : UpdateWrapperUtils.getUpdateAuthorCaption(update)
-            );
-        } else {
-            log.error("Message not supported: " + update.toString());
-            messages.postMessageToAdminChannel("Message not supported: " + update.toString());
-        }
+        if (message.isCommand()) handleTextMessage(message);
+        else if (update.hasMessage() && update.getMessage().hasPhoto()) handleImageMessage(update);
+        else handleUnsupportedMessage(update);
     }
 
-    void handleMessage(UpdateWrapper message) {
+    void handleTextMessage(UpdateWrapper message) {
         setPlayerToMessage(message);
         logSender(message);
         executeCommand(message);
+    }
+
+    void handleImageMessage(Update update) {
+        messages.sendMessage(
+                ResponseMessage.builder()
+                        .type(ResponseType.PHOTO)
+                        .targetId(BotConfig.ADMIN_CHANNEL_ID)
+                        .text(UpdateWrapperUtils.getUpdateLogCaption(update))
+                        .file(ResponseMessage.ResponseFile.builder()
+                                .fileId(UpdateWrapperUtils.getBiggestPhotoId(update))
+                                .build())
+                        .build()
+        );
+
+        messages.sendImage(
+                UpdateWrapperUtils.getBiggestPhotoId(update),
+                BotConfig.ADMIN_CHANNEL_ID,
+                update.getMessage().getCaption() != null ?
+                        update.getMessage().getCaption() + ", " + UpdateWrapperUtils.getUpdateAuthorCaption(update)
+                        : UpdateWrapperUtils.getUpdateAuthorCaption(update)
+        );
+    }
+
+    void handleUnsupportedMessage(Update update) {
+        log.error("Message not supported: " + update.toString());
+        messages.postMessageToAdminChannel("Message not supported: " + update.toString());
     }
 
     private void setPlayerToMessage(UpdateWrapper message) {

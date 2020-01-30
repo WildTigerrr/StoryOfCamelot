@@ -38,6 +38,12 @@ public class UpdateWrapperUtils {
         }
     }
 
+    public String getUpdateLogCaption(Update update) {
+        String authorCaption = UpdateWrapperUtils.getUpdateAuthorCaption(update);
+        return update.getMessage().getCaption() != null ?
+                update.getMessage().getCaption() + ", " + authorCaption : authorCaption;
+    }
+
     public String getUpdateAuthorCaption(Update update) {
         User user = update.hasCallbackQuery() ? update.getCallbackQuery().getMessage().getFrom() : update.getMessage().getFrom();
         return new Author(user).toString();
