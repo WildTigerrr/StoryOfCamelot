@@ -19,6 +19,11 @@ public class MockResponseManager implements ResponseManager {
     }
 
     @Override
+    public void sendMessage(ResponseMessage message) {
+
+    }
+
+    @Override
     public void sendErrorReport(String message, Exception e, Boolean applyMarkup) {
 
     }
