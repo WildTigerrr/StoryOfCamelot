@@ -6,6 +6,6 @@ public interface ResponseMessage {
 
     ResponseType getType();
     String getText();
-    Boolean isApplyMarkup();
+    boolean isApplyMarkup();
 
 }
