@@ -103,7 +103,8 @@ public class GameMain {
             return;
         } else {
             playerService.update(player);
-            message = translation.getMessage("player.nickname.accept", player);
+            message = translation.getMessage("player.nickname.accept", player,
+                    new Object[]{player.getNickname()});
         }
         messages.sendMessage(message, player.getExternalId(), true);
     }
@@ -124,7 +125,11 @@ public class GameMain {
                 }
             }
             if (sendExperienceGet) {
-                messages.sendMessage("Очков опыта получено: " + experience, player.getExternalId());
+                messages.sendMessage(
+                        translation.getMessage("player.stats.experience-taken", player.getLanguage(),
+                                new Object[]{experience}),
+                        player.getExternalId()
+                );
             }
             return player;
         } catch (InvalidInputException e) {

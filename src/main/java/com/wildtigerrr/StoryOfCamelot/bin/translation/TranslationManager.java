@@ -76,12 +76,12 @@ public class TranslationManager {
         Pattern pattern = Pattern.compile("\\[emj:(.*?)]");
         Matcher matcher = pattern.matcher(message);
         if (matcher.find()) {
-            message = matcher.replaceAll(matchResult -> getAppropriateEmoji(matchResult.group(1)));
+            message = matcher.replaceAll(matchResult -> getEmojiByName(matchResult.group(1)));
         }
         return message;
     }
 
-    private String getAppropriateEmoji(String name) {
+    private String getEmojiByName(String name) {
         return Emoji.valueOf(name).getCode();
     }
 
