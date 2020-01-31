@@ -15,8 +15,8 @@ import com.wildtigerrr.StoryOfCamelot.database.service.implementation.PlayerServ
 import com.wildtigerrr.StoryOfCamelot.web.bot.update.UpdateWrapper;
 import com.wildtigerrr.StoryOfCamelot.web.bot.utils.UpdateWrapperUtils;
 import com.wildtigerrr.StoryOfCamelot.web.service.ResponseManager;
-import com.wildtigerrr.StoryOfCamelot.web.service.ResponseMessage;
 import com.wildtigerrr.StoryOfCamelot.web.service.ResponseType;
+import com.wildtigerrr.StoryOfCamelot.web.service.message.template.ImageResponseMessage;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -70,14 +70,13 @@ public class ResponseHandler {
     }
 
     void handleImageMessage(Update update) {
+        System.out.println("New image here!");
         messages.sendMessage(
-                ResponseMessage.builder()
+                ImageResponseMessage.builder()
                         .type(ResponseType.PHOTO)
                         .targetId(BotConfig.ADMIN_CHANNEL_ID)
-                        .text(UpdateWrapperUtils.getUpdateLogCaption(update))
-                        .file(ResponseMessage.addFile()
-                                .fileId(UpdateWrapperUtils.getBiggestPhotoId(update))
-                                .build())
+                        .caption(UpdateWrapperUtils.getUpdateLogCaption(update))
+                        .fileId(UpdateWrapperUtils.getBiggestPhotoId(update))
                         .build()
         );
 

@@ -1,6 +1,7 @@
 package com.wildtigerrr.StoryOfCamelot.web.service;
 
 import com.wildtigerrr.StoryOfCamelot.web.WebHookHandler;
+import com.wildtigerrr.StoryOfCamelot.web.service.message.ResponseMessage;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboard;
 

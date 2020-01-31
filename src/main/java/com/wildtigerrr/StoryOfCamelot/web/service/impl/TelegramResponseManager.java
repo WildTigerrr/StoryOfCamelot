@@ -3,7 +3,8 @@ package com.wildtigerrr.StoryOfCamelot.web.service.impl;
 import com.wildtigerrr.StoryOfCamelot.web.BotConfig;
 import com.wildtigerrr.StoryOfCamelot.web.WebHookHandler;
 import com.wildtigerrr.StoryOfCamelot.web.service.ResponseManager;
-import com.wildtigerrr.StoryOfCamelot.web.service.ResponseMessage;
+import com.wildtigerrr.StoryOfCamelot.web.service.message.ResponseMessage;
+import com.wildtigerrr.StoryOfCamelot.web.service.message.template.*;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
@@ -34,8 +35,9 @@ public class TelegramResponseManager implements ResponseManager {
 
     public void sendMessage(ResponseMessage message) {
         switch (message.getType()) {
-            case TEXT: proceedMessageSend(message.getText(), message.getKeyboard(), message.getTargetId(), message.isApplyMarkup());
-            case PHOTO: sendImage(message);
+            case TEXT: proceedMessageSend((TextResponseMessage) message);
+            case PHOTO: proceedImageSend((ImageResponseMessage) message);
+            case DOCUMENT: proceedDocumentSend((DocumentResponseMessage) message);
         }
     }
 
@@ -93,17 +95,6 @@ public class TelegramResponseManager implements ResponseManager {
         sendImage(fileId, userId, null);
     }
 
-    private void sendImage(ResponseMessage message) {
-        if (message.getFile() == null) return;
-        else if (message.getFile().getFileId() != null) {
-            sendImage(message.getFile().getFileId(), message.getTargetId(), message.getText());
-        } else if (message.getFile().getFile() != null) {
-            sendImage(message.getFile().getFile(), message.getTargetId(), message.getText());
-        } else if (message.getFile().getInputStream() != null && message.getFile().getFileName() != null) {
-            sendImage(message.getFile().getFileName(), message.getFile().getInputStream(), message.getTargetId(), message.getText());
-        }
-    }
-
     public void sendDocument(File file, String userId) {
         proceedDocumentSend(file, userId);
     }
@@ -136,6 +127,14 @@ public class TelegramResponseManager implements ResponseManager {
                 .setReplyMarkup(keyboard);
         execute(message);
     }
+    private void proceedMessageSend(TextResponseMessage messageTemplate) {
+        SendMessage message = new SendMessage()
+                .enableMarkdown(messageTemplate.isApplyMarkup())
+                .setChatId(messageTemplate.getTargetId())
+                .setText(messageTemplate.getText())
+                .setReplyMarkup(messageTemplate.getKeyboard());
+        execute(message);
+    }
     private void proceedImageSend(File file, String fileName, InputStream stream, String fileId, String userId, String caption) {
         SendPhoto newMessage = new SendPhoto()
                 .setCaption(caption)
@@ -149,10 +148,29 @@ public class TelegramResponseManager implements ResponseManager {
         }
         execute(newMessage);
     }
+    private void proceedImageSend(ImageResponseMessage messageTemplate) {
+        SendPhoto newMessage = new SendPhoto()
+                .setCaption(messageTemplate.getCaption())
+                .setChatId(messageTemplate.getTargetId());
+        if (messageTemplate.getFile() != null) {
+            newMessage.setPhoto(messageTemplate.getFile());
+        } else if (messageTemplate.getInputStream() != null) {
+            newMessage.setPhoto(messageTemplate.getFileName(), messageTemplate.getInputStream());
+        } else if (messageTemplate.getFileId() != null) {
+            newMessage.setPhoto(messageTemplate.getFileId());
+        }
+        execute(newMessage);
+    }
     private void proceedDocumentSend(File file, String userId) {
         SendDocument sendMessage = new SendDocument()
                 .setDocument(file)
                 .setChatId(userId);
+        execute(sendMessage);
+    }
+    private void proceedDocumentSend(DocumentResponseMessage messageTemplate) {
+        SendDocument sendMessage = new SendDocument()
+                .setDocument(messageTemplate.getFile())
+                .setChatId(messageTemplate.getTargetId());
         execute(sendMessage);
     }
     private void proceedMessageEdit(Integer messageId, InlineKeyboardMarkup keyboard, String newText, String userId, Boolean useMarkdown) {
