@@ -34,11 +34,10 @@ public class TelegramResponseManager implements ResponseManager {
     }
 
     public void sendMessage(ResponseMessage message) {
-        System.out.println("Current type: " + message.getType());
         switch (message.getType()) {
-            case TEXT: proceedMessageSend((TextResponseMessage) message);
-            case PHOTO: proceedImageSend((ImageResponseMessage) message);
-            case DOCUMENT: proceedDocumentSend((DocumentResponseMessage) message);
+            case TEXT: proceedMessageSend((TextResponseMessage) message); break;
+            case PHOTO: proceedImageSend((ImageResponseMessage) message); break;
+            case DOCUMENT: proceedDocumentSend((DocumentResponseMessage) message); break;
         }
     }
 

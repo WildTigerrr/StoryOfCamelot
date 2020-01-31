@@ -70,7 +70,6 @@ public class ResponseHandler {
     }
 
     void handleImageMessage(Update update) {
-        System.out.println("New image here!");
         messages.sendMessage(
                 ImageResponseMessage.builder()
                         .targetId(BotConfig.ADMIN_CHANNEL_ID)
