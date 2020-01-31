@@ -168,14 +168,15 @@ public class GameTutorial {
                                 locationService.findByName(GameSettings.FIRST_FOREST_LOCATION.get()).getName(player.getLanguage())
                         }))
                 .keyboard(KeyboardManager.getReplyByButtons(new ArrayList<>(Collections.singleton(ReplyButton.MOVE)), player.getLanguage()))
-                .targetId(player).build()
+                .targetId(player)
+                .applyMarkup(true).build()
         );
     }
 
     void tutorialMovement(Player player) {
         player.setAdditionalStatus(PlayerStatusExtended.TUTORIAL_STATS);
         playerService.update(player);
-        List<ReplyButton> buttons = new ArrayList<ReplyButton>() {
+        List<ReplyButton> buttons = new ArrayList<>() {
             {
                 add(ReplyButton.ME);
                 add(ReplyButton.MOVE);
@@ -183,10 +184,11 @@ public class GameTutorial {
         };
         messages.sendMessage(TextResponseMessage.builder()
                 .text(translation.getMessage(
-                        "tutorial.lessons.first-profile", player, new Object[]{player.getNickname()}
+                        "tutorial.lessons.first-profile", player, new Object[]{player.getNickname(), ReplyButton.ME.getLabel(player.getLanguage())}
                 ))
                 .keyboard(KeyboardManager.getReplyByButtons(buttons, player.getLanguage()))
-                .targetId(player).build()
+                .targetId(player)
+                .applyMarkup(true).build()
         );
     }
 
