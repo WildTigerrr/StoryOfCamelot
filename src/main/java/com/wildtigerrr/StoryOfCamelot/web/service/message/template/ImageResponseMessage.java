@@ -32,7 +32,7 @@ public class ImageResponseMessage implements ResponseMessage {
     }
 
     @Override
-    public Boolean isApplyMarkup() {
+    public boolean isApplyMarkup() {
         return false;
     }
 

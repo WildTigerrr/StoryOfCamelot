@@ -25,7 +25,7 @@ public class DocumentResponseMessage implements ResponseMessage {
     }
 
     @Override
-    public Boolean isApplyMarkup() {
+    public boolean isApplyMarkup() {
         return false;
     }
 

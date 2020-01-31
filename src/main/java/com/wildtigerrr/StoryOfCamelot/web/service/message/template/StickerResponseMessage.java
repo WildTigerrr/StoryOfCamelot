@@ -29,7 +29,7 @@ public class StickerResponseMessage implements ResponseMessage {
     }
 
     @Override
-    public Boolean isApplyMarkup() {
+    public boolean isApplyMarkup() {
         return false;
     }
 
