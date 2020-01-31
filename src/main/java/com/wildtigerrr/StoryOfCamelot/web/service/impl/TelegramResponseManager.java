@@ -34,6 +34,7 @@ public class TelegramResponseManager implements ResponseManager {
     }
 
     public void sendMessage(ResponseMessage message) {
+        System.out.println("Current type: " + message.getType());
         switch (message.getType()) {
             case TEXT: proceedMessageSend((TextResponseMessage) message);
             case PHOTO: proceedImageSend((ImageResponseMessage) message);

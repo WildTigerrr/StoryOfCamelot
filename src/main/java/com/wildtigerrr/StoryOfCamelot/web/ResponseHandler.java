@@ -73,20 +73,19 @@ public class ResponseHandler {
         System.out.println("New image here!");
         messages.sendMessage(
                 ImageResponseMessage.builder()
-                        .type(ResponseType.PHOTO)
                         .targetId(BotConfig.ADMIN_CHANNEL_ID)
                         .caption(UpdateWrapperUtils.getUpdateLogCaption(update))
                         .fileId(UpdateWrapperUtils.getBiggestPhotoId(update))
                         .build()
         );
 
-        messages.sendImage(
-                UpdateWrapperUtils.getBiggestPhotoId(update),
-                BotConfig.ADMIN_CHANNEL_ID,
-                update.getMessage().getCaption() != null ?
-                        update.getMessage().getCaption() + ", " + UpdateWrapperUtils.getUpdateAuthorCaption(update)
-                        : UpdateWrapperUtils.getUpdateAuthorCaption(update)
-        );
+//        messages.sendImage(
+//                UpdateWrapperUtils.getBiggestPhotoId(update),
+//                BotConfig.ADMIN_CHANNEL_ID,
+//                update.getMessage().getCaption() != null ?
+//                        update.getMessage().getCaption() + ", " + UpdateWrapperUtils.getUpdateAuthorCaption(update)
+//                        : UpdateWrapperUtils.getUpdateAuthorCaption(update)
+//        );
     }
 
     void handleUnsupportedMessage(Update update) {
