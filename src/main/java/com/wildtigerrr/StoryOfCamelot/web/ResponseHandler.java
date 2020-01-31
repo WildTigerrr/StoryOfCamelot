@@ -15,8 +15,10 @@ import com.wildtigerrr.StoryOfCamelot.database.service.implementation.PlayerServ
 import com.wildtigerrr.StoryOfCamelot.web.bot.update.UpdateWrapper;
 import com.wildtigerrr.StoryOfCamelot.web.bot.utils.UpdateWrapperUtils;
 import com.wildtigerrr.StoryOfCamelot.web.service.ResponseManager;
+import com.wildtigerrr.StoryOfCamelot.web.service.ResponseType;
 import com.wildtigerrr.StoryOfCamelot.web.service.message.template.ImageResponseMessage;
 import com.wildtigerrr.StoryOfCamelot.web.service.message.template.StickerResponseMessage;
+import com.wildtigerrr.StoryOfCamelot.web.service.message.template.TextResponseMessage;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -111,11 +113,15 @@ public class ResponseHandler {
     private void commandNotExecuted(UpdateWrapper message) {
         String answer = "Я не знаю как это обработать: " + message.getText();
         log.debug("Answer: " + answer);
-        messages.sendMessage(answer, message.getUserId(), false);
+        messages.sendMessage(TextResponseMessage.builder()
+                .text(answer).targetId(message).build()
+        );
     }
 
     private void sendTestImage(String userId) {
-        messages.sendMessage("Нужно бы забраться повыше и осмотреться...", userId);
+        messages.sendMessage(TextResponseMessage.builder()
+                .text("Нужно бы забраться повыше и осмотреться...").targetId(userId).build()
+        );
         String docName = "Test name";
         try {
             File file = imageService.getOverlaidImagesAsFile(
@@ -124,7 +130,9 @@ public class ResponseHandler {
                     docName,
                     ".png"
             );
-            messages.sendImage(file, userId);
+            messages.sendMessage(ImageResponseMessage.builder()
+                    .file(file).targetId(userId).build()
+            );
         } catch (IOException e) {
             handleError(e.getMessage(), e);
         }
@@ -133,7 +141,9 @@ public class ResponseHandler {
     private void logSender(UpdateWrapper message) {
         log.debug("Working with message: " + message);
         if (!message.getUserId().equals(BotConfig.WEBHOOK_ADMIN_ID)) {
-            messages.postMessageToAdminChannel(message.toString());
+            messages.sendMessage(TextResponseMessage.builder()
+                    .text(message.toString()).type(ResponseType.POST_TO_ADMIN_CHANNEL).build()
+            );
         }
     }
 
@@ -203,7 +213,11 @@ public class ResponseHandler {
                 gameMain.getTopPlayers(message.getUserId());
                 break;
             default:
-                messages.sendMessage(translation.getMessage("commands.not-defined", message), message.getUserId(), true);
+                messages.sendMessage(TextResponseMessage.builder()
+                        .text(translation.getMessage("commands.not-defined", message))
+                        .targetId(message)
+                        .applyMarkup(true).build()
+                );
                 return false;
         }
         return true;
@@ -212,14 +226,18 @@ public class ResponseHandler {
     private void disableTutorial(Player player) {
         player.activate();
         playerService.update(player);
-        messages.sendMessage("Туториал отключен", player.getExternalId());
+        messages.sendMessage(TextResponseMessage.builder()
+                .text("Туториал отключен").targetId(player).build()
+        );
     }
 
     private void enableTutorial(Player player) {
         player.setAdditionalStatus(PlayerStatusExtended.TUTORIAL_NICKNAME);
         player.stop();
         playerService.update(player);
-        messages.sendMessage("Туториал перезапущен", player.getExternalId());
+        messages.sendMessage(TextResponseMessage.builder()
+                .text("Туториал перезапущен").targetId(player).build()
+        );
     }
 
     private void sendIdsToAdminChannel(String userId, long chatId) {
@@ -227,13 +245,13 @@ public class ResponseHandler {
     }
 
     private void sendPlayerInfo(UpdateWrapper message) {
-        messages.sendMessage(
-                playerService.getPlayerInfo(
+        messages.sendMessage(TextResponseMessage.builder()
+                .text(playerService.getPlayerInfo(
                         message.getUserId(),
                         message.getPlayer().getLanguage()
-                ),
-                message.getUserId(),
-                true
+                ))
+                .targetId(message)
+                .applyMarkup(true).build()
         );
     }
 
@@ -241,7 +259,11 @@ public class ResponseHandler {
         if (commandParts.length > 1) {
             gameMain.setNickname(message.getPlayer(), commandParts[1]);
         } else {
-            messages.sendMessage(translation.getMessage("player.nickname.empty", message), message.getUserId(), true);
+            messages.sendMessage(TextResponseMessage.builder()
+                    .text(translation.getMessage("player.nickname.empty", message))
+                    .targetId(message)
+                    .applyMarkup(true).build()
+            );
         }
     }
 
@@ -280,9 +302,13 @@ public class ResponseHandler {
         commandParts = message.split(" ", 3);
         Player receiver = playerService.findByExternalId(commandParts[1]);
         if (receiver != null) {
-            messages.sendMessage(commandParts[2], commandParts[1]);
+            messages.sendMessage(TextResponseMessage.builder()
+                    .text(commandParts[2]).targetId(commandParts[1]).build()
+            );
         } else {
-            messages.sendMessage(commandParts[2], commandParts[1]);
+            messages.sendMessage(TextResponseMessage.builder()
+                    .text(commandParts[2]).targetId(commandParts[1]).build()
+            );
 //                    messages.sendMessage("Пользователь не найден", message.getUserId());
         }
     }
@@ -291,7 +317,9 @@ public class ResponseHandler {
         if (message.getPlayer().isNew()) {
             tutorial.tutorialStart(message.getPlayer());
         } else {
-            messages.sendMessage(translation.getMessage("commands.expired", message), message.getUserId());
+            messages.sendMessage(TextResponseMessage.builder()
+                    .text(translation.getMessage("commands.expired", message)).targetId(message).build()
+            );
         }
     }
 

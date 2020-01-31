@@ -6,6 +6,7 @@ public enum ResponseType {
     POST_TO_ADMIN_CHANNEL,
     PHOTO,
     DOCUMENT,
-    STICKER
+    STICKER,
+    EDIT
 
 }

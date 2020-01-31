@@ -15,6 +15,9 @@ import com.wildtigerrr.StoryOfCamelot.database.service.implementation.PlayerServ
 import com.wildtigerrr.StoryOfCamelot.web.bot.update.UpdateWrapper;
 import com.wildtigerrr.StoryOfCamelot.web.service.DataProvider;
 import com.wildtigerrr.StoryOfCamelot.web.service.ResponseManager;
+import com.wildtigerrr.StoryOfCamelot.web.service.message.template.EditResponseMessage;
+import com.wildtigerrr.StoryOfCamelot.web.service.message.template.ImageResponseMessage;
+import com.wildtigerrr.StoryOfCamelot.web.service.message.template.TextResponseMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -61,15 +64,16 @@ public class GameMovement {
     public void handleMove(UpdateWrapper message) {
         if (message.getPlayer().getStatus() == PlayerStatus.MOVEMENT) {
             if (message.isQuery()) {
-                messages.sendMessageEdit(
-                        message.getMessageId(),
-//                        MainText.ALREADY_MOVING.text(message.getPlayer().getLanguage()),
-                        translation.getMessage("movement.location.in-progress", message),
-                        message.getUserId(),
-                        true
+                messages.sendMessage(EditResponseMessage.builder()
+                        .messageId(message)
+                        .text(translation.getMessage("movement.location.in-progress", message))
+                        .targetId(message)
+                        .applyMarkup(true).build()
                 );
             } else {
-                messages.sendMessage(translation.getMessage("movement.location.in-progress", message), message.getUserId());
+                messages.sendMessage(TextResponseMessage.builder()
+                        .text(translation.getMessage("movement.location.in-progress", message)).targetId(message).build()
+                );
             }
         } else if (message.isQuery()) {
             String[] commandParts = message.getText().split(" ", 2);
@@ -82,15 +86,14 @@ public class GameMovement {
     public void sendAvailableLocations(Player player) {
         ArrayList<Location> nearLocations = locationNearService.getNearLocations(player.getLocation());
         if (!nearLocations.isEmpty()) {
-            messages.sendMessage(
-                    translation.getMessage("movement.location.select", player),
-                    KeyboardManager.getKeyboardForLocations(nearLocations, player.getLanguage()),
-                    player.getExternalId()
+            messages.sendMessage(TextResponseMessage.builder()
+                            .text(translation.getMessage("movement.location.select", player))
+                            .keyboard(KeyboardManager.getKeyboardForLocations(nearLocations, player.getLanguage()))
+                            .targetId(player).build()
             );
         } else {
-            messages.sendMessage(
-                    translation.getMessage("movement.location.blocked", player),
-                    player.getExternalId()
+            messages.sendMessage(TextResponseMessage.builder()
+                    .text(translation.getMessage("movement.location.blocked", player)).targetId(player).build()
             );
         }
     }
@@ -103,9 +106,8 @@ public class GameMovement {
                     location
             );
             if (distance == -1) {
-                messages.sendMessage(
-                        translation.getMessage("movement.location.no-connection", message),
-                        message.getUserId()
+                messages.sendMessage(TextResponseMessage.builder()
+                        .text(translation.getMessage("movement.location.no-connection", message)).targetId(message).build()
                 );
                 return;
             }
@@ -128,11 +130,11 @@ public class GameMovement {
                 player.move();
                 playerService.update(player);
             }
-            messages.sendMessageEdit(
-                    message.getMessageId(),
-                    newText,
-                    message.getUserId(),
-                    true
+            messages.sendMessage(EditResponseMessage.builder()
+                    .messageId(message)
+                    .text(newText)
+                    .targetId(message)
+                    .applyMarkup(true).build()
             );
         }
     }
@@ -144,23 +146,22 @@ public class GameMovement {
         player.stop();
         if (location.getImageLink() != null) {
             InputStream stream = dataProvider.getObject(location.getImageLink().getLocation());
-            messages.sendImage(
-                    location.getSystemName(),
-                    stream,
-                    player.getExternalId(),
-                    translation.getMessage(
+            messages.sendMessage(ImageResponseMessage.builder()
+                    .fileName(location.getSystemName())
+                    .fileStream(stream)
+                    .caption(translation.getMessage(
                             "movement.location.arrived",
                             player,
-                            new Object[]{location.getName(player.getLanguage())})
+                            new Object[]{location.getName(player.getLanguage())}))
+                    .targetId(player).build()
             );
         } else {
-            messages.sendMessage(
-                    translation.getMessage(
+            messages.sendMessage(TextResponseMessage.builder()
+                    .text(translation.getMessage(
                             "movement.location.arrived",
                             player,
                             new Object[]{location.getName(player.getLanguage())}
-                    ),
-                    player.getExternalId()
+                    )).targetId(player).build()
             );
         }
         if (player.getAdditionalStatus() == PlayerStatusExtended.TUTORIAL_MOVEMENT) {

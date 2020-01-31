@@ -23,4 +23,14 @@ public class StickerResponseMessage implements ResponseMessage {
     private final String fileName;
     private final InputStream inputStream;
 
+    @Override
+    public String getText() {
+        return "Sticker without text";
+    }
+
+    @Override
+    public Boolean isApplyMarkup() {
+        return false;
+    }
+
 }

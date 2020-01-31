@@ -10,6 +10,8 @@ import com.wildtigerrr.StoryOfCamelot.database.service.implementation.LocationSe
 import com.wildtigerrr.StoryOfCamelot.database.service.implementation.PlayerServiceImpl;
 import com.wildtigerrr.StoryOfCamelot.web.bot.update.UpdateWrapper;
 import com.wildtigerrr.StoryOfCamelot.web.service.ResponseManager;
+import com.wildtigerrr.StoryOfCamelot.web.service.message.template.EditResponseMessage;
+import com.wildtigerrr.StoryOfCamelot.web.service.message.template.TextResponseMessage;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -61,7 +63,9 @@ public class GameTutorial {
                 break;
             case TUTORIAL_STATS:
                 if (command == Command.ME) {
-                    messages.sendMessage(message.getPlayer().toString(), message.getUserId(), true);
+                    messages.sendMessage(TextResponseMessage.builder()
+                            .text(message.getPlayer().toString()).targetId(message).applyMarkup(true).build()
+                    );
                     tutorialStats(message.getPlayer());
                 } else {
                     noRush(message.getPlayer().getLanguage(), message.getUserId());
@@ -89,16 +93,17 @@ public class GameTutorial {
                 }
                 break;
             default:
-                messages.sendMessage(
-                        translation.getMessage("commands.not-developed", message),
-                        message.getUserId()
+                messages.sendMessage(TextResponseMessage.builder()
+                        .text(translation.getMessage("commands.not-developed", message)).targetId(message).build()
                 );
         }
         return true;
     }
 
     private void noRush(Language lang, String userId) {
-        messages.sendMessage(translation.getMessage("tutorial.lessons.no-rush", lang), userId);
+        messages.sendMessage(TextResponseMessage.builder()
+                .text(translation.getMessage("tutorial.lessons.no-rush", lang)).targetId(userId).build()
+        );
     }
 
     private void tutorialLanguageSelect(Command command, UpdateWrapper message) {
@@ -115,26 +120,24 @@ public class GameTutorial {
                 Player player = message.getPlayer();
                 player.setLanguage(Language.values()[Integer.parseInt(commandParts[1])]);
                 player.setAdditionalStatus(PlayerStatusExtended.TUTORIAL_NICKNAME);
-                messages.sendMessageEdit(
-                        message.getMessageId(),
-                        translation.getMessage("tutorial.lang.selected",
+                messages.sendMessage(EditResponseMessage.builder()
+                        .messageId(message)
+                        .text(translation.getMessage("tutorial.lang.selected",
                                 player,
                                 new Object[]{player.getLanguage().getName()}
-                        ),
-                        message.getUserId(),
-                        true
+                        ))
+                        .targetId(message)
+                        .applyMarkup(true).build()
                 );
                 tutorialStart(player);
             } else {
-                messages.sendMessage(
-                        translation.getMessage("commands.invalid", message),
-                        message.getUserId()
+                messages.sendMessage(TextResponseMessage.builder()
+                        .text(translation.getMessage("commands.invalid", message)).targetId(message).build()
                 );
             }
         } else {
-            messages.sendMessage(
-                    translation.getMessage("tutorial.lessons.no-rush", message),
-                    message.getUserId()
+            messages.sendMessage(TextResponseMessage.builder()
+                    .text(translation.getMessage("tutorial.lessons.no-rush", message)).targetId(message).build()
             );
         }
     }
@@ -142,11 +145,9 @@ public class GameTutorial {
     public void tutorialStart(Player player) {
         log.info("New Player: " + player);
         player.setup();
-        playerService.update(player); // translation.get(player.getLanguage()).tutorialMeetNewPlayer(),
-        messages.sendMessage(
-                translation.getMessage("tutorial.player.welcome", player),
-                player.getExternalId(),
-                true
+        playerService.update(player);
+        messages.sendMessage(TextResponseMessage.builder()
+                .text(translation.getMessage("tutorial.player.welcome", player)).targetId(player).applyMarkup(true).build()
         );
     }
 
@@ -158,16 +159,16 @@ public class GameTutorial {
     void tutorialSetNickname(Player player) {
         player.setAdditionalStatus(PlayerStatusExtended.TUTORIAL_MOVEMENT);
         playerService.update(player);
-        messages.sendMessage(
-                translation.getMessage(
+        messages.sendMessage(TextResponseMessage.builder()
+                .text(translation.getMessage(
                         "tutorial.player.nickname.accept",
                         player,
                         new Object[]{
                                 player.getNickname(),
                                 locationService.findByName(GameSettings.FIRST_FOREST_LOCATION.get()).getName(player.getLanguage())
-                        }),
-                KeyboardManager.getReplyByButtons(new ArrayList<>(Collections.singleton(ReplyButton.MOVE)), player.getLanguage()),
-                player.getExternalId()
+                        }))
+                .keyboard(KeyboardManager.getReplyByButtons(new ArrayList<>(Collections.singleton(ReplyButton.MOVE)), player.getLanguage()))
+                .targetId(player).build()
         );
     }
 
@@ -180,22 +181,22 @@ public class GameTutorial {
                 add(ReplyButton.MOVE);
             }
         };
-        messages.sendMessage(
-                translation.getMessage(
+        messages.sendMessage(TextResponseMessage.builder()
+                .text(translation.getMessage(
                         "tutorial.lessons.first-profile", player, new Object[]{player.getNickname()}
-                ),
-                KeyboardManager.getReplyByButtons(buttons, player.getLanguage()),
-                player.getExternalId()
+                ))
+                .keyboard(KeyboardManager.getReplyByButtons(buttons, player.getLanguage()))
+                .targetId(player).build()
         );
     }
 
     private void tutorialStats(Player player) {
         player.setAdditionalStatus(PlayerStatusExtended.TUTORIAL_STATS_UP);
         playerService.update(player);
-        messages.sendMessage(
-                translation.getMessage("tutorial.lessons.two-skillpoints", player),
-                KeyboardManager.getReplyByButtons(new ArrayList<>(Collections.singleton(ReplyButton.SKILLS)), player.getLanguage()),
-                player.getExternalId()
+        messages.sendMessage(TextResponseMessage.builder()
+                .text(translation.getMessage("tutorial.lessons.two-skillpoints", player))
+                .keyboard(KeyboardManager.getReplyByButtons(new ArrayList<>(Collections.singleton(ReplyButton.SKILLS)), player.getLanguage()))
+                .targetId(player).build()
         );
     }
 
@@ -214,10 +215,10 @@ public class GameTutorial {
     private void tutorialStatsRaised(Player player) {
         player.setAdditionalStatus(PlayerStatusExtended.TUTORIAL_FIGHT);
         playerService.update(player);
-        messages.sendMessage(
-                translation.getMessage("tutorial.lessons.three-fight", player),
-                KeyboardManager.getReplyByButtons(new ArrayList<>(Collections.singleton(ReplyButton.FIGHT)), player.getLanguage()),
-                player.getExternalId()
+        messages.sendMessage(TextResponseMessage.builder()
+                .text(translation.getMessage("tutorial.lessons.three-fight", player))
+                .keyboard(KeyboardManager.getReplyByButtons(new ArrayList<>(Collections.singleton(ReplyButton.FIGHT)), player.getLanguage()))
+                .targetId(player).build()
         );
     }
 

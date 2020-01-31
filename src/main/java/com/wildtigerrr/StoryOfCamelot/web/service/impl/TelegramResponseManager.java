@@ -3,6 +3,7 @@ package com.wildtigerrr.StoryOfCamelot.web.service.impl;
 import com.wildtigerrr.StoryOfCamelot.web.BotConfig;
 import com.wildtigerrr.StoryOfCamelot.web.WebHookHandler;
 import com.wildtigerrr.StoryOfCamelot.web.service.ResponseManager;
+import com.wildtigerrr.StoryOfCamelot.web.service.ResponseType;
 import com.wildtigerrr.StoryOfCamelot.web.service.message.ResponseMessage;
 import com.wildtigerrr.StoryOfCamelot.web.service.message.template.*;
 import lombok.extern.log4j.Log4j2;
@@ -15,12 +16,7 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
 import org.telegram.telegrambots.meta.api.methods.send.SendSticker;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboard;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
-
-import java.io.File;
-import java.io.InputStream;
 
 @Log4j2
 @Service
@@ -36,10 +32,13 @@ public class TelegramResponseManager implements ResponseManager {
 
     public void sendMessage(ResponseMessage message) {
         switch (message.getType()) {
-            case TEXT: proceedMessageSend((TextResponseMessage) message); break;
+            case TEXT:
+            case POST_TO_ADMIN_CHANNEL:
+                proceedMessageSend((TextResponseMessage) message); break;
             case PHOTO: proceedImageSend((ImageResponseMessage) message); break;
             case DOCUMENT: proceedDocumentSend((DocumentResponseMessage) message); break;
             case STICKER: proceedStickerSend((StickerResponseMessage) message); break;
+            case EDIT: proceedMessageEdit((EditResponseMessage) message); break;
         }
     }
 
@@ -56,58 +55,17 @@ public class TelegramResponseManager implements ResponseManager {
 
 
     public void postMessageToAdminChannel(String text, Boolean applyMarkup) {
-        proceedMessageSend(text, null, BotConfig.ADMIN_CHANNEL_ID, applyMarkup);
+        sendMessage(TextResponseMessage.builder()
+                .type(ResponseType.POST_TO_ADMIN_CHANNEL)
+                .text(text)
+                .applyMarkup(applyMarkup).build()
+        );
     }
     public void postMessageToAdminChannel(String text) {
         postMessageToAdminChannel(text, false);
     }
 
 
-    public void sendMessage(String text, ReplyKeyboard keyboard, String userId) {
-        proceedMessageSend(text, keyboard, userId, true);
-    }
-    public void sendMessage(String text, String userId, Boolean useMarkdown) {
-        proceedMessageSend(text, null, userId, useMarkdown);
-    }
-    public void sendMessage(String text, String userId) {
-        sendMessage(text, userId, false);
-    }
-
-
-    public void sendImage(String fileName, InputStream stream, String userId, String caption) {
-        proceedImageSend(null, fileName, stream, null, userId, caption);
-    }
-    public void sendImage(String fileName, InputStream stream, String userId) {
-        sendImage(fileName, stream, userId, null);
-    }
-
-
-    public void sendImage(File file, String userId, String caption) {
-        proceedImageSend(file, null, null, null, userId, caption);
-    }
-    public void sendImage(File file, String userId) {
-        if (file == null || userId == null) return;
-        sendImage(file, userId, null);
-    }
-
-    public void sendImage(String fileId, String userId, String caption) {
-        proceedImageSend(null, null, null, fileId, userId, caption);
-    }
-    public void sendImage(String fileId, String userId) {
-        sendImage(fileId, userId, null);
-    }
-
-    public void sendDocument(File file, String userId) {
-        proceedDocumentSend(file, userId);
-    }
-
-
-    public void sendMessageEdit(Integer messageId, String newText, InlineKeyboardMarkup keyboard, String userId, Boolean useMarkdown) {
-        proceedMessageEdit(messageId, keyboard, newText, userId, useMarkdown);
-    }
-    public void sendMessageEdit(Integer messageId, String newText, String userId, Boolean useMarkdown) {
-        sendMessageEdit(messageId, newText, null, userId, useMarkdown);
-    }
 
 
     public void sendAnswer(String queryId, String text, Boolean isAlert) {
@@ -121,34 +79,14 @@ public class TelegramResponseManager implements ResponseManager {
     }
 
 
-    private void proceedMessageSend(String text, ReplyKeyboard keyboard, String userId, Boolean useMarkdown) {
-        SendMessage message = new SendMessage()
-                .enableMarkdown(useMarkdown)
-                .setChatId(userId)
-                .setText(text)
-                .setReplyMarkup(keyboard);
-        execute(message);
-    }
     private void proceedMessageSend(TextResponseMessage messageTemplate) {
         SendMessage message = new SendMessage()
                 .enableMarkdown(messageTemplate.isApplyMarkup())
-                .setChatId(messageTemplate.getTargetId())
+                .setChatId(messageTemplate.getType() == ResponseType.POST_TO_ADMIN_CHANNEL
+                        ? BotConfig.ADMIN_CHANNEL_ID : messageTemplate.getTargetId())
                 .setText(messageTemplate.getText())
                 .setReplyMarkup(messageTemplate.getKeyboard());
         execute(message);
-    }
-    private void proceedImageSend(File file, String fileName, InputStream stream, String fileId, String userId, String caption) {
-        SendPhoto newMessage = new SendPhoto()
-                .setCaption(caption)
-                .setChatId(userId);
-        if (file != null) {
-            newMessage.setPhoto(file);
-        } else if (stream != null) {
-            newMessage.setPhoto(fileName, stream);
-        } else if (fileId != null) {
-            newMessage.setPhoto(fileId);
-        }
-        execute(newMessage);
     }
     private void proceedImageSend(ImageResponseMessage messageTemplate) {
         SendPhoto newMessage = new SendPhoto()
@@ -156,18 +94,12 @@ public class TelegramResponseManager implements ResponseManager {
                 .setChatId(messageTemplate.getTargetId());
         if (messageTemplate.getFile() != null) {
             newMessage.setPhoto(messageTemplate.getFile());
-        } else if (messageTemplate.getInputStream() != null) {
-            newMessage.setPhoto(messageTemplate.getFileName(), messageTemplate.getInputStream());
+        } else if (messageTemplate.getFileStream() != null) {
+            newMessage.setPhoto(messageTemplate.getFileName(), messageTemplate.getFileStream());
         } else if (messageTemplate.getFileId() != null) {
             newMessage.setPhoto(messageTemplate.getFileId());
         }
         execute(newMessage);
-    }
-    private void proceedDocumentSend(File file, String userId) {
-        SendDocument sendMessage = new SendDocument()
-                .setDocument(file)
-                .setChatId(userId);
-        execute(sendMessage);
     }
     private void proceedDocumentSend(DocumentResponseMessage messageTemplate) {
         SendDocument sendMessage = new SendDocument()
@@ -187,13 +119,13 @@ public class TelegramResponseManager implements ResponseManager {
         }
         execute(newMessage);
     }
-    private void proceedMessageEdit(Integer messageId, InlineKeyboardMarkup keyboard, String newText, String userId, Boolean useMarkdown) {
+    private void proceedMessageEdit(EditResponseMessage messageTemplate) {
         EditMessageText messageEdit = new EditMessageText()
-                .setMessageId(messageId)
-                .setChatId(userId)
-                .setText(newText)
-                .enableMarkdown(useMarkdown)
-                .setReplyMarkup(keyboard);
+                .setMessageId(messageTemplate.getMessageId())
+                .setChatId(messageTemplate.getTargetId())
+                .setText(messageTemplate.getText())
+                .enableMarkdown(messageTemplate.isApplyMarkup())
+                .setReplyMarkup(messageTemplate.getKeyboard());
         execute(messageEdit);
     }
     private void proceedAnswerCallback(String queryId, String text,Boolean isAlert) {

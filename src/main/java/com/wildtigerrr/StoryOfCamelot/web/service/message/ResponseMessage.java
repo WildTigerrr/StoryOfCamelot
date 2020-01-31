@@ -5,5 +5,7 @@ import com.wildtigerrr.StoryOfCamelot.web.service.ResponseType;
 public interface ResponseMessage {
 
     ResponseType getType();
+    String getText();
+    Boolean isApplyMarkup();
 
 }

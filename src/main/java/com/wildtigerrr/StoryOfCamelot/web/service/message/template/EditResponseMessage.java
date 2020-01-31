@@ -7,33 +7,45 @@ import com.wildtigerrr.StoryOfCamelot.web.service.message.ResponseMessage;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NonNull;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboard;
 
 @Builder
 @Getter
-public class TextResponseMessage implements ResponseMessage {
+public class EditResponseMessage implements ResponseMessage {
 
     @Builder.Default
-    private final ResponseType type = ResponseType.TEXT;
+    private final ResponseType type = ResponseType.EDIT;
     @NonNull
     private final String targetId;
+    @NonNull
+    private final Integer messageId;
     private final String text;
     @Builder.Default
     private final boolean applyMarkup = false;
-    private final ReplyKeyboard keyboard;
+    private final InlineKeyboardMarkup keyboard;
 
-    public static class TextResponseMessageBuilder {
+    public static class EditResponseMessageBuilder {
         private String targetId;
-        public TextResponseMessageBuilder targetId(String targetId) {
+        public EditResponseMessageBuilder targetId(String targetId) {
             this.targetId = targetId;
             return this;
         }
-        public TextResponseMessageBuilder targetId(UpdateWrapper update) {
+        public EditResponseMessageBuilder targetId(UpdateWrapper update) {
             this.targetId = update.getUserId();
             return this;
         }
-        public TextResponseMessageBuilder targetId(Player player) {
+        public EditResponseMessageBuilder targetId(Player player) {
             this.targetId = player.getExternalId();
+            return this;
+        }
+
+        public EditResponseMessageBuilder messageId(Integer messageId) {
+            this.messageId = messageId;
+            return this;
+        }
+        public EditResponseMessageBuilder messageId(UpdateWrapper update) {
+            this.messageId = update.getMessageId();
             return this;
         }
     }

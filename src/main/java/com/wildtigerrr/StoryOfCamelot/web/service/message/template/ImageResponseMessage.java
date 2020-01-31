@@ -1,5 +1,7 @@
 package com.wildtigerrr.StoryOfCamelot.web.service.message.template;
 
+import com.wildtigerrr.StoryOfCamelot.database.schema.Player;
+import com.wildtigerrr.StoryOfCamelot.web.bot.update.UpdateWrapper;
 import com.wildtigerrr.StoryOfCamelot.web.service.ResponseType;
 import com.wildtigerrr.StoryOfCamelot.web.service.message.ResponseMessage;
 import lombok.Builder;
@@ -22,6 +24,32 @@ public class ImageResponseMessage implements ResponseMessage {
     private final File file;
     private final String fileId;
     private final String fileName;
-    private final InputStream inputStream;
+    private final InputStream fileStream;
+
+    @Override
+    public String getText() {
+        return caption.isBlank() ? "Image without text" : caption;
+    }
+
+    @Override
+    public Boolean isApplyMarkup() {
+        return false;
+    }
+
+    public static class ImageResponseMessageBuilder {
+        private String targetId;
+        public ImageResponseMessageBuilder targetId(String targetId) {
+            this.targetId = targetId;
+            return this;
+        }
+        public ImageResponseMessageBuilder targetId(UpdateWrapper update) {
+            this.targetId = update.getUserId();
+            return this;
+        }
+        public ImageResponseMessageBuilder targetId(Player player) {
+            this.targetId = player.getExternalId();
+            return this;
+        }
+    }
 
 }

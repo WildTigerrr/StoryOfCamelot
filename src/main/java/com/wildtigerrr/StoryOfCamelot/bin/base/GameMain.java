@@ -16,6 +16,8 @@ import com.wildtigerrr.StoryOfCamelot.database.service.implementation.MobService
 import com.wildtigerrr.StoryOfCamelot.database.service.implementation.PlayerServiceImpl;
 import com.wildtigerrr.StoryOfCamelot.web.bot.update.UpdateWrapper;
 import com.wildtigerrr.StoryOfCamelot.web.service.ResponseManager;
+import com.wildtigerrr.StoryOfCamelot.web.service.message.template.EditResponseMessage;
+import com.wildtigerrr.StoryOfCamelot.web.service.message.template.TextResponseMessage;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -64,17 +66,16 @@ public class GameMain {
                 players.stream()
                         .map(pl -> pl.toStatString(index.incrementAndGet()))
                         .collect(Collectors.joining());
-        messages.sendMessage(
-                top,
-                userId
+        messages.sendMessage(TextResponseMessage.builder()
+                .text(top).targetId(userId).build()
         );
     }
 
-    public void sendLanguageSelector(String userId, Language lang) {// translation.get(lang).languageSelectPrompt(),
-        messages.sendMessage(
-                translation.getMessage("tutorial.lang.choose", lang),
-                KeyboardManager.getKeyboardForLanguageSelect(),
-                userId
+    public void sendLanguageSelector(String userId, Language lang) {
+        messages.sendMessage(TextResponseMessage.builder()
+                        .text(translation.getMessage("tutorial.lang.choose", lang))
+                        .keyboard(KeyboardManager.getKeyboardForLanguageSelect())
+                        .targetId(userId).build()
         );
     }
 
@@ -106,7 +107,9 @@ public class GameMain {
             message = translation.getMessage("player.nickname.accept", player,
                     new Object[]{player.getNickname()});
         }
-        messages.sendMessage(message, player.getExternalId(), true);
+        messages.sendMessage(TextResponseMessage.builder()
+                .text(message).targetId(player).applyMarkup(true).build()
+        );
     }
 
     public Player addExperience(Player player, Stats stat, int experience, Boolean sendExperienceGet) {
@@ -120,15 +123,17 @@ public class GameMain {
             if (eventList != null && !eventList.isEmpty()) {
                 for (String event : eventList) {
                     if (event != null && !event.equals("")) {
-                        messages.sendMessage(event, player.getExternalId());
+                        messages.sendMessage(TextResponseMessage.builder()
+                                .text(event).targetId(player).build()
+                        );
                     }
                 }
             }
             if (sendExperienceGet) {
-                messages.sendMessage(
-                        translation.getMessage("player.stats.experience-taken", player.getLanguage(),
-                                new Object[]{experience}),
-                        player.getExternalId()
+                messages.sendMessage(TextResponseMessage.builder()
+                        .text(translation.getMessage("player.stats.experience-taken", player.getLanguage(),
+                                new Object[]{experience}))
+                        .targetId(player).build()
                 );
             }
             return player;
@@ -139,7 +144,11 @@ public class GameMain {
     }
 
     public void sendSkillWindow(Player player) {
-        messages.sendMessage(player.getStatMenu(translation), KeyboardManager.getKeyboardForStatUp(player.getUnassignedPoints()), player.getExternalId());
+        messages.sendMessage(TextResponseMessage.builder()
+                .text(player.getStatMenu(translation))
+                .keyboard(KeyboardManager.getKeyboardForStatUp(player.getUnassignedPoints()))
+                .targetId(player).build()
+        );
     }
 
     public void statUp(UpdateWrapper message) {
@@ -147,7 +156,9 @@ public class GameMain {
         if (commandParts.length == 3 && commandParts[1].length() == 1 && StringUtils.isNumeric(commandParts[2])) {
             Stats stat = Stats.getStat(commandParts[1]);
             if (stat == null) {
-                messages.sendMessage(translation.getMessage("player.stats.invalid", message), message.getUserId());
+                messages.sendMessage(TextResponseMessage.builder()
+                        .text(translation.getMessage("player.stats.invalid", message)).targetId(message).build()
+                );
             } else {
                 Player player = message.getPlayer();
                 String result = player.raiseStat(stat, Integer.valueOf(commandParts[2]), player.getLanguage(), translation);
@@ -155,24 +166,29 @@ public class GameMain {
                     playerService.update(player);
                 messages.sendAnswer(message.getQueryId(), result);
                 if (player.getUnassignedPoints() == 0) {
-                    messages.sendMessageEdit(message.getMessageId(), player.getStatMenu(translation), player.getExternalId(), false);
+                    messages.sendMessage(EditResponseMessage.builder()
+                            .messageId(message).text(player.getStatMenu(translation)).targetId(player).build()
+                    );
                 } else {
-                    messages.sendMessageEdit(
-                            message.getMessageId(),
-                            player.getStatMenu(translation),
-                            KeyboardManager.getKeyboardForStatUp(player.getUnassignedPoints()),
-                            player.getExternalId(),
-                            false
+                    messages.sendMessage(EditResponseMessage.builder()
+                            .messageId(message)
+                            .text(player.getStatMenu(translation))
+                            .keyboard(KeyboardManager.getKeyboardForStatUp(player.getUnassignedPoints()))
+                            .targetId(player).build()
                     );
                 }
             }
         } else {
-            messages.sendMessage(translation.getMessage("commands.invalid", message), message.getUserId());
+            messages.sendMessage(TextResponseMessage.builder()
+                    .text(translation.getMessage("commands.invalid", message)).targetId(message).build()
+            );
         }
     }
 
     public void fight(UpdateWrapper message) {
-        messages.sendMessage(translation.getMessage("battle.start", message), message.getUserId());
+        messages.sendMessage(TextResponseMessage.builder()
+                .text(translation.getMessage("battle.start", message)).targetId(message).build()
+        );
         Mob mob = mobService.getAll().get(0);
 
         List<String> battleLog = battleHandler.fight(message.getPlayer(), mob, message.getPlayer().getLanguage());
@@ -180,7 +196,9 @@ public class GameMain {
         for (String logRow : battleLog) {
             history.append(logRow).append("\n");
         }
-        messages.sendMessage(history.toString(), message.getUserId());
+        messages.sendMessage(TextResponseMessage.builder()
+                .text(history.toString()).targetId(message).build()
+        );
 
         // TODO Allow actions by statuses (class to compare)
         // TODO New status (new table?) with current situation

@@ -19,4 +19,14 @@ public class DocumentResponseMessage implements ResponseMessage {
     @NonNull
     private final File file;
 
+    @Override
+    public String getText() {
+        return "Document without text";
+    }
+
+    @Override
+    public Boolean isApplyMarkup() {
+        return false;
+    }
+
 }
