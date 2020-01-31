@@ -13,6 +13,7 @@ import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.send.SendDocument;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
+import org.telegram.telegrambots.meta.api.methods.send.SendSticker;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboard;
@@ -38,6 +39,7 @@ public class TelegramResponseManager implements ResponseManager {
             case TEXT: proceedMessageSend((TextResponseMessage) message); break;
             case PHOTO: proceedImageSend((ImageResponseMessage) message); break;
             case DOCUMENT: proceedDocumentSend((DocumentResponseMessage) message); break;
+            case STICKER: proceedStickerSend((StickerResponseMessage) message); break;
         }
     }
 
@@ -173,6 +175,18 @@ public class TelegramResponseManager implements ResponseManager {
                 .setChatId(messageTemplate.getTargetId());
         execute(sendMessage);
     }
+    private void proceedStickerSend(StickerResponseMessage messageTemplate) {
+        SendSticker newMessage = new SendSticker()
+                .setChatId(messageTemplate.getTargetId());
+        if (messageTemplate.getFile() != null) {
+            newMessage.setSticker(messageTemplate.getFile());
+        } else if (messageTemplate.getInputStream() != null) {
+            newMessage.setSticker(messageTemplate.getFileName(), messageTemplate.getInputStream());
+        } else if (messageTemplate.getFileId() != null) {
+            newMessage.setSticker(messageTemplate.getFileId());
+        }
+        execute(newMessage);
+    }
     private void proceedMessageEdit(Integer messageId, InlineKeyboardMarkup keyboard, String newText, String userId, Boolean useMarkdown) {
         EditMessageText messageEdit = new EditMessageText()
                 .setMessageId(messageId)
@@ -208,6 +222,13 @@ public class TelegramResponseManager implements ResponseManager {
         }
     }
     private void execute(SendDocument method) {
+        try {
+            webHook.execute(method);
+        } catch (TelegramApiException e) {
+            handleError(e);
+        }
+    }
+    private void execute(SendSticker method) {
         try {
             webHook.execute(method);
         } catch (TelegramApiException e) {

@@ -15,8 +15,8 @@ import com.wildtigerrr.StoryOfCamelot.database.service.implementation.PlayerServ
 import com.wildtigerrr.StoryOfCamelot.web.bot.update.UpdateWrapper;
 import com.wildtigerrr.StoryOfCamelot.web.bot.utils.UpdateWrapperUtils;
 import com.wildtigerrr.StoryOfCamelot.web.service.ResponseManager;
-import com.wildtigerrr.StoryOfCamelot.web.service.ResponseType;
 import com.wildtigerrr.StoryOfCamelot.web.service.message.template.ImageResponseMessage;
+import com.wildtigerrr.StoryOfCamelot.web.service.message.template.StickerResponseMessage;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -60,6 +60,7 @@ public class ResponseHandler {
         UpdateWrapper message = new UpdateWrapper(update);
         if (message.isCommand()) handleTextMessage(message);
         else if (update.hasMessage() && update.getMessage().hasPhoto()) handleImageMessage(update);
+        else if (update.getMessage().hasSticker()) handleStickerMessage(update);
         else handleUnsupportedMessage(update);
     }
 
@@ -77,14 +78,15 @@ public class ResponseHandler {
                         .fileId(UpdateWrapperUtils.getBiggestPhotoId(update))
                         .build()
         );
+    }
 
-//        messages.sendImage(
-//                UpdateWrapperUtils.getBiggestPhotoId(update),
-//                BotConfig.ADMIN_CHANNEL_ID,
-//                update.getMessage().getCaption() != null ?
-//                        update.getMessage().getCaption() + ", " + UpdateWrapperUtils.getUpdateAuthorCaption(update)
-//                        : UpdateWrapperUtils.getUpdateAuthorCaption(update)
-//        );
+    void handleStickerMessage(Update update) {
+        messages.sendMessage(
+                StickerResponseMessage.builder()
+                        .targetId(BotConfig.ADMIN_CHANNEL_ID)
+                        .fileId(update.getMessage().getSticker().getFileId())
+                        .build()
+        );
     }
 
     void handleUnsupportedMessage(Update update) {
