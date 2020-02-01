@@ -180,7 +180,8 @@ public class ResponseHandler {
         String[] commandParts = message.getText().split(" ", 2);
         switch (command) {
             case ME:
-                sendPlayerInfo(message);
+//                sendPlayerInfo(message);
+                command.execute(message);
                 break;
             case SKILLS:
                 gameMain.sendSkillWindow(message.getPlayer());

@@ -38,8 +38,12 @@ public enum Language {
 
     @Component
     public static class TranslationInjector {
-        @Autowired
-        private TranslationManager translations;
+        private final TranslationManager translations;
+
+        public TranslationInjector(TranslationManager translations) {
+            this.translations = translations;
+        }
+
         @PostConstruct
         public void postConstruct() {
             Language.setTranslationManager(translations);

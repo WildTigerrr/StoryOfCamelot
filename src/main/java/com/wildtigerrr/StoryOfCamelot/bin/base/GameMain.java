@@ -185,6 +185,17 @@ public class GameMain {
         }
     }
 
+    public void sendPlayerInfo(UpdateWrapper message) {
+        messages.sendMessage(TextResponseMessage.builder()
+                .text(playerService.getPlayerInfo(
+                        message.getUserId(),
+                        message.getPlayer().getLanguage()
+                ))
+                .targetId(message)
+                .applyMarkup(true).build()
+        );
+    }
+
     public void fight(UpdateWrapper message) {
         messages.sendMessage(TextResponseMessage.builder()
                 .text(translation.getMessage("battle.start", message)).targetId(message).build()
