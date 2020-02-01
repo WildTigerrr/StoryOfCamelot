@@ -36,6 +36,7 @@ public class GameMain {
     private final TranslationManager translation;
     private final MobServiceImpl mobService;
     private final BattleHandler battleHandler;
+    private final GameMovement moveService;
 
     @Autowired
     public GameMain(
@@ -44,14 +45,15 @@ public class GameMain {
             LocationServiceImpl locationService,
             TranslationManager translation,
             MobServiceImpl mobService,
-            BattleHandler battleHandler
-    ) {
+            BattleHandler battleHandler,
+            GameMovement moveService) {
         this.messages = messages;
         this.playerService = playerService;
         this.locationService = locationService;
         this.translation = translation;
         this.mobService = mobService;
         this.battleHandler = battleHandler;
+        this.moveService = moveService;
     }
 
     public void getTopPlayers(String userId) {
@@ -110,6 +112,22 @@ public class GameMain {
         messages.sendMessage(TextResponseMessage.builder()
                 .text(message).targetId(player).applyMarkup(true).build()
         );
+    }
+
+    public void addStatPoints(UpdateWrapper update) {
+        Player player = update.getPlayer();
+        String[] values = update.getText().split(" ", 3);
+        try {
+            player = addExperience(
+                    player,
+                    Stats.valueOf(values[1].toUpperCase()),
+                    Integer.parseInt(values[2]),
+                    true
+            );
+            playerService.update(player);
+        } catch (IllegalArgumentException e) {
+            handleError("Wrong Stat" + values[1].toUpperCase(), e);
+        }
     }
 
     public Player addExperience(Player player, Stats stat, int experience, Boolean sendExperienceGet) {
@@ -196,23 +214,49 @@ public class GameMain {
         );
     }
 
-    public void fight(UpdateWrapper message) {
+    public void fight(UpdateWrapper update) {
         messages.sendMessage(TextResponseMessage.builder()
-                .text(translation.getMessage("battle.start", message)).targetId(message).build()
+                .text(translation.getMessage("battle.start", update)).targetId(update).build()
         );
         Mob mob = mobService.getAll().get(0);
 
-        List<String> battleLog = battleHandler.fight(message.getPlayer(), mob, message.getPlayer().getLanguage());
+        List<String> battleLog = battleHandler.fight(update.getPlayer(), mob, update.getPlayer().getLanguage());
         StringBuilder history = new StringBuilder();
         for (String logRow : battleLog) {
             history.append(logRow).append("\n");
         }
         messages.sendMessage(TextResponseMessage.builder()
-                .text(history.toString()).targetId(message).build()
+                .text(history.toString()).targetId(update).build()
         );
 
         // TODO Allow actions by statuses (class to compare)
         // TODO New status (new table?) with current situation
+    }
+
+    public void move(UpdateWrapper update) {
+        moveService.handleMove(update);
+    }
+
+    public void sendMessageToUser(String message) {
+        String[] commandParts = message.split(" ", 3);
+//        Player receiver = playerService.findByExternalId(commandParts[1]);
+        messages.sendMessage(TextResponseMessage.builder()
+                .text(commandParts[2]).targetId(commandParts[1]).build()
+        );
+        //                    messages.sendMessage("Пользователь не найден", message.getUserId());
+    }
+
+    public void sendDumb(UpdateWrapper update) {
+        messages.sendMessage(TextResponseMessage.builder()
+                .text(translation.getMessage("commands.not-defined", update))
+                .targetId(update)
+                .applyMarkup(true).build()
+        );
+    }
+
+    private void handleError(String message, Exception e) {
+        log.error(message, e);
+        messages.postMessageToAdminChannel(message);
     }
 
 }

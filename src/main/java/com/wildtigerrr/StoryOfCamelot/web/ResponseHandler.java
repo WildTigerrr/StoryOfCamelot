@@ -178,50 +178,15 @@ public class ResponseHandler {
         Command command = message.getCommand();
         if (command == null) return false;
         String[] commandParts = message.getText().split(" ", 2);
-        switch (command) {
-            case ME:
-//                sendPlayerInfo(message);
-                command.execute(message);
-                break;
-            case SKILLS:
-                gameMain.sendSkillWindow(message.getPlayer());
-                break;
-            case FIGHT:
-                gameMain.fight(message);
-                break;
-            case NICKNAME:
-                updateNickname(message, commandParts);
-                break;
-            case ADD:
-                addStatPoints(message.getPlayer(), commandParts);
-                break;
-            case ACTION:
-                proceedTimeAction(message.getText(), commandParts);
-                break;
-            case MOVE:
-                movementService.handleMove(message);
-                break;
-            case SEND:
-                sendMessageToUser(message.getText(), commandParts);
-                break;
-            case START:
-                startGame(message);
-                break;
-            case UP:
-                gameMain.statUp(message);
-                break;
-            case TOP:
-                gameMain.getTopPlayers(message.getUserId());
-                break;
-            default:
-                messages.sendMessage(TextResponseMessage.builder()
-                        .text(translation.getMessage("commands.not-defined", message))
-                        .targetId(message)
-                        .applyMarkup(true).build()
-                );
-                return false;
+        if (command == Command.ACTION) {
+            proceedTimeAction(message.getText(), commandParts);
+            return true;
+        } else if (command == Command.START) {
+            startGame(message);
+            return true;
+        } else {
+            return command.execute(message);
         }
-        return true;
     }
 
     private void disableTutorial(Player player) {
@@ -296,21 +261,6 @@ public class ResponseHandler {
             case "get":
                 messages.postMessageToAdminChannel(TimeDependentActions.getAll());
                 break;
-        }
-    }
-
-    private void sendMessageToUser(String message, String[] commandParts) {
-        commandParts = message.split(" ", 3);
-        Player receiver = playerService.findByExternalId(commandParts[1]);
-        if (receiver != null) {
-            messages.sendMessage(TextResponseMessage.builder()
-                    .text(commandParts[2]).targetId(commandParts[1]).build()
-            );
-        } else {
-            messages.sendMessage(TextResponseMessage.builder()
-                    .text(commandParts[2]).targetId(commandParts[1]).build()
-            );
-//                    messages.sendMessage("Пользователь не найден", message.getUserId());
         }
     }
 

@@ -16,9 +16,10 @@ public class UpdateWrapper {
     private int messageId;
     private String queryId;
     private Author author;
-    private String tempUpdateLang;
+    private String userLanguageCode;
     private Player player;
     private Boolean isQuery;
+    private Command command;
 
     private UpdateType updateType;
 
@@ -37,7 +38,7 @@ public class UpdateWrapper {
         this.chatId = isQuery ? update.getCallbackQuery().getMessage().getChatId() : update.getMessage().getChatId();
         this.messageId = isQuery ? update.getCallbackQuery().getMessage().getMessageId() : update.getMessage().getMessageId();
         this.queryId = isQuery ? update.getCallbackQuery().getId() : null;
-        this.tempUpdateLang = user.getLanguageCode();
+        this.userLanguageCode = user.getLanguageCode();
     }
 
     public boolean isCommand() {
@@ -77,7 +78,8 @@ public class UpdateWrapper {
     }
 
     public Command getCommand() {
-        return UpdateWrapperUtils.fetchCommandFromMessage(message, player.getLanguage());
+        if (command == null) command = UpdateWrapperUtils.fetchCommandFromMessage(message, player.getLanguage());
+        return command;
     }
 
     @Override
@@ -89,7 +91,7 @@ public class UpdateWrapper {
                 ", firstName='" + author.getFirstName() + '\'' +
                 ", lastName='" + author.getLastName() + '\'' +
                 ", username='" + author.getUsername() + '\'' +
-                ", languageCode='" + tempUpdateLang + '\'' +
+                ", languageCode='" + userLanguageCode + '\'' +
                 ", isQuery='" + isQuery + '\'' +
                 '}';
     }

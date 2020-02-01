@@ -17,4 +17,9 @@ public class StringUtils {
                 .replace("`", "\\`");
     }
 
+    public static String emptyIfOutOfBounds(String[] array, int index) {
+        if (index > array.length) return "";
+        return array[index];
+    }
+
 }

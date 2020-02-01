@@ -1,5 +1,6 @@
 package com.wildtigerrr.StoryOfCamelot.bin.enums;
 
+import com.wildtigerrr.StoryOfCamelot.bin.service.StringUtils;
 import com.wildtigerrr.StoryOfCamelot.bin.translation.TranslationManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -34,6 +35,17 @@ public enum Language {
 
     public static Locale getDefaultLocale() {
         return RUS.getLocale();
+    }
+
+    public static boolean isValidLanguageCode(String languageCode) {
+        return StringUtils.isNumeric(languageCode) && (Integer.parseInt(languageCode) < Language.values().length);
+    }
+
+    // List - https://datahub.io/core/language-codes/r/3.html
+    public static Language byCountryCode(String countryCode) {
+        if (countryCode.equals("ru")) return Language.RUS;
+        else if (countryCode.equals("uk")) return Language.UKR;
+        else return Language.ENG;
     }
 
     @Component

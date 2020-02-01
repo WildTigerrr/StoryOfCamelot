@@ -2,7 +2,6 @@ package com.wildtigerrr.StoryOfCamelot.bin.base;
 
 import com.wildtigerrr.StoryOfCamelot.bin.KeyboardManager;
 import com.wildtigerrr.StoryOfCamelot.bin.enums.*;
-import com.wildtigerrr.StoryOfCamelot.bin.service.StringUtils;
 import com.wildtigerrr.StoryOfCamelot.bin.translation.TranslationManager;
 import com.wildtigerrr.StoryOfCamelot.database.schema.Player;
 import com.wildtigerrr.StoryOfCamelot.database.schema.enums.PlayerStatusExtended;
@@ -108,15 +107,10 @@ public class GameTutorial {
 
     private void tutorialLanguageSelect(Command command, UpdateWrapper message) {
         if (!message.isQuery() && (command == Command.START || message.getPlayer().isNew())) {
-            Language lang = Language.ENG;
-            String langCode = message.getTempUpdateLang().substring(0, Math.min(message.getTempUpdateLang().length(), 2));
-            // List - https://datahub.io/core/language-codes/r/3.html
-            if (langCode.equals("ru")) lang = Language.RUS;
-            else if (langCode.equals("uk")) lang = Language.UKR;
-            gameMain.sendLanguageSelector(message.getUserId(), lang);
+            setStartingLanguage(message);
         } else if (message.isQuery() && command == Command.LANG) {
             String[] commandParts = message.getText().split(" ", 2);
-            if (StringUtils.isNumeric(commandParts[1]) && (Integer.parseInt(commandParts[1]) < Language.values().length)) {
+            if (Language.isValidLanguageCode(commandParts[1])) {
                 Player player = message.getPlayer();
                 player.setLanguage(Language.values()[Integer.parseInt(commandParts[1])]);
                 player.setAdditionalStatus(PlayerStatusExtended.TUTORIAL_NICKNAME);
@@ -140,6 +134,12 @@ public class GameTutorial {
                     .text(translation.getMessage("tutorial.lessons.no-rush", message)).targetId(message).build()
             );
         }
+    }
+
+    public void setStartingLanguage(UpdateWrapper update) {
+        String langCode = update.getUserLanguageCode().substring(0, Math.min(update.getUserLanguageCode().length(), 2));
+        Language lang = Language.byCountryCode(langCode);
+        gameMain.sendLanguageSelector(update.getUserId(), lang);
     }
 
     public void tutorialStart(Player player) {
