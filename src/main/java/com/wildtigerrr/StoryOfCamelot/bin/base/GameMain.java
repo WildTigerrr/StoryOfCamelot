@@ -2,9 +2,9 @@ package com.wildtigerrr.StoryOfCamelot.bin.base;
 
 import com.wildtigerrr.StoryOfCamelot.bin.BattleHandler;
 import com.wildtigerrr.StoryOfCamelot.bin.KeyboardManager;
+import com.wildtigerrr.StoryOfCamelot.bin.base.player.ExperienceService;
 import com.wildtigerrr.StoryOfCamelot.bin.enums.GameSettings;
 import com.wildtigerrr.StoryOfCamelot.bin.enums.Language;
-import com.wildtigerrr.StoryOfCamelot.exception.InvalidInputException;
 import com.wildtigerrr.StoryOfCamelot.bin.service.StringUtils;
 import com.wildtigerrr.StoryOfCamelot.bin.translation.TranslationManager;
 import com.wildtigerrr.StoryOfCamelot.database.schema.Mob;
@@ -37,6 +37,7 @@ public class GameMain {
     private final MobServiceImpl mobService;
     private final BattleHandler battleHandler;
     private final GameMovement moveService;
+    private final ExperienceService experienceService;
 
     @Autowired
     public GameMain(
@@ -46,7 +47,7 @@ public class GameMain {
             TranslationManager translation,
             MobServiceImpl mobService,
             BattleHandler battleHandler,
-            GameMovement moveService) {
+            GameMovement moveService, ExperienceService experienceService) {
         this.messages = messages;
         this.playerService = playerService;
         this.locationService = locationService;
@@ -54,6 +55,7 @@ public class GameMain {
         this.mobService = mobService;
         this.battleHandler = battleHandler;
         this.moveService = moveService;
+        this.experienceService = experienceService;
     }
 
     public void getTopPlayers(String userId) {
@@ -115,50 +117,7 @@ public class GameMain {
     }
 
     public void addStatPoints(UpdateWrapper update) {
-        Player player = update.getPlayer();
-        String[] values = update.getText().split(" ", 3);
-        try {
-            player = addExperience(
-                    player,
-                    Stats.valueOf(values[1].toUpperCase()),
-                    Integer.parseInt(values[2]),
-                    true
-            );
-            playerService.update(player);
-        } catch (IllegalArgumentException e) {
-            handleError("Wrong Stat" + values[1].toUpperCase(), e);
-        }
-    }
-
-    public Player addExperience(Player player, Stats stat, int experience, Boolean sendExperienceGet) {
-        try {
-            List<String> eventList = player.addStatExp(
-                    experience,
-                    stat,
-                    player.getLanguage(),
-                    translation
-            );
-            if (eventList != null && !eventList.isEmpty()) {
-                for (String event : eventList) {
-                    if (event != null && !event.equals("")) {
-                        messages.sendMessage(TextResponseMessage.builder()
-                                .text(event).targetId(player).build()
-                        );
-                    }
-                }
-            }
-            if (sendExperienceGet) {
-                messages.sendMessage(TextResponseMessage.builder()
-                        .text(translation.getMessage("player.stats.experience-taken", player.getLanguage(),
-                                new Object[]{experience}))
-                        .targetId(player).build()
-                );
-            }
-            return player;
-        } catch (InvalidInputException e) {
-            messages.sendErrorReport(e);
-        }
-        return player;
+        experienceService.addStatPoints(update);
     }
 
     public void sendSkillWindow(Player player) {
@@ -252,11 +211,6 @@ public class GameMain {
                 .targetId(update)
                 .applyMarkup(true).build()
         );
-    }
-
-    private void handleError(String message, Exception e) {
-        log.error(message, e);
-        messages.postMessageToAdminChannel(message);
     }
 
 }

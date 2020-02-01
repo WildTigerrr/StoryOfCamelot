@@ -2,6 +2,7 @@ package com.wildtigerrr.StoryOfCamelot.bin.base;
 
 import com.wildtigerrr.StoryOfCamelot.bin.KeyboardManager;
 import com.wildtigerrr.StoryOfCamelot.bin.TimeDependentActions;
+import com.wildtigerrr.StoryOfCamelot.bin.base.player.ExperienceService;
 import com.wildtigerrr.StoryOfCamelot.bin.service.ScheduledAction;
 import com.wildtigerrr.StoryOfCamelot.bin.translation.TranslationManager;
 import com.wildtigerrr.StoryOfCamelot.database.schema.Location;
@@ -29,7 +30,7 @@ import java.util.Calendar;
 public class GameMovement {
 
     private ResponseManager messages;
-    private GameMain gameMain;
+    private ExperienceService experienceService;
     private GameTutorial tutorial;
     private LocationServiceImpl locationService;
     private LocationNearServiceImpl locationNearService;
@@ -48,7 +49,7 @@ public class GameMovement {
             LocationNearServiceImpl locationNearService,
             LocationServiceImpl locationService,
             GameTutorial tutorial,
-            GameMain gameMain,
+            ExperienceService experienceService,
             ResponseManager messages
     ) {
         this.dataProvider = dataProvider;
@@ -57,7 +58,7 @@ public class GameMovement {
         this.locationNearService = locationNearService;
         this.locationService = locationService;
         this.tutorial = tutorial;
-        this.gameMain = gameMain;
+        this.experienceService = experienceService;
         this.messages = messages;
     }
 
@@ -168,7 +169,7 @@ public class GameMovement {
             tutorial.tutorialMovement(player);
             return;
         }
-        gameMain.addExperience(
+        experienceService.addExperience(
                 player,
                 Stats.ENDURANCE,
                 Integer.parseInt(action.additionalValue) / 10,

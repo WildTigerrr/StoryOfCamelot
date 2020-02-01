@@ -10,7 +10,6 @@ import com.wildtigerrr.StoryOfCamelot.bin.translation.TranslationManager;
 import com.wildtigerrr.StoryOfCamelot.database.schema.Player;
 import com.wildtigerrr.StoryOfCamelot.database.schema.enums.PlayerStatus;
 import com.wildtigerrr.StoryOfCamelot.database.schema.enums.PlayerStatusExtended;
-import com.wildtigerrr.StoryOfCamelot.database.schema.enums.Stats;
 import com.wildtigerrr.StoryOfCamelot.database.service.implementation.PlayerServiceImpl;
 import com.wildtigerrr.StoryOfCamelot.web.bot.update.UpdateWrapper;
 import com.wildtigerrr.StoryOfCamelot.web.bot.utils.UpdateWrapperUtils;
@@ -208,44 +207,6 @@ public class ResponseHandler {
 
     private void sendIdsToAdminChannel(String userId, long chatId) {
         messages.postMessageToAdminChannel("User Id: " + userId + ", Chat Id: " + chatId);
-    }
-
-    private void sendPlayerInfo(UpdateWrapper message) {
-        messages.sendMessage(TextResponseMessage.builder()
-                .text(playerService.getPlayerInfo(
-                        message.getUserId(),
-                        message.getPlayer().getLanguage()
-                ))
-                .targetId(message)
-                .applyMarkup(true).build()
-        );
-    }
-
-    private void updateNickname(UpdateWrapper message, String[] commandParts) {
-        if (commandParts.length > 1) {
-            gameMain.setNickname(message.getPlayer(), commandParts[1]);
-        } else {
-            messages.sendMessage(TextResponseMessage.builder()
-                    .text(translation.getMessage("player.nickname.empty", message))
-                    .targetId(message)
-                    .applyMarkup(true).build()
-            );
-        }
-    }
-
-    private void addStatPoints(Player player, String[] commandParts) {
-        String[] values = commandParts[1].split(" ", 2);
-        try {
-            player = gameMain.addExperience(
-                    player,
-                    Stats.valueOf(values[0].toUpperCase()),
-                    Integer.parseInt(values[1]),
-                    true
-            );
-            playerService.update(player);
-        } catch (IllegalArgumentException e) {
-            handleError("Wrong Stat" + values[0].toUpperCase(), e);
-        }
     }
 
     private void proceedTimeAction(String message, String[] commandParts) {
