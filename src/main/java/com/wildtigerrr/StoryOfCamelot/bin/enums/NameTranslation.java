@@ -1,6 +1,7 @@
 package com.wildtigerrr.StoryOfCamelot.bin.enums;
 
 import com.wildtigerrr.StoryOfCamelot.bin.translation.TranslationManager;
+import com.wildtigerrr.StoryOfCamelot.database.schema.Player;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -112,6 +113,10 @@ public enum NameTranslation {
 
     public String getName(Language lang) {
         return name + translations.getMessage(namePath, lang);
+    }
+
+    public String getName(Player player) {
+        return getName(player.getLanguage());
     }
 
     @Component

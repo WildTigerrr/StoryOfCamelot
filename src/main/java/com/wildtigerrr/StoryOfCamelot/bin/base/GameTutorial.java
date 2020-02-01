@@ -218,7 +218,7 @@ public class GameTutorial {
         player.setAdditionalStatus(PlayerStatusExtended.TUTORIAL_FIGHT);
         playerService.update(player);
         messages.sendMessage(TextResponseMessage.builder()
-                .text(translation.getMessage("tutorial.lessons.three-fight", player))
+                .text(translation.getMessage("tutorial.lessons.three-fight", player, new Object[]{NameTranslation.MOB_FLYING_SWORD.getName(player)}))
                 .keyboard(KeyboardManager.getReplyByButtons(new ArrayList<>(Collections.singleton(ReplyButton.FIGHT)), player.getLanguage()))
                 .targetId(player).build()
         );
