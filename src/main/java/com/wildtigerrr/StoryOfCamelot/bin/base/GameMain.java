@@ -36,7 +36,6 @@ public class GameMain {
     private final TranslationManager translation;
     private final MobServiceImpl mobService;
     private final BattleHandler battleHandler;
-    private final GameMovement moveService;
     private final ExperienceService experienceService;
 
     @Autowired
@@ -47,14 +46,13 @@ public class GameMain {
             TranslationManager translation,
             MobServiceImpl mobService,
             BattleHandler battleHandler,
-            GameMovement moveService, ExperienceService experienceService) {
+            ExperienceService experienceService) {
         this.messages = messages;
         this.playerService = playerService;
         this.locationService = locationService;
         this.translation = translation;
         this.mobService = mobService;
         this.battleHandler = battleHandler;
-        this.moveService = moveService;
         this.experienceService = experienceService;
     }
 
@@ -190,10 +188,6 @@ public class GameMain {
 
         // TODO Allow actions by statuses (class to compare)
         // TODO New status (new table?) with current situation
-    }
-
-    public void move(UpdateWrapper update) {
-        moveService.handleMove(update);
     }
 
     public void sendMessageToUser(String message) {

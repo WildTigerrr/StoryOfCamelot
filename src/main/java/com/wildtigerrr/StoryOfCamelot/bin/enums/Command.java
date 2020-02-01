@@ -1,6 +1,7 @@
 package com.wildtigerrr.StoryOfCamelot.bin.enums;
 
 import com.wildtigerrr.StoryOfCamelot.bin.base.GameMain;
+import com.wildtigerrr.StoryOfCamelot.bin.base.GameMovement;
 import com.wildtigerrr.StoryOfCamelot.bin.service.StringUtils;
 import com.wildtigerrr.StoryOfCamelot.web.bot.update.UpdateWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,7 +42,7 @@ public enum Command {
     MOVE {
         @Override
         public boolean execute(UpdateWrapper update) {
-            game.move(update);
+            gameMovement.handleMove(update);
             return true;
         }
     },
@@ -77,6 +78,7 @@ public enum Command {
     };
 
     private static GameMain game;
+    private static GameMovement gameMovement;
 
     public boolean execute(UpdateWrapper update) {
         game.sendDumb(update);
@@ -86,20 +88,23 @@ public enum Command {
     @Component
     public static class DependencyInjector {
         private final GameMain game;
+        private final GameMovement gameMovement;
 
         @Autowired
-        public DependencyInjector(GameMain game) {
+        public DependencyInjector(GameMain game, GameMovement gameMovement) {
             this.game = game;
+            this.gameMovement = gameMovement;
         }
 
         @PostConstruct
         public void postConstruct() {
-            Command.setDependencies(game);
+            Command.setDependencies(game, gameMovement);
         }
     }
 
-    private static void setDependencies(GameMain gameMain) {
+    private static void setDependencies(GameMain gameMain, GameMovement gameMove) {
         game = gameMain;
+        gameMovement = gameMove;
     }
 
 }
