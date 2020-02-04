@@ -13,5 +13,6 @@ public class BotConfig {
     public final static int DAMAGE_RANDOM = 60; // In %
     public final static float ARMOR_EFFECTIVENESS = 33.0f;
     public final static float CRIT_MULTIPLIER = 1.5f;
+    public final static int DEFAULT_SKILL_POINTS = 20;
 
 }
