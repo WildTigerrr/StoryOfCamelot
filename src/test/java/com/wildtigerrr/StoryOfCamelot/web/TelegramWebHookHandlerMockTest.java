@@ -1,6 +1,7 @@
 package com.wildtigerrr.StoryOfCamelot.web;
 
 import com.wildtigerrr.StoryOfCamelot.ServiceBaseTest;
+import com.wildtigerrr.StoryOfCamelot.web.bot.update.UpdateWrapper;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
@@ -16,7 +17,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.mockito.Mockito.verify;
 
-class WebHookHandlerMockTest extends ServiceBaseTest {
+class TelegramWebHookHandlerMockTest extends ServiceBaseTest {
 
     private Update update = new Update();
     private Message message = new Message();
@@ -24,13 +25,13 @@ class WebHookHandlerMockTest extends ServiceBaseTest {
     private Chat chat = new Chat();
 
     @Autowired
-    private WebHookHandler webHookHandler;
+    private TelegramWebHookHandler telegramWebHookHandler;
 
     @MockBean
     private ResponseHandler responseHandlerMock;
 
-//    @Captor
-//    ArgumentCaptor<UpdateWrapper> messageArguments;
+    @Captor
+    ArgumentCaptor<UpdateWrapper> messageArguments;
 
     @Test
     void whenPlainMessageShouldCreateNonQueryWrapperTest() {
@@ -42,10 +43,10 @@ class WebHookHandlerMockTest extends ServiceBaseTest {
         ReflectionTestUtils.setField(message, "text", "Success");
         ReflectionTestUtils.setField(update, "message", message);
 
-        webHookHandler.onWebhookUpdateReceived(update);
+        telegramWebHookHandler.onWebhookUpdateReceived(update);
 
-//        verify(responseHandlerMock).handleMessage(messageArguments.capture());
-        verify(responseHandlerMock).handleUpdate(update);
+//        verify(responseHandlerMock).handleTextMessage(messageArguments.capture());
+//        verify(responseHandlerMock).handleUpdate(update);
 
 //        assertEquals("Success", messageArguments.getValue().getText());
 //        assertFalse(messageArguments.getValue().isQuery());

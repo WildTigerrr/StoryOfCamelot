@@ -1,193 +1,214 @@
 package com.wildtigerrr.StoryOfCamelot.bin.base;
 
-import com.wildtigerrr.StoryOfCamelot.bin.BattleHandler;
-import com.wildtigerrr.StoryOfCamelot.bin.KeyboardManager;
-import com.wildtigerrr.StoryOfCamelot.bin.base.player.ExperienceService;
-import com.wildtigerrr.StoryOfCamelot.bin.enums.GameSettings;
-import com.wildtigerrr.StoryOfCamelot.bin.enums.Language;
-import com.wildtigerrr.StoryOfCamelot.bin.service.StringUtils;
+import com.wildtigerrr.StoryOfCamelot.bin.FileProcessing;
+import com.wildtigerrr.StoryOfCamelot.bin.TimeDependentActions;
+import com.wildtigerrr.StoryOfCamelot.bin.enums.Command;
 import com.wildtigerrr.StoryOfCamelot.bin.translation.TranslationManager;
-import com.wildtigerrr.StoryOfCamelot.database.schema.Mob;
 import com.wildtigerrr.StoryOfCamelot.database.schema.Player;
+import com.wildtigerrr.StoryOfCamelot.database.schema.enums.PlayerStatus;
 import com.wildtigerrr.StoryOfCamelot.database.schema.enums.PlayerStatusExtended;
-import com.wildtigerrr.StoryOfCamelot.database.schema.enums.Stats;
-import com.wildtigerrr.StoryOfCamelot.database.service.implementation.LocationServiceImpl;
-import com.wildtigerrr.StoryOfCamelot.database.service.implementation.MobServiceImpl;
 import com.wildtigerrr.StoryOfCamelot.database.service.implementation.PlayerServiceImpl;
+import com.wildtigerrr.StoryOfCamelot.database.service.template.PlayerService;
+import com.wildtigerrr.StoryOfCamelot.web.BotConfig;
 import com.wildtigerrr.StoryOfCamelot.web.bot.update.UpdateWrapper;
+import com.wildtigerrr.StoryOfCamelot.web.bot.utils.UpdateWrapperUtils;
 import com.wildtigerrr.StoryOfCamelot.web.service.ResponseManager;
-import com.wildtigerrr.StoryOfCamelot.web.service.message.template.EditResponseMessage;
+import com.wildtigerrr.StoryOfCamelot.web.service.ResponseType;
+import com.wildtigerrr.StoryOfCamelot.web.service.message.template.ImageResponseMessage;
+import com.wildtigerrr.StoryOfCamelot.web.service.message.template.StickerResponseMessage;
 import com.wildtigerrr.StoryOfCamelot.web.service.message.template.TextResponseMessage;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.telegram.telegrambots.meta.api.objects.Update;
 
-import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.stream.Collectors;
+import java.io.File;
+import java.io.IOException;
 
 @Log4j2
 @Service
 public class GameMain {
 
     private final ResponseManager messages;
-    private final PlayerServiceImpl playerService;
-    private final LocationServiceImpl locationService;
+    private final PlayerService playerService;
     private final TranslationManager translation;
-    private final MobServiceImpl mobService;
-    private final BattleHandler battleHandler;
-    private final ExperienceService experienceService;
+    private final GameTutorial tutorial;
+    private final FileProcessing imageService;
 
     @Autowired
     public GameMain(
             ResponseManager messages,
             PlayerServiceImpl playerService,
-            LocationServiceImpl locationService,
             TranslationManager translation,
-            MobServiceImpl mobService,
-            BattleHandler battleHandler,
-            ExperienceService experienceService) {
+            GameTutorial tutorial,
+            FileProcessing imageService
+    ) {
         this.messages = messages;
         this.playerService = playerService;
-        this.locationService = locationService;
         this.translation = translation;
-        this.mobService = mobService;
-        this.battleHandler = battleHandler;
-        this.experienceService = experienceService;
+        this.tutorial = tutorial;
+        this.imageService = imageService;
     }
 
-    public void getTopPlayers(String userId) {
-        List<Player> players = playerService.getAll();
-        players = players.stream()
-                .sorted()
-                .collect(Collectors.toList());
-        if (players.size() > 10)
-            players = players.subList(players.size() - 10, players.size());
-        AtomicInteger index = new AtomicInteger();
-        String top = "Топ игроков: \n\n" +
-                players.stream()
-                        .map(pl -> pl.toStatString(index.incrementAndGet()))
-                        .collect(Collectors.joining());
-        messages.sendMessage(TextResponseMessage.builder()
-                .text(top).targetId(userId).build()
+    public void handleTextMessage(UpdateWrapper message) {
+        setPlayerToMessage(message);
+        logSender(message);
+        executeCommand(message);
+    }
+
+    public void handleImageMessage(Update update) {
+        messages.sendMessage(
+                ImageResponseMessage.builder()
+                        .targetId(BotConfig.ADMIN_CHANNEL_ID)
+                        .caption(UpdateWrapperUtils.getUpdateLogCaption(update))
+                        .fileId(UpdateWrapperUtils.getBiggestPhotoId(update))
+                        .build()
         );
     }
 
-    public void sendLanguageSelector(String userId, Language lang) {
-        messages.sendMessage(TextResponseMessage.builder()
-                        .text(translation.getMessage("tutorial.lang.choose", lang))
-                        .keyboard(KeyboardManager.getKeyboardForLanguageSelect())
-                        .targetId(userId).build()
+    public void handleStickerMessage(Update update) {
+        messages.sendMessage(
+                StickerResponseMessage.builder()
+                        .targetId(BotConfig.ADMIN_CHANNEL_ID)
+                        .fileId(update.getMessage().getSticker().getFileId())
+                        .build()
         );
     }
 
-    public Player getPlayer(String externalId) {
-        Player player;
-        player = playerService.findByExternalId(externalId);
-        if (player == null) {
-            player = new Player(externalId, externalId, locationService.findByName(GameSettings.DEFAULT_LOCATION.get()));
-            player = playerService.create(player);
-        }
-        return player;
+    public void handleUnsupportedMessage(Update update) {
+        log.error("Message not supported: " + update.toString());
+        messages.postMessageToAdminChannel("Message not supported: " + update.toString());
     }
 
-    public void setNickname(Player player, String newName) {
-        String message;
-        if (Player.containsSpecialCharacters(newName)) {
-            message = translation.getMessage("player.nickname.wrong-symbols", player);
-        } else if (!player.setNickname(newName)) {
-            message = translation.getMessage("player.nickname.too-long", player,
-                    new Object[]{String.valueOf(Player.getNicknameLengthMax())});
-        } else if (player.getNickname().isEmpty()) {
-            message = translation.getMessage("player.nickname.empty", player);
-        } else if (playerService.findByNickname(player.getNickname()) != null) {
-            message = translation.getMessage("player.nickname.duplicate", player);
-        } else if (player.getAdditionalStatus() == PlayerStatusExtended.TUTORIAL_NICKNAME) {
-            return;
-        } else {
-            playerService.update(player);
-            message = translation.getMessage("player.nickname.accept", player,
-                    new Object[]{player.getNickname()});
-        }
-        messages.sendMessage(TextResponseMessage.builder()
-                .text(message).targetId(player).applyMarkup(true).build()
-        );
+    private void executeCommand(UpdateWrapper message) {
+        if (executeAdminCommand(message)) return;
+        else if (executePlayerCommand(message)) return;
+        else commandNotExecuted(message);
     }
 
-    public void addStatPoints(UpdateWrapper update) {
-        experienceService.addStatPoints(update);
+    private boolean executeAdminCommand(UpdateWrapper message) {
+        return message.getUserId().equals(BotConfig.WEBHOOK_ADMIN_ID) && performAdminCommands(message);
     }
 
-    public void sendSkillWindow(Player player) {
-        messages.sendMessage(TextResponseMessage.builder()
-                .text(player.getStatMenu(translation))
-                .keyboard(KeyboardManager.getKeyboardForStatUp(player.getUnassignedPoints()))
-                .targetId(player).build()
-        );
-    }
-
-    public void statUp(UpdateWrapper message) {
-        String[] commandParts = message.getText().split("_", 3);
-        if (commandParts.length == 3 && commandParts[1].length() == 1 && StringUtils.isNumeric(commandParts[2])) {
-            Stats stat = Stats.getStat(commandParts[1]);
-            if (stat == null) {
-                messages.sendMessage(TextResponseMessage.builder()
-                        .text(translation.getMessage("player.stats.invalid", message)).targetId(message).build()
-                );
-            } else {
-                Player player = message.getPlayer();
-                String result = player.raiseStat(stat, Integer.valueOf(commandParts[2]), player.getLanguage(), translation);
-                if (!result.equals(translation.getMessage("player.stats.invalid", message)))
-                    playerService.update(player);
-                messages.sendAnswer(message.getQueryId(), result);
-                if (player.getUnassignedPoints() == 0) {
-                    messages.sendMessage(EditResponseMessage.builder()
-                            .messageId(message).text(player.getStatMenu(translation)).targetId(player).build()
-                    );
-                } else {
-                    messages.sendMessage(EditResponseMessage.builder()
-                            .messageId(message)
-                            .text(player.getStatMenu(translation))
-                            .keyboard(KeyboardManager.getKeyboardForStatUp(player.getUnassignedPoints()))
-                            .targetId(player).build()
-                    );
-                }
+    private Boolean performAdminCommands(UpdateWrapper message) {
+        switch (message.getText()) {
+            case "image test":
+                sendTestImage(message.getUserId());
+                return true;
+            case "/tutorial off": {
+                disableTutorial(message.getPlayer());
+                return true;
             }
+            case "/tutorial on": {
+                enableTutorial(message.getPlayer());
+                return true;
+            }
+            case "/id": {
+                sendIdsToAdminChannel(message.getUserId(), message.getChatId());
+                return true;
+            }
+        }
+        if (message.getText().startsWith("/ping")) {
+            messages.postMessageToAdminChannel(message.getText(), true);
+            return true;
+        }
+        return false;
+    }
+
+    private Boolean executePlayerCommand(UpdateWrapper message) {
+        if (message.getPlayer().getStatus() == PlayerStatus.TUTORIAL && tutorial.proceedTutorial(message)) return true;
+
+        Command command = message.getCommand();
+        if (command == null) return false;
+        String[] commandParts = message.getText().split(" ", 2);
+        if (command == Command.ACTION) {
+            proceedTimeAction(message.getText(), commandParts);
+            return true;
+        } else if (command == Command.START) {
+            startGame(message);
+            return true;
+        } else {
+            return command.execute(message);
+        }
+    }
+
+    private void commandNotExecuted(UpdateWrapper message) {
+        String answer = "Я не знаю как это обработать: " + message.getText();
+        log.debug("Answer: " + answer);
+        messages.sendMessage(TextResponseMessage.builder()
+                .text(answer).targetId(message).build()
+        );
+    }
+
+    private void sendTestImage(String userId) {
+        messages.sendMessage(TextResponseMessage.builder()
+                .text("Нужно бы забраться повыше и осмотреться...").targetId(userId).build()
+        );
+        String docName = "Test name";
+        try {
+            File file = imageService.getOverlaidImagesAsFile(
+                    "images/locations/forest-test.png",
+                    "images/items/weapons/swords/sword-test.png",
+                    docName,
+                    ".png"
+            );
+            messages.sendMessage(ImageResponseMessage.builder()
+                    .file(file).targetId(userId).build()
+            );
+        } catch (IOException e) {
+            handleError(e.getMessage(), e);
+        }
+    }
+
+    private void disableTutorial(Player player) {
+        player.activate();
+        playerService.update(player);
+        messages.sendMessage(TextResponseMessage.builder()
+                .text("Туториал отключен").targetId(player).build()
+        );
+    }
+
+    private void enableTutorial(Player player) {
+        player.setAdditionalStatus(PlayerStatusExtended.TUTORIAL_NICKNAME);
+        player.stop();
+        playerService.update(player);
+        messages.sendMessage(TextResponseMessage.builder()
+                .text("Туториал перезапущен").targetId(player).build()
+        );
+    }
+
+    private void sendIdsToAdminChannel(String userId, long chatId) {
+        messages.postMessageToAdminChannel("User Id: " + userId + ", Chat Id: " + chatId);
+    }
+
+    private void proceedTimeAction(String message, String[] commandParts) {
+        if (commandParts.length <= 1) return;
+        commandParts = message.split(" ", 3);
+        switch (commandParts[1]) {
+            case "add":
+                TimeDependentActions.addElement(commandParts[2]);
+                break;
+            case "remove":
+                TimeDependentActions.removeFirst();
+                break;
+            case "get":
+                messages.postMessageToAdminChannel(TimeDependentActions.getAll());
+                break;
+        }
+    }
+
+    private void startGame(UpdateWrapper message) {
+        if (message.getPlayer().isNew()) {
+            tutorial.tutorialStart(message.getPlayer());
         } else {
             messages.sendMessage(TextResponseMessage.builder()
-                    .text(translation.getMessage("commands.invalid", message)).targetId(message).build()
+                    .text(translation.getMessage("commands.expired", message)).targetId(message).build()
             );
         }
     }
 
-    public void sendPlayerInfo(UpdateWrapper message) {
-        messages.sendMessage(TextResponseMessage.builder()
-                .text(playerService.getPlayerInfo(
-                        message.getUserId(),
-                        message.getPlayer().getLanguage()
-                ))
-                .targetId(message)
-                .applyMarkup(true).build()
-        );
-    }
-
-    public void fight(UpdateWrapper update) {
-        messages.sendMessage(TextResponseMessage.builder()
-                .text(translation.getMessage("battle.start", update)).targetId(update).build()
-        );
-        Mob mob = mobService.getAll().get(0);
-
-        List<String> battleLog = battleHandler.fight(update.getPlayer(), mob, update.getPlayer().getLanguage());
-        StringBuilder history = new StringBuilder();
-        for (String logRow : battleLog) {
-            history.append(logRow).append("\n");
-        }
-        messages.sendMessage(TextResponseMessage.builder()
-                .text(history.toString()).targetId(update).build()
-        );
-
-        // TODO Allow actions by statuses (class to compare)
-        // TODO New status (new table?) with current situation
+    private void setPlayerToMessage(UpdateWrapper message) {
+        message.setPlayer(playerService.getPlayer(message.getUserId()));
     }
 
     public void sendMessageToUser(String message) {
@@ -205,6 +226,20 @@ public class GameMain {
                 .targetId(update)
                 .applyMarkup(true).build()
         );
+    }
+
+    private void logSender(UpdateWrapper message) {
+        log.debug("Working with message: " + message);
+        if (!message.getUserId().equals(BotConfig.WEBHOOK_ADMIN_ID)) {
+            messages.sendMessage(TextResponseMessage.builder()
+                    .text(message.toString()).type(ResponseType.POST_TO_ADMIN_CHANNEL).build()
+            );
+        }
+    }
+
+    private void handleError(String message, Exception e) {
+        log.error(message, e);
+        messages.postMessageToAdminChannel(message);
     }
 
 }

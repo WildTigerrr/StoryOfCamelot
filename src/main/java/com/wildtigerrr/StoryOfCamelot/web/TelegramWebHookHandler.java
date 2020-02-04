@@ -12,18 +12,18 @@ import javax.annotation.PostConstruct;
 
 @Log4j2
 @Service
-public class WebHookHandler extends TelegramWebhookBot {
+public class TelegramWebHookHandler extends TelegramWebhookBot {
 
     private ResponseHandler responseHandler;
     private ResponseManager messages;
 
     @Autowired
-    public WebHookHandler(ResponseHandler responseHandler, ResponseManager messages) {
+    public TelegramWebHookHandler(ResponseHandler responseHandler, ResponseManager messages) {
         this.responseHandler = responseHandler;
         this.messages = messages;
     }
 
-    public WebHookHandler() {}
+    public TelegramWebHookHandler() {}
 
     @PostConstruct
     public void init() {

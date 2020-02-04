@@ -1,7 +1,7 @@
 package com.wildtigerrr.StoryOfCamelot.web.service.impl;
 
 import com.wildtigerrr.StoryOfCamelot.web.BotConfig;
-import com.wildtigerrr.StoryOfCamelot.web.WebHookHandler;
+import com.wildtigerrr.StoryOfCamelot.web.TelegramWebHookHandler;
 import com.wildtigerrr.StoryOfCamelot.web.service.ResponseManager;
 import com.wildtigerrr.StoryOfCamelot.web.service.ResponseType;
 import com.wildtigerrr.StoryOfCamelot.web.service.message.ResponseMessage;
@@ -23,11 +23,11 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 @Profile("!test")
 public class TelegramResponseManager implements ResponseManager {
 
-    private WebHookHandler webHook;
+    private TelegramWebHookHandler webHook;
     private Boolean alreadyRedirected = false;
 
-    public void setExecutor(WebHookHandler webHookHandler) {
-        this.webHook = webHookHandler;
+    public void setExecutor(TelegramWebHookHandler telegramWebHookHandler) {
+        this.webHook = telegramWebHookHandler;
     }
 
     public void sendMessage(ResponseMessage message) {
@@ -171,7 +171,7 @@ public class TelegramResponseManager implements ResponseManager {
     private void executeBeforeAutowiring(BotApiMethod method) {
         log.warn("Spring Startup Error (Autowired Services not initialized)");
         try {
-            new WebHookHandler().execute(method);
+            new TelegramWebHookHandler().execute(method);
         } catch (TelegramApiException ex) {
             handleError(ex);
         }

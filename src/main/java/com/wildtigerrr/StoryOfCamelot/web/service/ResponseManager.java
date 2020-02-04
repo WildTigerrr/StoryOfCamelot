@@ -1,11 +1,11 @@
 package com.wildtigerrr.StoryOfCamelot.web.service;
 
-import com.wildtigerrr.StoryOfCamelot.web.WebHookHandler;
+import com.wildtigerrr.StoryOfCamelot.web.TelegramWebHookHandler;
 import com.wildtigerrr.StoryOfCamelot.web.service.message.ResponseMessage;
 
 public interface ResponseManager {
 
-    void setExecutor(WebHookHandler webHookHandler);
+    void setExecutor(TelegramWebHookHandler telegramWebHookHandler);
 
     void sendMessage(ResponseMessage message);
 

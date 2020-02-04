@@ -1,6 +1,8 @@
 package com.wildtigerrr.StoryOfCamelot.bin.base;
 
 import com.wildtigerrr.StoryOfCamelot.bin.KeyboardManager;
+import com.wildtigerrr.StoryOfCamelot.bin.base.service.LanguageService;
+import com.wildtigerrr.StoryOfCamelot.bin.base.service.player.ExperienceService;
 import com.wildtigerrr.StoryOfCamelot.bin.enums.*;
 import com.wildtigerrr.StoryOfCamelot.bin.translation.TranslationManager;
 import com.wildtigerrr.StoryOfCamelot.database.schema.Player;
@@ -24,76 +26,77 @@ import java.util.List;
 public class GameTutorial {
 
     private final ResponseManager messages;
-    private final GameMain gameMain;
+    private final TranslationManager translation;
     private final PlayerServiceImpl playerService;
     private final LocationServiceImpl locationService;
-    private final TranslationManager translation;
+    private final LanguageService languageService;
+    private final ExperienceService experienceService;
 
     @Autowired
     public GameTutorial(
             ResponseManager messages,
-            GameMain gameMain,
+            TranslationManager translation,
             PlayerServiceImpl playerService,
             LocationServiceImpl locationService,
-            TranslationManager translation
+            LanguageService languageService,
+            ExperienceService experienceService
     ) {
         this.messages = messages;
-        this.gameMain = gameMain;
+        this.translation = translation;
         this.playerService = playerService;
         this.locationService = locationService;
-        this.translation = translation;
+        this.languageService = languageService;
+        this.experienceService = experienceService;
     }
 
-    public Boolean proceedTutorial(UpdateWrapper message) {
-        Command command = message.getCommand();
-        switch (message.getPlayer().getAdditionalStatus()) {
+    public Boolean proceedTutorial(UpdateWrapper update) {
+        Command command = update.getCommand();
+        switch (update.getPlayer().getAdditionalStatus()) {
             case LANGUAGE_CHOOSE:
-                tutorialLanguageSelect(command, message);
+                tutorialLanguageSelect(command, update);
                 break;
             case TUTORIAL_NICKNAME:
-                tutorialNickname(message.getPlayer(), message.getText());
+                tutorialNickname(update.getPlayer(), update.getText());
                 break;
             case TUTORIAL_MOVEMENT:
                 if (command == Command.MOVE) {
                     return false;
                 } else {
-                    noRush(message.getPlayer().getLanguage(), message.getUserId());
+                    noRush(update.getPlayer().getLanguage(), update.getUserId());
                 }
                 break;
             case TUTORIAL_STATS:
                 if (command == Command.ME) {
-                    messages.sendMessage(TextResponseMessage.builder()
-                            .text(message.getPlayer().toString()).targetId(message).applyMarkup(true).build()
-                    );
-                    tutorialStats(message.getPlayer());
+                    command.execute(update);
+                    tutorialStats(update.getPlayer());
                 } else {
-                    noRush(message.getPlayer().getLanguage(), message.getUserId());
+                    noRush(update.getPlayer().getLanguage(), update.getUserId());
                 }
                 break;
             case TUTORIAL_STATS_UP:
                 if (command == Command.SKILLS) {
-                    tutorialInitiateStatsUp(message.getPlayer());
+                    tutorialInitiateStatsUp(update.getPlayer());
                 } else {
-                    noRush(message.getPlayer().getLanguage(), message.getUserId());
+                    noRush(update.getPlayer().getLanguage(), update.getUserId());
                 }
                 break;
             case TUTORIAL_STATS_UP_2:
                 if (command == Command.UP) {
-                    tutorialProceedStatsUpProgress(message);
+                    tutorialProceedStatsUpProgress(update);
                 } else {
-                    noRush(message.getPlayer().getLanguage(), message.getUserId());
+                    noRush(update.getPlayer().getLanguage(), update.getUserId());
                 }
                 break;
             case TUTORIAL_FIGHT:
                 if (command == Command.FIGHT) {
-                    gameMain.fight(message);
+                    command.execute(update);
                 } else {
-                    noRush(message.getPlayer().getLanguage(), message.getUserId());
+                    noRush(update.getPlayer().getLanguage(), update.getUserId());
                 }
                 break;
             default:
                 messages.sendMessage(TextResponseMessage.builder()
-                        .text(translation.getMessage("commands.not-developed", message)).targetId(message).build()
+                        .text(translation.getMessage("commands.not-developed", update)).targetId(update).build()
                 );
         }
         return true;
@@ -139,7 +142,7 @@ public class GameTutorial {
     public void setStartingLanguage(UpdateWrapper update) {
         String langCode = update.getUserLanguageCode().substring(0, Math.min(update.getUserLanguageCode().length(), 2));
         Language lang = Language.byCountryCode(langCode);
-        gameMain.sendLanguageSelector(update.getUserId(), lang);
+        languageService.sendLanguageSelector(update.getUserId(), lang);
     }
 
     public void tutorialStart(Player player) {
@@ -152,7 +155,7 @@ public class GameTutorial {
     }
 
     private void tutorialNickname(Player player, String nickname) {
-        gameMain.setNickname(player, nickname);
+        playerService.setNickname(player, nickname);
         tutorialSetNickname(player);
     }
 
@@ -205,11 +208,11 @@ public class GameTutorial {
     private void tutorialInitiateStatsUp(Player player) {
         player.setAdditionalStatus(PlayerStatusExtended.TUTORIAL_STATS_UP_2);
         playerService.update(player);
-        gameMain.sendSkillWindow(player);
+        experienceService.sendSkillWindow(player);
     }
 
     private void tutorialProceedStatsUpProgress(UpdateWrapper message) {
-        gameMain.statUp(message);
+        experienceService.statUp(message);
         if (message.getPlayer().getUnassignedPoints() == 0)
             tutorialStatsRaised(message.getPlayer());
     }

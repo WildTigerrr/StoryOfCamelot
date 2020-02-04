@@ -1,5 +1,7 @@
-package com.wildtigerrr.StoryOfCamelot.bin.base.player;
+package com.wildtigerrr.StoryOfCamelot.bin.base.service.player;
 
+import com.wildtigerrr.StoryOfCamelot.bin.KeyboardManager;
+import com.wildtigerrr.StoryOfCamelot.bin.service.StringUtils;
 import com.wildtigerrr.StoryOfCamelot.bin.translation.TranslationManager;
 import com.wildtigerrr.StoryOfCamelot.database.schema.Player;
 import com.wildtigerrr.StoryOfCamelot.database.schema.enums.Stats;
@@ -7,6 +9,7 @@ import com.wildtigerrr.StoryOfCamelot.database.service.implementation.PlayerServ
 import com.wildtigerrr.StoryOfCamelot.exception.InvalidInputException;
 import com.wildtigerrr.StoryOfCamelot.web.bot.update.UpdateWrapper;
 import com.wildtigerrr.StoryOfCamelot.web.service.ResponseManager;
+import com.wildtigerrr.StoryOfCamelot.web.service.message.template.EditResponseMessage;
 import com.wildtigerrr.StoryOfCamelot.web.service.message.template.TextResponseMessage;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +30,14 @@ public class ExperienceService {
         this.messages = messages;
         this.translation = translation;
         this.playerService = playerService;
+    }
+
+    public void sendSkillWindow(Player player) {
+        messages.sendMessage(TextResponseMessage.builder()
+                .text(player.getStatMenu(translation))
+                .keyboard(KeyboardManager.getKeyboardForStatUp(player.getUnassignedPoints()))
+                .targetId(player).build()
+        );
     }
 
     public void addStatPoints(UpdateWrapper update) {
@@ -74,6 +85,40 @@ public class ExperienceService {
             messages.sendErrorReport(e);
         }
         return player;
+    }
+
+    public void statUp(UpdateWrapper message) {
+        String[] commandParts = message.getText().split("_", 3);
+        if (commandParts.length == 3 && commandParts[1].length() == 1 && StringUtils.isNumeric(commandParts[2])) {
+            Stats stat = Stats.getStat(commandParts[1]);
+            if (stat == null) {
+                messages.sendMessage(TextResponseMessage.builder()
+                        .text(translation.getMessage("player.stats.invalid", message)).targetId(message).build()
+                );
+            } else {
+                Player player = message.getPlayer();
+                String result = player.raiseStat(stat, Integer.valueOf(commandParts[2]), player.getLanguage(), translation);
+                if (!result.equals(translation.getMessage("player.stats.invalid", message)))
+                    playerService.update(player);
+                messages.sendAnswer(message.getQueryId(), result);
+                if (player.getUnassignedPoints() == 0) {
+                    messages.sendMessage(EditResponseMessage.builder()
+                            .messageId(message).text(player.getStatMenu(translation)).targetId(player).build()
+                    );
+                } else {
+                    messages.sendMessage(EditResponseMessage.builder()
+                            .messageId(message)
+                            .text(player.getStatMenu(translation))
+                            .keyboard(KeyboardManager.getKeyboardForStatUp(player.getUnassignedPoints()))
+                            .targetId(player).build()
+                    );
+                }
+            }
+        } else {
+            messages.sendMessage(TextResponseMessage.builder()
+                    .text(translation.getMessage("commands.invalid", message)).targetId(message).build()
+            );
+        }
     }
 
     private void handleError(String message, Exception e) {

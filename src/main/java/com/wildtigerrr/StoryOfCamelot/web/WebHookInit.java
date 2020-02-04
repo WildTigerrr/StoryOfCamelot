@@ -15,11 +15,11 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 @RestController
 public class WebHookInit {
 
-    private final WebHookHandler handler;
+    private final TelegramWebHookHandler handler;
     private final ResponseManager messages;
 
     @Autowired
-    public WebHookInit(WebHookHandler handler, ResponseManager messages) {
+    public WebHookInit(TelegramWebHookHandler handler, ResponseManager messages) {
         this.handler = handler;
         this.messages = messages;
     }
