@@ -78,6 +78,7 @@ public class TimeDependentActions {
 
     private static void restoreValues() {
         try {
+            log.trace("Attempt To Restore Values");
             InputStream stream = fileService.getFile("temp/BackupValues"); // If file not found > AmazonS3Exception
             if (stream != null) {
                 String values = IOUtils.toString(stream, StandardCharsets.UTF_8);
@@ -207,11 +208,13 @@ public class TimeDependentActions {
     private static ScheduledFuture<?> task;
 
     private static void startActionsCheck() {
+        log.trace("Attempt To Start Checking");
         if (!Scheduler.isActive(task)) task = Scheduler.schedule(TimeDependentActions::check);
         log.debug("Start checking");
     }
 
     private static void cancelActionsCheck() {
+        log.trace("Attempt To Stop Checking");
         Scheduler.cancel(task);
         log.debug("Stop checking");
     }
