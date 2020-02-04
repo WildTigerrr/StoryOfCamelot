@@ -61,6 +61,9 @@ public class BattleHandler {
         if (finalDamage <= 0) {
             finalDamage = isCrit ? 2 : 1;
         }
+        if (isCrit) {
+            log.trace("Critical attack!");
+        }
         log.trace("Damage by attack " + attack + " is " + att + ". Defence with armor " + armor + " is " + def + ". Result: " + finalDamage);
         return finalDamage;
     }
