@@ -1,6 +1,5 @@
 package com.wildtigerrr.StoryOfCamelot.bin.base.service;
 
-import com.wildtigerrr.StoryOfCamelot.bin.KeyboardManager;
 import com.wildtigerrr.StoryOfCamelot.bin.enums.Language;
 import com.wildtigerrr.StoryOfCamelot.bin.translation.TranslationManager;
 import com.wildtigerrr.StoryOfCamelot.web.service.ResponseManager;

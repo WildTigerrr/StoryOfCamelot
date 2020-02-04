@@ -2,7 +2,7 @@ package com.wildtigerrr.StoryOfCamelot;
 
 import com.wildtigerrr.StoryOfCamelot.web.service.ResponseManager;
 import com.wildtigerrr.StoryOfCamelot.web.service.impl.TelegramResponseManager;
-import com.wildtigerrr.StoryOfCamelot.bin.TimeDependentActions;
+import com.wildtigerrr.StoryOfCamelot.bin.base.service.TimeDependentActions;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

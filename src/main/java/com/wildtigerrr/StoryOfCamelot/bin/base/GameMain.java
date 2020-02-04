@@ -1,7 +1,7 @@
 package com.wildtigerrr.StoryOfCamelot.bin.base;
 
-import com.wildtigerrr.StoryOfCamelot.bin.FileProcessing;
-import com.wildtigerrr.StoryOfCamelot.bin.TimeDependentActions;
+import com.wildtigerrr.StoryOfCamelot.bin.base.service.FileProcessing;
+import com.wildtigerrr.StoryOfCamelot.bin.base.service.TimeDependentActions;
 import com.wildtigerrr.StoryOfCamelot.bin.enums.Command;
 import com.wildtigerrr.StoryOfCamelot.bin.translation.TranslationManager;
 import com.wildtigerrr.StoryOfCamelot.database.schema.Player;

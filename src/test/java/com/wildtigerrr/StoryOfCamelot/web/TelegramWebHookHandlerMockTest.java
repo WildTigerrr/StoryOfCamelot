@@ -31,10 +31,10 @@ class TelegramWebHookHandlerMockTest extends ServiceBaseTest {
     private ResponseHandler responseHandlerMock;
 
     @Captor
-    ArgumentCaptor<UpdateWrapper> messageArguments;
+    ArgumentCaptor<Update> messageArguments;
 
     @Test
-    void whenPlainMessageShouldCreateNonQueryWrapperTest() {
+    void whenNewMessageShouldPassToHandlerTest() {
         ReflectionTestUtils.setField(user, "id", 1);
         ReflectionTestUtils.setField(message, "from", user);
         ReflectionTestUtils.setField(chat, "id", 2L);
@@ -45,11 +45,16 @@ class TelegramWebHookHandlerMockTest extends ServiceBaseTest {
 
         telegramWebHookHandler.onWebhookUpdateReceived(update);
 
-//        verify(responseHandlerMock).handleTextMessage(messageArguments.capture());
-//        verify(responseHandlerMock).handleUpdate(update);
+        verify(responseHandlerMock).handleUpdate(messageArguments.capture());
 
-//        assertEquals("Success", messageArguments.getValue().getText());
-//        assertFalse(messageArguments.getValue().isQuery());
+        assertEquals("Success", messageArguments.getValue().getMessage().getText());
+    }
+
+    @Test
+    void whenGettingParamsShouldReturnConfig() {
+        assertEquals(BotConfig.WEBHOOK_TOKEN, telegramWebHookHandler.getBotToken());
+        assertEquals(BotConfig.WEBHOOK_USER, telegramWebHookHandler.getBotUsername());
+        assertEquals(BotConfig.WEBHOOK_ADMIN, telegramWebHookHandler.getBotPath());
     }
 
 }

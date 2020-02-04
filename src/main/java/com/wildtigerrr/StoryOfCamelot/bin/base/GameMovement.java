@@ -1,7 +1,7 @@
 package com.wildtigerrr.StoryOfCamelot.bin.base;
 
-import com.wildtigerrr.StoryOfCamelot.bin.KeyboardManager;
-import com.wildtigerrr.StoryOfCamelot.bin.TimeDependentActions;
+import com.wildtigerrr.StoryOfCamelot.bin.base.service.KeyboardManager;
+import com.wildtigerrr.StoryOfCamelot.bin.base.service.TimeDependentActions;
 import com.wildtigerrr.StoryOfCamelot.bin.base.service.player.ExperienceService;
 import com.wildtigerrr.StoryOfCamelot.bin.service.ScheduledAction;
 import com.wildtigerrr.StoryOfCamelot.bin.translation.TranslationManager;

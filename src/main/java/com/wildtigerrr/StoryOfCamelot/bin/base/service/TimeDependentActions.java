@@ -1,4 +1,4 @@
-package com.wildtigerrr.StoryOfCamelot.bin;
+package com.wildtigerrr.StoryOfCamelot.bin.base.service;
 
 import com.wildtigerrr.StoryOfCamelot.bin.base.GameMovement;
 import com.wildtigerrr.StoryOfCamelot.bin.enums.ActionType;

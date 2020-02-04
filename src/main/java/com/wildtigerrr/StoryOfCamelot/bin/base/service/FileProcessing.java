@@ -1,4 +1,4 @@
-package com.wildtigerrr.StoryOfCamelot.bin;
+package com.wildtigerrr.StoryOfCamelot.bin.base.service;
 
 import com.wildtigerrr.StoryOfCamelot.web.service.DataProvider;
 import org.springframework.beans.factory.annotation.Autowired;

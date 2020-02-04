@@ -1,6 +1,5 @@
 package com.wildtigerrr.StoryOfCamelot.bin.base.service;
 
-import com.wildtigerrr.StoryOfCamelot.bin.BattleHandler;
 import com.wildtigerrr.StoryOfCamelot.bin.translation.TranslationManager;
 import com.wildtigerrr.StoryOfCamelot.database.schema.Mob;
 import com.wildtigerrr.StoryOfCamelot.database.service.implementation.MobServiceImpl;

@@ -1,4 +1,4 @@
-package com.wildtigerrr.StoryOfCamelot.bin;
+package com.wildtigerrr.StoryOfCamelot.bin.base.service;
 
 import com.wildtigerrr.StoryOfCamelot.bin.enums.Language;
 import com.wildtigerrr.StoryOfCamelot.bin.translation.TranslationManager;
@@ -70,7 +70,7 @@ public class BattleHandler {
 
     private boolean isCrit() {
         // TODO Crit calculation
-        return getPercentage(random.nextInt(100)) > 90;
+        return random.nextInt(100) > 90;
     }
 
     private float calculateAttackValue(float attack, boolean isCrit) {
