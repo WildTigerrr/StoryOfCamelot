@@ -4,6 +4,7 @@ import com.wildtigerrr.StoryOfCamelot.bin.enums.Language;
 import com.wildtigerrr.StoryOfCamelot.bin.translation.TranslationManager;
 import com.wildtigerrr.StoryOfCamelot.database.interfaces.Fighter;
 import com.wildtigerrr.StoryOfCamelot.web.BotConfig;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,6 +14,7 @@ import java.util.Random;
 
 import static com.wildtigerrr.StoryOfCamelot.web.BotConfig.*;
 
+@Log4j2
 @Service
 public class BattleHandler {
 
@@ -59,13 +61,13 @@ public class BattleHandler {
         if (finalDamage <= 0) {
             finalDamage = isCrit ? 2 : 1;
         }
-        System.out.println("Damage by attack " + attack + " is " + att + ". Defence with armor " + armor + " is " + def + ". Result: " + finalDamage);
+        log.trace("Damage by attack " + attack + " is " + att + ". Defence with armor " + armor + " is " + def + ". Result: " + finalDamage);
         return finalDamage;
     }
 
     private boolean isCrit() {
-        // TODO
-        return false;
+        // TODO Crit calculation
+        return getPercentage(random.nextInt(100)) > 90;
     }
 
     private float calculateAttackValue(float attack, boolean isCrit) {
