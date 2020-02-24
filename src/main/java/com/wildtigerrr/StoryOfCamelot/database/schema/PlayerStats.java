@@ -256,9 +256,9 @@ public class PlayerStats {
         }
     }
 
-    String getInfoRow(Stats stat, Boolean includeExperience, Language lang) {
-        return "*" + stat.emoji() + stat.what(lang)
-                + ":* " + getStatValue(stat)
+    String getInfoRow(Stats stat, Boolean includeExperience, Language lang, Boolean useMarkup) {
+        return (useMarkup ? "*" : "") + stat.emoji() + stat.what(lang)
+                + ":" + (useMarkup ? "* " : " ") + getStatValue(stat)
                 + (!includeExperience || !stat.containsExperience() ? "" : " (" + getStatExpValue(stat) + "/" + getExpToNextStatUp(getStatValue(stat)) + ")");
     }
 

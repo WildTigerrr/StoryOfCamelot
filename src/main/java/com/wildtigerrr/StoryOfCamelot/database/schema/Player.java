@@ -217,7 +217,7 @@ public class Player implements Comparable<Player>, Fighter {
                 .append("/").append(stats.getStatsToNextLevelUp()).append(")")
                 .append(stats.getUnassignedPoints() > 0 ? " (+" + stats.getUnassignedPoints() + ")" : "");
         for (Stats stat : Stats.values()) {
-            info.append("\n").append(this.stats().getInfoRow(stat, true, language));
+            info.append("\n").append(this.stats().getInfoRow(stat, true, language, true));
         }
         info.append("\n\n_").append(translation.getMessage("player.info.what-else", language)).append("?_");
         return info.toString();
@@ -234,7 +234,7 @@ public class Player implements Comparable<Player>, Fighter {
                 .append(stats.getLevel()).append(" ").append(translation.getMessage("player.info.level").toLowerCase())
                 .append(" (+").append(unassigned).append(")").append("\n");
         for (Stats stat : Stats.values()) {
-            info.append("\n").append(this.stats().getInfoRow(stat, false, language));
+            info.append("\n").append(this.stats().getInfoRow(stat, false, language, false));
         }
         return info.toString();
     }
