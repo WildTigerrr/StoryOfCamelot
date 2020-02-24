@@ -249,6 +249,8 @@ public class PlayerStats {
                 return intelligence;
             case ENDURANCE:
                 return endurance;
+            case LUCK:
+                return luck;
             default:
                 throw new InvalidInputException("Unknown Player stat: " + stat.name());
         }
