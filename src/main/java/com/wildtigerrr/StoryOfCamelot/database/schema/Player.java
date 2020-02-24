@@ -94,6 +94,7 @@ public class Player implements Comparable<Player>, Fighter {
         language = Language.RUS;
         status = PlayerStatus.TUTORIAL;
         additionalStatus = PlayerStatusExtended.LANGUAGE_CHOOSE;
+        stats = new PlayerStats();
         stats.setUnassignedPoints(stats.getDefaultPoints() + 5);
 //        strength = 1;
 //        health = 1;
@@ -486,6 +487,14 @@ public class Player implements Comparable<Player>, Fighter {
 
     public String raiseStat(Stats stat, Integer quantity, Language lang, TranslationManager translation) {
         return stats.raiseStat(stat, quantity, lang, translation);
+    }
+
+    public void setHealth(int health) {
+        stats.setHealth(health);
+    }
+
+    public void setStrength(int strength) {
+        stats.setStrength(strength);
     }
 
     // ================================================ END SERVICE ================================================= //
