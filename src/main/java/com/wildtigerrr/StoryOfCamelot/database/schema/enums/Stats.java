@@ -77,7 +77,7 @@ public enum Stats {
     }
 
     public Boolean containsExperience() {
-        return this == Stats.LUCK;
+        return this != Stats.LUCK;
     }
 
     public static Stats getStat(String character) {

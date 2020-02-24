@@ -35,7 +35,7 @@ public class ExperienceService {
     public void sendSkillWindow(Player player) {
         messages.sendMessage(TextResponseMessage.builder()
                 .text(player.getStatMenu(translation))
-                .keyboard(KeyboardManager.getKeyboardForStatUp(player.getUnassignedPoints()))
+                .keyboard(KeyboardManager.getKeyboardForStatUp(player.stats().getUnassignedPoints()))
                 .targetId(player).build()
         );
     }
@@ -58,7 +58,7 @@ public class ExperienceService {
 
     public Player addExperience(Player player, Stats stat, int experience, Boolean sendExperienceGet) {
         try {
-            List<String> eventList = player.addStatExp(
+            List<String> eventList = player.stats().addStatExp(
                     experience,
                     stat,
                     player.getLanguage(),
@@ -97,11 +97,11 @@ public class ExperienceService {
                 );
             } else {
                 Player player = message.getPlayer();
-                String result = player.raiseStat(stat, Integer.valueOf(commandParts[2]), player.getLanguage(), translation);
+                String result = player.stats().raiseStat(stat, Integer.valueOf(commandParts[2]), player.getLanguage(), translation);
                 if (!result.equals(translation.getMessage("player.stats.invalid", message)))
                     playerService.update(player);
                 messages.sendAnswer(message.getQueryId(), result);
-                if (player.getUnassignedPoints() == 0) {
+                if (player.stats().getUnassignedPoints() == 0) {
                     messages.sendMessage(EditResponseMessage.builder()
                             .messageId(message).text(player.getStatMenu(translation)).targetId(player).build()
                     );
@@ -109,7 +109,7 @@ public class ExperienceService {
                     messages.sendMessage(EditResponseMessage.builder()
                             .messageId(message)
                             .text(player.getStatMenu(translation))
-                            .keyboard(KeyboardManager.getKeyboardForStatUp(player.getUnassignedPoints()))
+                            .keyboard(KeyboardManager.getKeyboardForStatUp(player.stats().getUnassignedPoints()))
                             .targetId(player).build()
                     );
                 }

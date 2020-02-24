@@ -171,7 +171,7 @@ public class PlayerStats {
     }
 
     private Boolean isStatUp(Stats stat, Integer newExp) {
-        return getCurrentStatExp(stat, newExp) >= getExpToNextStatUp(getCurrentStat(stat));
+        return addStatExp(stat, newExp) >= getExpToNextStatUp(getStatValue(stat));
     }
 
     private Boolean isLevelUp() {
@@ -191,7 +191,7 @@ public class PlayerStats {
         return unassignedPoints;
     }
 
-    private Integer getCurrentStatExp(Stats stat, Integer exp) throws InvalidInputException {
+    private Integer addStatExp(Stats stat, Integer exp) throws InvalidInputException {
         switch (stat) {
             case STRENGTH:
                 strengthExp += exp;
@@ -216,7 +216,26 @@ public class PlayerStats {
         }
     }
 
-    private Integer getCurrentStat(Stats stat) {
+    private int getStatExpValue(Stats stat) {
+        switch (stat) {
+            case STRENGTH:
+                return strengthExp;
+            case HEALTH:
+                return healthExp;
+            case AGILITY:
+                return agilityExp;
+            case CHARISMA:
+                return charismaExp;
+            case INTELLIGENCE:
+                return intelligenceExp;
+            case ENDURANCE:
+                return enduranceExp;
+            default:
+                throw new InvalidInputException("Unknown Player stat experience: " + stat.name());
+        }
+    }
+
+    private Integer getStatValue(Stats stat) {
         switch (stat) {
             case STRENGTH:
                 return strength;
@@ -233,6 +252,12 @@ public class PlayerStats {
             default:
                 throw new InvalidInputException("Unknown Player stat: " + stat.name());
         }
+    }
+
+    String getInfoRow(Stats stat, Boolean includeExperience, Language lang) {
+        return stat.emoji() + stat.what(lang)
+                + ":* " + getStatValue(stat)
+                + (!includeExperience || !stat.containsExperience() ? "" : " (" + getStatExpValue(stat) + "/" + getExpToNextStatUp(getStatValue(stat)) + ")");
     }
 
 }

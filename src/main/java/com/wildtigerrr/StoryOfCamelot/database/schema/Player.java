@@ -90,240 +90,20 @@ public class Player implements Comparable<Player>, Fighter {
         this.nickname = nickname;
         this.location = location;
         isNew = externalId.equals(nickname);
-//        level = 1;
         language = Language.RUS;
         status = PlayerStatus.TUTORIAL;
         additionalStatus = PlayerStatusExtended.LANGUAGE_CHOOSE;
         stats = new PlayerStats();
         stats.setUnassignedPoints(stats.getDefaultPoints() + 5);
-//        strength = 1;
-//        health = 1;
-//        agility = 1;
-//        charisma = 1;
-//        intelligence = 1;
-//        endurance = 1;
-//        luck = 1;
-//
-//        strengthExp = 0;
-//        healthExp = 0;
-//        agilityExp = 0;
-//        charismaExp = 0;
-//        intelligenceExp = 0;
-//        enduranceExp = 0;
     }
 
     // ================================================== END MAIN ================================================== //
 
-    // ================================================ LEVEL SYSTEM ================================================ //
-
-//    @Setter(AccessLevel.NONE)
-//    private Integer level;
-//
-//    private Integer unassignedPoints;
-//
-//    private Integer strength;
-//    private Integer health;
-//    private Integer agility;
-//    private Integer charisma;
-//    private Integer intelligence;
-//    private Integer endurance;
-//    private Integer luck;
-//
-//    private Integer strengthExp;
-//    private Integer healthExp;
-//    private Integer agilityExp;
-//    private Integer charismaExp;
-//    private Integer intelligenceExp;
-//    private Integer enduranceExp;
-
-    // ------------------- LEVEL UP CALCULATION ------------------------------------------------------------------------ //
-
-//    private int getExpToNextStatUp(Integer currentLevel) {
-//        return (int) Math.pow(currentLevel + 1, 2);
-//    }
-//
-//    private int getStatsToNextLevelUp() {
-//        return 5 * level * (level + 1) / 2;
-//    }
-//
-//    private int getDefaultPoints() {
-//        return BotConfig.DEFAULT_SKILL_POINTS;
-//    }
-//
-//    private int getAssignedPoints() {
-//        return (7 - unassignedPoints + (getDefaultPoints() + (5 * level)));
-//    }
-
-    // ------------------- LEVEL UP MECHANIC ------------------------------------------------------------------------ //
-
-//    public String raiseStat(Stats stat, Integer quantity, Language lang, TranslationManager translation) {
-//        if (quantity > unassignedPoints) return translation.getMessage("player.stats.insufficient-points", lang);
-//        int newQuantity;
-//        switch (stat) {
-//            case STRENGTH:
-//                strengthExp = 0;
-//                strength += quantity;
-//                newQuantity = strength;
-//                break;
-//            case HEALTH:
-//                healthExp = 0;
-//                health += quantity;
-//                newQuantity = health;
-//                break;
-//            case AGILITY:
-//                agilityExp = 0;
-//                agility += quantity;
-//                newQuantity = agility;
-//                break;
-//            case CHARISMA:
-//                charismaExp = 0;
-//                charisma += quantity;
-//                newQuantity = charisma;
-//                break;
-//            case INTELLIGENCE:
-//                intelligenceExp = 0;
-//                intelligence += quantity;
-//                newQuantity = intelligence;
-//                break;
-//            case ENDURANCE:
-//                enduranceExp = 0;
-//                endurance += quantity;
-//                newQuantity = endurance;
-//                break;
-//            case LUCK:
-//                luck += quantity;
-//                newQuantity = luck;
-//                break;
-//            default:
-//                return translation.getMessage("player.stats.invalid", lang);
-//        }
-//        unassignedPoints -= quantity;
-//        return translation.getMessage("player.stats.stat-up", lang, new Object[]{stat.whichLowercase(lang), String.valueOf(newQuantity)});
-//    }
-//
-//    public ArrayList<String> addStatExp(Integer exp, Stats stat, Language lang, TranslationManager translation) {
-//        ArrayList<String> events = new ArrayList<>();
-//        Boolean up = isStatUp(stat, exp);
-//        String currentValue;
-//        while (up) {
-//            switch (stat) {
-//                case STRENGTH:
-//                    strengthExp -= getExpToNextStatUp(strength);
-//                    strength++;
-//                    currentValue = String.valueOf(strength);
-//                    break;
-//                case HEALTH:
-//                    healthExp -= getExpToNextStatUp(health);
-//                    health++;
-//                    currentValue = String.valueOf(health);
-//                    break;
-//                case AGILITY:
-//                    agilityExp -= getExpToNextStatUp(agility);
-//                    agility++;
-//                    currentValue = String.valueOf(agility);
-//                    break;
-//                case CHARISMA:
-//                    charismaExp -= getExpToNextStatUp(charisma);
-//                    charisma++;
-//                    currentValue = String.valueOf(charisma);
-//                    break;
-//                case INTELLIGENCE:
-//                    intelligenceExp -= getExpToNextStatUp(intelligence);
-//                    intelligence++;
-//                    currentValue = String.valueOf(intelligence);
-//                    break;
-//                case ENDURANCE:
-//                    enduranceExp -= getExpToNextStatUp(endurance);
-//                    endurance++;
-//                    currentValue = String.valueOf(endurance);
-//                    break;
-//                default:
-//                    throw new InvalidInputException("Invalid stat: " + stat);
-//            }
-//            events.add(statUp(lang, stat.whichLowercase(lang), currentValue, translation)); // MainText.STAT_UP.text(lang, stat.whichLowercase(lang), currentValue)
-//            if (isLevelUp()) {
-//                levelUp();
-//                events.add(translation.getMessage("player.stats.level-up", lang, new Object[]{String.valueOf(getLevel())}));
-//            }
-//            up = isStatUp(stat, 0);
-//        }
-//        return events;
-//    }
-//
-//    private String statUp(Language lang, String statName, String value, TranslationManager translation) {
-//        return translation.getMessage("player.stats.stat-up", lang, new Object[]{statName, value});
-//    }
-//
-//    private Boolean isStatUp(Stats stat, Integer newExp) {
-//        return getCurrentStatExp(stat, newExp) >= getExpToNextStatUp(getCurrentStat(stat));
-//    }
-//
-//    private Boolean isLevelUp() {
-//        return getTotalStats() - getAssignedPoints() >= getStatsToNextLevelUp();
-//    }
-//
-//    private Integer getTotalStats() {
-//        return strength + health + agility + charisma + intelligence + endurance + luck;
-//    }
-
-    // ------------------- GETTERS AND SETTERS ---------------------------------------------------------------------- //
-
-//    private void levelUp() {
-//        level++;
-//        unassignedPoints += 5;
-//    }
-//
-//    public Integer getUnassignedPoints() {
-//        return unassignedPoints;
-//    }
-//
-//    private Integer getCurrentStatExp(Stats stat, Integer exp) throws InvalidInputException {
-//        switch (stat) {
-//            case STRENGTH:
-//                strengthExp += exp;
-//                return strengthExp;
-//            case HEALTH:
-//                healthExp += exp;
-//                return healthExp;
-//            case AGILITY:
-//                agilityExp += exp;
-//                return agilityExp;
-//            case CHARISMA:
-//                charismaExp += exp;
-//                return charismaExp;
-//            case INTELLIGENCE:
-//                intelligenceExp += exp;
-//                return intelligenceExp;
-//            case ENDURANCE:
-//                enduranceExp += exp;
-//                return enduranceExp;
-//            default:
-//                throw new InvalidInputException("Unknown Player stat for exp: " + stat.name());
-//        }
-//    }
-//
-//    private Integer getCurrentStat(Stats stat) {
-//        switch (stat) {
-//            case STRENGTH:
-//                return strength;
-//            case HEALTH:
-//                return health;
-//            case AGILITY:
-//                return agility;
-//            case CHARISMA:
-//                return charisma;
-//            case INTELLIGENCE:
-//                return intelligence;
-//            case ENDURANCE:
-//                return endurance;
-//            default:
-//                throw new InvalidInputException("Unknown Player stat: " + stat.name());
-//        }
-//    }
-
-    // ============================================== END LEVEL SYSTEM ============================================== //
-
     // ================================================= FINAL STATS ================================================ //
+
+    public PlayerStats stats() {
+        return stats;
+    }
 
     private Integer hitpoints;
     private Integer hitpointsMax;
@@ -426,20 +206,21 @@ public class Player implements Comparable<Player>, Fighter {
     // ================================================== SERVICE =================================================== //
 
     @Override
-    public String toString() { // MainText.IF_I_REMEMBER.text(language) MainText.LEVEL.text(language) MainText.WHAT_ELSE_WE_KNOW.text(language)
+    public String toString() {
         TranslationManager translation = SpringManager.bean(TranslationManager.class);
-        return translation.getMessage("player.info.if-i-remember", language) + ":"
-                + "\n*" + this.nickname + "*, " + this.stats.getLevel() + " " + translation.getMessage("player.info.level", language).toLowerCase()
-                + " (" + (stats.getTotalStats() - stats.getAssignedPoints()) + "/" + stats.getStatsToNextLevelUp() + ")"
-                + (stats.getUnassignedPoints() > 0 ? " (+" + stats.getUnassignedPoints() + ")" : "")
-                + "\n*" + Stats.STRENGTH.what(language) + ":* " + this.stats.getStrength() + " (" + this.stats.getStrengthExp() + "/" + stats.getExpToNextStatUp(this.stats.getStrength()) + ")"
-                + "\n*" + Stats.HEALTH.what(language) + ":* " + this.stats.getHealth() + " (" + this.stats.getHealthExp() + "/" + stats.getExpToNextStatUp(this.stats.getHealth()) + ")"
-                + "\n*" + Stats.AGILITY.what(language) + ":* " + this.stats.getAgility() + " (" + this.stats.getAgilityExp() + "/" + stats.getExpToNextStatUp(this.stats.getAgility()) + ")"
-                + "\n*" + Stats.CHARISMA.what(language) + ":* " + this.stats.getCharisma() + " (" + this.stats.getCharismaExp() + "/" + stats.getExpToNextStatUp(this.stats.getCharisma()) + ")"
-                + "\n*" + Stats.INTELLIGENCE.what(language) + ":* " + this.stats.getIntelligence() + " (" + this.stats.getIntelligenceExp() + "/" + stats.getExpToNextStatUp(this.stats.getIntelligence()) + ")"
-                + "\n*" + Stats.ENDURANCE.what(language) + ":* " + this.stats.getEndurance() + " (" + this.stats.getEnduranceExp() + "/" + stats.getExpToNextStatUp(this.stats.getEndurance()) + ")"
-                + "\n*" + Stats.LUCK.what(language) + ":* " + this.stats.getLuck()
-                + "\n\n_" + translation.getMessage("player.info.what-else", language) + "?_";
+        StringBuilder info = new StringBuilder();
+        info.append(translation.getMessage("player.info.if-i-remember", language)).append(":")
+                .append("\n*").append(this.nickname).append("*, ")
+                .append(this.stats.getLevel()).append(" ")
+                .append(translation.getMessage("player.info.level", language).toLowerCase())
+                .append(" (").append(stats.getTotalStats() - stats.getAssignedPoints())
+                .append("/").append(stats.getStatsToNextLevelUp()).append(")")
+                .append(stats.getUnassignedPoints() > 0 ? " (+" + stats.getUnassignedPoints() + ")" : "");
+        for (Stats stat : Stats.values()) {
+            info.append("\n").append(this.stats().getInfoRow(stat, true, language));
+        }
+        info.append("\n\n_").append(translation.getMessage("player.info.what-else", language)).append("?_");
+        return info.toString();
     }
 
     public String toStatString(int index) {
@@ -448,14 +229,14 @@ public class Player implements Comparable<Player>, Fighter {
 
     public String getStatMenu(TranslationManager translation) {
         int unassigned = stats.getUnassignedPoints();
-        return nickname + ", " + stats.getLevel() + " " + translation.getMessage("player.info.level").toLowerCase() + " (+" + unassigned + ")"
-                + "\n\n" + Stats.STRENGTH.emoji() + Stats.STRENGTH.what(language) + ": " + stats.getStrength()
-                + "\n" + Stats.HEALTH.emoji() + Stats.HEALTH.what(language) + ": " + stats.getHealth()
-                + "\n" + Stats.AGILITY.emoji() + Stats.AGILITY.what(language) + ": " + stats.getAgility()
-                + "\n" + Stats.CHARISMA.emoji() + Stats.CHARISMA.what(language) + ": " + stats.getCharisma()
-                + "\n" + Stats.INTELLIGENCE.emoji() + Stats.INTELLIGENCE.what(language) + ": " + stats.getIntelligence()
-                + "\n" + Stats.ENDURANCE.emoji() + Stats.ENDURANCE.what(language) + ": " + stats.getEndurance()
-                + "\n" + Stats.LUCK.emoji() + Stats.LUCK.what(language) + ": " + stats.getLuck();
+        StringBuilder info = new StringBuilder();
+        info.append(nickname).append(", ")
+                .append(stats.getLevel()).append(" ").append(translation.getMessage("player.info.level").toLowerCase())
+                .append(" (+").append(unassigned).append(")").append("\n");
+        for (Stats stat : Stats.values()) {
+            info.append("\n").append(this.stats().getInfoRow(stat, false, language));
+        }
+        return info.toString();
     }
 
     public static int getNicknameLengthMax() {
@@ -475,26 +256,6 @@ public class Player implements Comparable<Player>, Fighter {
     private static Comparator<Player> getComparator() {
         return comparing(Player::getLevel, reverseOrder())
                 .thenComparing(Player::getTotalStats, reverseOrder());
-    }
-
-    public int getUnassignedPoints() {
-        return stats.getUnassignedPoints();
-    }
-
-    public List<String> addStatExp(int exp, Stats stat, Language lang, TranslationManager translation) {
-        return stats.addStatExp(exp, stat, lang, translation);
-    }
-
-    public String raiseStat(Stats stat, Integer quantity, Language lang, TranslationManager translation) {
-        return stats.raiseStat(stat, quantity, lang, translation);
-    }
-
-    public void setHealth(int health) {
-        stats.setHealth(health);
-    }
-
-    public void setStrength(int strength) {
-        stats.setStrength(strength);
     }
 
     // ================================================ END SERVICE ================================================= //

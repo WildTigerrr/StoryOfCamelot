@@ -213,7 +213,7 @@ public class GameTutorial {
 
     private void tutorialProceedStatsUpProgress(UpdateWrapper message) {
         experienceService.statUp(message);
-        if (message.getPlayer().getUnassignedPoints() == 0)
+        if (message.getPlayer().stats().getUnassignedPoints() == 0)
             tutorialStatsRaised(message.getPlayer());
     }
 
