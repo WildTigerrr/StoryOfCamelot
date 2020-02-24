@@ -87,6 +87,16 @@ public class Mob implements Fighter {
         return getHitpoints();
     }
 
+    @Override
+    public int getDefence() {
+        return this.defence;
+    }
+
+    @Override
+    public int getDamage() {
+        return this.damage;
+    }
+
     public Mob addPossibleLocation(PossibleLocation possibleLocation) {
         this.possibleLocations.add(possibleLocation);
         return this;

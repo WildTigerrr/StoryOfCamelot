@@ -117,7 +117,7 @@ public class PlayerStats {
         return translation.getMessage("player.stats.stat-up", lang, new Object[]{stat.whichLowercase(lang), String.valueOf(newQuantity)});
     }
 
-    public ArrayList<String> addStatExp(Integer exp, Stats stat, Language lang, TranslationManager translation) {
+    public ArrayList<String> addStatExp(int exp, Stats stat, Language lang, TranslationManager translation) {
         ArrayList<String> events = new ArrayList<>();
         Boolean up = isStatUp(stat, exp);
         String currentValue;

@@ -476,5 +476,17 @@ public class Player implements Comparable<Player>, Fighter {
                 .thenComparing(Player::getTotalStats, reverseOrder());
     }
 
+    public int getUnassignedPoints() {
+        return stats.getUnassignedPoints();
+    }
+
+    public List<String> addStatExp(int exp, Stats stat, Language lang, TranslationManager translation) {
+        return stats.addStatExp(exp, stat, lang, translation);
+    }
+
+    public String raiseStat(Stats stat, Integer quantity, Language lang, TranslationManager translation) {
+        return stats.raiseStat(stat, quantity, lang, translation);
+    }
+
     // ================================================ END SERVICE ================================================= //
 }
