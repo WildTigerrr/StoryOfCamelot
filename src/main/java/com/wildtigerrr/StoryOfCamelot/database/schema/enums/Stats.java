@@ -8,44 +8,37 @@ public enum Stats {
     STRENGTH(
             NameTranslation.SKILL_STRENGTH_WHICH,
             NameTranslation.SKILL_STRENGTH_WHAT,
-            Emoji.STRENGTH.getCode(), "S",
-            "strength", "strengthExp"
+            Emoji.STRENGTH.getCode(), "S"
     ),
     HEALTH(
             NameTranslation.SKILL_HEALTH_WHICH,
             NameTranslation.SKILL_HEALTH_WHAT,
-            Emoji.HEALTH.getCode(), "H",
-            "health", "healthExp"
+            Emoji.HEALTH.getCode(), "H"
     ),
     AGILITY(
             NameTranslation.SKILL_AGILITY_WHICH,
             NameTranslation.SKILL_AGILITY_WHAT,
-            Emoji.AGILITY.getCode(), "A",
-            "agility", "agilityExp"
+            Emoji.AGILITY.getCode(), "A"
     ),
     CHARISMA(
             NameTranslation.SKILL_CHARISMA_WHICH,
             NameTranslation.SKILL_CHARISMA_WHAT,
-            Emoji.CHARISMA.getCode(), "C",
-            "charisma", "charismaExp"
+            Emoji.CHARISMA.getCode(), "C"
     ),
     INTELLIGENCE(
             NameTranslation.SKILL_INTELLIGENCE_WHICH,
             NameTranslation.SKILL_INTELLIGENCE_WHAT,
-            Emoji.INTELLIGENCE.getCode(), "I",
-            "intelligence", "intelligenceExp"
+            Emoji.INTELLIGENCE.getCode(), "I"
     ),
     ENDURANCE(
             NameTranslation.SKILL_ENDURANCE_WHICH,
             NameTranslation.SKILL_ENDURANCE_WHAT,
-            Emoji.ENDURANCE.getCode(), "E",
-            "endurance", "enduranceExp"
+            Emoji.ENDURANCE.getCode(), "E"
     ),
     LUCK(
             NameTranslation.SKILL_LUCK_WHICH,
             NameTranslation.SKILL_LUCK_WHAT,
-            Emoji.LUCK.getCode(), "L",
-            "luck", null
+            Emoji.LUCK.getCode(), "L"
     );
 
 
@@ -53,16 +46,12 @@ public enum Stats {
     private final NameTranslation what;
     private final String emoji;
     private final String character;
-    private final String fieldName;
-    private final String expFieldName;
 
-    Stats(NameTranslation which, NameTranslation what, String emoji, String character, String fieldName, String expFieldName) {
+    Stats(NameTranslation which, NameTranslation what, String emoji, String character) {
         this.which = which;
         this.what = what;
         this.emoji = emoji;
         this.character = character;
-        this.fieldName = fieldName;
-        this.expFieldName = expFieldName;
     }
 
     public String emoji() {
@@ -85,6 +74,10 @@ public enum Stats {
 
     public String getCharacter() {
         return character;
+    }
+
+    public Boolean containsExperience() {
+        return this == Stats.LUCK;
     }
 
     public static Stats getStat(String character) {
