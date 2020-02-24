@@ -7,15 +7,18 @@ import com.wildtigerrr.StoryOfCamelot.bin.base.service.player.ExperienceService;
 import com.wildtigerrr.StoryOfCamelot.bin.service.StringUtils;
 import com.wildtigerrr.StoryOfCamelot.database.service.template.PlayerService;
 import com.wildtigerrr.StoryOfCamelot.web.bot.update.UpdateWrapper;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 
+@Log4j2
 public enum Command {
     ME {
         @Override
         public boolean execute(UpdateWrapper update) {
+            log.warn(update.getPlayer().toString());
             playerService.sendPlayerInfo(update);
             return true;
         }
