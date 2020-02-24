@@ -83,7 +83,7 @@ public class Mob implements Fighter {
     }
 
     @Override
-    public Integer getHealth() {
+    public int getHealth() {
         return getHitpoints();
     }
 

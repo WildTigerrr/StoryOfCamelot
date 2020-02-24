@@ -90,25 +90,25 @@ public class Player implements Comparable<Player>, Fighter {
         this.nickname = nickname;
         this.location = location;
         isNew = externalId.equals(nickname);
-        level = 1;
+//        level = 1;
         language = Language.RUS;
         status = PlayerStatus.TUTORIAL;
         additionalStatus = PlayerStatusExtended.LANGUAGE_CHOOSE;
         stats.setUnassignedPoints(stats.getDefaultPoints() + 5);
-        strength = 1;
-        health = 1;
-        agility = 1;
-        charisma = 1;
-        intelligence = 1;
-        endurance = 1;
-        luck = 1;
-
-        strengthExp = 0;
-        healthExp = 0;
-        agilityExp = 0;
-        charismaExp = 0;
-        intelligenceExp = 0;
-        enduranceExp = 0;
+//        strength = 1;
+//        health = 1;
+//        agility = 1;
+//        charisma = 1;
+//        intelligence = 1;
+//        endurance = 1;
+//        luck = 1;
+//
+//        strengthExp = 0;
+//        healthExp = 0;
+//        agilityExp = 0;
+//        charismaExp = 0;
+//        intelligenceExp = 0;
+//        enduranceExp = 0;
     }
 
     // ================================================== END MAIN ================================================== //
@@ -331,13 +331,13 @@ public class Player implements Comparable<Player>, Fighter {
     private Integer hunger;
 
     @Override
-    public Integer getDamage() {
-        return getStrength();
+    public int getDamage() {
+        return stats.getStrength();
     }
 
     @Override
-    public Integer getDefence() {
-        return getEndurance();
+    public int getDefence() {
+        return stats.getEndurance();
     }
 
     @Override
@@ -347,12 +347,25 @@ public class Player implements Comparable<Player>, Fighter {
 
     @Override
     public boolean isAlive() {
-        return health > 0;
+        return stats.getHealth() > 0;
     }
 
     @Override
     public void applyDamage(int damage) {
-        health -= damage;
+        stats.setHealth(stats.getHealth() - damage);
+    }
+
+    @Override
+    public int getHealth() {
+        return stats.getHealth();
+    }
+
+    public int getLevel() {
+        return stats.getLevel();
+    }
+
+    public int getTotalStats() {
+        return stats.getTotalStats();
     }
 
     // TODO Battle stats methods
@@ -398,7 +411,6 @@ public class Player implements Comparable<Player>, Fighter {
 
     public void setup() {
         this.isNew = false;
-        this.level = 1;
     }
 
     public void addBackpack(Backpack backpack) {
@@ -416,33 +428,33 @@ public class Player implements Comparable<Player>, Fighter {
     public String toString() { // MainText.IF_I_REMEMBER.text(language) MainText.LEVEL.text(language) MainText.WHAT_ELSE_WE_KNOW.text(language)
         TranslationManager translation = SpringManager.bean(TranslationManager.class);
         return translation.getMessage("player.info.if-i-remember", language) + ":"
-                + "\n*" + this.nickname + "*, " + this.level + " " + translation.getMessage("player.info.level", language).toLowerCase()
-                + " (" + (getTotalStats() - getAssignedPoints()) + "/" + getStatsToNextLevelUp() + ")"
-                + (getUnassignedPoints() > 0 ? " (+" + getUnassignedPoints() + ")" : "")
-                + "\n*" + Stats.STRENGTH.what(language) + ":* " + this.strength + " (" + this.strengthExp + "/" + getExpToNextStatUp(this.strength) + ")"
-                + "\n*" + Stats.HEALTH.what(language) + ":* " + this.health + " (" + this.healthExp + "/" + getExpToNextStatUp(this.health) + ")"
-                + "\n*" + Stats.AGILITY.what(language) + ":* " + this.agility + " (" + this.agilityExp + "/" + getExpToNextStatUp(this.agility) + ")"
-                + "\n*" + Stats.CHARISMA.what(language) + ":* " + this.charisma + " (" + this.charismaExp + "/" + getExpToNextStatUp(this.charisma) + ")"
-                + "\n*" + Stats.INTELLIGENCE.what(language) + ":* " + this.intelligence + " (" + this.intelligenceExp + "/" + getExpToNextStatUp(this.intelligence) + ")"
-                + "\n*" + Stats.ENDURANCE.what(language) + ":* " + this.endurance + " (" + this.enduranceExp + "/" + getExpToNextStatUp(this.endurance) + ")"
-                + "\n*" + Stats.LUCK.what(language) + ":* " + this.luck
+                + "\n*" + this.nickname + "*, " + this.stats.getLevel() + " " + translation.getMessage("player.info.level", language).toLowerCase()
+                + " (" + (stats.getTotalStats() - stats.getAssignedPoints()) + "/" + stats.getStatsToNextLevelUp() + ")"
+                + (stats.getUnassignedPoints() > 0 ? " (+" + stats.getUnassignedPoints() + ")" : "")
+                + "\n*" + Stats.STRENGTH.what(language) + ":* " + this.stats.getStrength() + " (" + this.stats.getStrengthExp() + "/" + stats.getExpToNextStatUp(this.stats.getStrength()) + ")"
+                + "\n*" + Stats.HEALTH.what(language) + ":* " + this.stats.getHealth() + " (" + this.stats.getHealthExp() + "/" + stats.getExpToNextStatUp(this.stats.getHealth()) + ")"
+                + "\n*" + Stats.AGILITY.what(language) + ":* " + this.stats.getAgility() + " (" + this.stats.getAgilityExp() + "/" + stats.getExpToNextStatUp(this.stats.getAgility()) + ")"
+                + "\n*" + Stats.CHARISMA.what(language) + ":* " + this.stats.getCharisma() + " (" + this.stats.getCharismaExp() + "/" + stats.getExpToNextStatUp(this.stats.getCharisma()) + ")"
+                + "\n*" + Stats.INTELLIGENCE.what(language) + ":* " + this.stats.getIntelligence() + " (" + this.stats.getIntelligenceExp() + "/" + stats.getExpToNextStatUp(this.stats.getIntelligence()) + ")"
+                + "\n*" + Stats.ENDURANCE.what(language) + ":* " + this.stats.getEndurance() + " (" + this.stats.getEnduranceExp() + "/" + stats.getExpToNextStatUp(this.stats.getEndurance()) + ")"
+                + "\n*" + Stats.LUCK.what(language) + ":* " + this.stats.getLuck()
                 + "\n\n_" + translation.getMessage("player.info.what-else", language) + "?_";
     }
 
     public String toStatString(int index) {
-        return index + ". " + this.nickname + ", " + getLevel() + " (" + getTotalStats() + ")" + "\n";
+        return index + ". " + this.nickname + ", " + stats.getLevel() + " (" + stats.getTotalStats() + ")" + "\n";
     }
 
     public String getStatMenu(TranslationManager translation) {
-        int unassigned = getUnassignedPoints();
-        return nickname + ", " + level + " " + translation.getMessage("player.info.level").toLowerCase() + " (+" + unassigned + ")"
-                + "\n\n" + Stats.STRENGTH.emoji() + Stats.STRENGTH.what(language) + ": " + strength
-                + "\n" + Stats.HEALTH.emoji() + Stats.HEALTH.what(language) + ": " + health
-                + "\n" + Stats.AGILITY.emoji() + Stats.AGILITY.what(language) + ": " + agility
-                + "\n" + Stats.CHARISMA.emoji() + Stats.CHARISMA.what(language) + ": " + charisma
-                + "\n" + Stats.INTELLIGENCE.emoji() + Stats.INTELLIGENCE.what(language) + ": " + intelligence
-                + "\n" + Stats.ENDURANCE.emoji() + Stats.ENDURANCE.what(language) + ": " + endurance
-                + "\n" + Stats.LUCK.emoji() + Stats.LUCK.what(language) + ": " + luck;
+        int unassigned = stats.getUnassignedPoints();
+        return nickname + ", " + stats.getLevel() + " " + translation.getMessage("player.info.level").toLowerCase() + " (+" + unassigned + ")"
+                + "\n\n" + Stats.STRENGTH.emoji() + Stats.STRENGTH.what(language) + ": " + stats.getStrength()
+                + "\n" + Stats.HEALTH.emoji() + Stats.HEALTH.what(language) + ": " + stats.getHealth()
+                + "\n" + Stats.AGILITY.emoji() + Stats.AGILITY.what(language) + ": " + stats.getAgility()
+                + "\n" + Stats.CHARISMA.emoji() + Stats.CHARISMA.what(language) + ": " + stats.getCharisma()
+                + "\n" + Stats.INTELLIGENCE.emoji() + Stats.INTELLIGENCE.what(language) + ": " + stats.getIntelligence()
+                + "\n" + Stats.ENDURANCE.emoji() + Stats.ENDURANCE.what(language) + ": " + stats.getEndurance()
+                + "\n" + Stats.LUCK.emoji() + Stats.LUCK.what(language) + ": " + stats.getLuck();
     }
 
     public static int getNicknameLengthMax() {

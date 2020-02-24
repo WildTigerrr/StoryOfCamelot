@@ -37,11 +37,30 @@ public class PlayerStats {
     private Integer intelligenceExp;
     private Integer enduranceExp;
 
-    private int getExpToNextStatUp(Integer currentLevel) {
+    public PlayerStats() {
+        level = 1;
+
+        strength = 1;
+        health = 1;
+        agility = 1;
+        charisma = 1;
+        intelligence = 1;
+        endurance = 1;
+        luck = 1;
+
+        strengthExp = 0;
+        healthExp = 0;
+        agilityExp = 0;
+        charismaExp = 0;
+        intelligenceExp = 0;
+        enduranceExp = 0;
+    }
+
+    int getExpToNextStatUp(Integer currentLevel) {
         return (int) Math.pow(currentLevel + 1, 2);
     }
 
-    private int getStatsToNextLevelUp() {
+    int getStatsToNextLevelUp() {
         return 5 * level * (level + 1) / 2;
     }
 
@@ -49,7 +68,7 @@ public class PlayerStats {
         return BotConfig.DEFAULT_SKILL_POINTS;
     }
 
-    private int getAssignedPoints() {
+    int getAssignedPoints() {
         return (7 - unassignedPoints + (getDefaultPoints() + (5 * level)));
     }
 
@@ -159,7 +178,7 @@ public class PlayerStats {
         return getTotalStats() - getAssignedPoints() >= getStatsToNextLevelUp();
     }
 
-    private Integer getTotalStats() {
+    Integer getTotalStats() {
         return strength + health + agility + charisma + intelligence + endurance + luck;
     }
 

@@ -4,9 +4,9 @@ import com.wildtigerrr.StoryOfCamelot.bin.enums.Language;
 
 public interface Fighter {
 
-    Integer getDamage();
-    Integer getDefence();
-    Integer getHealth();
+    int getDamage();
+    int getDefence();
+    int getHealth();
     String getName(Language lang);
     boolean isAlive();
     void applyDamage(int damage);
