@@ -1,20 +1,17 @@
 package com.wildtigerrr.StoryOfCamelot.database.schema;
 
 import com.wildtigerrr.StoryOfCamelot.bin.enums.Language;
-import com.wildtigerrr.StoryOfCamelot.exception.InvalidInputException;
 import com.wildtigerrr.StoryOfCamelot.bin.service.SpringManager;
 import com.wildtigerrr.StoryOfCamelot.bin.translation.TranslationManager;
 import com.wildtigerrr.StoryOfCamelot.database.interfaces.Fighter;
 import com.wildtigerrr.StoryOfCamelot.database.schema.enums.PlayerStatus;
 import com.wildtigerrr.StoryOfCamelot.database.schema.enums.PlayerStatusExtended;
 import com.wildtigerrr.StoryOfCamelot.database.schema.enums.Stats;
-import com.wildtigerrr.StoryOfCamelot.web.BotConfig;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;

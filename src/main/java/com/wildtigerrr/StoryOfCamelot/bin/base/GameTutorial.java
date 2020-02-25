@@ -122,7 +122,7 @@ public class GameTutorial {
                         .text(translation.getMessage("tutorial.lang.selected",
                                 player,
                                 new Object[]{player.getLanguage().getName()}
-                        ))
+                        ) + "Hello Branch!")
                         .targetId(message)
                         .applyMarkup(true).build()
                 );
