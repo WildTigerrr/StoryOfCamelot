@@ -44,7 +44,7 @@ public class StoryOfCamelotApplication {
         log.debug("Sending Startup Failure Notification");
         // TODO Remove direct call
         new TelegramResponseManager().postMessageToAdminChannel("Exception during startup: " + e.getMessage());
-        log.fatal(e);
+        log.fatal("Startup Error Stacktrace:", e);
     }
 
     @PreDestroy

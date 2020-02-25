@@ -10,6 +10,7 @@ import com.amazonaws.services.s3.model.GetObjectRequest;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.amazonaws.services.s3.model.S3Object;
 import com.wildtigerrr.StoryOfCamelot.web.service.DataProvider;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
@@ -27,7 +28,7 @@ public class AmazonClient implements DataProvider {
 
     @PostConstruct
     private void initializeAmazon() {
-        AWSCredentials credentials = new BasicAWSCredentials(System.getenv("AWS_S3_ID"), System.getenv("AWS_S3_KEY"));
+        AWSCredentials credentials = new BasicAWSCredentials(getEnvId(), getEnvKey());
         this.s3client = AmazonS3ClientBuilder.standard()
                 .withRegion(Regions.EU_CENTRAL_1)
                 .withCredentials(new AWSStaticCredentialsProvider(credentials))
@@ -51,6 +52,23 @@ public class AmazonClient implements DataProvider {
     @Override
     public void saveFile(String name, File file) {
         s3client.putObject(new PutObjectRequest(bucketName, name, file));
+    }
+
+    @Value("${AWS_S3_ID}")
+    private String awsIdProperty;
+    @Value("${AWS_S3_KEY}")
+    private String awsKeyProperty;
+
+    private String getEnvId() {
+        String id = System.getenv("AWS_S3_ID");
+        if (id == null) return awsIdProperty;
+        else return id;
+    }
+
+    private String getEnvKey() {
+        String key = System.getenv("AWS_S3_KEY");
+        if (key == null) return awsKeyProperty;
+        else return key;
     }
 
 }
