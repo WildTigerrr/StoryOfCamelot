@@ -89,7 +89,7 @@ public class PlayerServiceImpl implements PlayerService {
                 .sorted()
                 .collect(Collectors.toList());
         if (players.size() > count)
-            players = players.subList(players.size() - count, players.size());
+            players = players.subList(0, count);
         return players;
     }
 
