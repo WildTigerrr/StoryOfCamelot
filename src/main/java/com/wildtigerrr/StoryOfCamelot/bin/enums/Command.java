@@ -71,7 +71,7 @@ public enum Command {
     TOP {
         @Override
         public boolean execute(UpdateWrapper update) {
-            playerService.sendTopPlayers(update.getUserId());
+            game.sendTopPlayers(update.getUserId());
             return true;
         }
     },

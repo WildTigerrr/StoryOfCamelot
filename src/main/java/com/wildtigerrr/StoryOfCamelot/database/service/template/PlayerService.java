@@ -17,7 +17,6 @@ public interface PlayerService {
     Player update(Player player);
     List<Player> getAll();
     List<Player> getTopPlayers(int count);
-    void sendTopPlayers(String userId);
     String getPlayerInfo(String externalId, Language lang);
     Player getPlayer(String externalId);
     void setNickname(Player player, String newName);

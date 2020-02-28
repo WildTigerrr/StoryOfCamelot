@@ -24,6 +24,9 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
 
 @Log4j2
 @Service
@@ -78,6 +81,18 @@ public class GameMain {
     public void handleUnsupportedMessage(Update update) {
         log.error("Message not supported: " + update.toString());
         messages.postMessageToAdminChannel("Message not supported: " + update.toString());
+    }
+
+    public void sendTopPlayers(String currentPlayerId) {
+        List<Player> players = playerService.getTopPlayers(10);
+        AtomicInteger index = new AtomicInteger();
+        String top = "Топ игроков: \n\n" +
+                players.stream()
+                        .map(pl -> pl.toStatString(index.incrementAndGet()))
+                        .collect(Collectors.joining());
+        messages.sendMessage(TextResponseMessage.builder()
+                .text(top).targetId(currentPlayerId).build()
+        );
     }
 
     private void executeCommand(UpdateWrapper message) {

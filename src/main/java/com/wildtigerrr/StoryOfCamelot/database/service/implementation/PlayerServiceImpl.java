@@ -53,16 +53,13 @@ public class PlayerServiceImpl implements PlayerService {
 
     @Override
     public void delete(int id) {
-        playerDao.findById(id).ifPresent(player -> playerDao.delete(player));
+        playerDao.findById(id).ifPresent(playerDao::delete);
     }
 
     @Override
     public Player findById(int id) {
-        Optional obj = playerDao.findById(id);
-        if (obj.isPresent()) {
-            return (Player) obj.get();
-        }
-        return null;
+        Optional<Player> obj = playerDao.findById(id);
+        return obj.orElse(null);
     }
 
     @Override
@@ -94,19 +91,6 @@ public class PlayerServiceImpl implements PlayerService {
         if (players.size() > count)
             players = players.subList(players.size() - count, players.size());
         return players;
-    }
-
-    @Override
-    public void sendTopPlayers(String userId) {
-        List<Player> players = getTopPlayers(10);
-        AtomicInteger index = new AtomicInteger();
-        String top = "Топ игроков: \n\n" +
-                players.stream()
-                        .map(pl -> pl.toStatString(index.incrementAndGet()))
-                        .collect(Collectors.joining());
-        messages.sendMessage(TextResponseMessage.builder()
-                .text(top).targetId(userId).build()
-        );
     }
 
     @Override
