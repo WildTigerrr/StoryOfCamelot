@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public interface PlayerService {
-    Player create(Player player);
+    Player createIfNotExist(Player player);
     void create(ArrayList<Player> players);
     void delete(int id);
     Player findById(int id);
@@ -20,5 +20,4 @@ public interface PlayerService {
     String getPlayerInfo(String externalId, Language lang);
     Player getPlayer(String externalId);
     void setNickname(Player player, String newName);
-    void sendPlayerInfo(UpdateWrapper message);
 }

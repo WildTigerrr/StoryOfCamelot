@@ -16,8 +16,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 @Service
@@ -37,13 +37,13 @@ public class PlayerServiceImpl implements PlayerService {
     }
 
     @Override
-    public synchronized Player create(Player player) {
+    public synchronized Player createIfNotExist(Player player) {
         Player existingPlayer = playerDao.findByExternalId(player.getExternalId());
-        if (existingPlayer != null) {
-            return existingPlayer;
-        } else {
-            return playerDao.save(player);
-        }
+        return Objects.requireNonNullElseGet(existingPlayer, () -> save(player));
+    }
+
+    private synchronized Player save(Player player) {
+        return playerDao.save(player);
     }
 
     @Override
@@ -105,11 +105,10 @@ public class PlayerServiceImpl implements PlayerService {
 
     @Override
     public Player getPlayer(String externalId) {
-        Player player;
-        player = findByExternalId(externalId);
+        Player player = findByExternalId(externalId);
         if (player == null) {
             player = new Player(externalId, externalId, locationService.findByName(GameSettings.DEFAULT_LOCATION.get()));
-            player = create(player);
+            player = save(player);
         }
         return player;
     }
@@ -135,19 +134,6 @@ public class PlayerServiceImpl implements PlayerService {
         }
         messages.sendMessage(TextResponseMessage.builder()
                 .text(message).targetId(player).applyMarkup(true).build()
-        );
-    }
-
-    @Override
-    public void sendPlayerInfo(UpdateWrapper message) {
-        /*getPlayerInfo(
-                message.getUserId(),
-                message.getPlayer().getLanguage()
-        )*/
-        messages.sendMessage(TextResponseMessage.builder()
-                .text(message.getPlayer().toString())
-                .targetId(message)
-                .applyMarkup(true).build()
         );
     }
 

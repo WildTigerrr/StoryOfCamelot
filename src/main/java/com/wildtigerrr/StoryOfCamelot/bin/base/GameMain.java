@@ -95,6 +95,14 @@ public class GameMain {
         );
     }
 
+    public void sendPlayerInfo(UpdateWrapper message) {
+        messages.sendMessage(TextResponseMessage.builder()
+                .text(message.getPlayer().toString())
+                .targetId(message)
+                .applyMarkup(true).build()
+        );
+    }
+
     private void executeCommand(UpdateWrapper message) {
         if (executeAdminCommand(message)) return;
         else if (executePlayerCommand(message)) return;

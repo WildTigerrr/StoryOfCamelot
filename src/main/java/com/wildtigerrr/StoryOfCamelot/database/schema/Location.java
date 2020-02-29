@@ -52,7 +52,7 @@ public class Location {
         return "Location{" +
                 "id=" + id +
                 ", name=" + name +
-                ", nearLocations=" + locationsAsStart.toString() +
+                (locationsAsStart == null ? "" : ", nearLocations=" + locationsAsStart.toString()) +
                 ", imageLink=" + imageLink.toString() +
                 ", hasStores=" + hasStores +
                 "}\n";

@@ -19,7 +19,7 @@ public enum Command {
         @Override
         public boolean execute(UpdateWrapper update) {
             log.warn(update.getPlayer().toString());
-            playerService.sendPlayerInfo(update);
+            game.sendPlayerInfo(update);
             return true;
         }
     },
