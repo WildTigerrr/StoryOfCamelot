@@ -1,11 +1,16 @@
 package com.wildtigerrr.StoryOfCamelot.database.service.implementation;
 
 import com.wildtigerrr.StoryOfCamelot.ServiceBaseTest;
+import com.wildtigerrr.StoryOfCamelot.bin.enums.GameSettings;
+import com.wildtigerrr.StoryOfCamelot.bin.enums.Language;
 import com.wildtigerrr.StoryOfCamelot.bin.enums.templates.LocationTemplate;
 import com.wildtigerrr.StoryOfCamelot.database.dataaccessobject.PlayerDao;
 import com.wildtigerrr.StoryOfCamelot.database.schema.Location;
 import com.wildtigerrr.StoryOfCamelot.database.schema.Player;
+import com.wildtigerrr.StoryOfCamelot.database.service.template.LocationService;
 import org.junit.jupiter.api.Test;
+import org.mockito.stubbing.Answer;
+import org.opentest4j.AssertionFailedError;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.util.ReflectionTestUtils;
@@ -23,9 +28,11 @@ class PlayerServiceImplTest extends ServiceBaseTest {
 
     @MockBean
     PlayerDao playerDao;
+    @MockBean(name = "locationService")
+    LocationService locationService;
 
     @Test
-    void whenCreateShouldSearchForExistingAndCreate() {
+    void whenCreateShouldSearchForExistingAndCreateTest() {
         // Given
         String externalId = "test";
         Integer id = 1;
@@ -36,7 +43,7 @@ class PlayerServiceImplTest extends ServiceBaseTest {
         when(playerDao.save(player)).thenReturn(mockedPlayer);
 
         // When
-        Player response = service.create(player);
+        Player response = service.createIfNotExist(player);
 
         // Then
         assertEquals(id, response.getId());
@@ -45,7 +52,7 @@ class PlayerServiceImplTest extends ServiceBaseTest {
     }
 
     @Test
-    void whenCreateAndExistShouldReturnExisting() {
+    void whenCreateAndExistShouldReturnExistingTest() {
         // Given
         String externalId = "test";
         Integer id = 1;
@@ -55,7 +62,7 @@ class PlayerServiceImplTest extends ServiceBaseTest {
         when(playerDao.findByExternalId(externalId)).thenReturn(mockedPlayer);
 
         // When
-        Player response = service.create(player);
+        Player response = service.createIfNotExist(player);
 
         // Then
         assertEquals(id, response.getId());
@@ -64,7 +71,7 @@ class PlayerServiceImplTest extends ServiceBaseTest {
     }
 
     @Test
-    void whenSendTopPlayersShouldFilterTopPlayers() {
+    void whenSendTopPlayersShouldFilterTopPlayersTest() {
         // Given
         int playersNumber = 25;
         int topPlayersCount = 7;
@@ -88,7 +95,7 @@ class PlayerServiceImplTest extends ServiceBaseTest {
     }
 
     @Test
-    void whenSendTopPlayersLessThenPlayersShouldReturnLess() {
+    void whenSendTopPlayersLessThenShouldReturnAllTest() {
         // Given
         int playersNumber = 5;
         int topPlayersCount = 10;
@@ -109,6 +116,75 @@ class PlayerServiceImplTest extends ServiceBaseTest {
         assertEquals(playersNumber, response.size());
         assertEquals(Integer.valueOf(i), response.get(0).stats().getLevel());
         assertEquals(Integer.valueOf(1), response.get(response.size() - 1).stats().getLevel());
+    }
+
+    @Test
+    void whenGetPlayerShouldReturnPlayerTest() {
+        // Given
+        String externalId = "test";
+        Player player = new Player(externalId, "Tiger", new Location(LocationTemplate.TRADING_SQUARE));
+        when(playerDao.findByExternalId(externalId)).thenReturn(player);
+
+        // When
+        Player response = service.getPlayer(externalId);
+
+        // Then
+        assertEquals(externalId, response.getExternalId());
+        assertEquals("Tiger", response.getNickname());
+        verify(playerDao, never()).save(player);
+    }
+
+    @Test
+    void whenGetPlayerAndNotExistShouldCreateAndReturnPlayerTest() {
+        // Given
+        String externalId = "test";
+        when(playerDao.findByExternalId(externalId)).thenReturn(null);
+        when(locationService.findByName(GameSettings.DEFAULT_LOCATION.get())).thenReturn(new Location(LocationTemplate.THICKET));
+        when(playerDao.save(any(Player.class))).thenAnswer((Answer<Player>) invocationOnMock -> invocationOnMock.getArgument(0));
+
+        // When
+        Player response = service.getPlayer(externalId);
+
+        // Then
+        assertEquals(externalId, response.getExternalId());
+        assertEquals(externalId, response.getNickname());
+        verify(playerDao).save(any(Player.class));
+    }
+
+    @Test
+    void whenGetPlayerInfoShouldHaveValidMarkupInAnyLanguageTest() {
+        // Given
+        String externalId = "test";
+        Player player = new Player(externalId, "Tiger", new Location(LocationTemplate.TRADING_SQUARE));
+        when(playerDao.findByExternalId(externalId)).thenReturn(player);
+
+        for (Language lang : Language.values()) {
+            // When
+            String response = service.getPlayerInfo("test", lang);
+
+            // Then
+            for (char searchCharacter : "_*`".toCharArray()) {
+                try {
+                    assertEvenCharacters(response, searchCharacter);
+                } catch (AssertionFailedError e) {
+                    throw new AssertionFailedError("Assertion failed for {" + searchCharacter + "} in " + lang.getName(), e);
+                }
+            }
+        }
+    }
+
+    @Test
+    void whenSettingNicknameShouldAcceptOnlyValidTest() {
+
+    }
+
+    private void assertEvenCharacters(String searchString, char searchCharacter) {
+        long count = searchString.chars().filter(ch -> ch == searchCharacter).count();
+        assertIsEven(count);
+    }
+
+    private void assertIsEven(long value) {
+        assertEquals(0, value % 2);
     }
 
 }
