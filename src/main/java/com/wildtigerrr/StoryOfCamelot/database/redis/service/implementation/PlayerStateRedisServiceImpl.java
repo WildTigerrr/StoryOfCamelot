@@ -32,12 +32,12 @@ public class PlayerStateRedisServiceImpl implements PlayerStateRedisService {
     }
 
     @Override
-    public void delete(String playerId) {
+    public void delete(Integer playerId) {
         hashOperations.delete(KEY, playerId);
     }
 
     @Override
-    public PlayerState findPlayerState(String playerId) {
+    public PlayerState findPlayerState(Integer playerId) {
         return (PlayerState) hashOperations.get(KEY, playerId);
     }
 

@@ -12,7 +12,7 @@ public class PlayerState {
     private PlayerStatus status;
     private Fighter enemy;
 
-    private PlayerState(Player player, Fighter fighter) {
+    public PlayerState(Player player, Fighter fighter) {
         this.id = player.getId();
         this.status = player.getStatus();
         this.enemy = fighter;

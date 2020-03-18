@@ -3,6 +3,7 @@ package com.wildtigerrr.StoryOfCamelot.bin.base.service;
 import com.wildtigerrr.StoryOfCamelot.bin.translation.TranslationManager;
 import com.wildtigerrr.StoryOfCamelot.database.schema.Mob;
 import com.wildtigerrr.StoryOfCamelot.database.service.implementation.MobServiceImpl;
+import com.wildtigerrr.StoryOfCamelot.database.service.template.MobService;
 import com.wildtigerrr.StoryOfCamelot.web.bot.update.UpdateWrapper;
 import com.wildtigerrr.StoryOfCamelot.web.service.ResponseManager;
 import com.wildtigerrr.StoryOfCamelot.web.service.message.template.TextResponseMessage;
@@ -16,11 +17,11 @@ public class BattleService {
 
     private final ResponseManager messages;
     private final TranslationManager translation;
-    private final MobServiceImpl mobService;
+    private final MobService mobService;
     private final BattleHandler battleHandler;
 
     @Autowired
-    public BattleService(ResponseManager messages, TranslationManager translation, MobServiceImpl mobService, BattleHandler battleHandler) {
+    public BattleService(ResponseManager messages, TranslationManager translation, MobService mobService, BattleHandler battleHandler) {
         this.messages = messages;
         this.translation = translation;
         this.mobService = mobService;
