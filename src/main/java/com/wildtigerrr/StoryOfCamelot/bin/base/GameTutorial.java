@@ -187,7 +187,7 @@ public class GameTutorial {
         };
         messages.sendMessage(TextResponseMessage.builder()
                 .text(translation.getMessage(
-                        "tutorial.lessons.first-profile", player, new Object[]{player.getNickname(), ReplyButton.ME.getLabel(player.getLanguage())}
+                        "tutorial.lessons.first-profile", player, new Object[]{player.getNickname(), ReplyButton.ME.getLabel(player)}
                 ))
                 .keyboard(KeyboardManager.getReplyByButtons(buttons, player.getLanguage()))
                 .targetId(player)
@@ -199,7 +199,7 @@ public class GameTutorial {
         player.setAdditionalStatus(PlayerStatusExtended.TUTORIAL_STATS_UP);
         playerService.update(player);
         messages.sendMessage(TextResponseMessage.builder()
-                .text(translation.getMessage("tutorial.lessons.two-skillpoints", player))
+                .text(translation.getMessage("tutorial.lessons.two-skillpoints", player, new Object[]{ReplyButton.SKILLS.getLabel(player)}))
                 .keyboard(KeyboardManager.getReplyByButtons(new ArrayList<>(Collections.singleton(ReplyButton.SKILLS)), player.getLanguage()))
                 .targetId(player).build()
         );

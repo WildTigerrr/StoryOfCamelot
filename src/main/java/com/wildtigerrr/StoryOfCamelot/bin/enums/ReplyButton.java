@@ -1,5 +1,7 @@
 package com.wildtigerrr.StoryOfCamelot.bin.enums;
 
+import com.wildtigerrr.StoryOfCamelot.database.schema.Player;
+
 public enum ReplyButton {
     MOVE(NameTranslation.BUTTON_MOVE),
     SKILLS(NameTranslation.BUTTON_SKILLS),
@@ -14,6 +16,10 @@ public enum ReplyButton {
 
     public String getLabel(Language lang) {
         return label.getName(lang);
+    }
+
+    public String getLabel(Player player) {
+        return getLabel(player.getLanguage());
     }
 
     public static Command buttonToCommand(String text, Language lang) {
