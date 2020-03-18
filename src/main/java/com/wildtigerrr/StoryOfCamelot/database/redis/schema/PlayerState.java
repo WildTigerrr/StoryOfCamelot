@@ -5,17 +5,19 @@ import com.wildtigerrr.StoryOfCamelot.database.schema.Player;
 import com.wildtigerrr.StoryOfCamelot.database.schema.enums.PlayerStatus;
 import lombok.Getter;
 
+import java.io.Serializable;
+
 @Getter
-public class PlayerState {
+public class PlayerState implements Serializable {
 
     private Integer id;
     private PlayerStatus status;
-    private Fighter enemy;
+//    private Fighter enemy;
 
     public PlayerState(Player player, Fighter fighter) {
         this.id = player.getId();
         this.status = player.getStatus();
-        this.enemy = fighter;
+//        this.enemy = fighter;
     }
 
 }
