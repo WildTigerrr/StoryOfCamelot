@@ -6,6 +6,7 @@ public enum Emoji {
     EVERGREEN_TREE(EmojiParser.parseToUnicode(":evergreen_tree:")),
     CIRCUS_TENT(EmojiParser.parseToUnicode(":circus_tent:")),
     BAT(EmojiParser.parseToUnicode("\uD83E\uDD87")),
+    LIGHTNING(EmojiParser.parseToUnicode(":zap:")),
 
     // SKILLS
     STRENGTH(EmojiParser.parseToUnicode(":muscle:")),

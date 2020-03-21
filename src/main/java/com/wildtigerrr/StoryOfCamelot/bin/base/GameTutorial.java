@@ -235,7 +235,7 @@ public class GameTutorial {
         Mob enemy = mobService.findBySystemName(MobTemplate.FLYING_SWORD.name());
         cacheService.add(CacheType.PLAYER_STATE, player.getId(), new PlayerState(player, enemy));
         messages.sendMessage(TextResponseMessage.builder()
-                .text(translation.getMessage("tutorial.lessons.three-fight", player, new Object[]{enemy.getName()}))
+                .text(translation.getMessage("tutorial.lessons.three-fight", player, new Object[]{enemy.getName().getName(player)}))
                 .keyboard(KeyboardManager.getReplyByButtons(new ArrayList<>(Collections.singleton(ReplyButton.FIGHT)), player.getLanguage()))
                 .targetId(player).build()
         );

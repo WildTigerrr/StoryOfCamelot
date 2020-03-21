@@ -36,6 +36,7 @@ public class BattleHandler {
             if (defender.isAlive())
                 applyDamageAndLog(defender, attacker, lang, battleLog);
         }
+        battleLog.add("\n");
         if (attacker.isAlive()) {
             battleLog.add(translation.getMessage("battle.log.winner", lang,
                     new Object[]{attacker.getName(lang)}));
@@ -53,8 +54,10 @@ public class BattleHandler {
     }
 
     private void applyDamageAndLog(Fighter attacker, Fighter defender, Language lang, List<String> log) {
-        int damage = calculateDamage(attacker.getDamage(), defender.getDefence(), isCrit());
-        log.add(translation.getMessage("battle.log.row", lang, new Object[]{
+        boolean isCrit = isCrit();
+        int damage = calculateDamage(attacker.getDamage(), defender.getDefence(), isCrit);
+        String messageTemplate = isCrit ? "battle.log.row-crit" : "battle.log.row";
+        log.add(translation.getMessage(messageTemplate, lang, new Object[]{
                 attacker.getName(lang), attacker.getHealth(), defender.getName(lang), defender.getHealth(), damage
         }));
         defender.applyDamage(damage);
