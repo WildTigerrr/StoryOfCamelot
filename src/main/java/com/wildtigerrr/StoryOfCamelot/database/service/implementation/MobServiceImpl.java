@@ -2,6 +2,7 @@ package com.wildtigerrr.StoryOfCamelot.database.service.implementation;
 
 import com.wildtigerrr.StoryOfCamelot.database.dataaccessobject.MobDao;
 import com.wildtigerrr.StoryOfCamelot.database.schema.Mob;
+import com.wildtigerrr.StoryOfCamelot.database.schema.Player;
 import com.wildtigerrr.StoryOfCamelot.database.service.template.MobService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -37,6 +38,12 @@ public class MobServiceImpl implements MobService {
         HashMap<String, Mob> mobsMap = new HashMap<>();
         for (Mob mob : newMobs) mobsMap.put(mob.getSystemName(), mob);
         return mobsMap;
+    }
+
+    @Override
+    public Mob findById(int id) {
+        Optional<Mob> obj = mobDao.findById(id);
+        return obj.orElse(null);
     }
 
     @Override

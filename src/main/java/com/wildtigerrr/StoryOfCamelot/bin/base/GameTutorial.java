@@ -6,6 +6,7 @@ import com.wildtigerrr.StoryOfCamelot.bin.base.service.player.ExperienceService;
 import com.wildtigerrr.StoryOfCamelot.bin.enums.*;
 import com.wildtigerrr.StoryOfCamelot.bin.translation.TranslationManager;
 import com.wildtigerrr.StoryOfCamelot.database.redis.schema.PlayerState;
+import com.wildtigerrr.StoryOfCamelot.database.schema.Mob;
 import com.wildtigerrr.StoryOfCamelot.database.schema.Player;
 import com.wildtigerrr.StoryOfCamelot.database.schema.enums.PlayerStatusExtended;
 import com.wildtigerrr.StoryOfCamelot.database.service.implementation.LocationServiceImpl;
@@ -36,7 +37,7 @@ public class GameTutorial {
     private final LanguageService languageService;
     private final ExperienceService experienceService;
     private final MobService mobService;
-    private final CacheProvider cacheProvider;
+    private final CacheProvider cacheService;
 
     @Autowired
     public GameTutorial(
@@ -56,7 +57,7 @@ public class GameTutorial {
         this.languageService = languageService;
         this.experienceService = experienceService;
         this.mobService = mobService;
-        this.cacheProvider = cacheProvider;
+        this.cacheService = cacheProvider;
     }
 
     public Boolean proceedTutorial(UpdateWrapper update) {
@@ -99,8 +100,14 @@ public class GameTutorial {
                 break;
             case TUTORIAL_FIGHT:
                 if (command == Command.FIGHT) {
-                    log.warn(cacheProvider.findObject(CacheType.PLAYER_STATE, update.getPlayer().getId()));
+                    PlayerState state = (PlayerState) cacheService.findObject(CacheType.PLAYER_STATE, update.getPlayer().getId());
                     command.execute(update);
+                    Mob mob = mobService.findById(state.getEnemy().getId());
+                    messages.sendMessage(TextResponseMessage.builder()
+                            .text("Enemy " + mob.getName(update.getPlayer().getLanguage()) + " defeated")
+                            .targetId(update)
+                            .build()
+                    );
                 } else {
                     noRush(update.getPlayer().getLanguage(), update.getUserId());
                 }
@@ -231,7 +238,7 @@ public class GameTutorial {
     private void tutorialStatsRaised(Player player) {
         player.setAdditionalStatus(PlayerStatusExtended.TUTORIAL_FIGHT);
         playerService.update(player);
-        cacheProvider.add(CacheType.PLAYER_STATE, player.getId(), new PlayerState(player, mobService.getAll().get(0)));
+        cacheService.add(CacheType.PLAYER_STATE, player.getId(), new PlayerState(player, mobService.getAll().get(0)));
         messages.sendMessage(TextResponseMessage.builder()
                 .text(translation.getMessage("tutorial.lessons.three-fight", player, new Object[]{NameTranslation.MOB_FLYING_SWORD.getName(player)}))
                 .keyboard(KeyboardManager.getReplyByButtons(new ArrayList<>(Collections.singleton(ReplyButton.FIGHT)), player.getLanguage()))

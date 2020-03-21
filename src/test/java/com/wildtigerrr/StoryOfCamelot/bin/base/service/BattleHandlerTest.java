@@ -3,12 +3,16 @@ package com.wildtigerrr.StoryOfCamelot.bin.base.service;
 import com.wildtigerrr.StoryOfCamelot.ServiceBaseTest;
 import com.wildtigerrr.StoryOfCamelot.bin.enums.Language;
 import com.wildtigerrr.StoryOfCamelot.bin.enums.templates.LocationTemplate;
+import com.wildtigerrr.StoryOfCamelot.bin.enums.templates.MobTemplate;
 import com.wildtigerrr.StoryOfCamelot.database.interfaces.Fighter;
 import com.wildtigerrr.StoryOfCamelot.database.schema.Location;
+import com.wildtigerrr.StoryOfCamelot.database.schema.Mob;
 import com.wildtigerrr.StoryOfCamelot.database.schema.Player;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
@@ -37,10 +41,18 @@ public class BattleHandlerTest extends ServiceBaseTest {
 
     @Test
     void whenTest() {
+        Fighter fighter = new Mob(MobTemplate.FLYING_SWORD);
+        System.out.println(fighter.getClass());
+
         Random random = new Random();
-        for (int i = 0; i < 25; i++) {
-            System.out.println(random.nextInt(100));
+        List<Integer> numbers = new ArrayList<>();
+        int value;
+        for (int i = 0; i < 200; i++) {
+            value = random.nextInt(100);
+            numbers.add(value + 1);
+            System.out.println(value > 89);
         }
+        System.out.println(Arrays.toString(numbers.stream().sorted().toArray()));
     }
 
 }
