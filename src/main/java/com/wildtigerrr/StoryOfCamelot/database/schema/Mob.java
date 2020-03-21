@@ -1,10 +1,10 @@
 package com.wildtigerrr.StoryOfCamelot.database.schema;
 
+import com.wildtigerrr.StoryOfCamelot.bin.enums.EnemyType;
 import com.wildtigerrr.StoryOfCamelot.bin.enums.Language;
 import com.wildtigerrr.StoryOfCamelot.bin.enums.NameTranslation;
 import com.wildtigerrr.StoryOfCamelot.bin.enums.templates.MobTemplate;
 import com.wildtigerrr.StoryOfCamelot.database.interfaces.Fighter;
-import com.wildtigerrr.StoryOfCamelot.database.redis.schema.PlayerState;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -84,8 +84,8 @@ public class Mob implements Fighter {
     }
 
     @Override
-    public PlayerState.EnemyType getType() {
-        return PlayerState.EnemyType.MOB;
+    public EnemyType getType() {
+        return EnemyType.MOB;
     }
 
     @Override

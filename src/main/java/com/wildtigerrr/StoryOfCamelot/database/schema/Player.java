@@ -1,10 +1,10 @@
 package com.wildtigerrr.StoryOfCamelot.database.schema;
 
+import com.wildtigerrr.StoryOfCamelot.bin.enums.EnemyType;
 import com.wildtigerrr.StoryOfCamelot.bin.enums.Language;
 import com.wildtigerrr.StoryOfCamelot.bin.service.SpringManager;
 import com.wildtigerrr.StoryOfCamelot.bin.translation.TranslationManager;
 import com.wildtigerrr.StoryOfCamelot.database.interfaces.Fighter;
-import com.wildtigerrr.StoryOfCamelot.database.redis.schema.PlayerState;
 import com.wildtigerrr.StoryOfCamelot.database.schema.enums.PlayerStatus;
 import com.wildtigerrr.StoryOfCamelot.database.schema.enums.PlayerStatusExtended;
 import com.wildtigerrr.StoryOfCamelot.database.schema.enums.Stats;
@@ -18,7 +18,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 
-import static java.util.Comparator.*;
+import static java.util.Comparator.comparingInt;
 
 @Entity
 @Table(name = "player")
@@ -135,8 +135,8 @@ public class Player implements Comparable<Player>, Fighter {
     }
 
     @Override
-    public PlayerState.EnemyType getType() {
-        return PlayerState.EnemyType.PLAYER;
+    public EnemyType getType() {
+        return EnemyType.PLAYER;
     }
 
     @Override

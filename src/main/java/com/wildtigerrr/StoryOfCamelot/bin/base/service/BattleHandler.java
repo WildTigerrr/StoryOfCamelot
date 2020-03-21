@@ -1,9 +1,9 @@
 package com.wildtigerrr.StoryOfCamelot.bin.base.service;
 
+import com.wildtigerrr.StoryOfCamelot.bin.base.BattleLog;
 import com.wildtigerrr.StoryOfCamelot.bin.enums.Language;
 import com.wildtigerrr.StoryOfCamelot.bin.translation.TranslationManager;
 import com.wildtigerrr.StoryOfCamelot.database.interfaces.Fighter;
-import com.wildtigerrr.StoryOfCamelot.web.BotConfig;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,7 +26,7 @@ public class BattleHandler {
         this.translation = translation;
     }
 
-    public List<String> fight(Fighter attacker, Fighter defender, Language lang) {
+    public BattleLog fight(Fighter attacker, Fighter defender, Language lang) {
         List<String> battleLog = new ArrayList<>();
         battleLog.add(translation.getMessage("battle.log.start", lang,
                 new Object[]{attacker.getName(lang), defender.getName(lang)}));
@@ -43,7 +43,13 @@ public class BattleHandler {
             battleLog.add(translation.getMessage("battle.log.winner", lang,
                     new Object[]{defender.getName(lang)}));
         }
-        return battleLog;
+        return new BattleLog(
+                attacker.getId(),
+                defender.getId(),
+                defender.getType(),
+                attacker.isAlive(),
+                battleLog
+        );
     }
 
     private void applyDamageAndLog(Fighter attacker, Fighter defender, Language lang, List<String> log) {

@@ -100,14 +100,7 @@ public class GameTutorial {
                 break;
             case TUTORIAL_FIGHT:
                 if (command == Command.FIGHT) {
-                    PlayerState state = (PlayerState) cacheService.findObject(CacheType.PLAYER_STATE, update.getPlayer().getId());
-                    command.execute(update);
-                    Mob mob = mobService.findById(state.getEnemy().getId());
-                    messages.sendMessage(TextResponseMessage.builder()
-                            .text("Enemy " + mob.getName(update.getPlayer().getLanguage()) + " defeated")
-                            .targetId(update)
-                            .build()
-                    );
+                    tutorialBattle(update);
                 } else {
                     noRush(update.getPlayer().getLanguage(), update.getUserId());
                 }
@@ -243,6 +236,17 @@ public class GameTutorial {
                 .text(translation.getMessage("tutorial.lessons.three-fight", player, new Object[]{NameTranslation.MOB_FLYING_SWORD.getName(player)}))
                 .keyboard(KeyboardManager.getReplyByButtons(new ArrayList<>(Collections.singleton(ReplyButton.FIGHT)), player.getLanguage()))
                 .targetId(player).build()
+        );
+    }
+
+    private void tutorialBattle(UpdateWrapper update) {
+        update.getCommand().execute(update);
+
+        PlayerState state = (PlayerState) cacheService.findObject(CacheType.PLAYER_STATE, update.getPlayer().getId());
+        Mob mob = mobService.findById(Integer.parseInt(state.getLastBattle().getEnemyId()));
+        messages.sendMessage(TextResponseMessage.builder()
+                .text(translation.getMessage(state.getLastBattle().isWin() ? "battle.enemy-defeated" : "battle.player-defeated", update, new Object[]{mob.getName(update.getPlayer().getLanguage())}))
+                .targetId(update).build()
         );
     }
 

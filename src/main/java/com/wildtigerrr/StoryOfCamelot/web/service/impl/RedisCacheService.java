@@ -60,9 +60,7 @@ public class RedisCacheService implements CacheProvider {
     @Override
     public void clearChannel(CacheType channel) {
         Set<String> keys = hashOperations.keys(channel.key());
-        log.warn(keys);
         for (Object key : keys) {
-            log.warn(key);
             delete(channel, key);
         }
     }

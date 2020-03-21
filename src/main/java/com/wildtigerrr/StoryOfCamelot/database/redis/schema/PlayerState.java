@@ -1,5 +1,7 @@
 package com.wildtigerrr.StoryOfCamelot.database.redis.schema;
 
+import com.wildtigerrr.StoryOfCamelot.bin.base.BattleLog;
+import com.wildtigerrr.StoryOfCamelot.bin.enums.EnemyType;
 import com.wildtigerrr.StoryOfCamelot.database.interfaces.Fighter;
 import com.wildtigerrr.StoryOfCamelot.database.schema.Mob;
 import com.wildtigerrr.StoryOfCamelot.database.schema.Player;
@@ -15,11 +17,20 @@ public class PlayerState implements Serializable {
     private Integer id;
     private PlayerStatus status;
     private Enemy enemy;
+    private BattleLog lastBattle;
 
     public PlayerState(Player player, Fighter fighter) {
         this.id = player.getId();
         this.status = player.getStatus();
         this.enemy = enemyOf(fighter);
+    }
+
+    public BattleLog getLastBattle() {
+        return lastBattle;
+    }
+
+    public void setLastBattle(BattleLog lastBattle) {
+        this.lastBattle = lastBattle;
     }
 
     private Enemy enemyOf(Fighter fighter) {
@@ -47,11 +58,6 @@ public class PlayerState implements Serializable {
             this.id = id;
             this.type = type;
         }
-    }
-
-    public enum EnemyType {
-        PLAYER,
-        MOB
     }
 
 }
