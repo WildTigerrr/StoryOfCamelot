@@ -11,8 +11,8 @@ import org.springframework.data.redis.serializer.GenericToStringSerializer;
 import java.net.URI;
 import java.net.URISyntaxException;
 
-@Profile("!local")
 @Configuration
+@Profile("!test")
 public class RedisConfig {
 
     @Bean
@@ -34,3 +34,4 @@ public class RedisConfig {
     }
 
 }
+
