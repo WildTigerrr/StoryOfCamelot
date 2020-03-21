@@ -1,6 +1,7 @@
 package com.wildtigerrr.StoryOfCamelot.bin.base.service;
 
 import com.wildtigerrr.StoryOfCamelot.ServiceBaseTest;
+import com.wildtigerrr.StoryOfCamelot.bin.base.BattleLog;
 import com.wildtigerrr.StoryOfCamelot.bin.enums.Language;
 import com.wildtigerrr.StoryOfCamelot.bin.enums.templates.LocationTemplate;
 import com.wildtigerrr.StoryOfCamelot.bin.enums.templates.MobTemplate;
