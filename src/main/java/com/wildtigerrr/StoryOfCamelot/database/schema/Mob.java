@@ -5,6 +5,7 @@ import com.wildtigerrr.StoryOfCamelot.bin.enums.Language;
 import com.wildtigerrr.StoryOfCamelot.bin.enums.NameTranslation;
 import com.wildtigerrr.StoryOfCamelot.bin.enums.templates.MobTemplate;
 import com.wildtigerrr.StoryOfCamelot.database.interfaces.Fighter;
+import com.wildtigerrr.StoryOfCamelot.web.bot.update.UpdateWrapper;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -70,6 +71,14 @@ public class Mob implements Fighter {
 
     public String getName(Language lang) {
         return name.getName(lang);
+    }
+
+    public String getName(Player player) {
+        return getName(player.getLanguage());
+    }
+
+    public String getName(UpdateWrapper update) {
+        return getName(update.getPlayer());
     }
 
     @Override

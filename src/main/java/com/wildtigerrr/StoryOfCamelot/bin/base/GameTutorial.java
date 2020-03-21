@@ -4,6 +4,7 @@ import com.wildtigerrr.StoryOfCamelot.bin.base.service.KeyboardManager;
 import com.wildtigerrr.StoryOfCamelot.bin.base.service.LanguageService;
 import com.wildtigerrr.StoryOfCamelot.bin.base.service.player.ExperienceService;
 import com.wildtigerrr.StoryOfCamelot.bin.enums.*;
+import com.wildtigerrr.StoryOfCamelot.bin.enums.templates.MobTemplate;
 import com.wildtigerrr.StoryOfCamelot.bin.translation.TranslationManager;
 import com.wildtigerrr.StoryOfCamelot.database.redis.schema.PlayerState;
 import com.wildtigerrr.StoryOfCamelot.database.schema.Mob;
@@ -231,9 +232,10 @@ public class GameTutorial {
     private void tutorialStatsRaised(Player player) {
         player.setAdditionalStatus(PlayerStatusExtended.TUTORIAL_FIGHT);
         playerService.update(player);
-        cacheService.add(CacheType.PLAYER_STATE, player.getId(), new PlayerState(player, mobService.getAll().get(0)));
+        Mob enemy = mobService.findBySystemName(MobTemplate.FLYING_SWORD.name());
+        cacheService.add(CacheType.PLAYER_STATE, player.getId(), new PlayerState(player, enemy));
         messages.sendMessage(TextResponseMessage.builder()
-                .text(translation.getMessage("tutorial.lessons.three-fight", player, new Object[]{NameTranslation.MOB_FLYING_SWORD.getName(player)}))
+                .text(translation.getMessage("tutorial.lessons.three-fight", player, new Object[]{enemy.getName()}))
                 .keyboard(KeyboardManager.getReplyByButtons(new ArrayList<>(Collections.singleton(ReplyButton.FIGHT)), player.getLanguage()))
                 .targetId(player).build()
         );
@@ -244,8 +246,9 @@ public class GameTutorial {
 
         PlayerState state = (PlayerState) cacheService.findObject(CacheType.PLAYER_STATE, update.getPlayer().getId());
         Mob mob = mobService.findById(Integer.parseInt(state.getLastBattle().getEnemyId()));
+        String messageTemplate = state.getLastBattle().isWin() ? "battle.enemy-defeated" : "battle.player-defeated";
         messages.sendMessage(TextResponseMessage.builder()
-                .text(translation.getMessage(state.getLastBattle().isWin() ? "battle.enemy-defeated" : "battle.player-defeated", update, new Object[]{mob.getName(update.getPlayer().getLanguage())}))
+                .text(translation.getMessage(messageTemplate, update, new Object[]{mob.getName(update)}))
                 .targetId(update).build()
         );
     }

@@ -47,6 +47,12 @@ public class MobServiceImpl implements MobService {
     }
 
     @Override
+    public Mob findBySystemName(String name) {
+        Optional<Mob> obj = mobDao.findBySystemName(name);
+        return obj.orElse(null);
+    }
+
+    @Override
     public void delete(int id) {
         mobDao.findById(id).ifPresent(mob -> mobDao.delete(mob));
     }
