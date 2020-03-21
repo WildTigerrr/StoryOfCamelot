@@ -6,13 +6,14 @@ import com.wildtigerrr.StoryOfCamelot.bin.base.service.player.ExperienceService;
 import com.wildtigerrr.StoryOfCamelot.bin.enums.*;
 import com.wildtigerrr.StoryOfCamelot.bin.translation.TranslationManager;
 import com.wildtigerrr.StoryOfCamelot.database.redis.schema.PlayerState;
-import com.wildtigerrr.StoryOfCamelot.database.redis.service.template.PlayerStateRedisService;
 import com.wildtigerrr.StoryOfCamelot.database.schema.Player;
 import com.wildtigerrr.StoryOfCamelot.database.schema.enums.PlayerStatusExtended;
 import com.wildtigerrr.StoryOfCamelot.database.service.implementation.LocationServiceImpl;
 import com.wildtigerrr.StoryOfCamelot.database.service.implementation.PlayerServiceImpl;
 import com.wildtigerrr.StoryOfCamelot.database.service.template.MobService;
 import com.wildtigerrr.StoryOfCamelot.web.bot.update.UpdateWrapper;
+import com.wildtigerrr.StoryOfCamelot.web.service.CacheProvider;
+import com.wildtigerrr.StoryOfCamelot.web.service.CacheType;
 import com.wildtigerrr.StoryOfCamelot.web.service.ResponseManager;
 import com.wildtigerrr.StoryOfCamelot.web.service.message.template.EditResponseMessage;
 import com.wildtigerrr.StoryOfCamelot.web.service.message.template.TextResponseMessage;
@@ -35,7 +36,7 @@ public class GameTutorial {
     private final LanguageService languageService;
     private final ExperienceService experienceService;
     private final MobService mobService;
-    private final PlayerStateRedisService playerStateRedisService;
+    private final CacheProvider cacheProvider;
 
     @Autowired
     public GameTutorial(
@@ -46,7 +47,7 @@ public class GameTutorial {
             LanguageService languageService,
             ExperienceService experienceService,
             MobService mobService,
-            PlayerStateRedisService playerStateRedisService
+            CacheProvider cacheProvider
     ) {
         this.messages = messages;
         this.translation = translation;
@@ -55,7 +56,7 @@ public class GameTutorial {
         this.languageService = languageService;
         this.experienceService = experienceService;
         this.mobService = mobService;
-        this.playerStateRedisService = playerStateRedisService;
+        this.cacheProvider = cacheProvider;
     }
 
     public Boolean proceedTutorial(UpdateWrapper update) {
@@ -98,7 +99,7 @@ public class GameTutorial {
                 break;
             case TUTORIAL_FIGHT:
                 if (command == Command.FIGHT) {
-                    log.warn(playerStateRedisService.findPlayerState(update.getPlayer().getId()));
+                    log.warn(cacheProvider.findObject(CacheType.PLAYER_STATE, update.getPlayer().getId()));
                     command.execute(update);
                 } else {
                     noRush(update.getPlayer().getLanguage(), update.getUserId());
@@ -230,7 +231,7 @@ public class GameTutorial {
     private void tutorialStatsRaised(Player player) {
         player.setAdditionalStatus(PlayerStatusExtended.TUTORIAL_FIGHT);
         playerService.update(player);
-        playerStateRedisService.add(new PlayerState(player, mobService.getAll().get(0)));
+        cacheProvider.add(CacheType.PLAYER_STATE, player.getId(), new PlayerState(player, mobService.getAll().get(0)));
         messages.sendMessage(TextResponseMessage.builder()
                 .text(translation.getMessage("tutorial.lessons.three-fight", player, new Object[]{NameTranslation.MOB_FLYING_SWORD.getName(player)}))
                 .keyboard(KeyboardManager.getReplyByButtons(new ArrayList<>(Collections.singleton(ReplyButton.FIGHT)), player.getLanguage()))

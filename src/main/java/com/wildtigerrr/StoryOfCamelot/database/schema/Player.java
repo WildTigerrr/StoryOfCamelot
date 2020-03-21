@@ -4,6 +4,7 @@ import com.wildtigerrr.StoryOfCamelot.bin.enums.Language;
 import com.wildtigerrr.StoryOfCamelot.bin.service.SpringManager;
 import com.wildtigerrr.StoryOfCamelot.bin.translation.TranslationManager;
 import com.wildtigerrr.StoryOfCamelot.database.interfaces.Fighter;
+import com.wildtigerrr.StoryOfCamelot.database.redis.schema.PlayerState;
 import com.wildtigerrr.StoryOfCamelot.database.schema.enums.PlayerStatus;
 import com.wildtigerrr.StoryOfCamelot.database.schema.enums.PlayerStatusExtended;
 import com.wildtigerrr.StoryOfCamelot.database.schema.enums.Stats;
@@ -131,6 +132,11 @@ public class Player implements Comparable<Player>, Fighter {
     @Override
     public void applyDamage(int damage) {
         stats.setHealth(stats.getHealth() - damage);
+    }
+
+    @Override
+    public PlayerState.EnemyType getType() {
+        return PlayerState.EnemyType.PLAYER;
     }
 
     @Override
