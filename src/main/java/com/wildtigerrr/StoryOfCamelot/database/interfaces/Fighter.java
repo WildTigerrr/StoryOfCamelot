@@ -5,7 +5,7 @@ import com.wildtigerrr.StoryOfCamelot.bin.enums.Language;
 
 public interface Fighter {
 
-    String getId();
+    Integer getId();
     int getDamage();
     int getDefence();
     int getHealth();
