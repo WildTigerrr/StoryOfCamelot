@@ -30,13 +30,14 @@ public class BattleHandlerTest extends ServiceBaseTest {
         strongFighter.stats().setStrength(100);
         Fighter weakFighter = new Player("test", "Weak One", new Location(LocationTemplate.TRADING_SQUARE));
 
-        List<String> battleLog = battleHandler.fight(strongFighter, weakFighter, Language.RUS);
+        BattleLog battleLog = battleHandler.fight(strongFighter, weakFighter, Language.RUS);
 
-        assertTrue(battleLog.get(0).contains("Strong One"));
-        assertTrue(battleLog.get(0).contains("Weak One"));
-        assertTrue(battleLog.get(battleLog.size() - 1).contains("Strong One"));
+        assertTrue(battleLog.getLog().get(0).contains("Strong One"));
+        assertTrue(battleLog.getLog().get(0).contains("Weak One"));
+        assertTrue(battleLog.getLog().get(battleLog.getLog().size() - 1).contains("Strong One"));
+        assertTrue(battleLog.isWin());
 
-        battleLog.forEach(System.out::println);
+        battleLog.getLog().forEach(System.out::println);
     }
 
     @Test
