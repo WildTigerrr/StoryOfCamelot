@@ -9,8 +9,8 @@ import java.util.List;
 public interface LocationService {
     Location create(Location location);
     HashMap<String, Location> create(ArrayList<Location> locations);
-    void delete(int id);
-    Location findById(int id);
+    void delete(String id);
+    Location findById(String id);
     Location findByName(String locationName);
     Location update(Location location);
     List<Location> getAll();

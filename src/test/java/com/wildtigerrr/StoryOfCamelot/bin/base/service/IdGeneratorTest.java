@@ -4,7 +4,6 @@ import com.wildtigerrr.StoryOfCamelot.ServiceBaseTest;
 import com.wildtigerrr.StoryOfCamelot.database.schema.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.util.ReflectionTestUtils;
 
@@ -44,7 +43,7 @@ public class IdGeneratorTest extends ServiceBaseTest {
 
         assertEquals("a0n000000000001", idGenerator.generateId(Npc.class));
 
-        assertEquals("a0pl00000000001", idGenerator.generateId(PossibleLocation.class));
+        assertEquals("a0pl00000000001", idGenerator.generateId(LocationPossible.class));
     }
 
     @Test

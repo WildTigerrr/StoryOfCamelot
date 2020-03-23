@@ -27,6 +27,7 @@ public class RedisConfig {
         redisStandaloneConfiguration.setPassword(redisURI.getUserInfo().split(":")[1]);
         return new JedisConnectionFactory(redisStandaloneConfiguration);
     }
+
     @Bean
     public RedisTemplate<String, Object> redisTemplate() {
         final RedisTemplate<String, Object> template = new RedisTemplate<>();

@@ -8,7 +8,7 @@ import java.util.List;
 public interface FileLinkService {
     FileLink create(FileLink fileLink);
     void create(ArrayList<FileLink> fileLinks);
-    void delete(int id);
+    void delete(String id);
     FileLink update(FileLink fileLink);
     List<FileLink> getAll();
 }

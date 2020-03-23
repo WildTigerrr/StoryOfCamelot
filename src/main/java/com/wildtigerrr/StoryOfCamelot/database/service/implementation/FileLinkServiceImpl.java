@@ -36,7 +36,7 @@ public class FileLinkServiceImpl implements FileLinkService {
     }
 
     @Override
-    public void delete(int id) {
+    public void delete(String id) {
         fileLinkDao.findById(id).ifPresent(fileLink -> fileLinkDao.delete(fileLink));
     }
 

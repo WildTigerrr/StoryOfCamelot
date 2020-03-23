@@ -49,7 +49,7 @@ public class DatabaseInteraction {
         return locationService.findByName(locationName);
     }
 
-    public Location getLocationById(int locationId) {
+    public Location getLocationById(String locationId) {
         return locationService.findById(locationId);
     }
 
@@ -88,7 +88,7 @@ public class DatabaseInteraction {
                 initialMobsMap.put(
                         mobName,
                         initialMobsMap.get(mobName).addPossibleLocation(
-                                new PossibleLocation(
+                                new LocationPossible(
                                         initialMobsMap.get(mobName),
                                         locations.get(locationName)
                                 )

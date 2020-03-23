@@ -1,23 +1,34 @@
 package com.wildtigerrr.StoryOfCamelot.database.schema;
 
+import com.wildtigerrr.StoryOfCamelot.bin.base.service.IdGenerator;
 import com.wildtigerrr.StoryOfCamelot.bin.enums.templates.ItemsTemplate;
+import com.wildtigerrr.StoryOfCamelot.database.interfaces.SimpleObject;
 import com.wildtigerrr.StoryOfCamelot.database.schema.enums.ItemQuality;
 import com.wildtigerrr.StoryOfCamelot.database.schema.enums.ItemSubType;
+import com.wildtigerrr.StoryOfCamelot.database.schema.enums.ObjectType;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 
 @Entity
 @Table(name = "item")
 @Getter @Setter
-public class Item {
+public class Item extends SimpleObject {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @SequenceGenerator(name = "item_seq", sequenceName = "item_seq", allocationSize = 10)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "item_seq")
+    @GenericGenerator(
+            name = "item_seq",
+            strategy = "com.wildtigerrr.StoryOfCamelot.bin.base.service.IdGenerator",
+            parameters = {
+                    @org.hibernate.annotations.Parameter(name = IdGenerator.VALUE_PREFIX_PARAMETER, value = "a0i0")
+            })
     @Setter(AccessLevel.NONE)
-    private Integer id;
+    private String id;
     private Double value; // Defence, Damage, Speed etc
     private Integer durability;
     private Double price;
@@ -30,6 +41,11 @@ public class Item {
     @ManyToOne(optional = true)
     @JoinColumn(name = "filelink_id")
     private FileLink imageLink;
+
+    @Override
+    public ObjectType type() {
+        return ObjectType.ITEM;
+    }
 
     protected Item() {
     }

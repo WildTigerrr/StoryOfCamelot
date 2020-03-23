@@ -45,8 +45,8 @@ public class BattleHandler {
                     new Object[]{defender.getName(lang)}));
         }
         return new BattleLog(
-                String.valueOf(attacker.getId()),
-                String.valueOf(defender.getId()),
+                attacker.getId(),
+                defender.getId(),
                 defender.getType(),
                 attacker.isAlive(),
                 battleLog

@@ -40,12 +40,12 @@ public class LocationServiceImpl implements LocationService {
     }
 
     @Override
-    public void delete(int id) {
+    public void delete(String id) {
         locationDao.findById(id).ifPresent(location -> locationDao.delete(location));
     }
 
     @Override
-    public Location findById(int id) {
+    public Location findById(String id) {
         Optional object = locationDao.findById(id);
         if (object.isPresent()) {
             return  (Location) object.get();

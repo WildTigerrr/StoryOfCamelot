@@ -49,7 +49,8 @@ public class IdGenerator extends SequenceStyleGenerator {
         checkServices();
         SimpleObject newRecord = (SimpleObject) object;
         ObjectType type = newRecord.type();
-        return type.prefix() + StringUtils.getNumberWithMaxRadix(sequenceRepository.getNext(type.sequenceName()));
+        String newId = StringUtils.getNumberWithMaxRadix(sequenceRepository.getNext(type.sequenceName()));
+        return type.prefix() + DEFAULT_ID.substring(newId.length()) + newId;
     }
 
     public String generateId(Type type) {

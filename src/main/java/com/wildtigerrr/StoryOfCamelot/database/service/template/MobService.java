@@ -9,9 +9,9 @@ import java.util.List;
 public interface MobService {
     Mob create(Mob mob);
     HashMap<String, Mob> create(ArrayList<Mob> mobs);
-    Mob findById(int id);
+    Mob findById(String id);
     Mob findBySystemName(String name);
-    void delete(int id);
+    void delete(String id);
     Mob update(Mob mob);
     List<Mob> getAll();
 }

@@ -36,7 +36,7 @@ public class NpcServiceImpl implements NpcService {
     }
 
     @Override
-    public void delete(int id) {
+    public void delete(String id) {
         npcDao.findById(id).ifPresent(npc -> npcDao.delete(npc));
     }
 

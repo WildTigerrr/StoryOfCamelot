@@ -37,7 +37,7 @@ public class LocationNearServiceImpl implements LocationNearService {
     }
 
     @Override
-    public void delete(int id) {
+    public void delete(String id) {
         locationNearDao.findById(id).ifPresent(locationNear -> locationNearDao.delete(locationNear));
     }
 

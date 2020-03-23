@@ -8,7 +8,7 @@ import java.util.List;
 public interface BackpackService {
     Backpack create(Backpack backpack);
     void create(ArrayList<Backpack> backpacks);
-    void delete(int id);
+    void delete(String id);
     Backpack update(Backpack backpack);
     List<Backpack> getAll();
 }

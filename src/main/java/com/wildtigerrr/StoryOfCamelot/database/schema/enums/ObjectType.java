@@ -1,38 +1,36 @@
 package com.wildtigerrr.StoryOfCamelot.database.schema.enums;
 
-import lombok.Getter;
-
 public enum ObjectType {
 
     BACKPACK(
-            "", "a0b0"
+            "backpack_seq", "a0b0"
     ),
     FILE_LINK(
-            "", "a0f0"
+            "file_link_seq", "a0f0"
     ),
     ITEM(
-            "", "a0i0"
+            "item_seq", "a0i0"
     ),
     LOCATION(
-            "", "a0l0"
+            "location_seq", "a0l0"
     ),
     LOCATION_NEAR(
-            "", "a0ln"
+            "location_near_seq", "a0ln"
+    ),
+    LOCATION_POSSIBLE(
+            "location_possible_seq", "a0pl"
     ),
     MOB(
-            "", "a0m0"
+            "mob_seq", "a0m0"
     ),
-//    MOB_DROP(
-//            "", "a0md"
-//    ),
+    MOB_DROP(
+            "mob_drop_seq", "a0md"
+    ),
     NPC(
-            "", "a0n0"
+            "npc_seq", "a0n0"
     ),
     PLAYER(
             "player_seq", "a0p0"
-    ),
-    POSSIBLE_LOCATION(
-            "", "a0pl"
     );
 
     private final String sequenceName;

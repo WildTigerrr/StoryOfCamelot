@@ -30,4 +30,5 @@ public class TranslationConfig {
         localeResolver.setDefaultLocale(Language.getDefaultLocale());
         return localeResolver;
     }
+
 }

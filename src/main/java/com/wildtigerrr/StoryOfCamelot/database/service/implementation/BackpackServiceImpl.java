@@ -36,7 +36,7 @@ public class BackpackServiceImpl implements BackpackService {
     }
 
     @Override
-    public void delete(int id) {
+    public void delete(String id) {
         backpackDao.findById(id).ifPresent(backpack -> backpackDao.delete(backpack));
     }
 

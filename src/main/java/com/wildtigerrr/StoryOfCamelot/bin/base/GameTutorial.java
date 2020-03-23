@@ -245,7 +245,7 @@ public class GameTutorial {
         update.getCommand().execute(update);
 
         PlayerState state = (PlayerState) cacheService.findObject(CacheType.PLAYER_STATE, update.getPlayer().getId());
-        Mob mob = mobService.findById(Integer.parseInt(state.getLastBattle().getEnemyId()));
+        Mob mob = mobService.findById(state.getLastBattle().getEnemyId());
         String messageTemplate = state.getLastBattle().isWin() ? "battle.enemy-defeated" : "battle.player-defeated";
         messages.sendMessage(TextResponseMessage.builder()
                 .text(translation.getMessage(messageTemplate, update, new Object[]{mob.getName(update)}))

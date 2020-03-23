@@ -100,7 +100,7 @@ public class GameMovement {
     }
 
     public void moveToLocation(UpdateWrapper message, String locationId) {
-        Location location = locationService.findById(Integer.parseInt(locationId));
+        Location location = locationService.findById(locationId);
         if (location != null) {
             int distance = locationNearService.getDistance(
                     message.getPlayer().getLocation(),
@@ -142,7 +142,7 @@ public class GameMovement {
 
     public void sendLocationUpdate(ScheduledAction action) {
         Player player = playerService.findById(action.playerId);
-        Location location = locationService.findById(Integer.parseInt(action.target));
+        Location location = locationService.findById(action.target);
         player.setLocation(location);
         player.stop();
         if (location.getImageLink() != null) {

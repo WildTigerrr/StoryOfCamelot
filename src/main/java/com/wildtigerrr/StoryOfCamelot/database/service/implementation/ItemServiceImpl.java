@@ -36,7 +36,7 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public void delete(int id) {
+    public void delete(String id) {
         itemDao.findById(id).ifPresent(item -> itemDao.delete(item));
     }
 

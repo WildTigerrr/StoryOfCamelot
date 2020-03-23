@@ -9,7 +9,7 @@ import java.util.List;
 public interface LocationNearService {
     LocationNear create(LocationNear locationNear);
     void create(ArrayList<LocationNear> locationNear);
-    void delete(int id);
+    void delete(String id);
     LocationNear update(LocationNear locationNear);
     ArrayList<Location> getNearLocations(Location location);
     int getDistance(Location start, Location finish);

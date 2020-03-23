@@ -1,14 +1,18 @@
 package com.wildtigerrr.StoryOfCamelot.database.schema;
 
+import com.wildtigerrr.StoryOfCamelot.bin.base.service.IdGenerator;
 import com.wildtigerrr.StoryOfCamelot.bin.enums.EnemyType;
 import com.wildtigerrr.StoryOfCamelot.bin.enums.Language;
 import com.wildtigerrr.StoryOfCamelot.bin.enums.NameTranslation;
 import com.wildtigerrr.StoryOfCamelot.bin.enums.templates.MobTemplate;
 import com.wildtigerrr.StoryOfCamelot.database.interfaces.Fighter;
+import com.wildtigerrr.StoryOfCamelot.database.interfaces.SimpleObject;
+import com.wildtigerrr.StoryOfCamelot.database.schema.enums.ObjectType;
 import com.wildtigerrr.StoryOfCamelot.web.bot.update.UpdateWrapper;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -17,15 +21,19 @@ import java.util.List;
 @Entity
 @Table(name = "mob")
 @Getter @Setter
-public class Mob implements Fighter {
+public class Mob extends SimpleObject implements Fighter {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @SequenceGenerator(name = "mob_seq", sequenceName = "mob_seq", allocationSize = 10)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "mob_seq")
+    @GenericGenerator(
+            name = "mob_seq",
+            strategy = "com.wildtigerrr.StoryOfCamelot.bin.base.service.IdGenerator",
+            parameters = {
+                    @org.hibernate.annotations.Parameter(name = IdGenerator.VALUE_PREFIX_PARAMETER, value = "a0m0")
+            })
     @Setter(AccessLevel.NONE)
-    private Integer id;
-    public String getId() {
-        return String.valueOf(id);
-    }
+    private String id;
     private String systemName;
     @Enumerated(EnumType.STRING)
     private NameTranslation name;
@@ -40,10 +48,15 @@ public class Mob implements Fighter {
             cascade = {CascadeType.ALL},
             mappedBy = "mob"
     )
-    private List<PossibleLocation> possibleLocations = new ArrayList<>();
+    private List<LocationPossible> possibleLocations = new ArrayList<>();
     @ManyToOne(optional = true)
     @JoinColumn(name = "filelink_id")
     private FileLink imageLink;
+
+    @Override
+    public ObjectType type() {
+        return ObjectType.MOB;
+    }
 
     protected Mob() {
     }
@@ -115,12 +128,12 @@ public class Mob implements Fighter {
         return this.damage;
     }
 
-    public Mob addPossibleLocation(PossibleLocation possibleLocation) {
+    public Mob addPossibleLocation(LocationPossible possibleLocation) {
         this.possibleLocations.add(possibleLocation);
         return this;
     }
 
-    public void removePossibleLocation(PossibleLocation possibleLocation) {
+    public void removePossibleLocation(LocationPossible possibleLocation) {
         this.possibleLocations.remove(possibleLocation);
     }
 

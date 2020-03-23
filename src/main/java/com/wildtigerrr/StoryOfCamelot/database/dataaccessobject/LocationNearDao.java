@@ -6,7 +6,7 @@ import org.springframework.data.repository.CrudRepository;
 
 import java.util.List;
 
-public interface LocationNearDao extends CrudRepository<LocationNear, Integer> {
+public interface LocationNearDao extends CrudRepository<LocationNear, String> {
     List<LocationNear> findByStartLocation(Location location);
     LocationNear findByStartLocationAndFinishLocation(Location startLocation, Location finishLocation);
 }

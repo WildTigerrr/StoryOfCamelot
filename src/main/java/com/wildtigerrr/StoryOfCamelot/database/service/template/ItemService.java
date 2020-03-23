@@ -8,7 +8,7 @@ import java.util.List;
 public interface ItemService {
     Item create(Item item);
     void create(ArrayList<Item> items);
-    void delete(int id);
+    void delete(String id);
     Item update(Item item);
     List<Item> getAll();
 }
