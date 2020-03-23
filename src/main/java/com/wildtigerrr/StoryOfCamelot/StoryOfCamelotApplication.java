@@ -6,6 +6,7 @@ import com.wildtigerrr.StoryOfCamelot.bin.base.service.TimeDependentActions;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.data.redis.RedisRepositoriesAutoConfiguration;
 import org.springframework.stereotype.Controller;
 
 import javax.annotation.PostConstruct;
@@ -13,7 +14,9 @@ import javax.annotation.PreDestroy;
 
 @Log4j2
 @Controller
-@SpringBootApplication
+@SpringBootApplication(
+        exclude = { RedisRepositoriesAutoConfiguration.class }
+)
 public class StoryOfCamelotApplication {
 
     // TODO Add S3 Appender, for example https://github.com/bluedenim/log4j-s3-search
