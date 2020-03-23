@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class KeyboardBuilder {
-    private int rowLimit;
+    private int rowLimit = 100;
     private Type type;
 
     private InlineKeyboardMarkup inlineKeyboard;

@@ -18,11 +18,6 @@ public class KeyboardManager {
 
     public static InlineKeyboardMarkup getKeyboardForStatUp(int freePoints) {
         if (freePoints < 1) return null;
-        InlineKeyboardMarkup keyboard = new InlineKeyboardMarkup();
-        InlineKeyboardButton button;
-        List<InlineKeyboardButton> buttonsRow = new ArrayList<>();
-        List<List<InlineKeyboardButton>> rowList = new ArrayList<>();
-
         ArrayList<String> addings = new ArrayList<>();
         addings.add("1");
         if (freePoints > 1) {
@@ -36,99 +31,51 @@ public class KeyboardManager {
                 addings.add("" + freePoints);
             }
         }
-        int buttonsLine = 3;
-        if (addings.size() != 1) {
-            buttonsLine = addings.size();
-        }
-        int buttonsCounter = 0;
+
+        int buttonsLine = addings.size() != 1 ? addings.size() : 3;
+        KeyboardBuilder builder = new KeyboardBuilder(KeyboardBuilder.Type.INLINE, buttonsLine);
         for (Stats stat : Stats.values()) {
             for (String val : addings) {
-                buttonsCounter++;
-                if (buttonsCounter > buttonsLine) {
-                    rowList.add(buttonsRow);
-                    buttonsRow = new ArrayList<>();
-                    buttonsCounter = 1;
-                }
-                button = new InlineKeyboardButton();
-                button.setText(stat.emoji() + "+" + val);
-                button.setCallbackData("/up_" + stat.getCharacter().toLowerCase() + "_" + val);
-                buttonsRow.add(button);
+                builder.addButton(
+                        new InlineKeyboardButton()
+                                .setText(stat.emoji() + "+" + val)
+                                .setCallbackData("/up_" + stat.getCharacter().toLowerCase() + "_" + val)
+                );
             }
         }
-        rowList.add(buttonsRow);
-        keyboard.setKeyboard(rowList);
-        return keyboard;
+        return (InlineKeyboardMarkup) builder.build();
     }
-
-/*    public static InlineKeyboardMarkup getKeyboardForLanguageSelect() {
-        InlineKeyboardMarkup keyboard = new InlineKeyboardMarkup();
-        InlineKeyboardButton button;
-        List<InlineKeyboardButton> buttonsRow = new ArrayList<>();
-        List<List<InlineKeyboardButton>> rowList = new ArrayList<>();
-        int buttonsCounter = 0;
-        for (Language lang : Language.values()) {
-            buttonsCounter++;
-            if (buttonsCounter > 2) {
-                rowList.add(buttonsRow);
-                buttonsRow = new ArrayList<>();
-                buttonsCounter = 1;
-            }
-            button = new InlineKeyboardButton();
-            button.setText(lang.getName());
-            button.setCallbackData("/lang " + lang.ordinal());
-            buttonsRow.add(button);
-        }
-        rowList.add(buttonsRow);
-        keyboard.setKeyboard(rowList);
-        return keyboard;
-    }*/
 
     public static InlineKeyboardMarkup getKeyboardForLanguageSelect() {
         KeyboardBuilder builder = new KeyboardBuilder(KeyboardBuilder.Type.INLINE, 2);
         for (Language lang : Language.values()) {
             builder.addButton(
                     new InlineKeyboardButton()
-                    .setText(lang.getName())
-                    .setCallbackData("/lang " + lang.ordinal())
+                            .setText(lang.getName())
+                            .setCallbackData("/lang " + lang.ordinal())
             );
         }
         return (InlineKeyboardMarkup) builder.build();
     }
 
     public static InlineKeyboardMarkup getKeyboardForLocations(ArrayList<Location> nearLocations, Language lang) {
-        InlineKeyboardMarkup keyboard = new InlineKeyboardMarkup();
-        InlineKeyboardButton button;
-        List<InlineKeyboardButton> buttonsRow = new ArrayList<>();
-        List<List<InlineKeyboardButton>> rowList = new ArrayList<>();
-        int buttonsCounter = 0;
+        KeyboardBuilder builder = new KeyboardBuilder(KeyboardBuilder.Type.INLINE, 2);
         for (Location loc : nearLocations) {
-            buttonsCounter++;
-            if (buttonsCounter > 2) {
-                rowList.add(buttonsRow);
-                buttonsRow = new ArrayList<>();
-                buttonsCounter = 1;
-            }
-            button = new InlineKeyboardButton();
-            button.setText(loc.getName(lang));
-            button.setCallbackData("/move " + loc.getId());
-            buttonsRow.add(button);
+            builder.addButton(
+                    new InlineKeyboardButton()
+                            .setText(loc.getName(lang))
+                            .setCallbackData("/move " + loc.getId())
+            );
         }
-        rowList.add(buttonsRow);
-        keyboard.setKeyboard(rowList);
-        return keyboard;
+        return (InlineKeyboardMarkup) builder.build();
     }
 
     public static ReplyKeyboardMarkup getReplyByButtons(List<ReplyButton> buttons, Language lang) {
-        ReplyKeyboardMarkup keyboard = new ReplyKeyboardMarkup();
-        List<KeyboardRow> keyboardMarkup = new ArrayList<>();
-        KeyboardRow keyboardRow = new KeyboardRow();
+        KeyboardBuilder builder = new KeyboardBuilder(KeyboardBuilder.Type.REPLY);
         for (ReplyButton button : buttons) {
-            keyboardRow.add(button.getLabel(lang));
+            builder.addButton(button.getLabel(lang));
         }
-        keyboardMarkup.add(keyboardRow);
-        keyboard.setKeyboard(keyboardMarkup);
-        keyboard.setResizeKeyboard(true);
-        return keyboard;
+        return (ReplyKeyboardMarkup) builder.build();
     }
 
 
