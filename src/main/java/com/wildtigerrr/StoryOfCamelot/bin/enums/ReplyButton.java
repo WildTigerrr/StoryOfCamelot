@@ -1,6 +1,6 @@
 package com.wildtigerrr.StoryOfCamelot.bin.enums;
 
-import com.wildtigerrr.StoryOfCamelot.database.schema.Player;
+import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.Player;
 
 public enum ReplyButton {
     MOVE(NameTranslation.BUTTON_MOVE),

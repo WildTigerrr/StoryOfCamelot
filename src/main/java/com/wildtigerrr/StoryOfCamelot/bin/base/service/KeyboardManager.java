@@ -2,8 +2,8 @@ package com.wildtigerrr.StoryOfCamelot.bin.base.service;
 
 import com.wildtigerrr.StoryOfCamelot.bin.enums.Language;
 import com.wildtigerrr.StoryOfCamelot.bin.enums.ReplyButton;
-import com.wildtigerrr.StoryOfCamelot.database.schema.Location;
-import com.wildtigerrr.StoryOfCamelot.database.schema.enums.Stats;
+import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.Location;
+import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.enums.Stats;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;

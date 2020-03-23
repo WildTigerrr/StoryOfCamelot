@@ -1,8 +1,8 @@
 package com.wildtigerrr.StoryOfCamelot.bin.enums.templates;
 
 import com.wildtigerrr.StoryOfCamelot.bin.enums.NameTranslation;
-import com.wildtigerrr.StoryOfCamelot.database.schema.FileLink;
-import com.wildtigerrr.StoryOfCamelot.database.schema.Mob;
+import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.FileLink;
+import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.Mob;
 
 import java.util.HashMap;
 

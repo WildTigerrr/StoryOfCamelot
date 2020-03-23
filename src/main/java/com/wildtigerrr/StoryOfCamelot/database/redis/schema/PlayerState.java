@@ -2,10 +2,10 @@ package com.wildtigerrr.StoryOfCamelot.database.redis.schema;
 
 import com.wildtigerrr.StoryOfCamelot.bin.base.BattleLog;
 import com.wildtigerrr.StoryOfCamelot.bin.enums.EnemyType;
-import com.wildtigerrr.StoryOfCamelot.database.interfaces.Fighter;
-import com.wildtigerrr.StoryOfCamelot.database.schema.Mob;
-import com.wildtigerrr.StoryOfCamelot.database.schema.Player;
-import com.wildtigerrr.StoryOfCamelot.database.schema.enums.PlayerStatus;
+import com.wildtigerrr.StoryOfCamelot.database.jpa.interfaces.Fighter;
+import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.Mob;
+import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.Player;
+import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.enums.PlayerStatus;
 import com.wildtigerrr.StoryOfCamelot.exception.InvalidFighterException;
 import lombok.Getter;
 import org.springframework.data.redis.core.RedisHash;

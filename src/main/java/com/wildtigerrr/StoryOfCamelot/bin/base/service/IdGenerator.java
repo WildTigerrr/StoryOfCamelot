@@ -1,15 +1,14 @@
 package com.wildtigerrr.StoryOfCamelot.bin.base.service;
 
 import com.wildtigerrr.StoryOfCamelot.bin.service.StringUtils;
-import com.wildtigerrr.StoryOfCamelot.database.interfaces.SimpleObject;
-import com.wildtigerrr.StoryOfCamelot.database.schema.enums.ObjectType;
-import com.wildtigerrr.StoryOfCamelot.database.sequence.SequenceRepository;
+import com.wildtigerrr.StoryOfCamelot.database.jpa.interfaces.SimpleObject;
+import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.enums.ObjectType;
+import com.wildtigerrr.StoryOfCamelot.database.jpa.sequence.SequenceRepository;
 import com.wildtigerrr.StoryOfCamelot.exception.IdValueExceededException;
 import com.wildtigerrr.StoryOfCamelot.exception.InvalidInputException;
 import org.hibernate.HibernateException;
 import org.hibernate.engine.spi.SharedSessionContractImplementor;
 import org.hibernate.id.enhanced.SequenceStyleGenerator;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;

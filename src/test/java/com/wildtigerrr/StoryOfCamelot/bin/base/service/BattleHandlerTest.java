@@ -5,10 +5,10 @@ import com.wildtigerrr.StoryOfCamelot.bin.base.BattleLog;
 import com.wildtigerrr.StoryOfCamelot.bin.enums.Language;
 import com.wildtigerrr.StoryOfCamelot.bin.enums.templates.LocationTemplate;
 import com.wildtigerrr.StoryOfCamelot.bin.enums.templates.MobTemplate;
-import com.wildtigerrr.StoryOfCamelot.database.interfaces.Fighter;
-import com.wildtigerrr.StoryOfCamelot.database.schema.Location;
-import com.wildtigerrr.StoryOfCamelot.database.schema.Mob;
-import com.wildtigerrr.StoryOfCamelot.database.schema.Player;
+import com.wildtigerrr.StoryOfCamelot.database.jpa.interfaces.Fighter;
+import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.Location;
+import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.Mob;
+import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.Player;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 

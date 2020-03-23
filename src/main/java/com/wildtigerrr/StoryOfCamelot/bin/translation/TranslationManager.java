@@ -2,7 +2,7 @@ package com.wildtigerrr.StoryOfCamelot.bin.translation;
 
 import com.wildtigerrr.StoryOfCamelot.bin.enums.Emoji;
 import com.wildtigerrr.StoryOfCamelot.bin.enums.Language;
-import com.wildtigerrr.StoryOfCamelot.database.schema.Player;
+import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.Player;
 import com.wildtigerrr.StoryOfCamelot.exception.InvalidPropertyException;
 import com.wildtigerrr.StoryOfCamelot.web.bot.update.UpdateWrapper;
 import lombok.extern.log4j.Log4j2;
@@ -11,7 +11,6 @@ import org.springframework.context.MessageSource;
 import org.springframework.context.NoSuchMessageException;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.PostConstruct;
 import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;

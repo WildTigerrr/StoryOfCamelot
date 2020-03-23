@@ -1,6 +1,6 @@
 package com.wildtigerrr.StoryOfCamelot.bin.enums.templates;
 
-import com.wildtigerrr.StoryOfCamelot.database.schema.FileLink;
+import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.FileLink;
 
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;

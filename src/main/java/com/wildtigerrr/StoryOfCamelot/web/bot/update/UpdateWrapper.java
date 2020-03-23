@@ -3,7 +3,7 @@ package com.wildtigerrr.StoryOfCamelot.web.bot.update;
 import com.wildtigerrr.StoryOfCamelot.bin.enums.Command;
 import com.wildtigerrr.StoryOfCamelot.bin.enums.Language;
 import com.wildtigerrr.StoryOfCamelot.bin.service.StringUtils;
-import com.wildtigerrr.StoryOfCamelot.database.schema.Player;
+import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.Player;
 import com.wildtigerrr.StoryOfCamelot.web.bot.utils.UpdateWrapperUtils;
 import lombok.Getter;
 import org.telegram.telegrambots.meta.api.objects.Update;

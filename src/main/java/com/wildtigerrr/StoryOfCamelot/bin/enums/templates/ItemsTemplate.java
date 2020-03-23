@@ -1,9 +1,9 @@
 package com.wildtigerrr.StoryOfCamelot.bin.enums.templates;
 
-import com.wildtigerrr.StoryOfCamelot.database.schema.FileLink;
-import com.wildtigerrr.StoryOfCamelot.database.schema.Item;
-import com.wildtigerrr.StoryOfCamelot.database.schema.enums.ItemQuality;
-import com.wildtigerrr.StoryOfCamelot.database.schema.enums.ItemSubType;
+import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.FileLink;
+import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.Item;
+import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.enums.ItemQuality;
+import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.enums.ItemSubType;
 
 import java.util.ArrayList;
 

@@ -1,7 +1,7 @@
 package com.wildtigerrr.StoryOfCamelot.bin.base.service;
 
 import com.wildtigerrr.StoryOfCamelot.ServiceBaseTest;
-import com.wildtigerrr.StoryOfCamelot.database.schema.*;
+import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.test.annotation.DirtiesContext;
