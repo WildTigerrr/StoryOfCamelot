@@ -68,6 +68,12 @@ public class KeyboardBuilder {
         return this;
     }
 
+    public KeyboardBuilder resize() {
+        if (type != Type.REPLY) throw new InvalidKeyboardTypeException("Resize can't be set to " + type.name() + " keyboard");
+        replyKeyboard.setResizeKeyboard(true);
+        return this;
+    }
+
     public Object build() {
         if (type == Type.INLINE) {
             nextRow();

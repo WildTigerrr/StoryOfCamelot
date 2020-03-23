@@ -71,11 +71,11 @@ public class KeyboardManager {
     }
 
     public static ReplyKeyboardMarkup getReplyByButtons(List<ReplyButton> buttons, Language lang) {
-        KeyboardBuilder builder = new KeyboardBuilder(KeyboardBuilder.Type.REPLY);
+        KeyboardBuilder builder = new KeyboardBuilder(KeyboardBuilder.Type.REPLY, 2);
         for (ReplyButton button : buttons) {
             builder.addButton(button.getLabel(lang));
         }
-        return (ReplyKeyboardMarkup) builder.build();
+        return (ReplyKeyboardMarkup) builder.resize().build();
     }
 
 
