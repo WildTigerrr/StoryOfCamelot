@@ -3,7 +3,7 @@ package com.wildtigerrr.StoryOfCamelot.database.jpa.schema;
 import com.wildtigerrr.StoryOfCamelot.bin.base.service.IdGenerator;
 import com.wildtigerrr.StoryOfCamelot.bin.enums.EnemyType;
 import com.wildtigerrr.StoryOfCamelot.bin.enums.Language;
-import com.wildtigerrr.StoryOfCamelot.bin.service.SpringManager;
+import com.wildtigerrr.StoryOfCamelot.bin.service.ApplicationContextProvider;
 import com.wildtigerrr.StoryOfCamelot.bin.translation.TranslationManager;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.interfaces.Fighter;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.interfaces.SimpleObject;
@@ -227,7 +227,7 @@ public class Player extends SimpleObject implements Comparable<Player>, Fighter 
 
     @Override
     public String toString() {
-        TranslationManager translation = SpringManager.bean(TranslationManager.class);
+        TranslationManager translation = ApplicationContextProvider.bean(TranslationManager.class);
         StringBuilder info = new StringBuilder();
         info.append(translation.getMessage("player.info.if-i-remember", language)).append(":")
                 .append("\n*").append(this.nickname).append("*, ")

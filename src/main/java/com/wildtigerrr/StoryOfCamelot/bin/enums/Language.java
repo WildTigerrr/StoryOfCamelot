@@ -52,6 +52,7 @@ public enum Language {
     public static class TranslationInjector {
         private final TranslationManager translations;
 
+        @Autowired
         public TranslationInjector(TranslationManager translations) {
             this.translations = translations;
         }

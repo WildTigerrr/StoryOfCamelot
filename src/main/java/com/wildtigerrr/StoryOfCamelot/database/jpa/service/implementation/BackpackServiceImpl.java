@@ -24,9 +24,9 @@ public class BackpackServiceImpl implements BackpackService {
     public Backpack create(Backpack backpack) {
         Backpack existingLocation = null;
         if (backpack.getId() != null) {
-            Optional object = backpackDao.findById(backpack.getId());
+            Optional<Backpack> object = backpackDao.findById(backpack.getId());
             if (object.isPresent()) {
-                existingLocation = (Backpack) object.get();
+                existingLocation = object.get();
             }
         } else {
             existingLocation = backpackDao.save(backpack);
@@ -41,7 +41,7 @@ public class BackpackServiceImpl implements BackpackService {
 
     @Override
     public void delete(String id) {
-        backpackDao.findById(id).ifPresent(backpack -> backpackDao.delete(backpack));
+        backpackDao.findById(id).ifPresent(backpackDao::delete);
     }
 
     @Override

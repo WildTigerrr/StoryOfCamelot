@@ -24,9 +24,9 @@ public class LocationPossibleServiceImpl implements LocationPossibleService {
     public LocationPossible create(LocationPossible possibleLocation) {
         LocationPossible existingPossibleLocation = null;
         if (possibleLocation.getId() != null) {
-            Optional object = possibleLocationDao.findById(possibleLocation.getId());
+            Optional<LocationPossible> object = possibleLocationDao.findById(possibleLocation.getId());
             if (object.isPresent()) {
-                existingPossibleLocation = (LocationPossible) object.get();
+                existingPossibleLocation = object.get();
             }
         } else {
             existingPossibleLocation = possibleLocationDao.save(possibleLocation);
@@ -41,7 +41,7 @@ public class LocationPossibleServiceImpl implements LocationPossibleService {
 
     @Override
     public void delete(String id) {
-        possibleLocationDao.findById(id).ifPresent(possibleLocation -> possibleLocationDao.delete(possibleLocation));
+        possibleLocationDao.findById(id).ifPresent(possibleLocationDao::delete);
     }
 
     @Override

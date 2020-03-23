@@ -13,10 +13,8 @@ import java.util.*;
 
 @Log4j2
 @Service
-@DependsOn({"applicationContextProvider"})
+@DependsOn({"springManager"})
 public class DatabaseInteraction {
-
-    private final PlayerServiceImpl playerService;
 
     private final FileLinkServiceImpl fileLinkService;
 
@@ -29,8 +27,7 @@ public class DatabaseInteraction {
     private final MobServiceImpl mobService;
 
     @Autowired
-    public DatabaseInteraction(PlayerServiceImpl playerService, FileLinkServiceImpl fileLinkService, LocationServiceImpl locationService, LocationNearServiceImpl locationNearService, ItemServiceImpl itemService, MobServiceImpl mobService) {
-        this.playerService = playerService;
+    public DatabaseInteraction(FileLinkServiceImpl fileLinkService, LocationServiceImpl locationService, LocationNearServiceImpl locationNearService, ItemServiceImpl itemService, MobServiceImpl mobService) {
         this.fileLinkService = fileLinkService;
         this.locationService = locationService;
         this.locationNearService = locationNearService;
@@ -43,29 +40,11 @@ public class DatabaseInteraction {
         insertInitialData();
     }
 
-    public Player getPlayerById(String id) {
-        return playerService.findById(id);
-    }
-
-    public void updatePlayer(Player player) {
-        playerService.update(player);
-    }
-
-    public Location getLocationByName(String locationName) {
-        return locationService.findByName(locationName);
-    }
-
-    public Location getLocationById(String locationId) {
-        return locationService.findById(locationId);
-    }
-
     private void insertInitialData() {
         log.debug("Inserting initial DB data");
         insertFileLinks();
-//        HashMap<String, FileLink> filesMap = new HashMap<>();
         for (FileLink link : fileLinkService.getAll()) {
             FileLinkTemplate.valueOf(link.getFileName()).setFileLink(link);
-//            filesMap.put(link.getFileName(), link);
         }
         HashMap<String, Location> locations = insertLocations();
         insertMobs(locations);

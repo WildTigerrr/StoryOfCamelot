@@ -52,7 +52,7 @@ public enum LocationDistanceTemplate {
     }
 
     public static HashMap<String, Integer> getLocationDistances() {
-        return new HashMap<String, Integer>() {{
+        return new HashMap<>() {{
             for (LocationDistanceTemplate template : LocationDistanceTemplate.values()) {
                 put(template.way(), template.getDistance());
             }

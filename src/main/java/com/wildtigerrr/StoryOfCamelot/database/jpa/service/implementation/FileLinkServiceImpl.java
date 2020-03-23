@@ -24,9 +24,9 @@ public class FileLinkServiceImpl implements FileLinkService {
     public FileLink create(FileLink newLink) {
         FileLink fileLink = null;
         if (newLink.getId() != null) {
-            Optional object = fileLinkDao.findById(newLink.getId());
+            Optional<FileLink> object = fileLinkDao.findById(newLink.getId());
             if (object.isPresent()) {
-                fileLink = (FileLink) object.get();
+                fileLink = object.get();
             }
         } else {
             fileLink = fileLinkDao.save(newLink);
@@ -41,7 +41,7 @@ public class FileLinkServiceImpl implements FileLinkService {
 
     @Override
     public void delete(String id) {
-        fileLinkDao.findById(id).ifPresent(fileLink -> fileLinkDao.delete(fileLink));
+        fileLinkDao.findById(id).ifPresent(fileLinkDao::delete);
     }
 
     @Override

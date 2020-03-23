@@ -53,7 +53,7 @@ public enum LocationTemplate {
     }
 
     public static HashMap<String, Location> getLocations() {
-        return new HashMap<String, Location>() {{
+        return new HashMap<>() {{
             for (LocationTemplate template : LocationTemplate.values()) {
                 put(template.name(), new Location(template));
             }

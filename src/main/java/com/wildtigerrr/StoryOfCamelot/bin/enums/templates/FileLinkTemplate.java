@@ -37,7 +37,7 @@ public enum FileLinkTemplate {
     }
 
     public static ArrayList<FileLink> getFileLinks() {
-        return new ArrayList<FileLink>() {
+        return new ArrayList<>() {
             {
                 for (FileLinkTemplate template : FileLinkTemplate.values()) {
                     add(template.getFileLink());

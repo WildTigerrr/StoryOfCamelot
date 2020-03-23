@@ -66,7 +66,7 @@ public enum MobTemplate {
     }
 
     public static HashMap<String, Mob> getMobs() {
-        return new HashMap<String, Mob>() {{
+        return new HashMap<>() {{
             for (MobTemplate template : MobTemplate.values()) {
                 put(template.name(), new Mob(template));
             }

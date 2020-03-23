@@ -23,6 +23,7 @@ public class RedisConfig {
         try {
             redisURI = new URI(System.getenv("REDIS_URL"));
         } catch (URISyntaxException ignored) {}
+        assert redisURI != null;
         RedisStandaloneConfiguration redisStandaloneConfiguration = new RedisStandaloneConfiguration(redisURI.getHost(), redisURI.getPort());
         redisStandaloneConfiguration.setPassword(redisURI.getUserInfo().split(":")[1]);
         return new JedisConnectionFactory(redisStandaloneConfiguration);

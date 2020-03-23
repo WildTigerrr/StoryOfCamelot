@@ -6,7 +6,7 @@ import java.util.HashMap;
 public enum PossibleLocationTemplate {
     FOREST_MOBS(
             LocationTemplate.FOREST.name(),
-            new ArrayList<String>() {
+            new ArrayList<>() {
                 {
                     add(MobTemplate.FLYING_SWORD.name());
                 }
@@ -14,7 +14,7 @@ public enum PossibleLocationTemplate {
     ),
     THICKET_MOBS(
             LocationTemplate.THICKET.name(),
-            new ArrayList<String>() {
+            new ArrayList<>() {
                 {
                     add(MobTemplate.FLYING_SWORD.name());
                     add(MobTemplate.SUPER_FLYING_SWORD.name());
@@ -39,7 +39,7 @@ public enum PossibleLocationTemplate {
     }
 
     public static HashMap<String, ArrayList<String>> getPossibleLocationsMapping() {
-        return new HashMap<String, ArrayList<String>>() {
+        return new HashMap<>() {
             {
                 for (PossibleLocationTemplate template : PossibleLocationTemplate.values()) {
                     put(template.getLocation(), template.getMobs());

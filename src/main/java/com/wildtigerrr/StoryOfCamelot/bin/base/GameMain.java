@@ -104,9 +104,9 @@ public class GameMain {
     }
 
     private void executeCommand(UpdateWrapper message) {
-        if (executeAdminCommand(message)) return;
-        else if (executePlayerCommand(message)) return;
-        else commandNotExecuted(message);
+        if (!executeAdminCommand(message) && !executePlayerCommand(message)) {
+            commandNotExecuted(message);
+        }
     }
 
     private boolean executeAdminCommand(UpdateWrapper message) {

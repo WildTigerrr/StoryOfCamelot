@@ -1,5 +1,6 @@
 package com.wildtigerrr.StoryOfCamelot.bin.base.service;
 
+import com.wildtigerrr.StoryOfCamelot.bin.service.ApplicationContextProvider;
 import com.wildtigerrr.StoryOfCamelot.bin.service.StringUtils;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.interfaces.SimpleObject;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.enums.ObjectType;
@@ -35,7 +36,7 @@ public class IdGenerator extends SequenceStyleGenerator {
 //    }
 
     void checkServices() {
-        if (this.sequenceRepository == null) this.sequenceRepository = ApplicationContextProvider.getBean(SequenceRepository.class);
+        if (this.sequenceRepository == null) this.sequenceRepository = ApplicationContextProvider.bean(SequenceRepository.class);
     }
 
     @PostConstruct

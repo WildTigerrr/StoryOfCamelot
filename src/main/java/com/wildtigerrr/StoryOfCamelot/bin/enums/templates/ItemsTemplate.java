@@ -59,7 +59,7 @@ public enum ItemsTemplate {
     }
 
     public static ArrayList<Item> getItems() {
-        return new ArrayList<Item>() {
+        return new ArrayList<>() {
             {
                 for (ItemsTemplate template : ItemsTemplate.values()) {
                     add(new Item(template));

@@ -25,9 +25,9 @@ public class LocationServiceImpl implements LocationService {
     public synchronized Location create(Location location) {
         Location existingLocation = null;
         if (location.getId() != null) {
-            Optional object = locationDao.findById(location.getId());
+            Optional<Location> object = locationDao.findById(location.getId());
             if (object.isPresent()) {
-                existingLocation = (Location) object.get();
+                existingLocation = object.get();
             }
         } else {
             existingLocation = locationDao.save(location);
@@ -45,16 +45,13 @@ public class LocationServiceImpl implements LocationService {
 
     @Override
     public void delete(String id) {
-        locationDao.findById(id).ifPresent(location -> locationDao.delete(location));
+        locationDao.findById(id).ifPresent(locationDao::delete);
     }
 
     @Override
     public Location findById(String id) {
-        Optional object = locationDao.findById(id);
-        if (object.isPresent()) {
-            return  (Location) object.get();
-        }
-        return null;
+        Optional<Location> object = locationDao.findById(id);
+        return object.orElse(null);
     }
 
     @Override

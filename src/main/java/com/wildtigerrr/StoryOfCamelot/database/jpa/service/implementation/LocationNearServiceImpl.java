@@ -24,9 +24,9 @@ public class LocationNearServiceImpl implements LocationNearService {
     public LocationNear create(LocationNear locationNear) {
         LocationNear existingLocationNear = null;
         if (locationNear.getId() != null) {
-            Optional object = locationNearDao.findById(locationNear.getId());
+            Optional<LocationNear> object = locationNearDao.findById(locationNear.getId());
             if (object.isPresent()) {
-                existingLocationNear = (LocationNear) object.get();
+                existingLocationNear = object.get();
             }
         } else {
             existingLocationNear = locationNearDao.save(locationNear);
@@ -41,7 +41,7 @@ public class LocationNearServiceImpl implements LocationNearService {
 
     @Override
     public void delete(String id) {
-        locationNearDao.findById(id).ifPresent(locationNear -> locationNearDao.delete(locationNear));
+        locationNearDao.findById(id).ifPresent(locationNearDao::delete);
     }
 
     @Override

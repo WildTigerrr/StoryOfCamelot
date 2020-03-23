@@ -25,9 +25,9 @@ public class MobServiceImpl implements MobService {
     public Mob create(Mob mob) {
         Mob existingLocation = null;
         if (mob.getId() != null) {
-            Optional object = mobDao.findById(mob.getId());
+            Optional<Mob> object = mobDao.findById(mob.getId());
             if (object.isPresent()) {
-                existingLocation = (Mob) object.get();
+                existingLocation = object.get();
             }
         } else {
             existingLocation = mobDao.save(mob);
@@ -57,7 +57,7 @@ public class MobServiceImpl implements MobService {
 
     @Override
     public void delete(String id) {
-        mobDao.findById(id).ifPresent(mob -> mobDao.delete(mob));
+        mobDao.findById(id).ifPresent(mobDao::delete);
     }
 
     @Override

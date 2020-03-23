@@ -24,9 +24,9 @@ public class NpcServiceImpl implements NpcService {
     public Npc create(Npc npc) {
         Npc existingNpc = null;
         if (npc.getId() != null) {
-            Optional object = npcDao.findById(npc.getId());
+            Optional<Npc> object = npcDao.findById(npc.getId());
             if (object.isPresent()) {
-                existingNpc = (Npc) object.get();
+                existingNpc = object.get();
             }
         } else {
             existingNpc = npcDao.save(npc);
@@ -41,7 +41,7 @@ public class NpcServiceImpl implements NpcService {
 
     @Override
     public void delete(String id) {
-        npcDao.findById(id).ifPresent(npc -> npcDao.delete(npc));
+        npcDao.findById(id).ifPresent(npcDao::delete);
     }
 
     @Override

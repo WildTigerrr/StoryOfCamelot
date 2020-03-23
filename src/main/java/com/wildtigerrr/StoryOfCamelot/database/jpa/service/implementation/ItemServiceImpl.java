@@ -24,9 +24,9 @@ public class ItemServiceImpl implements ItemService {
     public Item create(Item item) {
         Item existingItem = null;
         if (item.getId() != null) {
-            Optional object = itemDao.findById(item.getId());
+            Optional<Item> object = itemDao.findById(item.getId());
             if (object.isPresent()) {
-                existingItem = (Item) object.get();
+                existingItem = object.get();
             }
         } else {
             existingItem = itemDao.save(item);
@@ -41,7 +41,7 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public void delete(String id) {
-        itemDao.findById(id).ifPresent(item -> itemDao.delete(item));
+        itemDao.findById(id).ifPresent(itemDao::delete);
     }
 
     @Override
