@@ -29,7 +29,7 @@ public enum ObjectType {
             "", "a0n0"
     ),
     PLAYER(
-            "", "a0p0"
+            "player_seq", "a0p0"
     ),
     POSSIBLE_LOCATION(
             "", "a0pl"
