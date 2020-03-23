@@ -60,7 +60,7 @@ public class KeyboardManager {
         return keyboard;
     }
 
-    public static InlineKeyboardMarkup getKeyboardForLanguageSelect() {
+/*    public static InlineKeyboardMarkup getKeyboardForLanguageSelect() {
         InlineKeyboardMarkup keyboard = new InlineKeyboardMarkup();
         InlineKeyboardButton button;
         List<InlineKeyboardButton> buttonsRow = new ArrayList<>();
@@ -81,6 +81,18 @@ public class KeyboardManager {
         rowList.add(buttonsRow);
         keyboard.setKeyboard(rowList);
         return keyboard;
+    }*/
+
+    public static InlineKeyboardMarkup getKeyboardForLanguageSelect() {
+        KeyboardBuilder builder = new KeyboardBuilder(KeyboardBuilder.Type.INLINE, 2);
+        for (Language lang : Language.values()) {
+            builder.addButton(
+                    new InlineKeyboardButton()
+                    .setText(lang.getName())
+                    .setCallbackData("/lang " + lang.ordinal())
+            );
+        }
+        return (InlineKeyboardMarkup) builder.build();
     }
 
     public static InlineKeyboardMarkup getKeyboardForLocations(ArrayList<Location> nearLocations, Language lang) {
