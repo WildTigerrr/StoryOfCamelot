@@ -5,6 +5,7 @@ import com.wildtigerrr.StoryOfCamelot.database.schema.*;
 import com.wildtigerrr.StoryOfCamelot.database.service.implementation.*;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
@@ -12,6 +13,7 @@ import java.util.*;
 
 @Log4j2
 @Service
+@DependsOn({"applicationContextProvider"})
 public class DatabaseInteraction {
 
     @PostConstruct
