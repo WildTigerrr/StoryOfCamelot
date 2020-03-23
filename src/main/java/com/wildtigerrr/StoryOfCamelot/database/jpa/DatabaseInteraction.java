@@ -13,7 +13,7 @@ import java.util.*;
 
 @Log4j2
 @Service
-@DependsOn({"springManager"})
+@DependsOn({"applicationContextProvider"})
 public class DatabaseInteraction {
 
     private final FileLinkServiceImpl fileLinkService;
