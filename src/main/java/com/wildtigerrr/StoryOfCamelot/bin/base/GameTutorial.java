@@ -152,7 +152,11 @@ public class GameTutorial {
     }
 
     public void setStartingLanguage(UpdateWrapper update) {
-        String langCode = update.getUserLanguageCode().substring(0, Math.min(update.getUserLanguageCode().length(), 2));
+        String userCountryCode = update.getUserLanguageCode();
+        String langCode = null;
+        if (userCountryCode != null) {
+            langCode = userCountryCode.substring(0, Math.min(userCountryCode.length(), 2));
+        }
         Language lang = Language.byCountryCode(langCode);
         languageService.sendLanguageSelector(update.getUserId(), lang);
     }
