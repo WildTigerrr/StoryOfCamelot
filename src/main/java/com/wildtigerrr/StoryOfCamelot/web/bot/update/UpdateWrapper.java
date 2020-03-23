@@ -1,6 +1,7 @@
 package com.wildtigerrr.StoryOfCamelot.web.bot.update;
 
 import com.wildtigerrr.StoryOfCamelot.bin.enums.Command;
+import com.wildtigerrr.StoryOfCamelot.bin.enums.Language;
 import com.wildtigerrr.StoryOfCamelot.bin.service.StringUtils;
 import com.wildtigerrr.StoryOfCamelot.database.schema.Player;
 import com.wildtigerrr.StoryOfCamelot.web.bot.utils.UpdateWrapperUtils;
@@ -38,7 +39,7 @@ public class UpdateWrapper {
         this.chatId = isQuery ? update.getCallbackQuery().getMessage().getChatId() : update.getMessage().getChatId();
         this.messageId = isQuery ? update.getCallbackQuery().getMessage().getMessageId() : update.getMessage().getMessageId();
         this.queryId = isQuery ? update.getCallbackQuery().getId() : null;
-        this.userLanguageCode = user.getLanguageCode();
+        this.userLanguageCode = user.getLanguageCode() == null ? Language.getDefaultLocale().getLanguage() : user.getLanguageCode();
     }
 
     public boolean isCommand() {

@@ -34,7 +34,7 @@ public enum Language {
     }
 
     public static Locale getDefaultLocale() {
-        return RUS.getLocale();
+        return ENG.getLocale();
     }
 
     public static boolean isValidLanguageCode(String languageCode) {
