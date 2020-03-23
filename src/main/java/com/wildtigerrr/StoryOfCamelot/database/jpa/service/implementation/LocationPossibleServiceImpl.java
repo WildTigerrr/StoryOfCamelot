@@ -13,8 +13,12 @@ import java.util.Optional;
 @Service
 public class LocationPossibleServiceImpl implements LocationPossibleService {
 
+    private final LocationPossibleDao possibleLocationDao;
+
     @Autowired
-    private LocationPossibleDao possibleLocationDao;
+    public LocationPossibleServiceImpl(LocationPossibleDao possibleLocationDao) {
+        this.possibleLocationDao = possibleLocationDao;
+    }
 
     @Override
     public LocationPossible create(LocationPossible possibleLocation) {

@@ -13,8 +13,12 @@ import java.util.Optional;
 @Service
 public class NpcServiceImpl implements NpcService {
 
+    private final NpcDao npcDao;
+
     @Autowired
-    private NpcDao npcDao;
+    public NpcServiceImpl(NpcDao npcDao) {
+        this.npcDao = npcDao;
+    }
 
     @Override
     public Npc create(Npc npc) {

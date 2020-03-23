@@ -14,8 +14,12 @@ import java.util.Optional;
 @Service
 public class LocationServiceImpl implements LocationService {
 
+    private final LocationDao locationDao;
+
     @Autowired
-    private LocationDao locationDao;
+    public LocationServiceImpl(LocationDao locationDao) {
+        this.locationDao = locationDao;
+    }
 
     @Override
     public synchronized Location create(Location location) {

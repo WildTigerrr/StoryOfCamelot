@@ -13,8 +13,12 @@ import java.util.Optional;
 @Service
 public class BackpackServiceImpl implements BackpackService {
 
+    private final BackpackDao backpackDao;
+
     @Autowired
-    private BackpackDao backpackDao;
+    public BackpackServiceImpl(BackpackDao backpackDao) {
+        this.backpackDao = backpackDao;
+    }
 
     @Override
     public Backpack create(Backpack backpack) {

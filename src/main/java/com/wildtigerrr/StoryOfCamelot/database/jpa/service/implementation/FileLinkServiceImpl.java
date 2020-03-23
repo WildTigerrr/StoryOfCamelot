@@ -13,8 +13,12 @@ import java.util.Optional;
 @Service
 public class FileLinkServiceImpl implements FileLinkService {
 
+    private final FileLinkDao fileLinkDao;
+
     @Autowired
-    private FileLinkDao fileLinkDao;
+    public FileLinkServiceImpl(FileLinkDao fileLinkDao) {
+        this.fileLinkDao = fileLinkDao;
+    }
 
     @Override
     public FileLink create(FileLink newLink) {

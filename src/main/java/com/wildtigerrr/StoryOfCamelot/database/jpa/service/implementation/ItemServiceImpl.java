@@ -13,8 +13,12 @@ import java.util.Optional;
 @Service
 public class ItemServiceImpl implements ItemService {
 
+    private final ItemDao itemDao;
+
     @Autowired
-    private ItemDao itemDao;
+    public ItemServiceImpl(ItemDao itemDao) {
+        this.itemDao = itemDao;
+    }
 
     @Override
     public Item create(Item item) {

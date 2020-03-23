@@ -16,28 +16,32 @@ import java.util.*;
 @DependsOn({"applicationContextProvider"})
 public class DatabaseInteraction {
 
+    private final PlayerServiceImpl playerService;
+
+    private final FileLinkServiceImpl fileLinkService;
+
+    private final LocationServiceImpl locationService;
+
+    private final LocationNearServiceImpl locationNearService;
+
+    private final ItemServiceImpl itemService;
+
+    private final MobServiceImpl mobService;
+
+    @Autowired
+    public DatabaseInteraction(PlayerServiceImpl playerService, FileLinkServiceImpl fileLinkService, LocationServiceImpl locationService, LocationNearServiceImpl locationNearService, ItemServiceImpl itemService, MobServiceImpl mobService) {
+        this.playerService = playerService;
+        this.fileLinkService = fileLinkService;
+        this.locationService = locationService;
+        this.locationNearService = locationNearService;
+        this.itemService = itemService;
+        this.mobService = mobService;
+    }
+
     @PostConstruct
     public void init() {
         insertInitialData();
     }
-
-    @Autowired
-    private PlayerServiceImpl playerService;
-
-    @Autowired
-    private FileLinkServiceImpl fileLinkService;
-
-    @Autowired
-    private LocationServiceImpl locationService;
-
-    @Autowired
-    private LocationNearServiceImpl locationNearService;
-
-    @Autowired
-    private ItemServiceImpl itemService;
-
-    @Autowired
-    private MobServiceImpl mobService;
 
     public Player getPlayerById(String id) {
         return playerService.findById(id);

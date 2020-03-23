@@ -13,8 +13,12 @@ import java.util.Optional;
 @Service
 public class LocationNearServiceImpl implements LocationNearService {
 
+    private final LocationNearDao locationNearDao;
+
     @Autowired
-    private LocationNearDao locationNearDao;
+    public LocationNearServiceImpl(LocationNearDao locationNearDao) {
+        this.locationNearDao = locationNearDao;
+    }
 
     @Override
     public LocationNear create(LocationNear locationNear) {

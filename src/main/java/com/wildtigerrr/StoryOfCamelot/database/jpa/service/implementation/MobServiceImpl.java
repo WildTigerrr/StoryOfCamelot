@@ -14,8 +14,12 @@ import java.util.Optional;
 @Service
 public class MobServiceImpl implements MobService {
 
+    private final MobDao mobDao;
+
     @Autowired
-    private MobDao mobDao;
+    public MobServiceImpl(MobDao mobDao) {
+        this.mobDao = mobDao;
+    }
 
     @Override
     public Mob create(Mob mob) {
