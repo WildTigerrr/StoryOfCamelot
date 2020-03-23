@@ -36,7 +36,7 @@ public class BattleService {
                 .text(translation.getMessage("battle.start", update)).targetId(update).build()
         );
         PlayerState state = (PlayerState) cacheService.findObject(CacheType.PLAYER_STATE, update.getPlayer().getId());
-        Mob mob = mobService.findById(state.getEnemy().getId());
+        Mob mob = mobService.findById(Integer.parseInt(state.getEnemy().getId())); // TODO remove parse
 
         BattleLog battleLog = battleHandler.fight(update.getPlayer(), mob, update.getPlayer().getLanguage());
         messages.sendMessage(TextResponseMessage.builder()

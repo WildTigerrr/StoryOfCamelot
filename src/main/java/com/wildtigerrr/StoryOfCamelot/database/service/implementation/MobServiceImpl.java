@@ -22,7 +22,7 @@ public class MobServiceImpl implements MobService {
     public Mob create(Mob mob) {
         Mob existingLocation = null;
         if (mob.getId() != null) {
-            Optional object = mobDao.findById(mob.getId());
+            Optional object = mobDao.findById(Integer.parseInt(mob.getId()));
             if (object.isPresent()) {
                 existingLocation = (Mob) object.get();
             }

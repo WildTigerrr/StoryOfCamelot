@@ -23,6 +23,9 @@ public class Mob implements Fighter {
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Setter(AccessLevel.NONE)
     private Integer id;
+    public String getId() {
+        return String.valueOf(id);
+    }
     private String systemName;
     @Enumerated(EnumType.STRING)
     private NameTranslation name;

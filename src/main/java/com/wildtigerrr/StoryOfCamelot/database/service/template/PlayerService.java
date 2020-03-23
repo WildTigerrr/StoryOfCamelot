@@ -10,8 +10,8 @@ import java.util.List;
 public interface PlayerService {
     Player createIfNotExist(Player player);
     void create(ArrayList<Player> players);
-    void delete(int id);
-    Player findById(int id);
+    void delete(String id);
+    Player findById(String id);
     Player findByExternalId(String externalId);
     Player findByNickname(String nickname);
     Player update(Player player);

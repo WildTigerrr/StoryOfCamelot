@@ -52,12 +52,12 @@ public class PlayerServiceImpl implements PlayerService {
     }
 
     @Override
-    public void delete(int id) {
+    public void delete(String id) {
         playerDao.findById(id).ifPresent(playerDao::delete);
     }
 
     @Override
-    public Player findById(int id) {
+    public Player findById(String id) {
         Optional<Player> obj = playerDao.findById(id);
         return obj.orElse(null);
     }

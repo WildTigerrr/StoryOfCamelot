@@ -37,7 +37,7 @@ public class DatabaseInteraction {
     @Autowired
     private MobServiceImpl mobService;
 
-    public Player getPlayerById(Integer id) {
+    public Player getPlayerById(String id) {
         return playerService.findById(id);
     }
 

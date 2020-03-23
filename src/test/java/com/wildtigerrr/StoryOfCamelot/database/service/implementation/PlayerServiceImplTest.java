@@ -35,7 +35,7 @@ class PlayerServiceImplTest extends ServiceBaseTest {
     void whenCreateShouldSearchForExistingAndCreateTest() {
         // Given
         String externalId = "test";
-        Integer id = 1;
+        String id = "1";
         Player player = new Player(externalId, "Tiger", new Location(LocationTemplate.TRADING_SQUARE));
         Player mockedPlayer = new Player(externalId, "Tiger", new Location(LocationTemplate.TRADING_SQUARE));
         ReflectionTestUtils.setField(mockedPlayer, "id", id);
@@ -55,7 +55,7 @@ class PlayerServiceImplTest extends ServiceBaseTest {
     void whenCreateAndExistShouldReturnExistingTest() {
         // Given
         String externalId = "test";
-        Integer id = 1;
+        String id = "1";
         Player player = new Player(externalId, "Tiger", new Location(LocationTemplate.TRADING_SQUARE));
         Player mockedPlayer = new Player(externalId, "Tiger", new Location(LocationTemplate.TRADING_SQUARE));
         ReflectionTestUtils.setField(mockedPlayer, "id", id);

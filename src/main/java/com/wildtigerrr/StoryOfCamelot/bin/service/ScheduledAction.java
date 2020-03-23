@@ -12,15 +12,15 @@ public class ScheduledAction {
     public String target;
     public String additionalValue;
     public Long timestamp;
-    public int playerId;
+    public String playerId;
 
-    public ScheduledAction(Long timestamp, ActionType type, int playerId, String target) {
+    public ScheduledAction(Long timestamp, ActionType type, String playerId, String target) {
         this.type = type;
         this.target = target;
         this.timestamp = timestamp;
         this.playerId = playerId;
     }
-    public ScheduledAction(Long timestamp, ActionType type, int playerId, String target, String additionalValue) {
+    public ScheduledAction(Long timestamp, ActionType type, String playerId, String target, String additionalValue) {
         this.type = type;
         this.target = target;
         this.additionalValue = additionalValue;
@@ -40,7 +40,7 @@ public class ScheduledAction {
         this.target = actionValues.get("target").replace("\'", "");
         this.additionalValue = actionValues.get("additionalValue").replace("\'", "");
         this.timestamp = Long.valueOf(actionValues.get("timestamp"));
-        this.playerId = Integer.parseInt(actionValues.get("playerId"));
+        this.playerId = actionValues.get("playerId");
 
         log.trace("Created action from: " + stringifiedAction);
     }

@@ -22,9 +22,9 @@ public class TimeDependentActions {
 
     private static ArrayList<String> actions = new ArrayList<>();
     private static HashMap<Long, ScheduledAction> scheduledActionMap = new HashMap<>();
-    private static HashMap<Integer, List<Long>> playerToScheduled = new HashMap<>();
+    private static HashMap<String, List<Long>> playerToScheduled = new HashMap<>();
 
-    public static Boolean scheduleMove(int playerId, Long timestamp, String target, String distance) {
+    public static Boolean scheduleMove(String playerId, Long timestamp, String target, String distance) {
         while (scheduledActionMap.containsKey(timestamp)) timestamp++;
         List<Long> playerActions;
         if (playerToScheduled.containsKey(playerId)) {
@@ -193,7 +193,7 @@ public class TimeDependentActions {
         log.debug("Updating location...");
         movement.sendLocationUpdate(scheduledActionMap.get(actionEntry.getKey()));
         log.debug("Location updated");
-        int playerId = actionEntry.getValue().playerId;
+        String playerId = actionEntry.getValue().playerId;
         List<Long> playerActions = playerToScheduled.get(playerId);
         playerActions.remove(actionEntry.getValue().timestamp);
         if (playerActions.isEmpty()) {

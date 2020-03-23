@@ -1,16 +1,21 @@
 package com.wildtigerrr.StoryOfCamelot.database.schema;
 
+import com.wildtigerrr.StoryOfCamelot.bin.base.service.IdGenerator;
 import com.wildtigerrr.StoryOfCamelot.bin.enums.EnemyType;
 import com.wildtigerrr.StoryOfCamelot.bin.enums.Language;
 import com.wildtigerrr.StoryOfCamelot.bin.service.SpringManager;
 import com.wildtigerrr.StoryOfCamelot.bin.translation.TranslationManager;
 import com.wildtigerrr.StoryOfCamelot.database.interfaces.Fighter;
+import com.wildtigerrr.StoryOfCamelot.database.interfaces.SimpleObject;
+import com.wildtigerrr.StoryOfCamelot.database.schema.enums.ObjectType;
 import com.wildtigerrr.StoryOfCamelot.database.schema.enums.PlayerStatus;
 import com.wildtigerrr.StoryOfCamelot.database.schema.enums.PlayerStatusExtended;
 import com.wildtigerrr.StoryOfCamelot.database.schema.enums.Stats;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Parameter;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -24,14 +29,21 @@ import static java.util.Comparator.comparingInt;
 @Table(name = "player")
 @Getter
 @Setter
-public class Player implements Comparable<Player>, Fighter {
+public class Player extends SimpleObject implements Comparable<Player>, Fighter {
 
     // ==================================================== MAIN ==================================================== //
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @SequenceGenerator(name = "player_seq", sequenceName = "player_seq", allocationSize = 10)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "player_seq")
+    @GenericGenerator(
+            name = "player_seq",
+            strategy = "com.wildtigerrr.StoryOfCamelot.bin.base.service.IdGenerator",
+            parameters = {
+                    @Parameter(name = IdGenerator.VALUE_PREFIX_PARAMETER, value = "a0p0")
+            })
     @Setter(AccessLevel.NONE)
-    private Integer id;
+    private String id;
     private String externalId; // TODO Admin method for setting another external Id
     @Setter(AccessLevel.NONE)
     private String nickname;
@@ -46,6 +58,11 @@ public class Player implements Comparable<Player>, Fighter {
     private PlayerStats stats;
 
     // ------------------- GETTERS AND SETTERS ---------------------------------------------------------------------- //
+
+    @Override
+    public ObjectType type() {
+        return ObjectType.PLAYER;
+    }
 
     public Boolean setNickname(String nickname) {
         if (nickname.length() > getNicknameLengthMax()) {

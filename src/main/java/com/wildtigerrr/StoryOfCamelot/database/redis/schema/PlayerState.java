@@ -14,7 +14,7 @@ import java.io.Serializable;
 @Getter
 public class PlayerState implements Serializable {
 
-    private Integer id;
+    private String id;
     private PlayerStatus status;
     private Enemy enemy;
     private BattleLog lastBattle;
@@ -51,10 +51,10 @@ public class PlayerState implements Serializable {
 
     @Getter
     public class Enemy implements Serializable {
-        private Integer id;
+        private String id;
         private EnemyType type;
 
-        private Enemy(Integer id, EnemyType type) {
+        private Enemy(String id, EnemyType type) {
             this.id = id;
             this.type = type;
         }
