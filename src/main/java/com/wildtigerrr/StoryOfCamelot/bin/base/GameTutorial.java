@@ -153,7 +153,7 @@ public class GameTutorial {
 
     public void setStartingLanguage(UpdateWrapper update) {
         String userCountryCode = update.getUserLanguageCode();
-        String langCode = null;
+        String langCode = "";
         if (userCountryCode != null) {
             langCode = userCountryCode.substring(0, Math.min(userCountryCode.length(), 2));
         }
