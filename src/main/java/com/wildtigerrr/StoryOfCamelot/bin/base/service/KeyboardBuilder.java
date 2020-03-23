@@ -35,7 +35,7 @@ public class KeyboardBuilder {
 
     public KeyboardBuilder(Type type, int rowLimit) {
         this(type);
-        this.rowLimit = rowLimit;
+        this.rowLimit = rowLimit - 1;
     }
 
     public KeyboardBuilder setRowLimit(int rowLimit) {
