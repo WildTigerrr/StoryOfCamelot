@@ -8,9 +8,11 @@ import com.wildtigerrr.StoryOfCamelot.database.schema.Player;
 import com.wildtigerrr.StoryOfCamelot.database.schema.enums.PlayerStatus;
 import com.wildtigerrr.StoryOfCamelot.exception.InvalidFighterException;
 import lombok.Getter;
+import org.springframework.data.redis.core.RedisHash;
 
 import java.io.Serializable;
 
+@RedisHash("PlayerState")
 @Getter
 public class PlayerState implements Serializable {
 
