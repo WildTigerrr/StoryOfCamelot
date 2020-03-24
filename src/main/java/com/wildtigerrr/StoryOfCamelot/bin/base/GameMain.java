@@ -3,6 +3,7 @@ package com.wildtigerrr.StoryOfCamelot.bin.base;
 import com.wildtigerrr.StoryOfCamelot.bin.base.service.FileProcessing;
 import com.wildtigerrr.StoryOfCamelot.bin.base.service.TimeDependentActions;
 import com.wildtigerrr.StoryOfCamelot.bin.enums.Command;
+import com.wildtigerrr.StoryOfCamelot.bin.service.StringUtils;
 import com.wildtigerrr.StoryOfCamelot.bin.translation.TranslationManager;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.Backpack;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.BackpackItem;
@@ -180,7 +181,7 @@ public class GameMain {
     private void getBackpack(UpdateWrapper message) {
         Backpack backpack = backpackService.findByPlayerId(message.getPlayer().getId());
         messages.sendMessage(TextResponseMessage.builder()
-                .text(backpack.toString())
+                .text(StringUtils.escape(backpack.toString()))
                 .targetId(message).build()
         );
     }
