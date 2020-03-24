@@ -60,4 +60,12 @@ public class Backpack extends SimpleObject {
         items.remove(item);
     }
 
+    @Override
+    public String toString() {
+        return "Backpack{" +
+                "id='" + id + '\'' +
+                ", player=" + player +
+                ", items=" + items +
+                '}';
+    }
 }

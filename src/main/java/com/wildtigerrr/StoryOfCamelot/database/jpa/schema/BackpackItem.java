@@ -52,4 +52,15 @@ public class BackpackItem extends SimpleObject {
         return ObjectType.BACKPACK_ITEM;
     }
 
+    @Override
+    public String toString() {
+        return "BackpackItem{" +
+                "id='" + id + '\'' +
+                ", item=" + item +
+                ", currentDurability=" + currentDurability +
+                ", quantity=" + quantity +
+                ", status=" + status +
+                ", isDeleted=" + isDeleted +
+                '}';
+    }
 }
