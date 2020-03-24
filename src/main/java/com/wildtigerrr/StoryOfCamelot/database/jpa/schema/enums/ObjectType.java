@@ -5,6 +5,9 @@ public enum ObjectType {
     BACKPACK(
             "backpack_seq", "a0b0"
     ),
+    BACKPACK_ITEM(
+            "backpack_item_seq", "a0bi"
+    ),
     FILE_LINK(
             "file_link_seq", "a0f0"
     ),

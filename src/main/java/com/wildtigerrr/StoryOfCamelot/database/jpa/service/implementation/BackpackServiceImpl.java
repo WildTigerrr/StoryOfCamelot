@@ -22,16 +22,16 @@ public class BackpackServiceImpl implements BackpackService {
 
     @Override
     public Backpack create(Backpack backpack) {
-        Backpack existingLocation = null;
+        Backpack existingBackpack = null;
         if (backpack.getId() != null) {
             Optional<Backpack> object = backpackDao.findById(backpack.getId());
             if (object.isPresent()) {
-                existingLocation = object.get();
+                existingBackpack = object.get();
             }
         } else {
-            existingLocation = backpackDao.save(backpack);
+            existingBackpack = backpackDao.save(backpack);
         }
-        return existingLocation;
+        return existingBackpack;
     }
 
     @Override
@@ -53,4 +53,5 @@ public class BackpackServiceImpl implements BackpackService {
     public List<Backpack> getAll() {
         return (List<Backpack>) backpackDao.findAll();
     }
+
 }

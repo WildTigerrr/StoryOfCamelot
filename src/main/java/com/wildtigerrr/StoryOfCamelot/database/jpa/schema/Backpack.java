@@ -10,6 +10,7 @@ import lombok.Setter;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name = "backpack")
@@ -31,28 +32,22 @@ public class Backpack extends SimpleObject {
     private String id;
     @ManyToOne
     private Player player;
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "item_id")
-    private Item item;
-
-    private Integer currentDurability;
-    private Integer quantity;
-    @Enumerated(EnumType.STRING)
-    private ItemStatus status;
-    private Boolean isDeleted;
+    @OneToMany(
+            cascade = {CascadeType.ALL},
+            mappedBy = "backpack"
+    )
+    private List<BackpackItem> items;
 
     protected Backpack() {
     }
 
-    public Backpack(Player player, Item item, ItemStatus status) {
+    public Backpack(Player player) {
         this.player = player;
-        this.item = item;
-        currentDurability = item.getDurability();
-        this.status = status;
     }
 
     @Override
     public ObjectType type() {
         return ObjectType.BACKPACK;
     }
+
 }

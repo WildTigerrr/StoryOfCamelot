@@ -23,16 +23,16 @@ public class MobServiceImpl implements MobService {
 
     @Override
     public Mob create(Mob mob) {
-        Mob existingLocation = null;
+        Mob existingMob = null;
         if (mob.getId() != null) {
             Optional<Mob> object = mobDao.findById(mob.getId());
             if (object.isPresent()) {
-                existingLocation = object.get();
+                existingMob = object.get();
             }
         } else {
-            existingLocation = mobDao.save(mob);
+            existingMob = mobDao.save(mob);
         }
-        return existingLocation;
+        return existingMob;
     }
 
     @Override
