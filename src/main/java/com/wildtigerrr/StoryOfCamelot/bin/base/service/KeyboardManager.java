@@ -33,7 +33,7 @@ public class KeyboardManager {
         }
 
         int buttonsLine = addings.size() != 1 ? addings.size() : 3;
-        KeyboardBuilder builder = new KeyboardBuilder(KeyboardBuilder.Type.INLINE, buttonsLine);
+        KeyboardBuilder<InlineKeyboardMarkup> builder = new KeyboardBuilder<>(KeyboardBuilder.Type.INLINE, buttonsLine);
         for (Stats stat : Stats.values()) {
             for (String val : addings) {
                 builder.addButton(
@@ -43,11 +43,11 @@ public class KeyboardManager {
                 );
             }
         }
-        return (InlineKeyboardMarkup) builder.build();
+        return builder.build();
     }
 
     public static InlineKeyboardMarkup getKeyboardForLanguageSelect() {
-        KeyboardBuilder builder = new KeyboardBuilder(KeyboardBuilder.Type.INLINE, 2);
+        KeyboardBuilder<InlineKeyboardMarkup> builder = new KeyboardBuilder<>(KeyboardBuilder.Type.INLINE, 2);
         for (Language lang : Language.values()) {
             builder.addButton(
                     new InlineKeyboardButton()
@@ -55,11 +55,11 @@ public class KeyboardManager {
                             .setCallbackData("/lang " + lang.ordinal())
             );
         }
-        return (InlineKeyboardMarkup) builder.build();
+        return builder.build();
     }
 
     public static InlineKeyboardMarkup getKeyboardForLocations(ArrayList<Location> nearLocations, Language lang) {
-        KeyboardBuilder builder = new KeyboardBuilder(KeyboardBuilder.Type.INLINE, 2);
+        KeyboardBuilder<InlineKeyboardMarkup> builder = new KeyboardBuilder<>(KeyboardBuilder.Type.INLINE, 2);
         for (Location loc : nearLocations) {
             builder.addButton(
                     new InlineKeyboardButton()
@@ -67,15 +67,15 @@ public class KeyboardManager {
                             .setCallbackData("/move " + loc.getId())
             );
         }
-        return (InlineKeyboardMarkup) builder.build();
+        return builder.build();
     }
 
     public static ReplyKeyboardMarkup getReplyByButtons(List<ReplyButton> buttons, Language lang) {
-        KeyboardBuilder builder = new KeyboardBuilder(KeyboardBuilder.Type.REPLY, 2);
+        KeyboardBuilder<ReplyKeyboardMarkup> builder = new KeyboardBuilder<>(KeyboardBuilder.Type.REPLY, 2);
         for (ReplyButton button : buttons) {
             builder.addButton(button.getLabel(lang));
         }
-        return (ReplyKeyboardMarkup) builder.resize().build();
+        return builder.resize().build();
     }
 
 

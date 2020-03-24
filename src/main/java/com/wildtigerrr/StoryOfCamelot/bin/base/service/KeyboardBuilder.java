@@ -1,6 +1,8 @@
 package com.wildtigerrr.StoryOfCamelot.bin.base.service;
 
+import com.wildtigerrr.StoryOfCamelot.exception.InvalidKeyboardTypeException;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboard;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
@@ -8,7 +10,7 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.Keyboard
 import java.util.ArrayList;
 import java.util.List;
 
-public class KeyboardBuilder {
+public class KeyboardBuilder<T extends ReplyKeyboard> {
     private int rowLimit = 100;
     private Type type;
 
@@ -38,26 +40,26 @@ public class KeyboardBuilder {
         this.rowLimit = rowLimit - 1;
     }
 
-    public KeyboardBuilder setRowLimit(int rowLimit) {
+    public KeyboardBuilder<T> setRowLimit(int rowLimit) {
         this.rowLimit = rowLimit;
         return this;
     }
 
-    public KeyboardBuilder addButton(InlineKeyboardButton button) {
+    public KeyboardBuilder<T> addButton(InlineKeyboardButton button) {
         if (type != Type.INLINE) throw new InvalidKeyboardTypeException("Text button can't be added to " + type.name() + " keyboard");
         if (buttonsInlineRow.size() > rowLimit) nextRow();
         buttonsInlineRow.add(button);
         return this;
     }
 
-    public KeyboardBuilder addButton(String buttonText) {
+    public KeyboardBuilder<T> addButton(String buttonText) {
         if (type != Type.REPLY) throw new InvalidKeyboardTypeException("Text button can't be added to " + type.name() + " keyboard");
         if (buttonsReplyRow.size() > rowLimit) nextRow();
         buttonsReplyRow.add(buttonText);
         return this;
     }
 
-    public KeyboardBuilder nextRow() {
+    public KeyboardBuilder<T> nextRow() {
         if (type == Type.INLINE) {
             this.rowInlineList.add(buttonsInlineRow);
             this.buttonsInlineRow = new ArrayList<>();
@@ -68,21 +70,21 @@ public class KeyboardBuilder {
         return this;
     }
 
-    public KeyboardBuilder resize() {
+    public KeyboardBuilder<T> resize() {
         if (type != Type.REPLY) throw new InvalidKeyboardTypeException("Resize can't be set to " + type.name() + " keyboard");
         replyKeyboard.setResizeKeyboard(true);
         return this;
     }
 
-    public Object build() {
+    public T build() {
         if (type == Type.INLINE) {
             nextRow();
             this.inlineKeyboard.setKeyboard(rowInlineList);
-            return this.inlineKeyboard;
+            return (T) this.inlineKeyboard;
         } else if (type == Type.REPLY) {
             nextRow();
             this.replyKeyboard.setKeyboard(rowReplyList);
-            return this.replyKeyboard;
+            return (T) this.replyKeyboard;
         }
         throw new InvalidKeyboardTypeException("Wrong keyboard type: " + this.type.name());
     }
@@ -92,9 +94,4 @@ public class KeyboardBuilder {
         REPLY
     }
 
-    public class InvalidKeyboardTypeException extends RuntimeException {
-        public InvalidKeyboardTypeException(String message) {
-            super(message);
-        }
-    }
 }
