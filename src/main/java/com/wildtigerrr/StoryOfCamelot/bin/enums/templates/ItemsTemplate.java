@@ -64,9 +64,6 @@ public enum ItemsTemplate {
                 for (ItemsTemplate template : ItemsTemplate.values()) {
                     add(new Item(template));
                 }
-                for (int i = 0; i < 200; i++) {
-                    add(new Item(1.0, i, 1.0, ItemSubType.SWORD, ItemQuality.COMMON));
-                }
             }
         };
     }
