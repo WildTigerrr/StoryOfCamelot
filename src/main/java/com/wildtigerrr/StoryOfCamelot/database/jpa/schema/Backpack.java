@@ -64,7 +64,6 @@ public class Backpack extends SimpleObject {
     public String toString() {
         return "Backpack{" +
                 "id='" + id + '\'' +
-                ", player=" + player +
                 ", items=" + items +
                 '}';
     }

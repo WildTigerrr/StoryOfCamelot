@@ -74,4 +74,14 @@ public class Item extends SimpleObject {
         this.imageLink = imageLink;
     }
 
+    @Override
+    public String toString() {
+        return "Item{" +
+                "id='" + id + '\'' +
+                ", value=" + value +
+                ", durability=" + durability +
+                ", price=" + price +
+                ", type=" + type +
+                '}';
+    }
 }

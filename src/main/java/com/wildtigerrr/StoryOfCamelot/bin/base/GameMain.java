@@ -180,9 +180,8 @@ public class GameMain {
 
     private void getBackpack(UpdateWrapper message) {
         Backpack backpack = backpackService.findByPlayerId(message.getPlayer().getId());
-        log.warn(StringUtils.escape(backpack.toString()));
         messages.sendMessage(TextResponseMessage.builder()
-                .text(StringUtils.escape(backpack.toString()))
+                .text(backpack.toString())
                 .targetId(message).build()
         );
     }
