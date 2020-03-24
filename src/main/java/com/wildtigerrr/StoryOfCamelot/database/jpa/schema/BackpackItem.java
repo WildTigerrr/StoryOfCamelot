@@ -40,6 +40,9 @@ public class BackpackItem extends SimpleObject {
     private ItemStatus status;
     private Boolean isDeleted;
 
+    protected BackpackItem() {
+    }
+
     public BackpackItem(Backpack backpack, Item item, ItemStatus status) {
         this.backpack = backpack;
         this.item = item;
