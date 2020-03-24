@@ -50,4 +50,13 @@ public class Backpack extends SimpleObject {
         return ObjectType.BACKPACK;
     }
 
+    public Backpack addBackpackItem(BackpackItem item) {
+        items.add(item);
+        return this;
+    }
+
+    public void removeBackpackItem(BackpackItem item) {
+        items.remove(item);
+    }
+
 }

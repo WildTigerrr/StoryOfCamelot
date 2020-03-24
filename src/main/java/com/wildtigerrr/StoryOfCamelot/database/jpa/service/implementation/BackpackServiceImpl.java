@@ -2,11 +2,11 @@ package com.wildtigerrr.StoryOfCamelot.database.jpa.service.implementation;
 
 import com.wildtigerrr.StoryOfCamelot.database.jpa.dataaccessobject.BackpackDao;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.Backpack;
+import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.Player;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.service.template.BackpackService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -35,8 +35,14 @@ public class BackpackServiceImpl implements BackpackService {
     }
 
     @Override
-    public void create(ArrayList<Backpack> backpacks) {
+    public void create(List<Backpack> backpacks) {
         backpackDao.saveAll(backpacks);
+    }
+
+    @Override
+    public Backpack findByPlayerId(String playerId) {
+        Optional<Backpack> obj = backpackDao.findByPlayer_Id(playerId);
+        return obj.orElse(null);
     }
 
     @Override

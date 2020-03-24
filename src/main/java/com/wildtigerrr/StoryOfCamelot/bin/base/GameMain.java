@@ -4,10 +4,17 @@ import com.wildtigerrr.StoryOfCamelot.bin.base.service.FileProcessing;
 import com.wildtigerrr.StoryOfCamelot.bin.base.service.TimeDependentActions;
 import com.wildtigerrr.StoryOfCamelot.bin.enums.Command;
 import com.wildtigerrr.StoryOfCamelot.bin.translation.TranslationManager;
+import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.Backpack;
+import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.BackpackItem;
+import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.Item;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.Player;
+import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.enums.ItemStatus;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.enums.PlayerStatus;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.enums.PlayerStatusExtended;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.service.implementation.PlayerServiceImpl;
+import com.wildtigerrr.StoryOfCamelot.database.jpa.service.template.BackpackItemService;
+import com.wildtigerrr.StoryOfCamelot.database.jpa.service.template.BackpackService;
+import com.wildtigerrr.StoryOfCamelot.database.jpa.service.template.ItemService;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.service.template.PlayerService;
 import com.wildtigerrr.StoryOfCamelot.web.BotConfig;
 import com.wildtigerrr.StoryOfCamelot.web.bot.update.UpdateWrapper;
@@ -24,6 +31,8 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
@@ -37,6 +46,9 @@ public class GameMain {
     private final TranslationManager translation;
     private final GameTutorial tutorial;
     private final FileProcessing imageService;
+    private final BackpackService backpackService;
+    private final BackpackItemService backpackItemService;
+    private final ItemService itemService;
 
     @Autowired
     public GameMain(
@@ -44,13 +56,19 @@ public class GameMain {
             PlayerServiceImpl playerService,
             TranslationManager translation,
             GameTutorial tutorial,
-            FileProcessing imageService
+            FileProcessing imageService,
+            BackpackService backpackService,
+            BackpackItemService backpackItemService,
+            ItemService itemService
     ) {
         this.messages = messages;
         this.playerService = playerService;
         this.translation = translation;
         this.tutorial = tutorial;
         this.imageService = imageService;
+        this.backpackService = backpackService;
+        this.backpackItemService = backpackItemService;
+        this.itemService = itemService;
     }
 
     public void handleTextMessage(UpdateWrapper message) {
@@ -130,12 +148,41 @@ public class GameMain {
                 sendIdsToAdminChannel(message.getUserId(), message.getChatId());
                 return true;
             }
+            case "/test item": {
+                testItem(message);
+                return true;
+            }
+            case "/backpack": {
+                getBackpack(message);
+                return true;
+            }
         }
         if (message.getText().startsWith("/ping")) {
             messages.postMessageToAdminChannel(message.getText(), true);
             return true;
         }
         return false;
+    }
+
+    private void testItem(UpdateWrapper message) {
+        Backpack backpack = new Backpack(message.getPlayer());
+        List<Item> items = itemService.getAll();
+        for (Item item : items) {
+            backpack.addBackpackItem(new BackpackItem(backpack, item, ItemStatus.IN_STACK));
+        }
+        backpackService.create(backpack);
+        messages.sendMessage(TextResponseMessage.builder()
+                .text("Предметы помещены в сумку")
+                .targetId(message).build()
+        );
+    }
+
+    private void getBackpack(UpdateWrapper message) {
+        Backpack backpack = backpackService.findByPlayerId(message.getPlayer().getId());
+        messages.sendMessage(TextResponseMessage.builder()
+                .text(backpack.toString())
+                .targetId(message).build()
+        );
     }
 
     private Boolean executePlayerCommand(UpdateWrapper message) {
