@@ -10,6 +10,7 @@ import lombok.Setter;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -36,7 +37,7 @@ public class Backpack extends SimpleObject {
             cascade = {CascadeType.ALL},
             mappedBy = "backpack"
     )
-    private List<BackpackItem> items;
+    private List<BackpackItem> items = new ArrayList<>();;
 
     protected Backpack() {
     }
