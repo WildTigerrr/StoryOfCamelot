@@ -11,7 +11,7 @@ import org.hibernate.annotations.GenericGenerator;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "possible_location")
+@Table(name = "location_possible")
 @Getter
 public class LocationPossible extends SimpleObject {
 

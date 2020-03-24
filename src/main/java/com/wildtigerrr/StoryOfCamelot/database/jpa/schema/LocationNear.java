@@ -27,10 +27,10 @@ public class LocationNear extends SimpleObject {
     @Setter(AccessLevel.NONE)
     private String id;
     @ManyToOne(cascade = CascadeType.PERSIST)
-    @JoinColumn(name = "startLocation_id", nullable = false)
+    @JoinColumn(name = "start_location_id", nullable = false)
     private Location startLocation;
     @ManyToOne(cascade = CascadeType.PERSIST)
-    @JoinColumn(name = "finishLocation_id", nullable = false)
+    @JoinColumn(name = "finish_location_id", nullable = false)
     private Location finishLocation;
 
     private int distance;

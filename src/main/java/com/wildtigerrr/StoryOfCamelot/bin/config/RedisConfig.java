@@ -12,9 +12,9 @@ import org.springframework.data.redis.serializer.GenericToStringSerializer;
 import java.net.URI;
 import java.net.URISyntaxException;
 
+@Profile("!test & !local")
 @Configuration
 @EnableRedisRepositories(basePackages = "com.wildtigerrr.StoryOfCamelot.database.redis.schema")
-@Profile("!test")
 public class RedisConfig {
 
     @Bean

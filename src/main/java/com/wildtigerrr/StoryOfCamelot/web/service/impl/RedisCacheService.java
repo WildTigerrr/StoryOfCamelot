@@ -15,7 +15,7 @@ import java.util.Set;
 
 @Log4j2
 @Repository
-@Profile("!test")
+@Profile("!test & !local")
 public class RedisCacheService implements CacheProvider {
 
     private RedisTemplate<String, Object> redisTemplate;

@@ -1,5 +1,7 @@
-package com.wildtigerrr.StoryOfCamelot.web.service;
+package com.wildtigerrr.StoryOfCamelot.web.service.impl;
 
+import com.wildtigerrr.StoryOfCamelot.web.service.CacheProvider;
+import com.wildtigerrr.StoryOfCamelot.web.service.CacheType;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Repository;
 
@@ -7,12 +9,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Repository
-@Profile("test")
-public class MockCacheProvider implements CacheProvider {
+@Profile("test | local")
+public class LocalCacheProvider implements CacheProvider {
 
     private static Map<String, Map<String, Object>> cache;
 
-    public MockCacheProvider() {
+    public LocalCacheProvider() {
         cache = new HashMap<>();
     }
 
