@@ -1,6 +1,8 @@
 package com.wildtigerrr.StoryOfCamelot.database.jpa.schema;
 
 import com.wildtigerrr.StoryOfCamelot.bin.base.service.IdGenerator;
+import com.wildtigerrr.StoryOfCamelot.bin.enums.NameTranslation;
+import com.wildtigerrr.StoryOfCamelot.bin.translation.TranslationManager;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.interfaces.SimpleObject;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.enums.ItemStatus;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.enums.ObjectType;
@@ -53,6 +55,10 @@ public class BackpackItem extends SimpleObject {
     @Override
     public ObjectType type() {
         return ObjectType.BACKPACK_ITEM;
+    }
+
+    public String backpackInfo(TranslationManager translation) {
+        return translation.getMessage("player.backpack.item", backpack.getPlayer(), new Object[]{getItem().getName(backpack.getPlayer())});
     }
 
     @Override

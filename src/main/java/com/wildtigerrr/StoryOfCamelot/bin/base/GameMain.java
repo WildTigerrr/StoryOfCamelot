@@ -48,7 +48,6 @@ public class GameMain {
     private final GameTutorial tutorial;
     private final FileProcessing imageService;
     private final BackpackService backpackService;
-    private final BackpackItemService backpackItemService;
     private final ItemService itemService;
 
     @Autowired
@@ -59,7 +58,6 @@ public class GameMain {
             GameTutorial tutorial,
             FileProcessing imageService,
             BackpackService backpackService,
-            BackpackItemService backpackItemService,
             ItemService itemService
     ) {
         this.messages = messages;
@@ -68,7 +66,6 @@ public class GameMain {
         this.tutorial = tutorial;
         this.imageService = imageService;
         this.backpackService = backpackService;
-        this.backpackItemService = backpackItemService;
         this.itemService = itemService;
     }
 
@@ -180,8 +177,10 @@ public class GameMain {
 
     private void getBackpack(UpdateWrapper message) {
         Backpack backpack = backpackService.findByPlayerId(message.getPlayer().getId());
+        StringBuilder builder = new StringBuilder();
+        backpack.getItems().forEach(item -> builder.append(item.backpackInfo(translation)));
         messages.sendMessage(TextResponseMessage.builder()
-                .text(backpack.toString())
+                .text(builder.toString())
                 .targetId(message).build()
         );
     }
