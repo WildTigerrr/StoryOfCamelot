@@ -7,6 +7,8 @@ public enum Emoji {
     CIRCUS_TENT(EmojiParser.parseToUnicode(":circus_tent:")),
     BAT(EmojiParser.parseToUnicode("\uD83E\uDD87")),
     LIGHTNING(EmojiParser.parseToUnicode(":zap:")),
+    BACKPACK(EmojiParser.parseToUnicode(":school_satchel:")),
+    DAGGER(EmojiParser.parseToUnicode(":dagger:")),
 
     // SKILLS
     STRENGTH(EmojiParser.parseToUnicode(":muscle:")),
