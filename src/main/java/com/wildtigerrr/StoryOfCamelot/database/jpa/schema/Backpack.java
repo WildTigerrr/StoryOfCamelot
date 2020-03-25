@@ -2,6 +2,7 @@ package com.wildtigerrr.StoryOfCamelot.database.jpa.schema;
 
 import com.wildtigerrr.StoryOfCamelot.bin.base.service.IdGenerator;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.interfaces.SimpleObject;
+import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.enums.BackpackType;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.enums.ItemStatus;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.enums.ObjectType;
 import lombok.AccessLevel;
@@ -18,8 +19,6 @@ import java.util.List;
 @Getter @Setter
 public class Backpack extends SimpleObject {
 
-    // TODO Backpack - junction, BackpackItem as item
-
     @Id
     @SequenceGenerator(name = "backpack_seq", sequenceName = "backpack_seq", allocationSize = 10)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "backpack_seq")
@@ -33,17 +32,24 @@ public class Backpack extends SimpleObject {
     private String id;
     @ManyToOne
     private Player player;
+    private BackpackType type;
     @OneToMany(
             cascade = {CascadeType.ALL},
             mappedBy = "backpack"
     )
-    private List<BackpackItem> items = new ArrayList<>();;
+    private List<BackpackItem> items = new ArrayList<>();
 
     protected Backpack() {
     }
 
     public Backpack(Player player) {
         this.player = player;
+        this.type = BackpackType.MAIN;
+    }
+
+    public Backpack(Player player, BackpackType type) {
+        this.player = player;
+        this.type = type;
     }
 
     @Override

@@ -8,6 +8,7 @@ public interface BackpackService {
     Backpack create(Backpack backpack);
     void create(List<Backpack> backpacks);
     Backpack findByPlayerId(String playerId);
+    Backpack findMainByPlayerId(String playerId);
     void delete(String id);
     Backpack update(Backpack backpack);
     List<Backpack> getAll();
