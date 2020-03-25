@@ -178,6 +178,7 @@ public class GameMain {
     private void getBackpack(UpdateWrapper message) {
         Backpack backpack = backpackService.findByPlayerId(message.getPlayer().getId());
         StringBuilder builder = new StringBuilder();
+        builder.append(translation.getMessage("player.backpack.info", message));
         backpack.getItems().forEach(item -> builder.append(item.backpackInfo(translation)));
         messages.sendMessage(TextResponseMessage.builder()
                 .text(builder.toString())
