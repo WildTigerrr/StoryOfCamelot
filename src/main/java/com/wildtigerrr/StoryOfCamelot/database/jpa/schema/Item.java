@@ -1,6 +1,8 @@
 package com.wildtigerrr.StoryOfCamelot.database.jpa.schema;
 
 import com.wildtigerrr.StoryOfCamelot.bin.base.service.IdGenerator;
+import com.wildtigerrr.StoryOfCamelot.bin.enums.Language;
+import com.wildtigerrr.StoryOfCamelot.bin.enums.NameTranslation;
 import com.wildtigerrr.StoryOfCamelot.bin.enums.templates.ItemsTemplate;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.interfaces.SimpleObject;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.enums.ItemQuality;
@@ -10,6 +12,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.GenericGenerator;
+import org.jetbrains.annotations.NotNull;
 
 import javax.persistence.*;
 
@@ -29,6 +32,10 @@ public class Item extends SimpleObject {
             })
     @Setter(AccessLevel.NONE)
     private String id;
+    @Enumerated(EnumType.STRING)
+    private NameTranslation nameTranslation;
+    private String systemName;
+
     private Double value; // Defence, Damage, Speed etc
     private Integer durability;
     private Double price;
@@ -57,21 +64,37 @@ public class Item extends SimpleObject {
                 template.getPrice(),
                 template.getSubType(),
                 template.getQuality(),
+                template.getNameTranslation(),
+                template.name(),
                 template.getFileLink()
         );
     }
 
-    public Item(Double value, Integer durability, Double price, ItemSubType type, ItemQuality quality) {
-        this(value, durability, price, type, quality, null);
+    public Item(Double value, Integer durability, Double price, ItemSubType type, ItemQuality quality,
+                NameTranslation translation, String systemName
+    ) {
+        this(value, durability, price, type, quality, translation, systemName, null);
     }
 
-    public Item(Double value, Integer durability, Double price, ItemSubType type, ItemQuality quality, FileLink imageLink) {
+    public Item(Double value, Integer durability, Double price, ItemSubType type, ItemQuality quality,
+                NameTranslation translation, String systemName, FileLink imageLink
+    ) {
         this.value = value;
         this.durability = durability;
         this.price = price;
         this.type = type;
         this.quality = quality;
+        this.systemName = systemName;
+        this.nameTranslation = translation;
         this.imageLink = imageLink;
+    }
+
+    public String getName(Language lang) {
+        return nameTranslation.getName(lang);
+    }
+
+    public String getName(@NotNull Player player) {
+        return getName(player.getLanguage());
     }
 
     @Override

@@ -35,6 +35,13 @@ public enum NameTranslation {
             "mob.aggressive.super-flying-sword"
     ),
 
+    // ITEMS
+    ITEM_SWORD_COMMON(
+            "item.sword.common"
+    ),
+    ITEM_SWORD_UNCOMMON(
+            "item.sword.uncommon"
+    ),
 
     // BUTTONS
     BUTTON_MOVE(
