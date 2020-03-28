@@ -5,10 +5,14 @@ import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.FileLink;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.Item;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.enums.ItemQuality;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.enums.ItemSubType;
+import lombok.AccessLevel;
+import lombok.Getter;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
-public enum ItemsTemplate {
+@Getter
+public enum ItemTemplate {
     SWORD_COMMON(
             10.0, 100, 10.0, ItemSubType.SWORD, ItemQuality.COMMON,
             NameTranslation.ITEM_SWORD_COMMON, FileLinkTemplate.FLYING_SWORD
@@ -24,9 +28,10 @@ public enum ItemsTemplate {
     private final ItemSubType subType;
     private final ItemQuality quality;
     private final NameTranslation nameTranslation;
+    @Getter(AccessLevel.NONE)
     private final FileLinkTemplate imageLink;
 
-    ItemsTemplate(double value, int durability, double price, ItemSubType subType, ItemQuality quality, NameTranslation translation, FileLinkTemplate imageLink) {
+    ItemTemplate(double value, int durability, double price, ItemSubType subType, ItemQuality quality, NameTranslation translation, FileLinkTemplate imageLink) {
         this.value = value;
         this.durability = durability;
         this.price = price;
@@ -36,43 +41,17 @@ public enum ItemsTemplate {
         this.imageLink = imageLink;
     }
 
-    public double getValue() {
-        return value;
-    }
-
-    public int getDurability() {
-        return durability;
-    }
-
-    public double getPrice() {
-        return price;
-    }
-
-    public ItemSubType getSubType() {
-        return subType;
-    }
-
-    public ItemQuality getQuality() {
-        return quality;
-    }
-
-    public NameTranslation getNameTranslation() {
-        return nameTranslation;
-    }
-
     public FileLink getFileLink() {
         if (imageLink == null) return null;
         return imageLink.getFileLink();
     }
 
-    public static ArrayList<Item> getItems() {
-        return new ArrayList<>() {
-            {
-                for (ItemsTemplate template : ItemsTemplate.values()) {
-                    add(new Item(template));
-                }
+    public static HashMap<String, Item> getItems() {
+        return new HashMap<>() {{
+            for (ItemTemplate template : ItemTemplate.values()) {
+                put(template.name(), new Item(template));
             }
-        };
+        }};
     }
 
 }

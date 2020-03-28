@@ -3,7 +3,7 @@ package com.wildtigerrr.StoryOfCamelot.database.jpa.schema;
 import com.wildtigerrr.StoryOfCamelot.bin.base.service.IdGenerator;
 import com.wildtigerrr.StoryOfCamelot.bin.enums.Language;
 import com.wildtigerrr.StoryOfCamelot.bin.enums.NameTranslation;
-import com.wildtigerrr.StoryOfCamelot.bin.enums.templates.ItemsTemplate;
+import com.wildtigerrr.StoryOfCamelot.bin.enums.templates.ItemTemplate;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.interfaces.SimpleObject;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.enums.ItemQuality;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.enums.ItemSubType;
@@ -45,7 +45,7 @@ public class Item extends SimpleObject {
     private ItemSubType type;
     @Enumerated(EnumType.STRING)
     private ItemQuality quality;
-    @ManyToOne(optional = true)
+    @ManyToOne
     @JoinColumn(name = "filelink_id")
     private FileLink imageLink;
 
@@ -57,7 +57,7 @@ public class Item extends SimpleObject {
     protected Item() {
     }
 
-    public Item(ItemsTemplate template) {
+    public Item(ItemTemplate template) {
         this(
                 template.getValue(),
                 template.getDurability(),

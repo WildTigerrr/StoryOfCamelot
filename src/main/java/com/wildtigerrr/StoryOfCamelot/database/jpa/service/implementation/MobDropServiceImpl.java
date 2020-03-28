@@ -6,7 +6,6 @@ import com.wildtigerrr.StoryOfCamelot.database.jpa.service.template.MobDropServi
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -35,7 +34,7 @@ public class MobDropServiceImpl implements MobDropService {
     }
 
     @Override
-    public void create(ArrayList<MobDrop> mobDrops) {
+    public void create(List<MobDrop> mobDrops) {
         mobDropDao.saveAll(mobDrops);
     }
 

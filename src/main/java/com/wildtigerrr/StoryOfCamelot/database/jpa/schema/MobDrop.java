@@ -1,6 +1,7 @@
 package com.wildtigerrr.StoryOfCamelot.database.jpa.schema;
 
 import com.wildtigerrr.StoryOfCamelot.bin.base.service.IdGenerator;
+import com.wildtigerrr.StoryOfCamelot.bin.enums.templates.DropTemplate;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.interfaces.SimpleObject;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.enums.ObjectType;
 import lombok.AccessLevel;
@@ -28,11 +29,11 @@ public class MobDrop extends SimpleObject {
     @Setter(AccessLevel.NONE)
     private String id;
     @ManyToOne(optional = false)
-    @JoinColumn(name = "item_id")
-    private Item item;
-    @ManyToOne(optional = false)
     @JoinColumn(name = "mob_id")
     private Mob mob;
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "item_id")
+    private Item item;
 
     @Override
     public ObjectType type() {
@@ -42,9 +43,9 @@ public class MobDrop extends SimpleObject {
     protected MobDrop() {
     }
 
-    public MobDrop(@NotNull Item item, @NotNull Mob mob) {
-        this.item = item;
+    public MobDrop(@NotNull Mob mob, @NotNull Item item) {
         this.mob = mob;
+        this.item = item;
     }
 
 }

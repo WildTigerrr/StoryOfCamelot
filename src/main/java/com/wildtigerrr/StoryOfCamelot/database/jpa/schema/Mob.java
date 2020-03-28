@@ -53,8 +53,8 @@ public class Mob extends SimpleObject implements Fighter {
             cascade = {CascadeType.ALL},
             mappedBy = "mob"
     )
-    private List<MobDrop> possibleDrop = new ArrayList<>();
-    @ManyToOne(optional = true)
+    private List<MobDrop> drop = new ArrayList<>();
+    @ManyToOne
     @JoinColumn(name = "filelink_id")
     private FileLink imageLink;
 
@@ -143,12 +143,12 @@ public class Mob extends SimpleObject implements Fighter {
     }
 
     public Mob addPossibleDrop(MobDrop possibleDrop) {
-        this.possibleDrop.add(possibleDrop);
+        this.drop.add(possibleDrop);
         return this;
     }
 
     public void removePossibleDrop(MobDrop possibleDrop) {
-        this.possibleDrop.remove(possibleDrop);
+        this.drop.remove(possibleDrop);
     }
 
 }
