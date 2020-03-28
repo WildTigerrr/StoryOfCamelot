@@ -7,6 +7,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.GenericGenerator;
+import org.jetbrains.annotations.NotNull;
 
 import javax.persistence.*;
 
@@ -26,10 +27,10 @@ public class LocationPossible extends SimpleObject {
             })
     @Setter(AccessLevel.NONE)
     private String id;
-    @ManyToOne
+    @ManyToOne(optional = false)
     @JoinColumn(name = "mob_id")
     private Mob mob;
-    @ManyToOne
+    @ManyToOne(optional = false)
     @JoinColumn(name = "location_id")
     private Location location;
 
@@ -41,7 +42,7 @@ public class LocationPossible extends SimpleObject {
     protected LocationPossible() {
     }
 
-    public LocationPossible(Mob mob, Location location) {
+    public LocationPossible(@NotNull Mob mob, @NotNull Location location) {
         this.mob = mob;
         this.location = location;
     }

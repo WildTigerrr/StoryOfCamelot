@@ -7,6 +7,6 @@ import org.springframework.data.repository.CrudRepository;
 import java.util.Optional;
 
 public interface BackpackDao extends CrudRepository<Backpack, String> {
-    Optional<Backpack> findByPlayer_Id(String playerId);
+    Optional<Backpack> findByPlayerId(String playerId);
     Optional<Backpack> findByPlayerIdAndType(String playerId, BackpackType type);
 }

@@ -1,7 +1,6 @@
 package com.wildtigerrr.StoryOfCamelot.database.jpa.schema;
 
 import com.wildtigerrr.StoryOfCamelot.bin.base.service.IdGenerator;
-import com.wildtigerrr.StoryOfCamelot.bin.enums.NameTranslation;
 import com.wildtigerrr.StoryOfCamelot.bin.translation.TranslationManager;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.interfaces.SimpleObject;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.enums.ItemStatus;
@@ -10,6 +9,8 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.GenericGenerator;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import javax.persistence.*;
 
@@ -45,7 +46,7 @@ public class BackpackItem extends SimpleObject {
     protected BackpackItem() {
     }
 
-    public BackpackItem(Backpack backpack, Item item, ItemStatus status) {
+    public BackpackItem(@NotNull Backpack backpack, @NotNull Item item, @Nullable ItemStatus status) {
         this.backpack = backpack;
         this.item = item;
         currentDurability = item.getDurability();

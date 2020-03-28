@@ -9,7 +9,6 @@ import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.Backpack;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.BackpackItem;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.Item;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.Player;
-import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.enums.BackpackType;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.enums.ItemStatus;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.enums.PlayerStatus;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.enums.PlayerStatusExtended;
@@ -164,7 +163,7 @@ public class GameMain {
     }
 
     private void testItem(UpdateWrapper message) {
-        Backpack backpack = new Backpack(message.getPlayer(), BackpackType.SECONDARY);
+        Backpack backpack = new Backpack(message.getPlayer());
         List<Item> items = itemService.getAll();
         for (Item item : items) {
             backpack.addBackpackItem(new BackpackItem(backpack, item, ItemStatus.IN_STACK));

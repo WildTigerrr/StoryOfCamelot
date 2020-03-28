@@ -4,14 +4,16 @@ import com.wildtigerrr.StoryOfCamelot.bin.base.service.IdGenerator;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.interfaces.SimpleObject;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.enums.ObjectType;
 import lombok.AccessLevel;
+import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.GenericGenerator;
+import org.jetbrains.annotations.NotNull;
 
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.SequenceGenerator;
+import javax.persistence.*;
 
+@Entity
+@Table(name = "mob_drop")
+@Getter
 public class MobDrop extends SimpleObject {
 
     @Id
@@ -25,10 +27,24 @@ public class MobDrop extends SimpleObject {
             })
     @Setter(AccessLevel.NONE)
     private String id;
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "item_id")
+    private Item item;
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "mob_id")
+    private Mob mob;
 
     @Override
     public ObjectType type() {
         return ObjectType.MOB_DROP;
+    }
+
+    protected MobDrop() {
+    }
+
+    public MobDrop(@NotNull Item item, @NotNull Mob mob) {
+        this.item = item;
+        this.mob = mob;
     }
 
 }

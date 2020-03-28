@@ -3,7 +3,6 @@ package com.wildtigerrr.StoryOfCamelot.database.jpa.schema;
 import com.wildtigerrr.StoryOfCamelot.bin.base.service.IdGenerator;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.interfaces.SimpleObject;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.enums.BackpackType;
-import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.enums.ItemStatus;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.enums.ObjectType;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -57,9 +56,8 @@ public class Backpack extends SimpleObject {
         return ObjectType.BACKPACK;
     }
 
-    public Backpack addBackpackItem(BackpackItem item) {
+    public void addBackpackItem(BackpackItem item) {
         items.add(item);
-        return this;
     }
 
     public void removeBackpackItem(BackpackItem item) {

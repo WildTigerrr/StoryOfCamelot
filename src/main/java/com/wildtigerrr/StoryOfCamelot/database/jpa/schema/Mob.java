@@ -49,6 +49,11 @@ public class Mob extends SimpleObject implements Fighter {
             mappedBy = "mob"
     )
     private List<LocationPossible> possibleLocations = new ArrayList<>();
+    @OneToMany(
+            cascade = {CascadeType.ALL},
+            mappedBy = "mob"
+    )
+    private List<MobDrop> possibleDrop = new ArrayList<>();
     @ManyToOne(optional = true)
     @JoinColumn(name = "filelink_id")
     private FileLink imageLink;
@@ -135,6 +140,15 @@ public class Mob extends SimpleObject implements Fighter {
 
     public void removePossibleLocation(LocationPossible possibleLocation) {
         this.possibleLocations.remove(possibleLocation);
+    }
+
+    public Mob addPossibleDrop(MobDrop possibleDrop) {
+        this.possibleDrop.add(possibleDrop);
+        return this;
+    }
+
+    public void removePossibleDrop(MobDrop possibleDrop) {
+        this.possibleDrop.remove(possibleDrop);
     }
 
 }

@@ -39,7 +39,7 @@ public class BackpackServiceImpl implements BackpackService {
 
     @Override
     public Backpack findByPlayerId(String playerId) {
-        Optional<Backpack> obj = backpackDao.findByPlayer_Id(playerId);
+        Optional<Backpack> obj = backpackDao.findByPlayerId(playerId);
         return obj.orElse(null);
     }
 
