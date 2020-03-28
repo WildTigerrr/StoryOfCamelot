@@ -45,6 +45,11 @@ public class MobDropServiceImpl implements MobDropService {
     }
 
     @Override
+    public List<MobDrop> findByMobId(String mobId) {
+        return mobDropDao.findByMobId(mobId);
+    }
+
+    @Override
     public void delete(String id) {
         mobDropDao.findById(id).ifPresent(mobDropDao::delete);
     }

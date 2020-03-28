@@ -3,11 +3,14 @@ package com.wildtigerrr.StoryOfCamelot.database.jpa.schema;
 import com.wildtigerrr.StoryOfCamelot.bin.base.service.IdGenerator;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.interfaces.SimpleObject;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.enums.BackpackType;
+import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.enums.ItemStatus;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.enums.ObjectType;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.GenericGenerator;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -54,6 +57,14 @@ public class Backpack extends SimpleObject {
     @Override
     public ObjectType type() {
         return ObjectType.BACKPACK;
+    }
+
+    public void put(@NotNull Item item, @Nullable ItemStatus status) {
+        addBackpackItem(new BackpackItem(this, item, status));
+    }
+
+    public void put(@NotNull Item item) {
+        addBackpackItem(new BackpackItem(this, item, null));
     }
 
     public void addBackpackItem(BackpackItem item) {

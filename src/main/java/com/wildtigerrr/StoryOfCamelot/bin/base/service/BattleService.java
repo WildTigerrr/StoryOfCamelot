@@ -1,7 +1,14 @@
 package com.wildtigerrr.StoryOfCamelot.bin.base.service;
 
 import com.wildtigerrr.StoryOfCamelot.bin.base.BattleLog;
+import com.wildtigerrr.StoryOfCamelot.bin.enums.EnemyType;
 import com.wildtigerrr.StoryOfCamelot.bin.translation.TranslationManager;
+import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.Backpack;
+import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.BackpackItem;
+import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.MobDrop;
+import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.enums.ItemStatus;
+import com.wildtigerrr.StoryOfCamelot.database.jpa.service.template.BackpackService;
+import com.wildtigerrr.StoryOfCamelot.database.jpa.service.template.MobDropService;
 import com.wildtigerrr.StoryOfCamelot.database.redis.schema.PlayerState;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.Mob;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.service.template.MobService;
@@ -13,6 +20,8 @@ import com.wildtigerrr.StoryOfCamelot.web.service.message.template.TextResponseM
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class BattleService {
 
@@ -21,14 +30,18 @@ public class BattleService {
     private final MobService mobService;
     private final BattleHandler battleHandler;
     private final CacheProvider cacheService;
+    private final MobDropService dropService;
+    private final BackpackService backpackService;
 
     @Autowired
-    public BattleService(ResponseManager messages, TranslationManager translation, MobService mobService, BattleHandler battleHandler, CacheProvider cacheProvider) {
+    public BattleService(ResponseManager messages, TranslationManager translation, MobService mobService, BattleHandler battleHandler, CacheProvider cacheProvider, MobDropService dropService, BackpackService backpackService) {
         this.messages = messages;
         this.translation = translation;
         this.mobService = mobService;
         this.battleHandler = battleHandler;
         this.cacheService = cacheProvider;
+        this.dropService = dropService;
+        this.backpackService = backpackService;
     }
 
     public BattleLog fight(UpdateWrapper update) {
@@ -46,10 +59,21 @@ public class BattleService {
         state.setLastBattle(battleLog);
         cacheService.add(CacheType.PLAYER_STATE, state.getId(), state);
 
+        if (battleLog.isWin() && battleLog.getEnemyType() == EnemyType.MOB) applyDrop(battleLog);
+
         return battleLog;
 
         // TODO Allow actions by statuses (class to compare)
-        // TODO New status (new table?) with current situation
+    }
+
+    private void applyDrop(BattleLog battleLog) {
+        List<MobDrop> dropMap = dropService.findByMobId(battleLog.getEnemyId());
+        if (dropMap == null || dropMap.isEmpty()) return;
+        Backpack backpack = backpackService.findMainByPlayerId(battleLog.getAttackerId());
+        for (MobDrop drop : dropMap) {
+            backpack.put(drop.getItem());
+        }
+        backpackService.update(backpack);
     }
 
 }

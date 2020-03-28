@@ -8,6 +8,7 @@ public interface MobDropService {
     MobDrop create(MobDrop mobDrop);
     void create(List<MobDrop> mobDrops);
     MobDrop findById(String id);
+    List<MobDrop> findByMobId(String mobId);
     void delete(String id);
     MobDrop update(MobDrop mobDrop);
     List<MobDrop> getAll();
