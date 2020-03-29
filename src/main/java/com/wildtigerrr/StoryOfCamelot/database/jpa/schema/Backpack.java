@@ -67,6 +67,15 @@ public class Backpack extends SimpleObject {
         addBackpackItem(new BackpackItem(this, item, null));
     }
 
+    public void put(@NotNull BackpackItem item) {
+        item.setBackpack(this);
+        addBackpackItem(item);
+    }
+
+    public void put(@NotNull List<BackpackItem> items) {
+        items.forEach(this::put);
+    }
+
     public void addBackpackItem(BackpackItem item) {
         items.add(item);
     }

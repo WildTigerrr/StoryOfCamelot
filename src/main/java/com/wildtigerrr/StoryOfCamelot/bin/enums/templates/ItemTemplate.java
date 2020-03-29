@@ -8,22 +8,21 @@ import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.enums.ItemSubType;
 import lombok.AccessLevel;
 import lombok.Getter;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
 @Getter
 public enum ItemTemplate {
     SWORD_COMMON(
-            10.0, 100, 10.0, ItemSubType.SWORD, ItemQuality.COMMON,
+            10.0, 100.0, 10.0, ItemSubType.SWORD, ItemQuality.COMMON,
             NameTranslation.ITEM_SWORD_COMMON, FileLinkTemplate.FLYING_SWORD
     ),
     SWORD_UNCOMMON(
-            15.0, 150, 25.0, ItemSubType.SWORD, ItemQuality.UNCOMMON,
+            15.0, 150.0, 25.0, ItemSubType.SWORD, ItemQuality.UNCOMMON,
             NameTranslation.ITEM_SWORD_UNCOMMON, FileLinkTemplate.FLYING_SWORD
     );
 
     private final double value;
-    private final int durability;
+    private final double durability;
     private final double price;
     private final ItemSubType subType;
     private final ItemQuality quality;
@@ -31,7 +30,7 @@ public enum ItemTemplate {
     @Getter(AccessLevel.NONE)
     private final FileLinkTemplate imageLink;
 
-    ItemTemplate(double value, int durability, double price, ItemSubType subType, ItemQuality quality, NameTranslation translation, FileLinkTemplate imageLink) {
+    ItemTemplate(double value, double durability, double price, ItemSubType subType, ItemQuality quality, NameTranslation translation, FileLinkTemplate imageLink) {
         this.value = value;
         this.durability = durability;
         this.price = price;

@@ -37,7 +37,7 @@ public class BackpackItem extends SimpleObject {
     @JoinColumn(name = "item_id")
     private Item item;
 
-    private Integer currentDurability;
+    private Double currentDurability;
     private Integer quantity;
     @Enumerated(EnumType.STRING)
     private ItemStatus status;
@@ -46,11 +46,32 @@ public class BackpackItem extends SimpleObject {
     protected BackpackItem() {
     }
 
-    public BackpackItem(@NotNull Backpack backpack, @NotNull Item item, @Nullable ItemStatus status) {
+    public BackpackItem(@Nullable Backpack backpack, @NotNull Item item, @Nullable ItemStatus status) {
         this.backpack = backpack;
         this.item = item;
         currentDurability = item.getDurability();
         this.status = status;
+    }
+
+    public BackpackItem(@NotNull Item item, @Nullable ItemStatus status) {
+        this.item = item;
+        currentDurability = item.getDurability();
+        this.status = status;
+    }
+
+    public BackpackItem(@NotNull Item item) {
+        this.item = item;
+        currentDurability = item.getDurability();
+    }
+
+    public BackpackItem setCurrentDurability(Double currentDurability) {
+        this.currentDurability = currentDurability;
+        return this;
+    }
+
+    public BackpackItem setQuantity(Integer quantity) {
+        this.quantity = quantity;
+        return this;
     }
 
     @Override

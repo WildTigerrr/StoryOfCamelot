@@ -1,6 +1,7 @@
 package com.wildtigerrr.StoryOfCamelot.database.jpa.schema;
 
 import com.wildtigerrr.StoryOfCamelot.bin.base.service.IdGenerator;
+import com.wildtigerrr.StoryOfCamelot.bin.enums.RandomDistribution;
 import com.wildtigerrr.StoryOfCamelot.bin.enums.templates.DropTemplate;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.interfaces.SimpleObject;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.enums.ObjectType;
@@ -34,6 +35,14 @@ public class MobDrop extends SimpleObject {
     @ManyToOne(optional = false)
     @JoinColumn(name = "item_id")
     private Item item;
+    @Enumerated(EnumType.STRING)
+    private RandomDistribution quantityRandom;
+    private int quantityMin;
+    private int quantityLimit;
+
+    private RandomDistribution durabilityRandom;
+    private double durabilityMin;
+    private double durabilityMax;
 
     @Override
     public ObjectType type() {
@@ -46,6 +55,20 @@ public class MobDrop extends SimpleObject {
     public MobDrop(@NotNull Mob mob, @NotNull Item item) {
         this.mob = mob;
         this.item = item;
+    }
+
+    public MobDrop setQuantityRandom(RandomDistribution distribution, int min, int max) {
+        quantityRandom = distribution;
+        quantityMin = min;
+        quantityLimit = max;
+        return this;
+    }
+
+    public MobDrop setDurabilityRandom(RandomDistribution distribution, double min, double max) {
+        durabilityRandom = distribution;
+        durabilityMin = min;
+        durabilityMax = max;
+        return this;
     }
 
 }

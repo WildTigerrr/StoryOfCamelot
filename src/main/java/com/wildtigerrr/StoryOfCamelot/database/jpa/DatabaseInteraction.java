@@ -58,12 +58,14 @@ public class DatabaseInteraction {
         ArrayList<FileLink> initialFileLinks = FileLinkTemplate.getFileLinks();
         fileLinkService.create(initialFileLinks);
     }
-    
+
     private void insertDropMap(HashMap<String, Mob> mobs, HashMap<String, Item> items) {
         log.debug("Inserting Drop map");
         List<MobDrop> drops = new ArrayList<>();
-        for (DropTemplate dropTemplate : DropTemplate.values()) {
-            drops.add(new MobDrop(mobs.get(dropTemplate.getMobName()), items.get(dropTemplate.getItemName())));
+        for (DropTemplate template : DropTemplate.values()) {
+            drops.add(new MobDrop(mobs.get(template.getMobName()), items.get(template.getItemName()))
+                    .setQuantityRandom(template.getQuantityRandom(), template.getQuantityMin(), template.getQuantityLimit())
+                    .setDurabilityRandom(template.getDurabilityRandom(), template.getDurabilityMin(), template.getDurabilityMax()));
         }
         mobDropService.create(drops);
     }

@@ -37,7 +37,7 @@ public class Item extends SimpleObject {
     private String systemName;
 
     private Double value; // Defence, Damage, Speed etc
-    private Integer durability;
+    private Double durability;
     private Double price;
     private Boolean isStackable;
 
@@ -70,13 +70,13 @@ public class Item extends SimpleObject {
         );
     }
 
-    public Item(Double value, Integer durability, Double price, ItemSubType type, ItemQuality quality,
+    public Item(Double value, Double durability, Double price, ItemSubType type, ItemQuality quality,
                 NameTranslation translation, String systemName
     ) {
         this(value, durability, price, type, quality, translation, systemName, null);
     }
 
-    public Item(Double value, Integer durability, Double price, ItemSubType type, ItemQuality quality,
+    public Item(Double value, Double durability, Double price, ItemSubType type, ItemQuality quality,
                 NameTranslation translation, String systemName, FileLink imageLink
     ) {
         this.value = value;
