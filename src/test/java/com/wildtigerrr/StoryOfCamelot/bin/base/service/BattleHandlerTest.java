@@ -4,22 +4,16 @@ import com.wildtigerrr.StoryOfCamelot.ServiceBaseTest;
 import com.wildtigerrr.StoryOfCamelot.bin.base.BattleLog;
 import com.wildtigerrr.StoryOfCamelot.bin.enums.Language;
 import com.wildtigerrr.StoryOfCamelot.bin.enums.templates.LocationTemplate;
-import com.wildtigerrr.StoryOfCamelot.bin.enums.templates.MobTemplate;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.interfaces.Fighter;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.Location;
-import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.Mob;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.Player;
+import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ActiveProfiles;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Random;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+@Log4j2
 //@ActiveProfiles("local")
 public class BattleHandlerTest extends ServiceBaseTest {
 
@@ -41,22 +35,6 @@ public class BattleHandlerTest extends ServiceBaseTest {
         assertTrue(battleLog.isWin());
 
         battleLog.getLog().forEach(System.out::println);
-    }
-
-    @Test
-    void whenTest() {
-        Fighter fighter = new Mob(MobTemplate.FLYING_SWORD);
-        System.out.println(fighter.getClass());
-
-        Random random = new Random();
-        List<Integer> numbers = new ArrayList<>();
-        int value;
-        for (int i = 0; i < 200; i++) {
-            value = random.nextInt(100);
-            numbers.add(value + 1);
-            System.out.println(value > 89);
-        }
-        System.out.println(Arrays.toString(numbers.stream().sorted().toArray()));
     }
 
 }
