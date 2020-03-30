@@ -10,7 +10,7 @@ public enum DropTemplate {
             RandomDistribution.EXPONENTIAL_OFTEN, 0, 1,
             RandomDistribution.GAUSSIAN, 50, 100),
     FLYING_SWORD_STICK(MobTemplate.FLYING_SWORD, ItemTemplate.STICK,
-            RandomDistribution.EXPONENTIAL_SUPER_OFTEN, 0, 20),
+            RandomDistribution.EXPONENTIAL_VERY_OFTEN, 0, 20),
     FLYING_SWORD_STONE(MobTemplate.FLYING_SWORD, ItemTemplate.STONE,
             RandomDistribution.EXPONENTIAL_OFTEN, 0, 4),
 
