@@ -75,7 +75,7 @@ public class BattleService {
         if (newItems.isEmpty()) return;
         StringBuilder builder = new StringBuilder();
         builder.append("Добыча:\n\n");
-        newItems.forEach(item -> builder.append(item.backpackInfo(translation)));
+        newItems.forEach(item -> builder.append(item.backpackInfo(translation, backpack.getPlayer().getLanguage())));
         messages.sendMessage(TextResponseMessage.builder()
                 .targetId(backpack.getPlayer())
                 .text(builder.toString()).build()

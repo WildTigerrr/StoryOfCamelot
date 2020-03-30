@@ -1,6 +1,7 @@
 package com.wildtigerrr.StoryOfCamelot.database.jpa.schema;
 
 import com.wildtigerrr.StoryOfCamelot.bin.base.service.IdGenerator;
+import com.wildtigerrr.StoryOfCamelot.bin.enums.Language;
 import com.wildtigerrr.StoryOfCamelot.bin.service.NumberUtils;
 import com.wildtigerrr.StoryOfCamelot.bin.translation.TranslationManager;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.interfaces.SimpleObject;
@@ -84,6 +85,14 @@ public class BackpackItem extends SimpleObject {
         String template = getMaximumDurability() > 0 ? "player.backpack.item-durability" : "player.backpack.item-quantity";
         double value = getMaximumDurability() > 0 ? getDurabilityPercent() : getQuantity();
         return translation.getMessage(template, backpack.getPlayer(), new Object[]{
+                getItem().getName(backpack.getPlayer()), value
+        });
+    }
+
+    public String backpackInfo(TranslationManager translation, Language lang) {
+        String template = getMaximumDurability() > 0 ? "player.backpack.item-durability" : "player.backpack.item-quantity";
+        double value = getMaximumDurability() > 0 ? getDurabilityPercent() : getQuantity();
+        return translation.getMessage(template, lang, new Object[]{
                 getItem().getName(backpack.getPlayer()), value
         });
     }
