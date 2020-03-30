@@ -14,11 +14,19 @@ import java.util.HashMap;
 public enum ItemTemplate {
     SWORD_COMMON(
             10.0, 100.0, 10.0, ItemSubType.SWORD, ItemQuality.COMMON,
-            NameTranslation.ITEM_SWORD_COMMON, FileLinkTemplate.FLYING_SWORD
+            NameTranslation.ITEM_WEAPON_SWORD_COMMON, FileLinkTemplate.FLYING_SWORD
     ),
     SWORD_UNCOMMON(
             15.0, 150.0, 25.0, ItemSubType.SWORD, ItemQuality.UNCOMMON,
-            NameTranslation.ITEM_SWORD_UNCOMMON, FileLinkTemplate.FLYING_SWORD
+            NameTranslation.ITEM_WEAPON_SWORD_UNCOMMON, FileLinkTemplate.FLYING_SWORD
+    ),
+    STICK(
+            1.0, 0, 1.0, ItemSubType.CRAFTING, ItemQuality.COMMON,
+            NameTranslation.ITEM_MATERIAL_STICK, null
+    ),
+    STONE(
+            3.0, 0, 1.0, ItemSubType.CRAFTING, ItemQuality.COMMON,
+            NameTranslation.ITEM_MATERIAL_STONE, null
     );
 
     private final double value;

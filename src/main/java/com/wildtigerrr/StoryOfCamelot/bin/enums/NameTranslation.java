@@ -36,11 +36,17 @@ public enum NameTranslation {
     ),
 
     // ITEMS
-    ITEM_SWORD_COMMON(
-            "item.sword.common"
+    ITEM_WEAPON_SWORD_COMMON(
+            "item.weapon.sword.common"
     ),
-    ITEM_SWORD_UNCOMMON(
-            "item.sword.uncommon"
+    ITEM_WEAPON_SWORD_UNCOMMON(
+            "item.weapon.sword.uncommon"
+    ),
+    ITEM_MATERIAL_STICK(
+            "item.material.stick"
+    ),
+    ITEM_MATERIAL_STONE(
+            "item.material.stone"
     ),
 
     // BUTTONS
