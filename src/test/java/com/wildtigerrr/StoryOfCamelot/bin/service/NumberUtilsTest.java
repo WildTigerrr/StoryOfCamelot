@@ -37,4 +37,14 @@ class NumberUtilsTest extends ServiceBaseTest {
         assertFalse(NumberUtils.betweenLeftIncl(2, 0, 2));
         assertFalse(NumberUtils.betweenLeftIncl(-1, 0, 2));
     }
+
+    @Test
+    void whenRoundShouldHaveTwoDecimalPointsMaxTest() {
+        assertEquals(5.11, NumberUtils.round(5.111));
+        assertEquals(5.12, NumberUtils.round(5.119));
+        assertEquals(0, NumberUtils.round(0));
+        assertEquals(0, NumberUtils.round(0.001));
+        assertEquals(0.01, NumberUtils.round(0.005));
+    }
+
 }

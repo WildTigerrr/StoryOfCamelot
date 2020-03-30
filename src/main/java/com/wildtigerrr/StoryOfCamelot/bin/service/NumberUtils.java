@@ -50,4 +50,14 @@ public class NumberUtils {
         return value >= leftBound && value < rightBound;
     }
 
+    /**
+     * Round double with 2 decimal places
+     *
+     * @param value - double to round
+     * @return double
+     */
+    public static double round(double value) {
+        return Math.round(value * 100) / 100.0;
+    }
+
 }
