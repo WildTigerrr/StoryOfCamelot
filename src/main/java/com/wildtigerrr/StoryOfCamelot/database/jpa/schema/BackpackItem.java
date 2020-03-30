@@ -93,7 +93,7 @@ public class BackpackItem extends SimpleObject {
         String template = getMaximumDurability() > 0 ? "player.backpack.item-durability" : "player.backpack.item-quantity";
         double value = getMaximumDurability() > 0 ? getDurabilityPercent() : getQuantity();
         return translation.getMessage(template, lang, new Object[]{
-                getItem().getName(backpack.getPlayer()), value
+                getItem().getName(lang), value
         });
     }
 
