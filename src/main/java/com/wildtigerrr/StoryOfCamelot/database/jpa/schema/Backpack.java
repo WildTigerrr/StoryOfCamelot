@@ -15,6 +15,7 @@ import org.jetbrains.annotations.Nullable;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Entity
 @Table(name = "backpack")
@@ -68,6 +69,14 @@ public class Backpack extends SimpleObject {
     }
 
     public void put(@NotNull BackpackItem item) {
+        if (item.getItem().getIsStackable()) {
+            Optional<BackpackItem> existing = getItems().stream().filter(exItem -> item.getItem().getId().equals(exItem.getItem().getId())).findFirst();
+            if (existing.isPresent()) {
+                BackpackItem existingItem = existing.get();
+                existingItem.setQuantity(existingItem.getQuantity() + item.getQuantity());
+                return;
+            }
+        }
         item.setBackpack(this);
         addBackpackItem(item);
     }
