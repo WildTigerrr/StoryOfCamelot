@@ -72,6 +72,14 @@ public class BattleService {
         if (dropMap == null || dropMap.isEmpty()) return;
         Backpack backpack = backpackService.findMainByPlayerId(battleLog.getAttackerId());
         List<BackpackItem> newItems = dropCalculator.calculate(dropMap);
+        if (newItems.isEmpty()) return;
+        StringBuilder builder = new StringBuilder();
+        builder.append("Добыча:\n\n");
+        backpack.getItems().forEach(item -> builder.append(item.backpackInfo(translation)));
+        messages.sendMessage(TextResponseMessage.builder()
+                .targetId(backpack.getPlayer())
+                .text(builder.toString()).build()
+        );
         backpack.put(newItems);
         backpackService.update(backpack);
     }
