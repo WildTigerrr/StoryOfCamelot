@@ -69,14 +69,7 @@ public class Backpack extends SimpleObject {
     }
 
     public void put(@NotNull BackpackItem item) {
-        if (item.getItem().getIsStackable()) {
-            Optional<BackpackItem> existing = getItems().stream().filter(exItem -> item.getItem().getId().equals(exItem.getItem().getId())).findFirst();
-            if (existing.isPresent()) {
-                BackpackItem existingItem = existing.get();
-                existingItem.setQuantity(existingItem.getQuantity() + item.getQuantity());
-                return;
-            }
-        }
+        if (addQuantity(item)) return;
         item.setBackpack(this);
         addBackpackItem(item);
     }
@@ -91,6 +84,18 @@ public class Backpack extends SimpleObject {
 
     public void removeBackpackItem(BackpackItem item) {
         items.remove(item);
+    }
+
+    private boolean addQuantity(BackpackItem item) {
+        if (item.getItem().getIsStackable()) {
+            Optional<BackpackItem> existing = getItems().stream().filter(exItem -> item.getItem().getId().equals(exItem.getItem().getId())).findFirst();
+            if (existing.isPresent()) {
+                BackpackItem existingItem = existing.get();
+                existingItem.setQuantity(existingItem.getQuantity() + item.getQuantity());
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override

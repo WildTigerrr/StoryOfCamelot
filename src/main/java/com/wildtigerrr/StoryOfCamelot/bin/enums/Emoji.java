@@ -9,6 +9,8 @@ public enum Emoji {
     LIGHTNING(EmojiParser.parseToUnicode(":zap:")),
     BACKPACK(EmojiParser.parseToUnicode(":school_satchel:")),
     DAGGER(EmojiParser.parseToUnicode(":dagger:")),
+    SAPLING(EmojiParser.parseToUnicode(":seedling:")),
+    MOUNTAIN(EmojiParser.parseToUnicode(":mountain:")),
 
     // SKILLS
     STRENGTH(EmojiParser.parseToUnicode(":muscle:")),
