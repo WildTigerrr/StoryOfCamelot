@@ -19,13 +19,12 @@ public class DropCalculator {
         double value;
         for (MobDrop drop : dropMap) {
             quantity = (int) of(drop.getQuantityRandom(), drop.getQuantityMin(), drop.getQuantityLimit()).drop();
-            log.info(quantity);
             if (quantity <= 0) continue;
-            if (drop.getItem().getDurability() != null) {
+            if (!drop.getItem().getIsStackable()) {
                 value = of(drop.getDurabilityRandom(), drop.getDurabilityMin(), drop.getDurabilityMax()).drop();
-                items.add(new BackpackItem(drop.getItem(), null).setCurrentDurability(value));
+                items.add(new BackpackItem(drop.getItem()).setCurrentDurability(value));
             } else {
-                items.add(new BackpackItem(drop.getItem(), null).setQuantity(quantity));
+                items.add(new BackpackItem(drop.getItem()).setQuantity(quantity));
             }
         }
         return items;
