@@ -89,7 +89,7 @@ public class BackpackItem extends SimpleObject {
     }
 
     private double getDurabilityPercent() {
-        return NumberUtils.round(getCurrentDurability() / getMaximumDurability());
+        return NumberUtils.round(getCurrentDurability() / getMaximumDurability() * 100);
     }
 
     @Override
