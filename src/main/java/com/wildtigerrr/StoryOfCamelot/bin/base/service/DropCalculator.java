@@ -3,11 +3,13 @@ package com.wildtigerrr.StoryOfCamelot.bin.base.service;
 import com.wildtigerrr.StoryOfCamelot.bin.enums.RandomDistribution;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.BackpackItem;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.MobDrop;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Log4j2
 @Service
 public class DropCalculator {
 
@@ -17,6 +19,7 @@ public class DropCalculator {
         double value;
         for (MobDrop drop : dropMap) {
             quantity = (int) of(drop.getQuantityRandom(), drop.getQuantityMin(), drop.getQuantityLimit()).drop();
+            log.info(quantity);
             if (quantity <= 0) continue;
             if (drop.getItem().getDurability() != null) {
                 value = of(drop.getDurabilityRandom(), drop.getDurabilityMin(), drop.getDurabilityMax()).drop();
@@ -41,7 +44,7 @@ public class DropCalculator {
             if (distributionType == null) {
                 return valueMin;
             } else {
-                return valueMin + ((double) distributionType.nextInt((int) ((valueMax + 1) * 10)) / 10.0) - 1;
+                return valueMin + distributionType.nextInt((int) (valueMax - valueMin + 1)) - 1;
             }
         }
 

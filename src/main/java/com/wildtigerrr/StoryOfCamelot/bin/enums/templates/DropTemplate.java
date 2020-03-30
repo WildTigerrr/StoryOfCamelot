@@ -11,7 +11,7 @@ public enum DropTemplate {
             RandomDistribution.GAUSSIAN, 50, 100),
     SUPER_FLYING_SWORD_SWORD(MobTemplate.SUPER_FLYING_SWORD, ItemTemplate.SWORD_UNCOMMON,
             RandomDistribution.EXPONENTIAL_OFTEN, 0, 1,
-            RandomDistribution.GAUSSIAN, 20, 80);
+            RandomDistribution.GAUSSIAN, 20, 120);
 
     private final MobTemplate mob;
     private final ItemTemplate item;

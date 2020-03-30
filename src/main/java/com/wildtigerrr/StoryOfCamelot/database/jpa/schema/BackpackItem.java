@@ -80,7 +80,12 @@ public class BackpackItem extends SimpleObject {
     }
 
     public String backpackInfo(TranslationManager translation) {
-        return translation.getMessage("player.backpack.item", backpack.getPlayer(), new Object[]{getItem().getName(backpack.getPlayer())});
+        String template = getItem().getDurability() > 0 ? "player.backpack.item-durability" : "player.backpack.item";
+        return translation.getMessage(template, backpack.getPlayer(), new Object[]{
+                getItem().getName(backpack.getPlayer()),
+                getItem().getDurability(),
+                getCurrentDurability()
+        });
     }
 
     @Override
