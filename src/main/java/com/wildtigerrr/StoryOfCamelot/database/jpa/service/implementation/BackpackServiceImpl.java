@@ -53,7 +53,7 @@ public class BackpackServiceImpl implements BackpackService {
         if (obj.isPresent()) {
             return obj.get();
         } else {
-            Player player = playerService.getPlayer(playerId);
+            Player player = playerService.findById(playerId);
             return create(new Backpack(player));
         }
     }
