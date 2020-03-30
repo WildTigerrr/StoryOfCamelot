@@ -2,8 +2,10 @@ package com.wildtigerrr.StoryOfCamelot.database.jpa.service.implementation;
 
 import com.wildtigerrr.StoryOfCamelot.database.jpa.dataaccessobject.BackpackDao;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.Backpack;
+import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.Player;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.enums.BackpackType;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.service.template.BackpackService;
+import com.wildtigerrr.StoryOfCamelot.database.jpa.service.template.PlayerService;
 import com.wildtigerrr.StoryOfCamelot.exception.InvalidInputException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,10 +17,12 @@ import java.util.Optional;
 public class BackpackServiceImpl implements BackpackService {
 
     private final BackpackDao backpackDao;
+    private final PlayerService playerService;
 
     @Autowired
-    public BackpackServiceImpl(BackpackDao backpackDao) {
+    public BackpackServiceImpl(BackpackDao backpackDao, PlayerService playerService) {
         this.backpackDao = backpackDao;
+        this.playerService = playerService;
     }
 
     @Override
@@ -46,7 +50,12 @@ public class BackpackServiceImpl implements BackpackService {
     @Override
     public Backpack findMainByPlayerId(String playerId) {
         Optional<Backpack> obj = backpackDao.findByPlayerIdAndType(playerId, BackpackType.MAIN);
-        return obj.orElse(null);
+        if (obj.isPresent()) {
+            return obj.get();
+        } else {
+            Player player = playerService.getPlayer(playerId);
+            return create(new Backpack(player));
+        }
     }
 
     @Override

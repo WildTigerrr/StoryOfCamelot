@@ -146,10 +146,6 @@ public class GameMain {
                 sendIdsToAdminChannel(message.getUserId(), message.getChatId());
                 return true;
             }
-            case "/test item": {
-                testItem(message);
-                return true;
-            }
             case "/backpack": {
                 getBackpack(message);
                 return true;
@@ -160,19 +156,6 @@ public class GameMain {
             return true;
         }
         return false;
-    }
-
-    private void testItem(UpdateWrapper message) {
-        Backpack backpack = new Backpack(message.getPlayer());
-        List<Item> items = itemService.getAll();
-        for (Item item : items) {
-            backpack.addBackpackItem(new BackpackItem(backpack, item, ItemStatus.IN_STACK));
-        }
-        backpackService.create(backpack);
-        messages.sendMessage(TextResponseMessage.builder()
-                .text("Предметы помещены в сумку")
-                .targetId(message).build()
-        );
     }
 
     private void getBackpack(UpdateWrapper message) {
