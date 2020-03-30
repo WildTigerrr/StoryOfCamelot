@@ -41,7 +41,7 @@ public class DropCalculator {
             if (distributionType == null) {
                 return valueMin;
             } else {
-                return valueMin + ((double) distributionType.nextInt((int) (valueMax * 10)) / 10.0) - 1;
+                return valueMin + ((double) distributionType.nextInt((int) ((valueMax + 1) * 10)) / 10.0) - 1;
             }
         }
 
