@@ -1,6 +1,7 @@
 package com.wildtigerrr.StoryOfCamelot.database.jpa.schema;
 
 import com.wildtigerrr.StoryOfCamelot.bin.base.service.IdGenerator;
+import com.wildtigerrr.StoryOfCamelot.bin.service.NumberUtils;
 import com.wildtigerrr.StoryOfCamelot.bin.translation.TranslationManager;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.interfaces.SimpleObject;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.enums.ItemStatus;
@@ -37,6 +38,7 @@ public class BackpackItem extends SimpleObject {
     @JoinColumn(name = "item_id")
     private Item item;
 
+    private Double maximumDurability;
     private Double currentDurability;
     private Integer quantity;
     @Enumerated(EnumType.STRING)
@@ -49,19 +51,18 @@ public class BackpackItem extends SimpleObject {
     public BackpackItem(@Nullable Backpack backpack, @NotNull Item item, @Nullable ItemStatus status) {
         this.backpack = backpack;
         this.item = item;
-        currentDurability = item.getDurability();
+        this.currentDurability = item.getDurability();
+        this.maximumDurability = item.getDurability();
         this.status = status;
+        this.quantity = 1;
     }
 
     public BackpackItem(@NotNull Item item, @Nullable ItemStatus status) {
-        this.item = item;
-        currentDurability = item.getDurability();
-        this.status = status;
+        this(null, item, status);
     }
 
     public BackpackItem(@NotNull Item item) {
-        this.item = item;
-        currentDurability = item.getDurability();
+        this(null, item, null);
     }
 
     public BackpackItem setCurrentDurability(Double currentDurability) {
@@ -80,12 +81,15 @@ public class BackpackItem extends SimpleObject {
     }
 
     public String backpackInfo(TranslationManager translation) {
-        String template = getItem().getDurability() > 0 ? "player.backpack.item-durability" : "player.backpack.item";
+        String template = getMaximumDurability() > 0 ? "player.backpack.item-durability" : "player.backpack.item-quantity";
+        double value = getMaximumDurability() > 0 ? getDurabilityPercent() : getQuantity();
         return translation.getMessage(template, backpack.getPlayer(), new Object[]{
-                getItem().getName(backpack.getPlayer()),
-                getItem().getDurability(),
-                getCurrentDurability()
+                getItem().getName(backpack.getPlayer()), value
         });
+    }
+
+    private double getDurabilityPercent() {
+        return NumberUtils.round(getCurrentDurability() / getMaximumDurability());
     }
 
     @Override

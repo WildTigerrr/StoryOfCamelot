@@ -2,7 +2,6 @@ package com.wildtigerrr.StoryOfCamelot.database.jpa.schema;
 
 import com.wildtigerrr.StoryOfCamelot.bin.base.service.IdGenerator;
 import com.wildtigerrr.StoryOfCamelot.bin.enums.RandomDistribution;
-import com.wildtigerrr.StoryOfCamelot.bin.enums.templates.DropTemplate;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.interfaces.SimpleObject;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.enums.ObjectType;
 import lombok.AccessLevel;
