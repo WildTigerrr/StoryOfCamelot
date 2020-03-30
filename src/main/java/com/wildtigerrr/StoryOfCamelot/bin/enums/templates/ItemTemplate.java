@@ -13,35 +13,37 @@ import java.util.HashMap;
 @Getter
 public enum ItemTemplate {
     SWORD_COMMON(
-            10.0, 100.0, 10.0, ItemSubType.SWORD, ItemQuality.COMMON,
+            10.0, 100.0, 10.0, false, ItemSubType.SWORD, ItemQuality.COMMON,
             NameTranslation.ITEM_WEAPON_SWORD_COMMON, FileLinkTemplate.FLYING_SWORD
     ),
     SWORD_UNCOMMON(
-            15.0, 150.0, 25.0, ItemSubType.SWORD, ItemQuality.UNCOMMON,
+            15.0, 150.0, 25.0, false, ItemSubType.SWORD, ItemQuality.UNCOMMON,
             NameTranslation.ITEM_WEAPON_SWORD_UNCOMMON, FileLinkTemplate.FLYING_SWORD
     ),
     STICK(
-            1.0, 0, 1.0, ItemSubType.CRAFTING, ItemQuality.COMMON,
+            1.0, 0, 1.0, true, ItemSubType.CRAFTING, ItemQuality.COMMON,
             NameTranslation.ITEM_MATERIAL_STICK, null
     ),
     STONE(
-            3.0, 0, 1.0, ItemSubType.CRAFTING, ItemQuality.COMMON,
+            3.0, 0, 1.0, true, ItemSubType.CRAFTING, ItemQuality.COMMON,
             NameTranslation.ITEM_MATERIAL_STONE, null
     );
 
     private final double value;
     private final double durability;
     private final double price;
+    private final boolean isStackable;
     private final ItemSubType subType;
     private final ItemQuality quality;
     private final NameTranslation nameTranslation;
     @Getter(AccessLevel.NONE)
     private final FileLinkTemplate imageLink;
 
-    ItemTemplate(double value, double durability, double price, ItemSubType subType, ItemQuality quality, NameTranslation translation, FileLinkTemplate imageLink) {
+    ItemTemplate(double value, double durability, double price, boolean isStackable, ItemSubType subType, ItemQuality quality, NameTranslation translation, FileLinkTemplate imageLink) {
         this.value = value;
         this.durability = durability;
         this.price = price;
+        this.isStackable = isStackable;
         this.subType = subType;
         this.quality = quality;
         nameTranslation = translation;

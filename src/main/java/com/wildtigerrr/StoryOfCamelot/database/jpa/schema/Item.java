@@ -62,6 +62,7 @@ public class Item extends SimpleObject {
                 template.getValue(),
                 template.getDurability(),
                 template.getPrice(),
+                template.isStackable(),
                 template.getSubType(),
                 template.getQuality(),
                 template.getNameTranslation(),
@@ -70,18 +71,19 @@ public class Item extends SimpleObject {
         );
     }
 
-    public Item(Double value, Double durability, Double price, ItemSubType type, ItemQuality quality,
+    public Item(Double value, Double durability, Double price, Boolean isStackable, ItemSubType type, ItemQuality quality,
                 NameTranslation translation, String systemName
     ) {
-        this(value, durability, price, type, quality, translation, systemName, null);
+        this(value, durability, price, isStackable, type, quality, translation, systemName, null);
     }
 
-    public Item(Double value, Double durability, Double price, ItemSubType type, ItemQuality quality,
+    public Item(Double value, Double durability, Double price, Boolean isStackable, ItemSubType type, ItemQuality quality,
                 NameTranslation translation, String systemName, FileLink imageLink
     ) {
         this.value = value;
         this.durability = durability;
         this.price = price;
+        this.isStackable = isStackable;
         this.type = type;
         this.quality = quality;
         this.systemName = systemName;
