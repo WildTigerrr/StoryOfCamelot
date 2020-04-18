@@ -35,6 +35,9 @@
         <Logger name="org.springframework" level="warn" additivity="false">
             <AppenderRef ref="LogToConsole"/>
         </Logger>
+        <Logger name="org.apache" level="warn" additivity="false">
+            <AppenderRef ref="LogToConsole"/>
+        </Logger>
         <Root level="error">
             <AppenderRef ref="LogToFile"/>
             <AppenderRef ref="LogToConsole"/>
