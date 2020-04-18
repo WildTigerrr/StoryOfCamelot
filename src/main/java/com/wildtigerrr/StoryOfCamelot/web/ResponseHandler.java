@@ -12,16 +12,20 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 public class ResponseHandler {
 
     private final GameMain gameMain;
+    private final UpdateReceiver receiver;
 
     @Autowired
     public ResponseHandler(
-            GameMain gameMain
+            GameMain gameMain,
+            UpdateReceiver receiver
     ) {
         this.gameMain = gameMain;
+        this.receiver = receiver;
     }
 
     void handleUpdate(Update update) {
         UpdateWrapper updateWrapper = new UpdateWrapper(update);
+        receiver.process(updateWrapper);
         switch (updateWrapper.getUpdateType()) {
             case MESSAGE:
             case CALLBACK:
