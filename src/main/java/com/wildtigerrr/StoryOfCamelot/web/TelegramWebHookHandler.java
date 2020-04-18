@@ -43,7 +43,7 @@ public class TelegramWebHookHandler extends TelegramWebhookBot {
 
     @Override
     public String getBotToken() {
-        return BotConfig.WEBHOOK_TOKEN;
+        return BotConfig.getWebhookToken();
     }
 
     @Override

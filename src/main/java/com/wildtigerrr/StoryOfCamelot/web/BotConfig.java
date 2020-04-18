@@ -1,8 +1,16 @@
 package com.wildtigerrr.StoryOfCamelot.web;
 
+import org.springframework.beans.factory.annotation.Value;
+
 public class BotConfig {
-    public static String WEBHOOK_TOKEN = "796596291:AAEp_KaeoRDE-B197PjWQsNr2EBdluW0ro8";
-//    public static String WEBHOOK_TOKEN = "862899890:AAGJ7unX0rzLWnViMElILFK7Ytb-Np9yRTA";
+    @Value("TG_TOKEN")
+    private static String WEBHOOK_TOKEN;
+
+    public static String getWebhookToken() {
+        String token = System.getenv("TG_TOKEN");
+        return token == null ? WEBHOOK_TOKEN : token;
+    }
+
     public static String WEBHOOK_USER = "story_of_camelot_bot";
     public static String WEBHOOK_ADMIN = "WildTigerrr";
     public static String BOT_NAME = "WildTigerrr";

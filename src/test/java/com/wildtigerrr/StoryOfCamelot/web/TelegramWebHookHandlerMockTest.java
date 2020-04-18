@@ -52,7 +52,7 @@ class TelegramWebHookHandlerMockTest extends ServiceBaseTest {
 
     @Test
     void whenGettingParamsShouldReturnConfig() {
-        assertEquals(BotConfig.WEBHOOK_TOKEN, telegramWebHookHandler.getBotToken());
+        assertEquals(BotConfig.getWebhookToken(), telegramWebHookHandler.getBotToken());
         assertEquals(BotConfig.WEBHOOK_USER, telegramWebHookHandler.getBotUsername());
         assertEquals(BotConfig.WEBHOOK_ADMIN, telegramWebHookHandler.getBotPath());
     }
