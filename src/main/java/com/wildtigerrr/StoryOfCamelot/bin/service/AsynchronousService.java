@@ -20,7 +20,7 @@ public class AsynchronousService {
     @PostConstruct
     public void startAsyncServices() {
         log.info("Starting async services");
-        UpdateReceiver receiver = ApplicationContextProvider.bean("UpdateReceiver");
+        UpdateReceiver receiver = ApplicationContextProvider.bean("updateReceiver");
         executor.execute(receiver);
     }
 
