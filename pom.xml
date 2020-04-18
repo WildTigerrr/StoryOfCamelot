@@ -19,7 +19,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <spring.data>2.2.5.RELEASE</spring.data>
-        <telegrambots.version>4.4.0.1</telegrambots.version>
+        <telegrambots.version>4.7</telegrambots.version>
         <lombok.version>1.18.10</lombok.version>
 
         <hibernate.version>5.4.2.Final</hibernate.version>
