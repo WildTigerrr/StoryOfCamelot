@@ -10,7 +10,6 @@ import com.amazonaws.services.s3.model.GetObjectRequest;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.amazonaws.services.s3.model.S3Object;
 import com.wildtigerrr.StoryOfCamelot.web.service.DataProvider;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
@@ -54,21 +53,12 @@ public class AmazonClient implements DataProvider {
         s3client.putObject(new PutObjectRequest(bucketName, name, file));
     }
 
-    @Value("${AWS_S3_ID}")
-    private String awsIdProperty;
-    @Value("${AWS_S3_KEY}")
-    private String awsKeyProperty;
-
     private String getEnvId() {
-        String id = System.getenv("AWS_S3_ID");
-        if (id == null) return awsIdProperty;
-        else return id;
+        return System.getenv("AWS_S3_ID");
     }
 
     private String getEnvKey() {
-        String key = System.getenv("AWS_S3_KEY");
-        if (key == null) return awsKeyProperty;
-        else return key;
+        return System.getenv("AWS_S3_KEY");
     }
 
 }

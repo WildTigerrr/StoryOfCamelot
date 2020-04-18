@@ -19,10 +19,10 @@ import static org.mockito.Mockito.verify;
 
 class TelegramWebHookHandlerMockTest extends ServiceBaseTest {
 
-    private Update update = new Update();
-    private Message message = new Message();
-    private User user = new User();
-    private Chat chat = new Chat();
+    private final Update update = new Update();
+    private final Message message = new Message();
+    private final User user = new User();
+    private final Chat chat = new Chat();
 
     @Autowired
     private TelegramWebHookHandler telegramWebHookHandler;
@@ -52,7 +52,7 @@ class TelegramWebHookHandlerMockTest extends ServiceBaseTest {
 
     @Test
     void whenGettingParamsShouldReturnConfig() {
-        assertEquals(BotConfig.getWebhookToken(), telegramWebHookHandler.getBotToken());
+        assertEquals(BotConfig.WEBHOOK_TOKEN, telegramWebHookHandler.getBotToken());
         assertEquals(BotConfig.WEBHOOK_USER, telegramWebHookHandler.getBotUsername());
         assertEquals(BotConfig.WEBHOOK_ADMIN, telegramWebHookHandler.getBotPath());
     }

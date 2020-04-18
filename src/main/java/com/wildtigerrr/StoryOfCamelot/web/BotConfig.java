@@ -1,21 +1,13 @@
 package com.wildtigerrr.StoryOfCamelot.web;
 
-import org.springframework.beans.factory.annotation.Value;
-
 public class BotConfig {
-    @Value("TG_TOKEN")
-    private static String WEBHOOK_TOKEN;
 
-    public static String getWebhookToken() {
-        String token = System.getenv("TG_TOKEN");
-        return token == null ? WEBHOOK_TOKEN : token;
-    }
+    public static String WEBHOOK_TOKEN = System.getenv("TG_TOKEN");
 
-    public static String WEBHOOK_USER = "story_of_camelot_bot";
-    public static String WEBHOOK_ADMIN = "WildTigerrr";
-    public static String BOT_NAME = "WildTigerrr";
+    public static String WEBHOOK_USER = System.getenv("TG_BOT_NAME");
+    public static String WEBHOOK_ADMIN = System.getenv("TG_ADMIN_NAME");
 
-    public static String WEBHOOK_ADMIN_ID = "413316947";
+    public static String WEBHOOK_ADMIN_ID = System.getenv("TG_ADMIN_ID");
     public static String ADMIN_CHANNEL_ID = "-1001419651307";
 
     public final static int DAMAGE_RANDOM = 60; // In %
