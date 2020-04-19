@@ -4,6 +4,7 @@ import com.wildtigerrr.StoryOfCamelot.bin.translation.TranslationManager;
 import com.wildtigerrr.StoryOfCamelot.web.service.ResponseManager;
 import com.wildtigerrr.StoryOfCamelot.web.service.message.IncomingMessage;
 import com.wildtigerrr.StoryOfCamelot.web.service.message.template.TextResponseMessage;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -14,7 +15,12 @@ public class StartCommandHandler extends CommandHandler {
     }
 
     @Override
-    protected void process(IncomingMessage message) {
+    public void process(IncomingMessage message) {
+        sendTestMessages(message);
+    }
+
+    @Async
+    void sendTestMessages(IncomingMessage message) {
         messages.sendMessage(TextResponseMessage.builder()
                 .text("Hello world!")
                 .targetId(message)
@@ -31,4 +37,5 @@ public class StartCommandHandler extends CommandHandler {
                 .build()
         );
     }
+
 }
