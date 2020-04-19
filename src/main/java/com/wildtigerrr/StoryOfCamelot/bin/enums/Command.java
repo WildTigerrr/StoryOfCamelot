@@ -4,6 +4,8 @@ import com.wildtigerrr.StoryOfCamelot.bin.base.GameMain;
 import com.wildtigerrr.StoryOfCamelot.bin.base.GameMovement;
 import com.wildtigerrr.StoryOfCamelot.bin.base.service.BattleService;
 import com.wildtigerrr.StoryOfCamelot.bin.base.service.player.ExperienceService;
+import com.wildtigerrr.StoryOfCamelot.bin.handler.CommandHandler;
+import com.wildtigerrr.StoryOfCamelot.bin.service.ApplicationContextProvider;
 import com.wildtigerrr.StoryOfCamelot.bin.service.StringUtils;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.service.template.PlayerService;
 import com.wildtigerrr.StoryOfCamelot.web.bot.update.UpdateWrapper;
@@ -59,7 +61,7 @@ public enum Command {
             return true;
         }
     },
-    START,
+    START("startCommandHandler"),
     UP {
         @Override
         public boolean execute(UpdateWrapper update) {
@@ -83,11 +85,25 @@ public enum Command {
         }
     };
 
+    private final String handlerName;
+
     private static GameMain game;
     private static GameMovement gameMovement;
     private static BattleService battleService;
     private static PlayerService playerService;
     private static ExperienceService experienceService;
+
+    Command(String handlerName) {
+        this.handlerName = handlerName;
+    }
+
+    Command() {
+        this.handlerName = "defaultCommandHandler";
+    }
+
+    public CommandHandler handler() {
+        return ApplicationContextProvider.bean(handlerName);
+    }
 
     public boolean execute(UpdateWrapper update) {
         game.sendDumb(update);

@@ -22,14 +22,14 @@ public class UpdateWrapper {
     private Boolean isQuery;
     private Command command;
 
-    private UpdateType updateType;
+    private MessageType messageType;
 
     // TODO Add escaped entire Update for debug and logs
 
     public UpdateWrapper(Update update) {
         this.isQuery = update.hasCallbackQuery();
         User user = isQuery ? update.getCallbackQuery().getMessage().getFrom() : update.getMessage().getFrom();
-        this.updateType = UpdateWrapperUtils.defineUpdateType(update);
+        this.messageType = UpdateWrapperUtils.defineUpdateType(update);
         if (isCommand()) {
             this.message = isQuery ? update.getCallbackQuery().getData() : StringUtils.escape(update.getMessage().getText().trim());
             if (this.message.contains("@StoryOfCamelotBot")) this.message = this.message.replace("@StoryOfCamelotBot", "").trim();
@@ -43,11 +43,11 @@ public class UpdateWrapper {
     }
 
     public boolean isCommand() {
-        return updateType == UpdateType.MESSAGE || updateType == UpdateType.CALLBACK;
+        return messageType == MessageType.MESSAGE || messageType == MessageType.CALLBACK;
     }
 
     public boolean isUnsupportedMedia() {
-        return !isCommand() && updateType != UpdateType.OTHER;
+        return !isCommand() && messageType != MessageType.OTHER;
     }
 
     public String getText() {
@@ -86,7 +86,7 @@ public class UpdateWrapper {
     @Override
     public String toString() {
         return "UpdateWrapper{" +
-                " type='" + updateType + '\'' +
+                " type='" + messageType + '\'' +
                 ", message='" + message + '\'' +
                 ", userId='" + author.getId() + '\'' +
                 ", firstName='" + author.getFirstName() + '\'' +

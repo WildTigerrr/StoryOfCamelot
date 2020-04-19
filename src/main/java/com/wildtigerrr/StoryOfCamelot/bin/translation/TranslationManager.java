@@ -5,6 +5,7 @@ import com.wildtigerrr.StoryOfCamelot.bin.enums.Language;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.Player;
 import com.wildtigerrr.StoryOfCamelot.exception.InvalidPropertyException;
 import com.wildtigerrr.StoryOfCamelot.web.bot.update.UpdateWrapper;
+import com.wildtigerrr.StoryOfCamelot.web.service.message.IncomingMessage;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
@@ -67,6 +68,12 @@ public class TranslationManager {
     public String getMessage(String code, UpdateWrapper message) {
         return getMessage(code, message.getPlayer());
     }
+
+    public String getMessage(String code, IncomingMessage message, Object[] args) {
+        return getMessage(code, message.getPlayer(), args);
+    }
+
+    public String getMessage(String code, IncomingMessage message) {return getMessage(code, message.getPlayer());}
 
     private String applyEmoji(String message) {
         if (!message.contains("[emj:")) {

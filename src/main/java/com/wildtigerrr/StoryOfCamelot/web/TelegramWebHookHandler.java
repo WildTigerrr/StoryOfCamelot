@@ -14,13 +14,11 @@ import javax.annotation.PostConstruct;
 @Service
 public class TelegramWebHookHandler extends TelegramWebhookBot {
 
-    private ResponseHandler responseHandler;
     private ResponseManager messages;
     private UpdateReceiver receiver;
 
     @Autowired
-    public TelegramWebHookHandler(ResponseHandler responseHandler, ResponseManager messages, UpdateReceiver receiver) {
-        this.responseHandler = responseHandler;
+    public TelegramWebHookHandler(ResponseManager messages, UpdateReceiver receiver) {
         this.messages = messages;
         this.receiver = receiver;
     }
@@ -34,7 +32,6 @@ public class TelegramWebHookHandler extends TelegramWebhookBot {
 
     @Override
     public BotApiMethod onWebhookUpdateReceived(Update update) {
-//        responseHandler.handleUpdate(update);
         receiver.process(update);
         return null;
     }

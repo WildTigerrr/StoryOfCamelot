@@ -1,7 +1,6 @@
 package com.wildtigerrr.StoryOfCamelot.web;
 
-import com.wildtigerrr.StoryOfCamelot.bin.base.GameMain;
-import com.wildtigerrr.StoryOfCamelot.web.bot.update.UpdateWrapper;
+import com.wildtigerrr.StoryOfCamelot.web.service.message.IncomingMessage;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.objects.Update;
@@ -14,31 +13,27 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 @Log4j2
 public class UpdateReceiver implements Runnable {
 
-    private final GameMain gameMain;
+    private final ResponseHandler responseHandler;
 
-    public final Queue<UpdateWrapper> messages = new ConcurrentLinkedQueue<>();
+    public final Queue<IncomingMessage> messages = new ConcurrentLinkedQueue<>();
     private boolean active;
 
-    public UpdateReceiver(GameMain gameMain) {
-        this.gameMain = gameMain;
+    public UpdateReceiver(ResponseHandler responseHandler) {
+        this.responseHandler = responseHandler;
     }
 
     @Override
     public void run() {
         active = true;
         while(active) {
-            for (UpdateWrapper object = messages.poll(); object != null; object = messages.poll()) {
-                gameMain.handleTextMessage(object);
+            for (IncomingMessage message = messages.poll(); message != null; message = messages.poll()) {
+                responseHandler.proceed(message);
             }
         }
     }
 
-    public void process(UpdateWrapper update) {
-        messages.add(update);
-    }
-
     public void process(Update update) {
-        messages.add(new UpdateWrapper(update));
+        messages.add(IncomingMessage.from(update));
     }
 
     @PreDestroy

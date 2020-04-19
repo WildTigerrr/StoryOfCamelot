@@ -1,6 +1,6 @@
 package com.wildtigerrr.StoryOfCamelot.web.bot.update;
 
-public enum UpdateType {
+public enum MessageType {
     MESSAGE,
     CALLBACK,
     PHOTO,

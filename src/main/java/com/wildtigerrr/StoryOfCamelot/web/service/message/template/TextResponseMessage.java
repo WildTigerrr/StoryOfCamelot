@@ -4,6 +4,7 @@ import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.Player;
 import com.wildtigerrr.StoryOfCamelot.web.BotConfig;
 import com.wildtigerrr.StoryOfCamelot.web.bot.update.UpdateWrapper;
 import com.wildtigerrr.StoryOfCamelot.web.service.ResponseType;
+import com.wildtigerrr.StoryOfCamelot.web.service.message.IncomingMessage;
 import com.wildtigerrr.StoryOfCamelot.web.service.message.ResponseMessage;
 import lombok.Builder;
 import lombok.Getter;
@@ -31,6 +32,10 @@ public class TextResponseMessage implements ResponseMessage {
         }
         public TextResponseMessageBuilder targetId(UpdateWrapper update) {
             this.targetId = update.getUserId() == null ? DEFAULT_TARGET_ID : update.getUserId();
+            return this;
+        }
+        public TextResponseMessageBuilder targetId(IncomingMessage message) {
+            this.targetId = message.getUserId() == null ? DEFAULT_TARGET_ID : message.getUserId();
             return this;
         }
         public TextResponseMessageBuilder targetId(Player player) {
