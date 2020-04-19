@@ -18,19 +18,39 @@ import org.telegram.telegrambots.meta.api.methods.send.SendSticker;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
+import javax.annotation.PreDestroy;
+import java.util.Queue;
+import java.util.concurrent.ConcurrentLinkedQueue;
+
 @Log4j2
 @Service
 @Profile("!test")
-public class TelegramResponseManager implements ResponseManager {
+public class TelegramResponseManager implements ResponseManager, Runnable {
 
     private TelegramWebHookHandler webHook;
-    private Boolean alreadyRedirected = false;
+    public final Queue<ResponseMessage> responses = new ConcurrentLinkedQueue<>();
+    private boolean alreadyRedirected = false;
+    private boolean active;
 
     public void setExecutor(TelegramWebHookHandler telegramWebHookHandler) {
         this.webHook = telegramWebHookHandler;
     }
 
+    @Override
+    public void run() {
+        active = true;
+        while(active) {
+            for (ResponseMessage object = responses.poll(); object != null; object = responses.poll()) {
+                proceed(object);
+            }
+        }
+    }
+
     public void sendMessage(ResponseMessage message) {
+        responses.add(message);
+    }
+
+    private void proceed(ResponseMessage message) {
         switch (message.getType()) {
             case TEXT:
             case POST_TO_ADMIN_CHANNEL:
@@ -190,6 +210,12 @@ public class TelegramResponseManager implements ResponseManager {
             return false;
         }
         return true;
+    }
+
+    @PreDestroy
+    public void destroy() {
+        log.info("Outgoing messages should be stored before restart");
+        active = false;
     }
 
 }
