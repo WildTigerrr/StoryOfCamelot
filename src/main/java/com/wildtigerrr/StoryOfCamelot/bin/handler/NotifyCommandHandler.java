@@ -41,8 +41,8 @@ public class NotifyCommandHandler extends CommandHandler {
 
         try {
             asyncMessageSender.sendDelayedMessage(
-                    value * 1000,
-                    "commands.notify_finish",
+                    value * 60 * 1000,
+                    translation.getMessage("commands.notify_finish", textMessage, new Object[]{value}),
                     message.getUserId()
             );
         } catch (InterruptedException e) {
