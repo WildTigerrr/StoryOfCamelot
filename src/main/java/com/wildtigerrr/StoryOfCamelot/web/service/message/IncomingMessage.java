@@ -79,7 +79,7 @@ public class IncomingMessage {
 
     @Override
     public String toString() {
-        return "UpdateWrapper{" +
+        return "IncomingMessage{" +
                 " type='" + messageType + '\'' +
                 ", message='" + text + '\'' +
                 ", userId='" + author.getId() + '\'' +
