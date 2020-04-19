@@ -18,11 +18,11 @@ public class AsyncMessageSender {
     }
 
     @Async
-    public void sendDelayedMessage(int delay, String message) throws InterruptedException {
+    public void sendDelayedMessage(int delay, String message, String targetId) throws InterruptedException {
         Thread.sleep(delay);
         messages.sendMessage(TextResponseMessage.builder()
-                .text("Hello world!")
-                .targetId(message)
+                .text(message)
+                .targetId(targetId)
                 .build()
         );
     }

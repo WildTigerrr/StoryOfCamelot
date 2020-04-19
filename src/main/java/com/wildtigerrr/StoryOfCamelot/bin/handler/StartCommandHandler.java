@@ -25,7 +25,7 @@ public class StartCommandHandler extends CommandHandler {
                 .build()
         );
         try {
-            asyncMessageSender.sendDelayedMessage(10000, "Hello world! 2");
+            asyncMessageSender.sendDelayedMessage(10000, "Hello world! 2", message.getUserId());
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
