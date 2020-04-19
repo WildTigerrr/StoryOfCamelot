@@ -23,7 +23,7 @@ public class ParsedCommand {
     }
 
     public String paramByNum(int order) {
-        if (paramsCount() >= order) {
+        if (paramsCount() > order) {
             return params[order];
         } else {
             return "";
