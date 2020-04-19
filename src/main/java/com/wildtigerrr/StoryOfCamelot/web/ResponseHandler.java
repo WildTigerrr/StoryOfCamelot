@@ -2,6 +2,7 @@ package com.wildtigerrr.StoryOfCamelot.web;
 
 import com.wildtigerrr.StoryOfCamelot.bin.base.GameMain;
 import com.wildtigerrr.StoryOfCamelot.bin.handler.TextMessageHandler;
+import com.wildtigerrr.StoryOfCamelot.database.jpa.service.template.PlayerService;
 import com.wildtigerrr.StoryOfCamelot.web.bot.update.UpdateWrapper;
 import com.wildtigerrr.StoryOfCamelot.web.service.message.IncomingMessage;
 import lombok.extern.log4j.Log4j2;
@@ -15,15 +16,20 @@ public class ResponseHandler {
 
     private final GameMain gameMain;
     private final TextMessageHandler textMessageHandler;
+    private final PlayerService playerService;
 
     public ResponseHandler(
             GameMain gameMain,
-            TextMessageHandler textMessageHandler) {
+            TextMessageHandler textMessageHandler,
+            PlayerService playerService
+    ) {
         this.gameMain = gameMain;
         this.textMessageHandler = textMessageHandler;
+        this.playerService = playerService;
     }
 
     public void proceed(IncomingMessage message) {
+        message.setPlayer(playerService.getPlayer(message.getUserId()));
         switch (message.getMessageType()) {
             case MESSAGE:
             case CALLBACK:
