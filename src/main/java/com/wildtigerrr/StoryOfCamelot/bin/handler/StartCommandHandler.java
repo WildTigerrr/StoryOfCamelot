@@ -10,32 +10,25 @@ import org.springframework.stereotype.Service;
 @Service
 public class StartCommandHandler extends CommandHandler {
 
-    public StartCommandHandler(ResponseManager messages, TranslationManager translation) {
+    private final AsyncMessageSender asyncMessageSender;
+
+    public StartCommandHandler(ResponseManager messages, TranslationManager translation, AsyncMessageSender asyncMessageSender) {
         super(messages, translation);
+        this.asyncMessageSender = asyncMessageSender;
     }
 
     @Override
     public void process(IncomingMessage message) {
-        sendTestMessages(message);
-    }
-
-    @Async
-    void sendTestMessages(IncomingMessage message) {
         messages.sendMessage(TextResponseMessage.builder()
                 .text("Hello world!")
                 .targetId(message)
                 .build()
         );
         try {
-            Thread.sleep(10000);
+            asyncMessageSender.sendDelayedMessage(10000, "Hello world! 2");
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        messages.sendMessage(TextResponseMessage.builder()
-                .text("Hello world! 2")
-                .targetId(message)
-                .build()
-        );
     }
 
 }
