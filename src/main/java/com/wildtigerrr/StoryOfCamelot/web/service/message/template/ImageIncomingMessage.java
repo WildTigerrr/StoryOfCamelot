@@ -27,7 +27,7 @@ public class ImageIncomingMessage extends IncomingMessage {
     }
 
     public String getAuthorCaption() {
-        return getText() != null ? getText() + ", " + getAuthor().toString() : getAuthor().toString();
+        return text() != null ? text() + ", " + getAuthor().toString() : getAuthor().toString();
     }
 
     @Getter
