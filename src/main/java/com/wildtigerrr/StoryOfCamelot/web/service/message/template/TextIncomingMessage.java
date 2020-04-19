@@ -8,11 +8,15 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 @Getter
 public class TextIncomingMessage extends IncomingMessage {
 
-    private final ParsedCommand parsedCommand;
+    private ParsedCommand parsedCommand;
 
     public TextIncomingMessage(Update update) {
         super(update);
-        this.parsedCommand = new ParsedCommand(getCommand(), text());
+    }
+
+    public ParsedCommand getParsedCommand() {
+        if (this.parsedCommand == null) this.parsedCommand = new ParsedCommand(getCommand(), text());
+        return this.parsedCommand;
     }
 
 }
