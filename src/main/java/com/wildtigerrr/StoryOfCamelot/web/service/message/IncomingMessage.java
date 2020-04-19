@@ -7,12 +7,14 @@ import com.wildtigerrr.StoryOfCamelot.web.bot.update.MessageType;
 import com.wildtigerrr.StoryOfCamelot.web.service.message.template.ImageIncomingMessage;
 import com.wildtigerrr.StoryOfCamelot.web.service.message.template.StickerIncomingMessage;
 import com.wildtigerrr.StoryOfCamelot.web.service.message.template.TextIncomingMessage;
+import lombok.AccessLevel;
 import lombok.Getter;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
 @Getter
 public class IncomingMessage {
 
+    @Getter(AccessLevel.NONE)
     private final String text;
     private final MessageType messageType;
     private final Author author;
@@ -48,6 +50,10 @@ public class IncomingMessage {
         this.chatId = isQuery ? update.getCallbackQuery().getMessage().getChatId() : update.getMessage().getChatId();
         this.messageId = isQuery ? update.getCallbackQuery().getMessage().getMessageId() : update.getMessage().getMessageId();
         this.queryId = isQuery ? update.getCallbackQuery().getId() : null;
+    }
+
+    public String text() {
+        return this.text;
     }
 
     public boolean isCommand() {

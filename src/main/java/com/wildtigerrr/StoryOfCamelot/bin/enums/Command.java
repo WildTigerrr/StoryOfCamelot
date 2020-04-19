@@ -83,7 +83,8 @@ public enum Command {
             battleService.fight(update);
             return true;
         }
-    };
+    },
+    NOTIFY("notifyCommandHandler");
 
     private final String handlerName;
 
