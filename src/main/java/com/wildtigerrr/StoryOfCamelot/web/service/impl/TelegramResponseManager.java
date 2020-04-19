@@ -42,6 +42,11 @@ public class TelegramResponseManager implements ResponseManager, Runnable {
         while(active) {
             for (ResponseMessage object = responses.poll(); object != null; object = responses.poll()) {
                 proceed(object);
+                try {
+                    Thread.sleep(2000);
+                } catch (InterruptedException e) {
+                    log.error("Sender interrupted", e);
+                }
             }
         }
     }
