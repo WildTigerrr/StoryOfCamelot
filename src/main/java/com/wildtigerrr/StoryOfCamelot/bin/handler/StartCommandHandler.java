@@ -20,5 +20,15 @@ public class StartCommandHandler extends CommandHandler {
                 .targetId(message)
                 .build()
         );
+        try {
+            Thread.sleep(10000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        messages.sendMessage(TextResponseMessage.builder()
+                .text("Hello world! 2")
+                .targetId(message)
+                .build()
+        );
     }
 }
