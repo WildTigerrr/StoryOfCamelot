@@ -4,7 +4,9 @@ import com.wildtigerrr.StoryOfCamelot.bin.translation.TranslationManager;
 import com.wildtigerrr.StoryOfCamelot.web.service.ResponseManager;
 import com.wildtigerrr.StoryOfCamelot.web.service.message.IncomingMessage;
 import com.wildtigerrr.StoryOfCamelot.web.service.message.template.TextResponseMessage;
+import org.springframework.stereotype.Service;
 
+@Service
 public class StartCommandHandler extends CommandHandler {
 
     public StartCommandHandler(ResponseManager messages, TranslationManager translation) {
