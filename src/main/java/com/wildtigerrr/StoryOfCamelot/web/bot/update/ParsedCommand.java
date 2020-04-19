@@ -32,7 +32,7 @@ public class ParsedCommand {
 
     public int intByNum(int order) {
         String param = paramByNum(order);
-        if (StringUtils.isNumeric(param)) {
+        if (!param.isBlank() || StringUtils.isNumeric(param)) {
             return Integer.parseInt(param);
         } else {
             throw new InvalidInputException("Parameter not numeric");
