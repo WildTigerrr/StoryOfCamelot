@@ -117,13 +117,13 @@ public class PlayerServiceImpl implements PlayerService {
         String message;
         if (Player.containsSpecialCharacters(newName)) {
             message = translation.getMessage("player.nickname.wrong-symbols", player);
+        } else if (findByNickname(newName) != null) {
+            message = translation.getMessage("player.nickname.duplicate", player, new Object[]{player.getNickname()});
         } else if (!player.setNickname(newName)) {
             message = translation.getMessage("player.nickname.too-long", player,
                     new Object[]{String.valueOf(Player.getNicknameLengthMax())});
         } else if (player.getNickname().isEmpty()) {
             message = translation.getMessage("player.nickname.empty", player);
-        } else if (findByNickname(player.getNickname()) != null) {
-            message = translation.getMessage("player.nickname.duplicate", player, new Object[]{player.getNickname()});
         } else if (player.getAdditionalStatus() == PlayerStatusExtended.TUTORIAL_NICKNAME) {
             return;
         } else {
