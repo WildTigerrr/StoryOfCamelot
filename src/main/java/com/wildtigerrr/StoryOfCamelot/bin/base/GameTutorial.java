@@ -168,7 +168,9 @@ public class GameTutorial {
 
     private void tutorialNickname(Player player, String nickname) {
         playerService.setNickname(player, nickname);
-        tutorialSetNickname(player);
+        if (player.getNickname().equals(nickname)) {
+            tutorialSetNickname(player);
+        }
     }
 
     void tutorialSetNickname(Player player) {
