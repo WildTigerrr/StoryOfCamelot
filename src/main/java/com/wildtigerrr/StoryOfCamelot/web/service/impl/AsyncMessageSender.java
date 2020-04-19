@@ -1,4 +1,4 @@
-package com.wildtigerrr.StoryOfCamelot.bin.handler;
+package com.wildtigerrr.StoryOfCamelot.web.service.impl;
 
 import com.wildtigerrr.StoryOfCamelot.bin.translation.TranslationManager;
 import com.wildtigerrr.StoryOfCamelot.web.service.ResponseManager;
@@ -10,11 +10,9 @@ import org.springframework.stereotype.Service;
 public class AsyncMessageSender {
 
     protected final ResponseManager messages;
-    protected final TranslationManager translation;
 
-    public AsyncMessageSender(ResponseManager messages, TranslationManager translation) {
+    public AsyncMessageSender(ResponseManager messages) {
         this.messages = messages;
-        this.translation = translation;
     }
 
     @Async
