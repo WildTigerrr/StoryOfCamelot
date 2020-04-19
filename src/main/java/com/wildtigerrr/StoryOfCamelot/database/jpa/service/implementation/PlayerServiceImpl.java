@@ -123,7 +123,7 @@ public class PlayerServiceImpl implements PlayerService {
         } else if (player.getNickname().isEmpty()) {
             message = translation.getMessage("player.nickname.empty", player);
         } else if (findByNickname(player.getNickname()) != null) {
-            message = translation.getMessage("player.nickname.duplicate", player);
+            message = translation.getMessage("player.nickname.duplicate", player, new Object[]{player.getNickname()});
         } else if (player.getAdditionalStatus() == PlayerStatusExtended.TUTORIAL_NICKNAME) {
             return;
         } else {
