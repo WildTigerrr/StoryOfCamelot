@@ -84,7 +84,7 @@ public class IncomingMessage {
         return this.player.getNickname() + "["
                 + this.player.getExternalId() + "/"
                 + this.player.getId()
-                + (this.author.getUsername() != null ? "/" + this.author.getUsername() : "")
+                + (this.author.getUsername() != null ? "/@" + this.author.getUsername() : "")
                 + "]";
     }
 
