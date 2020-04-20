@@ -22,6 +22,7 @@ public class IncomingMessage {
     private final Long chatId;
     private final int messageId;
     private final String queryId;
+    private final long startTime;
 
     private Player player;
     private Command command;
@@ -42,6 +43,7 @@ public class IncomingMessage {
     }
 
     public IncomingMessage(Update update) {
+        this.startTime = System.currentTimeMillis();
         this.isQuery = update.hasCallbackQuery();
         this.messageType = IncomingMessageUtils.defineUpdateType(update);
         this.author = IncomingMessageUtils.getUpdateAuthor(update);
@@ -75,6 +77,18 @@ public class IncomingMessage {
     public Command getCommand() {
         if (this.command == null) this.command = IncomingMessageUtils.fetchCommandFromMessage(this.text, this.player.getLanguage());
         return this.command;
+    }
+
+    public String senderLog() {
+        return this.player.getNickname() + "["
+                + this.player.getExternalId() + "/"
+                + this.player.getId()
+                + (this.author.getUsername() != null ? "/" + this.author.getUsername() : "")
+                + "]";
+    }
+
+    public long elapsedTime() {
+        return System.currentTimeMillis() - startTime;
     }
 
     @Override

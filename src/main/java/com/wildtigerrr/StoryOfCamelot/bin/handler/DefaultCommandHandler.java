@@ -7,14 +7,14 @@ import com.wildtigerrr.StoryOfCamelot.web.service.message.template.TextResponseM
 import org.springframework.stereotype.Service;
 
 @Service
-public class DefaultCommandHandler extends CommandHandler {
+public class DefaultCommandHandler extends TextMessageHandler {
 
     public DefaultCommandHandler(ResponseManager messages, TranslationManager translation) {
         super(messages, translation);
     }
 
     @Override
-    void process(IncomingMessage message) {
+    public void process(IncomingMessage message) {
         messages.sendMessage(TextResponseMessage.builder()
                 .text(translation.getMessage("commands.unknown", message))
                 .targetId(message)

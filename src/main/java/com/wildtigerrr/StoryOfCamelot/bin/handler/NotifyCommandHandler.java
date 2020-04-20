@@ -10,7 +10,7 @@ import com.wildtigerrr.StoryOfCamelot.web.service.message.template.TextResponseM
 import org.springframework.stereotype.Service;
 
 @Service
-public class NotifyCommandHandler extends CommandHandler {
+public class NotifyCommandHandler extends TextMessageHandler {
 
     private final AsyncMessageSender asyncMessageSender;
 
@@ -20,7 +20,7 @@ public class NotifyCommandHandler extends CommandHandler {
     }
 
     @Override
-    void process(IncomingMessage message) {
+    public void process(IncomingMessage message) {
         TextIncomingMessage textMessage = (TextIncomingMessage) message;
         int value;
         try {

@@ -14,6 +14,6 @@ public abstract class CommandHandler {
         this.translation = translation;
     }
 
-    abstract void process(IncomingMessage message);
+    public abstract void process(IncomingMessage message);
 
 }

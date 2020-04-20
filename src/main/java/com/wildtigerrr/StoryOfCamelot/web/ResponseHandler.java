@@ -1,12 +1,11 @@
 package com.wildtigerrr.StoryOfCamelot.web;
 
 import com.wildtigerrr.StoryOfCamelot.bin.base.GameMain;
+import com.wildtigerrr.StoryOfCamelot.bin.handler.DefaultCommandHandler;
 import com.wildtigerrr.StoryOfCamelot.bin.handler.TextMessageHandler;
-import com.wildtigerrr.StoryOfCamelot.database.jpa.service.template.PlayerService;
 import com.wildtigerrr.StoryOfCamelot.web.bot.update.UpdateWrapper;
 import com.wildtigerrr.StoryOfCamelot.web.service.message.IncomingMessage;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
@@ -16,24 +15,25 @@ public class ResponseHandler {
 
     private final GameMain gameMain;
     private final TextMessageHandler textMessageHandler;
-    private final PlayerService playerService;
+    private final DefaultCommandHandler defaultCommandHandler;
+
 
     public ResponseHandler(
             GameMain gameMain,
             TextMessageHandler textMessageHandler,
-            PlayerService playerService
-    ) {
+            DefaultCommandHandler defaultCommandHandler) {
         this.gameMain = gameMain;
         this.textMessageHandler = textMessageHandler;
-        this.playerService = playerService;
+        this.defaultCommandHandler = defaultCommandHandler;
     }
 
     public void proceed(IncomingMessage message) {
-        message.setPlayer(playerService.getPlayer(message.getUserId()));
         switch (message.getMessageType()) {
             case MESSAGE:
             case CALLBACK:
                 textMessageHandler.process(message);
+            default:
+                defaultCommandHandler.process(message);
         }
     }
 
