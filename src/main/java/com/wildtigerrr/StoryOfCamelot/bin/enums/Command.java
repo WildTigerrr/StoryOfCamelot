@@ -84,7 +84,8 @@ public enum Command {
             return true;
         }
     },
-    NOTIFY("notifyCommandHandler");
+    NOTIFY("notifyCommandHandler"),
+    DEFAULT;
 
     private final String handlerName;
 
