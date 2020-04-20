@@ -29,21 +29,22 @@ public class DiceCommandHandler extends CommandHandler {
                     .targetId(diceMessage).build()
             );
         } else {
+            String text = "У меня *" + diceMessage.getResponse() + "*. ";
             if (diceMessage.getValue() > diceMessage.getResponse()) {
                 messages.sendMessage(TextResponseMessage.builder()
-                        .text("Ты победил!")
+                        .text(text + "Ты победил!")
                         .targetId(diceMessage)
                         .applyMarkup(true).build()
                 );
             } else if (diceMessage.getValue() < diceMessage.getResponse()) {
                 messages.sendMessage(TextResponseMessage.builder()
-                        .text("Я победил!")
+                        .text(text + "Я победил!")
                         .targetId(diceMessage)
                         .applyMarkup(true).build()
                 );
             } else {
                 messages.sendMessage(TextResponseMessage.builder()
-                        .text("Ничья!")
+                        .text(text + "Ничья!")
                         .targetId(diceMessage)
                         .applyMarkup(true).build()
                 );
