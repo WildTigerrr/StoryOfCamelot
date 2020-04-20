@@ -35,7 +35,7 @@ public class UpdateWrapper {
             if (this.message.contains("@StoryOfCamelotBot")) this.message = this.message.replace("@StoryOfCamelotBot", "").trim();
         }
         this.author = new Author(user);
-        if (isQuery) author.setId(update.getCallbackQuery().getMessage().getChatId().toString());
+        if (isQuery) author.setExternalId(update.getCallbackQuery().getMessage().getChatId().toString());
         this.chatId = isQuery ? update.getCallbackQuery().getMessage().getChatId() : update.getMessage().getChatId();
         this.messageId = isQuery ? update.getCallbackQuery().getMessage().getMessageId() : update.getMessage().getMessageId();
         this.queryId = isQuery ? update.getCallbackQuery().getId() : null;
@@ -55,7 +55,7 @@ public class UpdateWrapper {
     }
 
     public String getUserId() {
-        return author.getId();
+        return author.getExternalId();
     }
 
     String getFirstName() {
@@ -88,7 +88,7 @@ public class UpdateWrapper {
         return "UpdateWrapper{" +
                 " type='" + messageType + '\'' +
                 ", message='" + message + '\'' +
-                ", userId='" + author.getId() + '\'' +
+                ", userId='" + author.getExternalId() + '\'' +
                 ", firstName='" + author.getFirstName() + '\'' +
                 ", lastName='" + author.getLastName() + '\'' +
                 ", username='" + author.getUsername() + '\'' +

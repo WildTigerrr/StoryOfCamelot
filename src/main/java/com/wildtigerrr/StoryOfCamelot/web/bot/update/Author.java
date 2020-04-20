@@ -9,6 +9,8 @@ import org.telegram.telegrambots.meta.api.objects.User;
 public class Author {
 
     @Setter
+    private String externalId;
+    @Setter
     private String id;
     private final String firstName;
     private final String lastName;
@@ -16,7 +18,7 @@ public class Author {
     private final String languageCode;
 
     public Author(User user) {
-        this.id = user.getId().toString();
+        this.externalId = user.getId().toString();
         this.firstName = user.getFirstName();
         this.lastName = user.getLastName();
         this.username = user.getUserName();
@@ -26,7 +28,8 @@ public class Author {
     @Override
     public String toString() {
         return "Author{" +
-                "id = " + id + ' ' +
+                "externalId = " + externalId + ' ' +
+                (id != null ? "id = " + id + ' ' : "") +
                 ", name = " + firstName + " " + lastName +
                 ", username = @" + username +
                 " }";

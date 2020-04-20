@@ -47,7 +47,7 @@ public class IncomingMessage {
         this.isQuery = update.hasCallbackQuery();
         this.messageType = IncomingMessageUtils.defineUpdateType(update);
         this.author = IncomingMessageUtils.getUpdateAuthor(update);
-        if (isQuery) this.author.setId(update.getCallbackQuery().getMessage().getChatId().toString());
+        if (isQuery) this.author.setExternalId(update.getCallbackQuery().getMessage().getChatId().toString());
         this.text = IncomingMessageUtils.getUpdateMessageText(update, isCommand(), hasCaption());
         this.chatId = isQuery ? update.getCallbackQuery().getMessage().getChatId() : update.getMessage().getChatId();
         this.messageId = isQuery ? update.getCallbackQuery().getMessage().getMessageId() : update.getMessage().getMessageId();
@@ -67,11 +67,12 @@ public class IncomingMessage {
     }
 
     public String getUserId() {
-        return this.author.getId();
+        return this.author.getExternalId();
     }
 
     public void setPlayer(Player player) {
         this.player = player;
+        this.author.setId(player.getId());
     }
 
     public Command getCommand() {
@@ -96,7 +97,7 @@ public class IncomingMessage {
         return "IncomingMessage{" +
                 " type='" + messageType + '\'' +
                 ", message='" + text + '\'' +
-                ", userId='" + author.getId() + '\'' +
+                ", userId='" + author.getExternalId() + '\'' +
                 ", firstName='" + author.getFirstName() + '\'' +
                 ", lastName='" + author.getLastName() + '\'' +
                 ", username='" + author.getUsername() + '\'' +
