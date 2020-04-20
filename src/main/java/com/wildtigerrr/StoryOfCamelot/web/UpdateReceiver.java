@@ -44,11 +44,15 @@ public class UpdateReceiver implements Runnable {
         }
     }
 
+    public void process(IncomingMessage message) {
+        logSender(message);
+        messageQueue.add(message);
+    }
+
     public void process(Update update) {
         IncomingMessage message = IncomingMessage.from(update);
         message.setPlayer(playerService.getPlayer(message.getUserId()));
-        logSender(message);
-        messageQueue.add(message);
+        process(message);
     }
 
     private void logSender(IncomingMessage message) {

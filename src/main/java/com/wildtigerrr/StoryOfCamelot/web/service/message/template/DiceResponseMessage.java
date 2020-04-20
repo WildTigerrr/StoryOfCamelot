@@ -16,6 +16,8 @@ public class DiceResponseMessage implements ResponseMessage {
     private final ResponseType type = ResponseType.DICE;
     private final String targetId;
 
+    private final DiceIncomingMessage incomingMessage;
+
     @Override
     public String getText() {
         return null;

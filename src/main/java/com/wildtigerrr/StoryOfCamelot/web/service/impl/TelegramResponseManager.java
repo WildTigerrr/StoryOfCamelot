@@ -2,6 +2,7 @@ package com.wildtigerrr.StoryOfCamelot.web.service.impl;
 
 import com.wildtigerrr.StoryOfCamelot.web.BotConfig;
 import com.wildtigerrr.StoryOfCamelot.web.TelegramWebHookHandler;
+import com.wildtigerrr.StoryOfCamelot.web.UpdateReceiver;
 import com.wildtigerrr.StoryOfCamelot.web.service.ResponseManager;
 import com.wildtigerrr.StoryOfCamelot.web.service.ResponseType;
 import com.wildtigerrr.StoryOfCamelot.web.service.message.ResponseMessage;
@@ -13,6 +14,7 @@ import org.telegram.telegrambots.meta.api.methods.AnswerCallbackQuery;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.send.*;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText;
+import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 import javax.annotation.PreDestroy;
@@ -25,9 +27,14 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 public class TelegramResponseManager implements ResponseManager, Runnable {
 
     private TelegramWebHookHandler webHook;
+    private final UpdateReceiver receiver;
     public final Queue<ResponseMessage> responses = new ConcurrentLinkedQueue<>();
     private boolean alreadyRedirected = false;
     private boolean active;
+
+    public TelegramResponseManager(UpdateReceiver receiver) {
+        this.receiver = receiver;
+    }
 
     public void setExecutor(TelegramWebHookHandler telegramWebHookHandler) {
         this.webHook = telegramWebHookHandler;
@@ -163,13 +170,16 @@ public class TelegramResponseManager implements ResponseManager, Runnable {
     private void proceedDiceSend(DiceResponseMessage messageTemplate) {
         SendDice newMessage = new SendDice()
                 .setChatId(messageTemplate.getTargetId());
-        execute(newMessage);
+        Message response = execute(newMessage);
+        DiceIncomingMessage message = messageTemplate.getIncomingMessage();
+        message.setResponse(response.getDice().getValue());
+        receiver.process(message);
     }
 
 
     private void execute(BotApiMethod method) {
         try {
-            log.info(webHook.execute(method));
+            webHook.execute(method);
         } catch (NullPointerException e) {
             executeBeforeAutowiring(method);
         } catch (TelegramApiException e) {
@@ -195,6 +205,14 @@ public class TelegramResponseManager implements ResponseManager, Runnable {
             webHook.execute(method);
         } catch (TelegramApiException e) {
             handleError(e);
+        }
+    }
+    private Message execute(SendDice method) {
+        try {
+            return webHook.execute(method);
+        } catch (TelegramApiException e) {
+            handleError(e);
+            return null;
         }
     }
 

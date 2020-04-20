@@ -18,14 +18,37 @@ public class DiceCommandHandler extends CommandHandler {
     @Override
     public void process(IncomingMessage message) {
         DiceIncomingMessage diceMessage = (DiceIncomingMessage) message;
-        messages.sendMessage(TextResponseMessage.builder()
-                .text(translation.getMessage("commands.dice-output", diceMessage, new Object[]{diceMessage.getValue()}))
-                .targetId(diceMessage)
-                .applyMarkup(true).build()
-        );
-        messages.sendMessage(DiceResponseMessage.builder()
-                .targetId(diceMessage).build()
-        );
+        if (diceMessage.getResponse() == null) {
+            messages.sendMessage(TextResponseMessage.builder()
+                    .text(translation.getMessage("commands.dice-output", diceMessage, new Object[]{diceMessage.getValue()}))
+                    .targetId(diceMessage)
+                    .applyMarkup(true).build()
+            );
+            messages.sendMessage(DiceResponseMessage.builder()
+                    .incomingMessage(diceMessage)
+                    .targetId(diceMessage).build()
+            );
+        } else {
+            if (diceMessage.getValue() > diceMessage.getResponse()) {
+                messages.sendMessage(TextResponseMessage.builder()
+                        .text("Ты победил!")
+                        .targetId(diceMessage)
+                        .applyMarkup(true).build()
+                );
+            } else if (diceMessage.getValue() < diceMessage.getResponse()) {
+                messages.sendMessage(TextResponseMessage.builder()
+                        .text("Я победил!")
+                        .targetId(diceMessage)
+                        .applyMarkup(true).build()
+                );
+            } else {
+                messages.sendMessage(TextResponseMessage.builder()
+                        .text("Ничья!")
+                        .targetId(diceMessage)
+                        .applyMarkup(true).build()
+                );
+            }
+        }
     }
 
 }
