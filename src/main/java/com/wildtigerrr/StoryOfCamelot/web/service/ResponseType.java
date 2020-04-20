@@ -7,6 +7,7 @@ public enum ResponseType {
     PHOTO,
     DOCUMENT,
     STICKER,
-    EDIT
+    EDIT,
+    DICE
 
 }

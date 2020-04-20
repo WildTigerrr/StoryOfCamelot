@@ -11,10 +11,7 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.AnswerCallbackQuery;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
-import org.telegram.telegrambots.meta.api.methods.send.SendDocument;
-import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
-import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
-import org.telegram.telegrambots.meta.api.methods.send.SendSticker;
+import org.telegram.telegrambots.meta.api.methods.send.*;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
@@ -65,6 +62,7 @@ public class TelegramResponseManager implements ResponseManager, Runnable {
             case DOCUMENT: proceedDocumentSend((DocumentResponseMessage) message); break;
             case STICKER: proceedStickerSend((StickerResponseMessage) message); break;
             case EDIT: proceedMessageEdit((EditResponseMessage) message); break;
+            case DICE: proceedDiceSend((DiceResponseMessage) message); break;
         }
     }
 
@@ -162,10 +160,16 @@ public class TelegramResponseManager implements ResponseManager, Runnable {
         execute(answerCallbackQuery);
     }
 
+    private void proceedDiceSend(DiceResponseMessage messageTemplate) {
+        SendDice newMessage = new SendDice()
+                .setChatId(messageTemplate.getTargetId());
+        execute(newMessage);
+    }
+
 
     private void execute(BotApiMethod method) {
         try {
-            webHook.execute(method);
+            log.info(webHook.execute(method));
         } catch (NullPointerException e) {
             executeBeforeAutowiring(method);
         } catch (TelegramApiException e) {
