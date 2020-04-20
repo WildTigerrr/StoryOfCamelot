@@ -2,6 +2,7 @@ package com.wildtigerrr.StoryOfCamelot.web;
 
 import com.wildtigerrr.StoryOfCamelot.bin.base.GameMain;
 import com.wildtigerrr.StoryOfCamelot.bin.handler.DefaultCommandHandler;
+import com.wildtigerrr.StoryOfCamelot.bin.handler.ImageMessageHandler;
 import com.wildtigerrr.StoryOfCamelot.bin.handler.TextMessageHandler;
 import com.wildtigerrr.StoryOfCamelot.web.bot.update.UpdateWrapper;
 import com.wildtigerrr.StoryOfCamelot.web.service.message.IncomingMessage;
@@ -15,15 +16,17 @@ public class ResponseHandler {
 
     private final GameMain gameMain;
     private final TextMessageHandler textMessageHandler;
+    private final ImageMessageHandler imageMessageHandler;
     private final DefaultCommandHandler defaultCommandHandler;
 
 
     public ResponseHandler(
             GameMain gameMain,
             TextMessageHandler textMessageHandler,
-            DefaultCommandHandler defaultCommandHandler) {
+            ImageMessageHandler imageMessageHandler, DefaultCommandHandler defaultCommandHandler) {
         this.gameMain = gameMain;
         this.textMessageHandler = textMessageHandler;
+        this.imageMessageHandler = imageMessageHandler;
         this.defaultCommandHandler = defaultCommandHandler;
     }
 
@@ -32,6 +35,9 @@ public class ResponseHandler {
             case MESSAGE:
             case CALLBACK:
                 textMessageHandler.process(message);
+                break;
+            case PHOTO:
+                imageMessageHandler.process(message);
                 break;
             default:
                 defaultCommandHandler.process(message);
