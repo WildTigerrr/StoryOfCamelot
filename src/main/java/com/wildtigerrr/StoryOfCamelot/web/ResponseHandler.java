@@ -32,6 +32,7 @@ public class ResponseHandler {
             case MESSAGE:
             case CALLBACK:
                 textMessageHandler.process(message);
+                break;
             default:
                 defaultCommandHandler.process(message);
         }
