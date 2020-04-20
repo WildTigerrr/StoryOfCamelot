@@ -47,6 +47,7 @@ public class ResponseHandler {
                 break;
             case DICE:
                 diceCommandHandler.process(message);
+                break;
             default:
                 defaultCommandHandler.process(message);
                 log.info(message.senderLog() + ": Unknown message " + message.getMessageType() + " - Finished in " + message.elapsedTime() + "ms");
