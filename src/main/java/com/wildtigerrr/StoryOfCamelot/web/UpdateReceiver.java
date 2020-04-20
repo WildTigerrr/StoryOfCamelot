@@ -45,6 +45,7 @@ public class UpdateReceiver implements Runnable {
     }
 
     public void process(Update update) {
+        log.info(update);
         IncomingMessage message = IncomingMessage.from(update);
         message.setPlayer(playerService.getPlayer(message.getUserId()));
         logSender(message);
