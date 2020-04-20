@@ -6,6 +6,7 @@ import java.math.BigInteger;
 public class StringUtils {
 
     public static boolean isNumeric(String str) {
+        if (str == null || str.isBlank()) return false;
         for (char c : str.toCharArray()) {
             if (!Character.isDigit(c)) return false;
         }
