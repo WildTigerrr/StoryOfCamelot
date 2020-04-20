@@ -1,5 +1,6 @@
 package com.wildtigerrr.StoryOfCamelot.web.service.impl;
 
+import com.wildtigerrr.StoryOfCamelot.bin.service.ApplicationContextProvider;
 import com.wildtigerrr.StoryOfCamelot.web.BotConfig;
 import com.wildtigerrr.StoryOfCamelot.web.TelegramWebHookHandler;
 import com.wildtigerrr.StoryOfCamelot.web.UpdateReceiver;
@@ -27,14 +28,10 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 public class TelegramResponseManager implements ResponseManager, Runnable {
 
     private TelegramWebHookHandler webHook;
-    private final UpdateReceiver receiver;
+    private UpdateReceiver receiver;
     public final Queue<ResponseMessage> responses = new ConcurrentLinkedQueue<>();
     private boolean alreadyRedirected = false;
     private boolean active;
-
-    public TelegramResponseManager(UpdateReceiver receiver) {
-        this.receiver = receiver;
-    }
 
     public void setExecutor(TelegramWebHookHandler telegramWebHookHandler) {
         this.webHook = telegramWebHookHandler;
@@ -58,6 +55,11 @@ public class TelegramResponseManager implements ResponseManager, Runnable {
 
     public void sendMessage(ResponseMessage message) {
         responses.add(message);
+    }
+
+    private UpdateReceiver receiver() {
+        if (receiver == null) receiver = ApplicationContextProvider.bean("updateReceiver");
+        return receiver;
     }
 
     private void proceed(ResponseMessage message) {
@@ -173,7 +175,7 @@ public class TelegramResponseManager implements ResponseManager, Runnable {
         Message response = execute(newMessage);
         DiceIncomingMessage message = messageTemplate.getIncomingMessage();
         message.setResponse(response.getDice().getValue());
-        receiver.process(message);
+        receiver().process(message);
     }
 
 
