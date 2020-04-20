@@ -5,6 +5,7 @@ import com.wildtigerrr.StoryOfCamelot.web.service.ResponseManager;
 import com.wildtigerrr.StoryOfCamelot.web.service.message.IncomingMessage;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Log4j2
@@ -15,6 +16,7 @@ public class TextMessageHandler extends CommandHandler {
     }
 
     @Override
+    @Transactional
     public void process(IncomingMessage message) {
         message.getCommand().handler().process(message);
         logFinish(message);

@@ -7,7 +7,6 @@ import com.wildtigerrr.StoryOfCamelot.web.bot.update.UpdateWrapper;
 import com.wildtigerrr.StoryOfCamelot.web.service.message.IncomingMessage;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
 @Log4j2
@@ -28,7 +27,6 @@ public class ResponseHandler {
         this.defaultCommandHandler = defaultCommandHandler;
     }
 
-    @Transactional
     public void proceed(IncomingMessage message) {
         switch (message.getMessageType()) {
             case MESSAGE:
