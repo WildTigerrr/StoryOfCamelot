@@ -76,7 +76,6 @@ public class IncomingMessage {
 
     public Command getCommand() {
         if (this.command == null) this.command = IncomingMessageUtils.fetchCommandFromMessage(this.text, this.player.getLanguage());
-        if (this.command == null) this.command = Command.DEFAULT;
         return this.command;
     }
 
