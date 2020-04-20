@@ -35,6 +35,7 @@ public class ResponseHandler {
                 break;
             default:
                 defaultCommandHandler.process(message);
+                log.info(message.senderLog() + ": Unknown message " + message.getMessageType() + " - Finished in " + message.elapsedTime() + "ms");
         }
     }
 
