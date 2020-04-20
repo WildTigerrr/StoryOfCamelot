@@ -7,9 +7,6 @@ import com.wildtigerrr.StoryOfCamelot.bin.service.StringUtils;
 import com.wildtigerrr.StoryOfCamelot.web.BotConfig;
 import com.wildtigerrr.StoryOfCamelot.web.bot.update.Author;
 import com.wildtigerrr.StoryOfCamelot.web.bot.update.MessageType;
-import com.wildtigerrr.StoryOfCamelot.web.service.message.template.ImageIncomingMessage;
-import com.wildtigerrr.StoryOfCamelot.web.service.message.template.StickerIncomingMessage;
-import com.wildtigerrr.StoryOfCamelot.web.service.message.template.TextIncomingMessage;
 import lombok.experimental.UtilityClass;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.User;
@@ -30,6 +27,7 @@ public class IncomingMessageUtils {
         else if (update.hasMessage() && update.getMessage().hasSticker()) return MessageType.STICKER;
         else if (update.hasMessage() && update.getMessage().hasVideo()) return MessageType.VIDEO;
         else if (update.hasMessage() && update.getMessage().hasVoice()) return MessageType.VOICE;
+        else if (update.hasMessage() && update.getMessage().hasDice()) return MessageType.DICE;
         else return MessageType.OTHER;
     }
 

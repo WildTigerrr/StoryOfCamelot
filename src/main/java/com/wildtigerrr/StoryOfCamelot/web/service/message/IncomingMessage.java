@@ -4,6 +4,7 @@ import com.wildtigerrr.StoryOfCamelot.bin.enums.Command;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.Player;
 import com.wildtigerrr.StoryOfCamelot.web.bot.update.Author;
 import com.wildtigerrr.StoryOfCamelot.web.bot.update.MessageType;
+import com.wildtigerrr.StoryOfCamelot.web.service.message.template.DiceIncomingMessage;
 import com.wildtigerrr.StoryOfCamelot.web.service.message.template.ImageIncomingMessage;
 import com.wildtigerrr.StoryOfCamelot.web.service.message.template.StickerIncomingMessage;
 import com.wildtigerrr.StoryOfCamelot.web.service.message.template.TextIncomingMessage;
@@ -37,6 +38,8 @@ public class IncomingMessage {
                 return new ImageIncomingMessage(update);
             case STICKER:
                 return new StickerIncomingMessage(update);
+            case DICE:
+                return new DiceIncomingMessage(update);
             default:
                 return new IncomingMessage(update);
         }

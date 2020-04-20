@@ -13,5 +13,6 @@ public enum MessageType {
     STICKER,
     VIDEO,
     MESSAGE_EDIT,
+    DICE,
     OTHER
 }

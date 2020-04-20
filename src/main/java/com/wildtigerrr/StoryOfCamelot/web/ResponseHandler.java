@@ -2,6 +2,7 @@ package com.wildtigerrr.StoryOfCamelot.web;
 
 import com.wildtigerrr.StoryOfCamelot.bin.base.GameMain;
 import com.wildtigerrr.StoryOfCamelot.bin.handler.DefaultCommandHandler;
+import com.wildtigerrr.StoryOfCamelot.bin.handler.DiceCommandHandler;
 import com.wildtigerrr.StoryOfCamelot.bin.handler.ImageMessageHandler;
 import com.wildtigerrr.StoryOfCamelot.bin.handler.TextMessageHandler;
 import com.wildtigerrr.StoryOfCamelot.web.bot.update.UpdateWrapper;
@@ -16,6 +17,7 @@ public class ResponseHandler {
 
     private final GameMain gameMain;
     private final TextMessageHandler textMessageHandler;
+    private final DiceCommandHandler diceCommandHandler;
     private final ImageMessageHandler imageMessageHandler;
     private final DefaultCommandHandler defaultCommandHandler;
 
@@ -23,8 +25,12 @@ public class ResponseHandler {
     public ResponseHandler(
             GameMain gameMain,
             TextMessageHandler textMessageHandler,
-            ImageMessageHandler imageMessageHandler, DefaultCommandHandler defaultCommandHandler) {
+            DiceCommandHandler diceCommandHandler,
+            ImageMessageHandler imageMessageHandler,
+            DefaultCommandHandler defaultCommandHandler
+    ) {
         this.gameMain = gameMain;
+        this.diceCommandHandler = diceCommandHandler;
         this.textMessageHandler = textMessageHandler;
         this.imageMessageHandler = imageMessageHandler;
         this.defaultCommandHandler = defaultCommandHandler;
@@ -39,6 +45,8 @@ public class ResponseHandler {
             case PHOTO:
                 imageMessageHandler.process(message);
                 break;
+            case DICE:
+                diceCommandHandler.process(message);
             default:
                 defaultCommandHandler.process(message);
                 log.info(message.senderLog() + ": Unknown message " + message.getMessageType() + " - Finished in " + message.elapsedTime() + "ms");
