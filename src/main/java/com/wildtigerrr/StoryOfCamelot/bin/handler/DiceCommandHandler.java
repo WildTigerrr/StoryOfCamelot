@@ -6,9 +6,11 @@ import com.wildtigerrr.StoryOfCamelot.web.service.message.IncomingMessage;
 import com.wildtigerrr.StoryOfCamelot.web.service.message.template.DiceIncomingMessage;
 import com.wildtigerrr.StoryOfCamelot.web.service.message.template.DiceResponseMessage;
 import com.wildtigerrr.StoryOfCamelot.web.service.message.template.TextResponseMessage;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 
 @Service
+@Log4j2
 public class DiceCommandHandler extends CommandHandler {
 
     protected DiceCommandHandler(ResponseManager messages, TranslationManager translation) {
@@ -48,8 +50,13 @@ public class DiceCommandHandler extends CommandHandler {
                         .targetId(diceMessage)
                         .applyMarkup(true).build()
                 );
+                logFinish(diceMessage);
             }
         }
+    }
+
+    private void logFinish(IncomingMessage message) {
+        log.info(message.senderLog() + ": " + message.text() + " - Finished in " + message.elapsedTime() + "ms");
     }
 
 }

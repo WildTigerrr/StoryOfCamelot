@@ -44,7 +44,6 @@ public class TelegramResponseManager implements ResponseManager, Runnable {
             for (ResponseMessage object = responses.poll(); object != null; object = responses.poll()) {
                 proceed(object);
                 try {
-                    log.info("Sender would sleep a bit...");
                     Thread.sleep(2000);
                 } catch (InterruptedException e) {
                     log.warn("Sender interrupted");
