@@ -30,6 +30,7 @@ public class DiceCommandHandler extends CommandHandler {
                     .incomingMessage(diceMessage)
                     .targetId(diceMessage).build()
             );
+            logFinish(diceMessage);
         } else {
             String text = "У меня *" + diceMessage.getResponse() + "*. ";
             if (diceMessage.getValue() > diceMessage.getResponse()) {
@@ -50,8 +51,8 @@ public class DiceCommandHandler extends CommandHandler {
                         .targetId(diceMessage)
                         .applyMarkup(true).build()
                 );
-                logFinish(diceMessage);
             }
+            logFinish(diceMessage);
         }
     }
 
