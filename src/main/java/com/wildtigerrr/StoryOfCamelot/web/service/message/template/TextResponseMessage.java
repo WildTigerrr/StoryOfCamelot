@@ -8,6 +8,7 @@ import com.wildtigerrr.StoryOfCamelot.web.service.message.IncomingMessage;
 import com.wildtigerrr.StoryOfCamelot.web.service.message.ResponseMessage;
 import lombok.Builder;
 import lombok.Getter;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.ForceReplyKeyboard;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboard;
 
 @Builder
@@ -22,7 +23,15 @@ public class TextResponseMessage implements ResponseMessage {
     private final String text;
     @Builder.Default
     private final boolean applyMarkup = false;
+    @Builder.Default
+    private final boolean forceReply = false;
     private final ReplyKeyboard keyboard;
+
+    public ReplyKeyboard getKeyboard() {
+        return keyboard != null
+                ? keyboard
+                : forceReply ? new ForceReplyKeyboard() : null;
+    }
 
     public static class TextResponseMessageBuilder {
         private String targetId;
