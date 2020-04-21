@@ -10,9 +10,11 @@ import com.wildtigerrr.StoryOfCamelot.web.service.message.template.StickerIncomi
 import com.wildtigerrr.StoryOfCamelot.web.service.message.template.TextIncomingMessage;
 import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.extern.log4j.Log4j2;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
 @Getter
+@Log4j2
 public class IncomingMessage {
 
     @Getter(AccessLevel.NONE)
@@ -55,6 +57,10 @@ public class IncomingMessage {
         this.chatId = isQuery ? update.getCallbackQuery().getMessage().getChatId() : update.getMessage().getChatId();
         this.messageId = isQuery ? update.getCallbackQuery().getMessage().getMessageId() : update.getMessage().getMessageId();
         this.queryId = isQuery ? update.getCallbackQuery().getId() : null;
+    }
+
+    public void logFinish() {
+        log.info(senderLog() + ": " + text() + " - Finished in " + elapsedTime() + "ms");
     }
 
     public String text() {

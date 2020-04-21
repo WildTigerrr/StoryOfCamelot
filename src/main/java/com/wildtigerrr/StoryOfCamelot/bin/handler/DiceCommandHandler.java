@@ -20,44 +20,51 @@ public class DiceCommandHandler extends CommandHandler {
     @Override
     public void process(IncomingMessage message) {
         DiceIncomingMessage diceMessage = (DiceIncomingMessage) message;
-        if (diceMessage.getResponse() == null) {
-            messages.sendMessage(TextResponseMessage.builder()
-                    .text(translation.getMessage("commands.dice-output", diceMessage, new Object[]{diceMessage.getValue()}))
-                    .targetId(diceMessage)
-                    .applyMarkup(true).build()
-            );
-            messages.sendMessage(DiceResponseMessage.builder()
-                    .incomingMessage(diceMessage)
-                    .targetId(diceMessage).build()
-            );
-            logFinish(diceMessage);
+        if (diceMessage.hasAnswer()) {
+            sendDiceResult(diceMessage);
+            sendDice(diceMessage);
         } else {
-            String text = "У меня *" + diceMessage.getResponse() + "*. ";
-            if (diceMessage.getValue() > diceMessage.getResponse()) {
-                messages.sendMessage(TextResponseMessage.builder()
-                        .text(text + "Ты победил!")
-                        .targetId(diceMessage)
-                        .applyMarkup(true).build()
-                );
-            } else if (diceMessage.getValue() < diceMessage.getResponse()) {
-                messages.sendMessage(TextResponseMessage.builder()
-                        .text(text + "Я победил!")
-                        .targetId(diceMessage)
-                        .applyMarkup(true).build()
-                );
-            } else {
-                messages.sendMessage(TextResponseMessage.builder()
-                        .text(text + "Ничья!")
-                        .targetId(diceMessage)
-                        .applyMarkup(true).build()
-                );
-            }
-            logFinish(diceMessage);
+            sendMinigameResult(diceMessage);
         }
+        diceMessage.logFinish();
     }
 
-    private void logFinish(IncomingMessage message) {
-        log.info(message.senderLog() + ": " + message.text() + " - Finished in " + message.elapsedTime() + "ms");
+    private void sendDiceResult(DiceIncomingMessage message) {
+        messages.sendMessage(TextResponseMessage.builder()
+                .text(translation.getMessage("commands.dice-output", message, new Object[]{message.getValue()}))
+                .targetId(message)
+                .applyMarkup(true).build()
+        );
+    }
+
+    private void sendDice(DiceIncomingMessage message) {
+        messages.sendMessage(DiceResponseMessage.builder()
+                .incomingMessage(message)
+                .targetId(message).build()
+        );
+    }
+
+    private void sendMinigameResult(DiceIncomingMessage message) {
+        String botResult = "У меня *" + message.getResponse() + "*. ";
+        if (message.getValue() > message.getResponse()) {
+            messages.sendMessage(TextResponseMessage.builder()
+                    .text(botResult + "Ты победил!")
+                    .targetId(message)
+                    .applyMarkup(true).build()
+            );
+        } else if (message.getValue() < message.getResponse()) {
+            messages.sendMessage(TextResponseMessage.builder()
+                    .text(botResult + "Я победил!")
+                    .targetId(message)
+                    .applyMarkup(true).build()
+            );
+        } else {
+            messages.sendMessage(TextResponseMessage.builder()
+                    .text(botResult + "Ничья!")
+                    .targetId(message)
+                    .applyMarkup(true).build()
+            );
+        }
     }
 
 }

@@ -19,11 +19,7 @@ public class TextMessageHandler extends CommandHandler {
     @Transactional
     public void process(IncomingMessage message) {
         message.getCommand().handler().process(message);
-        logFinish(message);
-    }
-
-    private void logFinish(IncomingMessage message) {
-        log.info(message.senderLog() + ": " + message.text() + " - Finished in " + message.elapsedTime() + "ms");
+        message.logFinish();
     }
 
 }

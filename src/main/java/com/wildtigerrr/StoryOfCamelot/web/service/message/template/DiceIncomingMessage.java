@@ -17,4 +17,8 @@ public class DiceIncomingMessage extends IncomingMessage {
         value = update.getMessage().getDice().getValue();
     }
 
+    public boolean hasAnswer() {
+        return this.response != null;
+    }
+
 }
