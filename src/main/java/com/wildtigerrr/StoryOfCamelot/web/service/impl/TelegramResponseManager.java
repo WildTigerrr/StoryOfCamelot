@@ -299,11 +299,12 @@ public class TelegramResponseManager implements ResponseManager, Runnable {
             long time = System.currentTimeMillis();
             if (time > nextMessageOn) {
                 if (postponeNext) {
-                    nextMessageOn = System.currentTimeMillis() + Time.seconds(20);
+                    nextMessageOn = time + Time.seconds(20);
                     postponeNext = false;
+                } else {
+                    nextMessageOn = time + Time.seconds(2);
                 }
                 lastMessage = responses.pollFirst();
-                nextMessageOn = time + Time.seconds(2);
                 return lastMessage;
             }
             return null;
