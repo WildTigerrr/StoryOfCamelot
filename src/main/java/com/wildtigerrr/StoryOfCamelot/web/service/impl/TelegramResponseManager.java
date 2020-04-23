@@ -106,6 +106,7 @@ public class TelegramResponseManager implements ResponseManager, Runnable {
 
     public void postMessageToAdminChannel(String text, Boolean applyMarkup) {
         sendMessage(TextResponseMessage.builder().lang(Language.RUS)
+                .targetId(BotConfig.ADMIN_CHANNEL_ID)
                 .type(ResponseType.POST_TO_ADMIN_CHANNEL)
                 .text(text)
                 .applyMarkup(applyMarkup).build()
