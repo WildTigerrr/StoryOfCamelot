@@ -1,6 +1,9 @@
 package com.wildtigerrr.StoryOfCamelot.web.service.impl;
 
+import com.wildtigerrr.StoryOfCamelot.bin.enums.Language;
 import com.wildtigerrr.StoryOfCamelot.bin.service.ApplicationContextProvider;
+import com.wildtigerrr.StoryOfCamelot.bin.service.Time;
+import com.wildtigerrr.StoryOfCamelot.bin.translation.TranslationManager;
 import com.wildtigerrr.StoryOfCamelot.web.BotConfig;
 import com.wildtigerrr.StoryOfCamelot.web.TelegramWebHookHandler;
 import com.wildtigerrr.StoryOfCamelot.web.UpdateReceiver;
@@ -19,17 +22,22 @@ import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 import javax.annotation.PreDestroy;
-import java.util.Queue;
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 @Log4j2
 @Service
 @Profile("!test")
 public class TelegramResponseManager implements ResponseManager, Runnable {
 
+    private TranslationManager translation;
     private TelegramWebHookHandler webHook;
     private UpdateReceiver receiver;
     public final Queue<ResponseMessage> responses = new ConcurrentLinkedQueue<>();
+    private final Map<String, MessageQueue> responsesByChat = new ConcurrentHashMap<>();
     private boolean alreadyRedirected = false;
     private boolean active;
 
@@ -41,24 +49,34 @@ public class TelegramResponseManager implements ResponseManager, Runnable {
     public void run() {
         active = true;
         while(active) {
-            for (ResponseMessage object = responses.poll(); object != null; object = responses.poll()) {
-                proceed(object);
-                try {
-                    Thread.sleep(2000);
-                } catch (InterruptedException e) {
-                    log.warn("Sender interrupted");
+            for (MessageQueue queue : responsesByChat.values()) {
+                if (queue.hasMessage()) {
+                    try {
+                        proceed(queue.get());
+                    } catch (Exception e) {
+                        queue.reportError(e);
+                    }
                 }
             }
         }
     }
 
     public void sendMessage(ResponseMessage message) {
-        responses.add(message);
+        if (responsesByChat.containsKey(message.getTargetId())) {
+            responsesByChat.get(message.getTargetId()).add(message);
+        } else {
+            responsesByChat.put(message.getTargetId(), new MessageQueue(message));
+        }
     }
 
     private UpdateReceiver receiver() {
         if (receiver == null) receiver = ApplicationContextProvider.bean("updateReceiver");
         return receiver;
+    }
+
+    private TranslationManager translation() {
+        if (translation == null) translation = ApplicationContextProvider.bean("translationManager");
+        return translation;
     }
 
     private void proceed(ResponseMessage message) {
@@ -87,7 +105,7 @@ public class TelegramResponseManager implements ResponseManager, Runnable {
 
 
     public void postMessageToAdminChannel(String text, Boolean applyMarkup) {
-        sendMessage(TextResponseMessage.builder()
+        sendMessage(TextResponseMessage.builder().lang(Language.RUS)
                 .type(ResponseType.POST_TO_ADMIN_CHANNEL)
                 .text(text)
                 .applyMarkup(applyMarkup).build()
@@ -245,6 +263,71 @@ public class TelegramResponseManager implements ResponseManager, Runnable {
     public void destroy() {
         log.info("Outgoing messages should be stored before restart");
         active = false;
+    }
+
+    class MessageQueue {
+        private final Language language;
+        private final String targetId;
+
+        private final List<Long> timestamps = new CopyOnWriteArrayList<>();
+        private final Deque<ResponseMessage> responses = new ConcurrentLinkedDeque<>();
+
+        private long nextMessageOn;
+        private ResponseMessage lastMessage;
+
+
+        MessageQueue(String targetId, Language language) {
+            this.targetId = targetId;
+            this.language = language;
+        }
+        MessageQueue(ResponseMessage message) {
+            this(message.getTargetId(), message.getLanguage());
+            add(message);
+        }
+
+        void add(ResponseMessage message) {
+            long currentTime = System.currentTimeMillis();
+            clearOldTimestamps(currentTime);
+            timestamps.add(currentTime);
+            responses.add(message);
+            checkSpam();
+        }
+
+        ResponseMessage get() {
+            long time = System.currentTimeMillis();
+            if (time > nextMessageOn) {
+                lastMessage = responses.pollFirst();
+                nextMessageOn = time + Time.seconds(2);
+                return lastMessage;
+            }
+            return null;
+        }
+
+        boolean hasMessage() {
+            return !responses.isEmpty() && (System.currentTimeMillis() > nextMessageOn);
+        }
+
+        void reportError(Exception e) {
+            log.error("Message can't be sent: " + lastMessage, e);
+            responses.offerFirst(lastMessage);
+            nextMessageOn = System.currentTimeMillis() + Time.seconds(5);
+        }
+
+        private void clearOldTimestamps(Long now) {
+            timestamps.removeIf(time -> now - time > Time.seconds(20));
+        }
+
+        private void checkSpam() {
+            if (timestamps.size() > 10) {
+                responses.offerFirst(TextResponseMessage.builder().lang(language)
+                        .text(translation().getMessage("commands.too-fast"))
+                        .targetId(targetId)
+                        .build()
+                );
+                nextMessageOn = System.currentTimeMillis() + Time.seconds(20);
+            }
+        }
+
     }
 
 }
