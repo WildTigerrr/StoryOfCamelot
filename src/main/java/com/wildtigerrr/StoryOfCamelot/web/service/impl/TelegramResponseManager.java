@@ -275,6 +275,7 @@ public class TelegramResponseManager implements ResponseManager, Runnable {
 
         private long nextMessageOn;
         private ResponseMessage lastMessage;
+        private boolean postponeNext;
 
 
         MessageQueue(String targetId, Language language) {
@@ -297,6 +298,10 @@ public class TelegramResponseManager implements ResponseManager, Runnable {
         ResponseMessage get() {
             long time = System.currentTimeMillis();
             if (time > nextMessageOn) {
+                if (postponeNext) {
+                    nextMessageOn = System.currentTimeMillis() + Time.seconds(20);
+                    postponeNext = false;
+                }
                 lastMessage = responses.pollFirst();
                 nextMessageOn = time + Time.seconds(2);
                 return lastMessage;
@@ -325,7 +330,7 @@ public class TelegramResponseManager implements ResponseManager, Runnable {
                         .targetId(targetId)
                         .build()
                 );
-                nextMessageOn = System.currentTimeMillis() + Time.seconds(20);
+                postponeNext = true;
             }
         }
 
