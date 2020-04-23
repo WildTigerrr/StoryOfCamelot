@@ -1,8 +1,10 @@
 package com.wildtigerrr.StoryOfCamelot.web.service.message.template;
 
+import com.wildtigerrr.StoryOfCamelot.bin.enums.Language;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.Player;
 import com.wildtigerrr.StoryOfCamelot.web.bot.update.UpdateWrapper;
 import com.wildtigerrr.StoryOfCamelot.web.service.ResponseType;
+import com.wildtigerrr.StoryOfCamelot.web.service.message.IncomingMessage;
 import com.wildtigerrr.StoryOfCamelot.web.service.message.ResponseMessage;
 import lombok.Builder;
 import lombok.Getter;
@@ -25,6 +27,13 @@ public class ImageResponseMessage implements ResponseMessage {
     private final String fileId;
     private final String fileName;
     private final InputStream fileStream;
+    @NonNull
+    private final Language lang;
+
+    @Override
+    public Language getLanguage() {
+        return lang;
+    }
 
     @Override
     public String getText() {
@@ -37,18 +46,29 @@ public class ImageResponseMessage implements ResponseMessage {
     }
 
     public static class ImageResponseMessageBuilder {
-        private String targetId;
         public ImageResponseMessageBuilder targetId(String targetId) {
             this.targetId = targetId;
             return this;
         }
         public ImageResponseMessageBuilder targetId(UpdateWrapper update) {
-            this.targetId = update.getUserId();
-            return this;
+            return this.targetId(update.getUserId());
+        }
+        public ImageResponseMessageBuilder targetId(IncomingMessage message) {
+            return this.targetId(message.getUserId());
         }
         public ImageResponseMessageBuilder targetId(Player player) {
-            this.targetId = player.getExternalId();
+            return this.targetId(player.getExternalId());
+        }
+
+        public ImageResponseMessageBuilder lang(Language language) {
+            this.lang = language;
             return this;
+        }
+        public ImageResponseMessageBuilder lang(Player player) {
+            return this.lang(player.getLanguage());
+        }
+        public ImageResponseMessageBuilder lang(IncomingMessage message) {
+            return this.lang(message.getPlayer());
         }
     }
 

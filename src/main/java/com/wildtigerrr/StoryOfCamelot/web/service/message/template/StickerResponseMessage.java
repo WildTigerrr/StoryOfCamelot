@@ -1,5 +1,6 @@
 package com.wildtigerrr.StoryOfCamelot.web.service.message.template;
 
+import com.wildtigerrr.StoryOfCamelot.bin.enums.Language;
 import com.wildtigerrr.StoryOfCamelot.web.service.ResponseType;
 import com.wildtigerrr.StoryOfCamelot.web.service.message.ResponseMessage;
 import lombok.Builder;
@@ -22,6 +23,13 @@ public class StickerResponseMessage implements ResponseMessage {
     private final String fileId;
     private final String fileName;
     private final InputStream inputStream;
+    @NonNull
+    private final Language lang;
+
+    @Override
+    public Language getLanguage() {
+        return lang;
+    }
 
     @Override
     public String getText() {

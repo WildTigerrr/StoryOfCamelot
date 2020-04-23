@@ -1,5 +1,6 @@
 package com.wildtigerrr.StoryOfCamelot.web.service.message.template;
 
+import com.wildtigerrr.StoryOfCamelot.bin.enums.Language;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.Player;
 import com.wildtigerrr.StoryOfCamelot.web.BotConfig;
 import com.wildtigerrr.StoryOfCamelot.web.bot.update.UpdateWrapper;
@@ -8,6 +9,8 @@ import com.wildtigerrr.StoryOfCamelot.web.service.message.IncomingMessage;
 import com.wildtigerrr.StoryOfCamelot.web.service.message.ResponseMessage;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.NonNull;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ForceReplyKeyboard;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboard;
 
@@ -19,13 +22,17 @@ public class TextResponseMessage implements ResponseMessage {
 
     @Builder.Default
     private final ResponseType type = ResponseType.TEXT;
+    @NonNull
     private final String targetId;
+    @NonNull
     private final String text;
     @Builder.Default
     private final boolean applyMarkup = false;
     @Builder.Default
     private final boolean forceReply = false;
     private final ReplyKeyboard keyboard;
+    @NonNull
+    private final Language lang;
 
     public ReplyKeyboard getKeyboard() {
         return keyboard != null
@@ -33,23 +40,35 @@ public class TextResponseMessage implements ResponseMessage {
                 : forceReply ? new ForceReplyKeyboard() : null;
     }
 
+    @Override
+    public Language getLanguage() {
+        return lang;
+    }
+
     public static class TextResponseMessageBuilder {
-        private String targetId;
         public TextResponseMessageBuilder targetId(String targetId) {
             this.targetId = targetId == null ? DEFAULT_TARGET_ID : targetId;
             return this;
         }
         public TextResponseMessageBuilder targetId(UpdateWrapper update) {
-            this.targetId = update.getUserId() == null ? DEFAULT_TARGET_ID : update.getUserId();
-            return this;
+            return this.targetId(update.getUserId());
         }
         public TextResponseMessageBuilder targetId(IncomingMessage message) {
-            this.targetId = message.getUserId() == null ? DEFAULT_TARGET_ID : message.getUserId();
-            return this;
+            return this.targetId(message.getUserId());
         }
         public TextResponseMessageBuilder targetId(Player player) {
-            this.targetId = player.getExternalId() == null ? DEFAULT_TARGET_ID : player.getExternalId();
+            return this.targetId(player.getExternalId());
+        }
+
+        public TextResponseMessageBuilder lang(Language language) {
+            this.lang = language;
             return this;
+        }
+        public TextResponseMessageBuilder lang(IncomingMessage message) {
+            return this.lang(message.getPlayer());
+        }
+        public TextResponseMessageBuilder lang(Player player) {
+            return this.lang(player.getLanguage());
         }
     }
 
