@@ -1,5 +1,6 @@
 package com.wildtigerrr.StoryOfCamelot.web;
 
+import com.wildtigerrr.StoryOfCamelot.bin.enums.Language;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.service.template.PlayerService;
 import com.wildtigerrr.StoryOfCamelot.web.service.ResponseManager;
 import com.wildtigerrr.StoryOfCamelot.web.service.ResponseType;
@@ -58,7 +59,7 @@ public class UpdateReceiver implements Runnable {
     private void logSender(IncomingMessage message) {
         log.info(message.senderLog() + ": " + message.text() + " - Queued");
         if (!message.getUserId().equals(BotConfig.WEBHOOK_ADMIN_ID)) {
-            messages.sendMessage(TextResponseMessage.builder()
+            messages.sendMessage(TextResponseMessage.builder().lang(Language.ENG).targetId(BotConfig.ADMIN_CHANNEL_ID)
                     .text(message.toString()).type(ResponseType.POST_TO_ADMIN_CHANNEL).build()
             );
         }
