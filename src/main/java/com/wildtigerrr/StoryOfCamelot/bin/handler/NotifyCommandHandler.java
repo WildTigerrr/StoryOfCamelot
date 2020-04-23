@@ -26,14 +26,14 @@ public class NotifyCommandHandler extends TextMessageHandler {
         try {
             value = textMessage.getParsedCommand().intByNum(1);
         } catch (InvalidInputException e) {
-            messages.sendMessage(TextResponseMessage.builder()
+            messages.sendMessage(TextResponseMessage.builder().lang(message)
                     .text(translation.getMessage("commands.notify_error", textMessage))
                     .targetId(message)
                     .build()
             );
             return;
         }
-        messages.sendMessage(TextResponseMessage.builder()
+        messages.sendMessage(TextResponseMessage.builder().lang(message)
                 .text(translation.getMessage("commands.notify", textMessage, new Object[]{value}))
                 .targetId(message)
                 .build()
@@ -43,7 +43,8 @@ public class NotifyCommandHandler extends TextMessageHandler {
             asyncMessageSender.sendDelayedMessage(
                     value * 60 * 1000,
                     translation.getMessage("commands.notify_finish", textMessage, new Object[]{value}),
-                    message.getUserId()
+                    message.getUserId(),
+                    message.getPlayer().getLanguage()
             );
         } catch (InterruptedException e) {
             e.printStackTrace();

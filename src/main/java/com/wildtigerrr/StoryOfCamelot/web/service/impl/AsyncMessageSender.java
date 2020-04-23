@@ -1,5 +1,6 @@
 package com.wildtigerrr.StoryOfCamelot.web.service.impl;
 
+import com.wildtigerrr.StoryOfCamelot.bin.enums.Language;
 import com.wildtigerrr.StoryOfCamelot.bin.translation.TranslationManager;
 import com.wildtigerrr.StoryOfCamelot.web.service.ResponseManager;
 import com.wildtigerrr.StoryOfCamelot.web.service.message.template.TextResponseMessage;
@@ -16,9 +17,9 @@ public class AsyncMessageSender {
     }
 
     @Async
-    public void sendDelayedMessage(int delay, String message, String targetId) throws InterruptedException {
+    public void sendDelayedMessage(int delay, String message, String targetId, Language language) throws InterruptedException {
         Thread.sleep(delay);
-        messages.sendMessage(TextResponseMessage.builder()
+        messages.sendMessage(TextResponseMessage.builder().lang(language)
                 .text(message)
                 .targetId(targetId)
                 .build()

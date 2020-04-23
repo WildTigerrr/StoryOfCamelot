@@ -19,13 +19,13 @@ public class ImageMessageHandler extends CommandHandler {
     @Override
     public void process(IncomingMessage message) {
         ImageIncomingMessage imageMessage = (ImageIncomingMessage) message;
-        messages.sendMessage(ImageResponseMessage.builder()
+        messages.sendMessage(ImageResponseMessage.builder().lang(message)
                 .targetId(BotConfig.ADMIN_CHANNEL_ID)
                 .caption(imageMessage.getAuthorCaption())
                 .fileId(imageMessage.getBiggetImageId())
                 .build()
         );
-        messages.sendMessage(TextResponseMessage.builder()
+        messages.sendMessage(TextResponseMessage.builder().lang(message)
                 .text(translation.getMessage("commands.unknown", message))
                 .targetId(message)
                 .build()

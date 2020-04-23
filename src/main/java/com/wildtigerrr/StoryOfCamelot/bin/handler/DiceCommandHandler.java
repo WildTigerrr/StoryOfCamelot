@@ -30,7 +30,7 @@ public class DiceCommandHandler extends CommandHandler {
     }
 
     private void sendDiceResult(DiceIncomingMessage message) {
-        messages.sendMessage(TextResponseMessage.builder()
+        messages.sendMessage(TextResponseMessage.builder().lang(message)
                 .text(translation.getMessage("commands.dice-output", message, new Object[]{message.getValue()}))
                 .targetId(message)
                 .applyMarkup(true).build()
@@ -38,7 +38,7 @@ public class DiceCommandHandler extends CommandHandler {
     }
 
     private void sendDice(DiceIncomingMessage message) {
-        messages.sendMessage(DiceResponseMessage.builder()
+        messages.sendMessage(DiceResponseMessage.builder().lang(message)
                 .incomingMessage(message)
                 .targetId(message).build()
         );
@@ -47,19 +47,19 @@ public class DiceCommandHandler extends CommandHandler {
     private void sendMinigameResult(DiceIncomingMessage message) {
         String botResult = "У меня *" + message.getResponse() + "*. ";
         if (message.getValue() > message.getResponse()) {
-            messages.sendMessage(TextResponseMessage.builder()
+            messages.sendMessage(TextResponseMessage.builder().lang(message)
                     .text(botResult + "Ты победил!")
                     .targetId(message)
                     .applyMarkup(true).build()
             );
         } else if (message.getValue() < message.getResponse()) {
-            messages.sendMessage(TextResponseMessage.builder()
+            messages.sendMessage(TextResponseMessage.builder().lang(message)
                     .text(botResult + "Я победил!")
                     .targetId(message)
                     .applyMarkup(true).build()
             );
         } else {
-            messages.sendMessage(TextResponseMessage.builder()
+            messages.sendMessage(TextResponseMessage.builder().lang(message)
                     .text(botResult + "Ничья!")
                     .targetId(message)
                     .applyMarkup(true).build()

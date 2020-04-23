@@ -15,7 +15,7 @@ public class StartCommandHandler extends TextMessageHandler {
 
     @Override
     public void process(IncomingMessage message) {
-        messages.sendMessage(TextResponseMessage.builder()
+        messages.sendMessage(TextResponseMessage.builder().lang(message)
                 .text("Hello world!")
                 .targetId(message)
                 .build()

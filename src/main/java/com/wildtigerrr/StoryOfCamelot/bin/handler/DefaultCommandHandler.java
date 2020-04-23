@@ -15,7 +15,7 @@ public class DefaultCommandHandler extends TextMessageHandler {
 
     @Override
     public void process(IncomingMessage message) {
-        messages.sendMessage(TextResponseMessage.builder()
+        messages.sendMessage(TextResponseMessage.builder().lang(message)
                 .text(translation.getMessage("commands.unknown", message))
                 .targetId(message)
                 .build()
