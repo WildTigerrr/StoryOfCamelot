@@ -1,6 +1,7 @@
 package com.wildtigerrr.StoryOfCamelot.bin.handler;
 
 import com.wildtigerrr.StoryOfCamelot.bin.base.service.ValidationResult;
+import com.wildtigerrr.StoryOfCamelot.bin.enums.Language;
 import com.wildtigerrr.StoryOfCamelot.bin.translation.TranslationManager;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.Player;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.service.template.PlayerService;
@@ -32,10 +33,11 @@ public class NicknameCommandHandler extends CommandHandler {
     }
 
     public void setNickname(Player player, String newName) {
-        NicknameValidator validator = new NicknameValidator(player, newName);
+        NicknameValidator validator = new NicknameValidator(player.getLanguage(), newName);
         ValidationResult result = validator.validate();
         String message = result.getFailMessage();
         if (result.success()) {
+            player.setNickname(newName);
             playerService.update(player);
             message = translation.getMessage("player.nickname.accept", player,
                     new Object[]{player.getNickname()});
@@ -47,27 +49,25 @@ public class NicknameCommandHandler extends CommandHandler {
 
     class NicknameValidator {
 
-        Player player;
+        Language language;
         String newNickname;
 
-        NicknameValidator(Player player, String nickname) {
-            this.player = player;
+        NicknameValidator(Language language, String nickname) {
+            this.language = language;
             this.newNickname = nickname;
         }
 
         ValidationResult validate() {
             ValidationResult result = ValidationResult.get();
             if (newNickname == null || newNickname.isBlank()) {
-                result.setFailMessage(translation.getMessage("player.nickname.empty", player));
+                result.setFailMessage(translation.getMessage("player.nickname.empty", language));
             } else if (containsSpecialCharacters()) {
-                result.setFailMessage(translation.getMessage("player.nickname.wrong-symbols", player));
+                result.setFailMessage(translation.getMessage("player.nickname.wrong-symbols", language));
             } else if (playerService.findByNickname(newNickname) != null) {
-                result.setFailMessage(translation.getMessage("player.nickname.duplicate", player, new Object[]{newNickname}));
+                result.setFailMessage(translation.getMessage("player.nickname.duplicate", language, new Object[]{newNickname}));
             } else if (newNickname.length() > getNicknameLengthMax()) {
-                result.setFailMessage(translation.getMessage("player.nickname.too-long", player,
+                result.setFailMessage(translation.getMessage("player.nickname.too-long", language,
                         new Object[]{String.valueOf(getNicknameLengthMax())}));
-            } else if (player.getNickname().isEmpty()) {
-                result.setFailMessage(translation.getMessage("player.nickname.empty", player));
             }
             return result;
         }
