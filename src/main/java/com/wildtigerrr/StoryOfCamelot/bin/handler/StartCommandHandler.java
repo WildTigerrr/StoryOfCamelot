@@ -16,7 +16,7 @@ public class StartCommandHandler extends TextMessageHandler {
     @Override
     public void process(IncomingMessage message) {
         messages.sendMessage(TextResponseMessage.builder().lang(message)
-                .text("Hello world!")
+                .text("Please, set nickname using /nickname command")
                 .targetId(message)
                 .build()
         );
