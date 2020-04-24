@@ -6,8 +6,10 @@ import com.wildtigerrr.StoryOfCamelot.database.jpa.interfaces.Fighter;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.Mob;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.Player;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.enums.PlayerStatus;
+import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.enums.UserStatus;
 import com.wildtigerrr.StoryOfCamelot.exception.InvalidFighterException;
 import lombok.Getter;
+import lombok.Setter;
 import org.springframework.data.redis.core.RedisHash;
 
 import java.io.Serializable;
@@ -18,7 +20,11 @@ public class PlayerState implements Serializable {
 
     private String id;
     private PlayerStatus status;
+    @Setter
+    private UserStatus userStatus;
+    @Setter
     private Enemy enemy;
+    @Setter
     private BattleLog lastBattle;
 
     public PlayerState(Player player, Fighter fighter) {
@@ -27,12 +33,8 @@ public class PlayerState implements Serializable {
         this.enemy = enemyOf(fighter);
     }
 
-    public BattleLog getLastBattle() {
-        return lastBattle;
-    }
-
-    public void setLastBattle(BattleLog lastBattle) {
-        this.lastBattle = lastBattle;
+    public void ban() {
+        this.userStatus = userStatus.ifBan();
     }
 
     private Enemy enemyOf(Fighter fighter) {
