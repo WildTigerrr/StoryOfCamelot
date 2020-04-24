@@ -22,10 +22,11 @@ import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 import javax.annotation.PreDestroy;
-import java.util.*;
+import java.util.Deque;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedDeque;
-import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 @Log4j2
@@ -36,7 +37,6 @@ public class TelegramResponseManager implements ResponseManager, Runnable {
     private TranslationManager translation;
     private TelegramWebHookHandler webHook;
     private UpdateReceiver receiver;
-    public final Queue<ResponseMessage> responses = new ConcurrentLinkedQueue<>();
     private final Map<String, MessageQueue> responsesByChat = new ConcurrentHashMap<>();
     private boolean alreadyRedirected = false;
     private boolean active;
@@ -325,7 +325,7 @@ public class TelegramResponseManager implements ResponseManager, Runnable {
         }
 
         private void checkSpam() {
-            if (timestamps.size() > 10) {
+            if (timestamps.size() > 10 && !postponeNext) {
                 responses.offerFirst(TextResponseMessage.builder().lang(language)
                         .text(translation().getMessage("commands.too-fast"))
                         .targetId(targetId)
