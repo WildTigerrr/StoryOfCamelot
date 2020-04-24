@@ -20,7 +20,7 @@ public class DiceCommandHandler extends CommandHandler {
     @Override
     public void process(IncomingMessage message) {
         DiceIncomingMessage diceMessage = (DiceIncomingMessage) message;
-        if (diceMessage.hasAnswer()) {
+        if (!diceMessage.hasAnswer()) {
             sendDiceResult(diceMessage);
             sendDice(diceMessage);
         } else {
