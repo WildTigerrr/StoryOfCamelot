@@ -25,7 +25,7 @@ public enum Command {
             return true;
         }
     },
-    NICKNAME {
+    NICKNAME ("nicknameCommandHandler") {
         @Override
         public boolean execute(UpdateWrapper update) {
             playerService.setNickname(update.getPlayer(), StringUtils.emptyIfOutOfBounds(update.getText().split(" ", 2), 1));

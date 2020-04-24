@@ -45,7 +45,6 @@ public class Player extends SimpleObject implements Comparable<Player>, Fighter 
     @Setter(AccessLevel.NONE)
     private String id;
     private String externalId; // TODO Admin method for setting another external Id
-    @Setter(AccessLevel.NONE)
     private String nickname;
     @Enumerated(EnumType.STRING)
     private Language language;
@@ -62,15 +61,6 @@ public class Player extends SimpleObject implements Comparable<Player>, Fighter 
     @Override
     public ObjectType type() {
         return ObjectType.PLAYER;
-    }
-
-    public Boolean setNickname(String nickname) {
-        if (nickname.length() > getNicknameLengthMax()) {
-            return false;
-        } else {
-            this.nickname = nickname;
-            return true;
-        }
     }
 
     public void ban() {
