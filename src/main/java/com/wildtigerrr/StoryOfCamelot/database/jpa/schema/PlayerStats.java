@@ -73,6 +73,7 @@ public class PlayerStats {
     }
 
     public String raiseStat(Stats stat, Integer quantity, Language lang, TranslationManager translation) {
+        if (quantity == 0) return "";
         if (quantity > unassignedPoints) return translation.getMessage("player.stats.insufficient-points", lang);
         int newQuantity;
         switch (stat) {
@@ -119,7 +120,8 @@ public class PlayerStats {
 
     public ArrayList<String> addStatExp(int exp, Stats stat, Language lang, TranslationManager translation) {
         ArrayList<String> events = new ArrayList<>();
-        Boolean up = isStatUp(stat, exp);
+        if (exp == 0) return events;
+        boolean up = isStatUp(stat, exp);
         String currentValue;
         while (up) {
             switch (stat) {
