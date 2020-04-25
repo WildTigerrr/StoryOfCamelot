@@ -2,6 +2,8 @@ package com.wildtigerrr.StoryOfCamelot.bin.service;
 
 import lombok.experimental.UtilityClass;
 
+import java.util.Calendar;
+
 @UtilityClass
 public class Time {
     
@@ -24,6 +26,13 @@ public class Time {
     
     public long seconds(long number) {
         return number * MILLISECONDS_IN_SECOND;
+    }
+
+    public long getTimeAfter(long milliseconds) {
+//        Calendar calendar = Calendar.getInstance();
+//        calendar.add(Calendar.SECOND, (int) seconds(milliseconds));
+//        return calendar.getTimeInMillis();
+        return System.currentTimeMillis() + milliseconds;
     }
     
 }
