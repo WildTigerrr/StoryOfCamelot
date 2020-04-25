@@ -1,13 +1,10 @@
 package com.wildtigerrr.StoryOfCamelot.bin.enums;
 
 import com.wildtigerrr.StoryOfCamelot.bin.base.GameMain;
-import com.wildtigerrr.StoryOfCamelot.bin.base.GameMovement;
 import com.wildtigerrr.StoryOfCamelot.bin.base.service.BattleService;
 import com.wildtigerrr.StoryOfCamelot.bin.base.service.player.ExperienceService;
 import com.wildtigerrr.StoryOfCamelot.bin.handler.CommandHandler;
 import com.wildtigerrr.StoryOfCamelot.bin.service.ApplicationContextProvider;
-import com.wildtigerrr.StoryOfCamelot.bin.service.StringUtils;
-import com.wildtigerrr.StoryOfCamelot.database.jpa.service.template.PlayerService;
 import com.wildtigerrr.StoryOfCamelot.web.bot.update.UpdateWrapper;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -78,9 +75,7 @@ public enum Command {
     private final String handlerName;
 
     private static GameMain game;
-    private static GameMovement gameMovement;
     private static BattleService battleService;
-    private static PlayerService playerService;
     private static ExperienceService experienceService;
 
     Command(String handlerName) {
@@ -103,43 +98,33 @@ public enum Command {
     @Component
     public static class DependencyInjector {
         private final GameMain game;
-        private final GameMovement gameMovement;
         private final BattleService battleService;
-        private final PlayerService playerService;
         private final ExperienceService experienceService;
 
         @Autowired
         public DependencyInjector(
                 GameMain game,
-                GameMovement gameMovement,
                 BattleService battleService,
-                PlayerService playerService,
                 ExperienceService experienceService
         ) {
             this.game = game;
-            this.gameMovement = gameMovement;
             this.battleService = battleService;
-            this.playerService = playerService;
             this.experienceService = experienceService;
         }
 
         @PostConstruct
         public void postConstruct() {
-            Command.setDependencies(game, gameMovement, battleService, playerService, experienceService);
+            Command.setDependencies(game, battleService, experienceService);
         }
     }
 
     private static void setDependencies(
             GameMain gameDep,
-            GameMovement gameMovementDep,
             BattleService battleServiceDep,
-            PlayerService playerServiceDep,
             ExperienceService experienceServiceDep
     ) {
         game = gameDep;
-        gameMovement = gameMovementDep;
         battleService = battleServiceDep;
-        playerService = playerServiceDep;
         experienceService = experienceServiceDep;
     }
 

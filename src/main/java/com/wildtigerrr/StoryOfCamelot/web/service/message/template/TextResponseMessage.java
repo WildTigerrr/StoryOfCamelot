@@ -46,6 +46,40 @@ public class TextResponseMessage implements ResponseMessage {
     }
 
     public static class TextResponseMessageBuilder {
+        /**
+         * Set default params from Player instance<br/>
+         * Params to set:<br/>
+         * <ul>
+         *     <li>targetId</li>
+         *     <li>lang</li>
+         * </ul>
+         *
+         * @param message - IncomingMessage instance to get params from
+         * @return Builder
+         */
+        public TextResponseMessageBuilder by(IncomingMessage message) {
+            targetId(message)
+                    .lang(message);
+            return this;
+        }
+
+        /**
+         * Set default params from Player instance<br/>
+         * Params to set:<br/>
+         * <ul>
+         *     <li>targetId</li>
+         *     <li>lang</li>
+         * </ul>
+         *
+         * @param player - Player instance to get params from
+         * @return Builder
+         */
+        public TextResponseMessageBuilder by(Player player) {
+            targetId(player)
+                    .lang(player);
+            return this;
+        }
+
         public TextResponseMessageBuilder targetId(String targetId) {
             this.targetId = targetId == null ? DEFAULT_TARGET_ID : targetId;
             return this;

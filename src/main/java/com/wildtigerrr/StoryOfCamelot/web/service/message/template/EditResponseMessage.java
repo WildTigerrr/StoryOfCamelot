@@ -34,6 +34,25 @@ public class EditResponseMessage implements ResponseMessage {
     }
 
     public static class EditResponseMessageBuilder {
+        /**
+         * Set default params from Player instance<br/>
+         * Params to set:<br/>
+         * <ul>
+         *     <li>targetId</li>
+         *     <li>lang</li>
+         *     <li>messageId</li>
+         * </ul>
+         *
+         * @param message - IncomingMessage instance to get params from
+         * @return Builder
+         */
+        public EditResponseMessageBuilder by(IncomingMessage message) {
+            targetId(message)
+                    .lang(message)
+                    .messageId(message);
+            return this;
+        }
+
         public EditResponseMessageBuilder targetId(String targetId) {
             this.targetId = targetId;
             return this;

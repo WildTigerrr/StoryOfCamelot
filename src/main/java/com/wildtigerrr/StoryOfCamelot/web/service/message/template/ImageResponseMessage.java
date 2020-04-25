@@ -46,6 +46,40 @@ public class ImageResponseMessage implements ResponseMessage {
     }
 
     public static class ImageResponseMessageBuilder {
+        /**
+         * Set default params from Player instance<br/>
+         * Params to set:<br/>
+         * <ul>
+         *     <li>targetId</li>
+         *     <li>lang</li>
+         * </ul>
+         *
+         * @param message - IncomingMessage instance to get params from
+         * @return Builder
+         */
+        public ImageResponseMessageBuilder by(IncomingMessage message) {
+            targetId(message)
+                    .lang(message);
+            return this;
+        }
+
+        /**
+         * Set default params from Player instance<br/>
+         * Params to set:<br/>
+         * <ul>
+         *     <li>targetId</li>
+         *     <li>lang</li>
+         * </ul>
+         *
+         * @param player - Player instance to get params from
+         * @return Builder
+         */
+        public ImageResponseMessageBuilder by(Player player) {
+            targetId(player)
+                    .lang(player);
+            return this;
+        }
+
         public ImageResponseMessageBuilder targetId(String targetId) {
             this.targetId = targetId;
             return this;

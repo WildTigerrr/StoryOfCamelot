@@ -1,7 +1,7 @@
 package com.wildtigerrr.StoryOfCamelot.bin.base.service;
 
-import com.wildtigerrr.StoryOfCamelot.bin.base.GameMovement;
 import com.wildtigerrr.StoryOfCamelot.bin.enums.ActionType;
+import com.wildtigerrr.StoryOfCamelot.bin.handler.MoveCommandHandler;
 import com.wildtigerrr.StoryOfCamelot.bin.service.Scheduler;
 import com.wildtigerrr.StoryOfCamelot.bin.service.ScheduledAction;
 import com.wildtigerrr.StoryOfCamelot.web.service.ResponseManager;
@@ -54,13 +54,13 @@ public class TimeDependentActions {
     }
 
     private static FileProcessing fileService;
-    private static GameMovement movement;
+    private static MoveCommandHandler movement;
     private static ResponseManager messages;
 
     @Autowired
-    private TimeDependentActions(FileProcessing fileService, GameMovement gameMovement, ResponseManager messages) {
+    private TimeDependentActions(FileProcessing fileService, MoveCommandHandler moveHandler, ResponseManager messages) {
         TimeDependentActions.fileService = fileService;
-        TimeDependentActions.movement = gameMovement;
+        TimeDependentActions.movement = moveHandler;
         TimeDependentActions.messages = messages;
     }
 
