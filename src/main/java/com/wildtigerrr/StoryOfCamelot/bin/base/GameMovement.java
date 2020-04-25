@@ -64,14 +64,14 @@ public class GameMovement {
     public void handleMove(IncomingMessage message) {
         if (message.getPlayer().getStatus() == PlayerStatus.MOVEMENT) {
             if (message.isQuery()) {
-                messages.sendMessage(EditResponseMessage.builder()
+                messages.sendMessage(EditResponseMessage.builder().lang(message)
                         .messageId(message)
                         .text(translation.getMessage("movement.location.in-progress", message))
                         .targetId(message)
                         .applyMarkup(true).build()
                 );
             } else {
-                messages.sendMessage(TextResponseMessage.builder()
+                messages.sendMessage(TextResponseMessage.builder().lang(message)
                         .text(translation.getMessage("movement.location.in-progress", message)).targetId(message).build()
                 );
             }
@@ -86,13 +86,13 @@ public class GameMovement {
     public void sendAvailableLocations(Player player) {
         ArrayList<Location> nearLocations = locationNearService.getNearLocations(player.getLocation());
         if (!nearLocations.isEmpty()) {
-            messages.sendMessage(TextResponseMessage.builder()
+            messages.sendMessage(TextResponseMessage.builder().lang(player)
                             .text(translation.getMessage("movement.location.select", player))
                             .keyboard(KeyboardManager.getKeyboardForLocations(nearLocations, player.getLanguage()))
                             .targetId(player).build()
             );
         } else {
-            messages.sendMessage(TextResponseMessage.builder()
+            messages.sendMessage(TextResponseMessage.builder().lang(player)
                     .text(translation.getMessage("movement.location.blocked", player)).targetId(player).build()
             );
         }
@@ -106,7 +106,7 @@ public class GameMovement {
                     location
             );
             if (distance == -1) {
-                messages.sendMessage(TextResponseMessage.builder()
+                messages.sendMessage(TextResponseMessage.builder().lang(message)
                         .text(translation.getMessage("movement.location.no-connection", message)).targetId(message).build()
                 );
                 return;
@@ -130,7 +130,7 @@ public class GameMovement {
                 player.move();
                 playerService.update(player);
             }
-            messages.sendMessage(EditResponseMessage.builder()
+            messages.sendMessage(EditResponseMessage.builder().lang(message)
                     .messageId(message)
                     .text(newText)
                     .targetId(message)
@@ -144,24 +144,18 @@ public class GameMovement {
         Location location = locationService.findById(action.target);
         player.setLocation(location);
         player.stop();
+        String text = translation.getMessage("movement.location.arrived", player, new Object[]{location.getName(player)});
         if (location.getImageLink() != null) {
             InputStream stream = dataProvider.getObject(location.getImageLink().getLocation());
-            messages.sendMessage(ImageResponseMessage.builder()
+            messages.sendMessage(ImageResponseMessage.builder().lang(player)
                     .fileName(location.getSystemName())
                     .fileStream(stream)
-                    .caption(translation.getMessage(
-                            "movement.location.arrived",
-                            player,
-                            new Object[]{location.getName(player.getLanguage())}))
+                    .caption(text)
                     .targetId(player).build()
             );
         } else {
-            messages.sendMessage(TextResponseMessage.builder()
-                    .text(translation.getMessage(
-                            "movement.location.arrived",
-                            player,
-                            new Object[]{location.getName(player.getLanguage())}
-                    )).targetId(player).build()
+            messages.sendMessage(TextResponseMessage.builder().lang(player)
+                    .text(text).targetId(player).build()
             );
         }
         experienceService.addExperience(

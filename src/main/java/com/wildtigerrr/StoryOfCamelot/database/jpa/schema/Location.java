@@ -62,6 +62,9 @@ public class Location extends SimpleObject {
     public String getName(Language lang) {
         return name.getName(lang);
     }
+    public String getName(Player player) {
+        return getName(player.getLanguage());
+    }
 
     @Override
     public String toString() {
