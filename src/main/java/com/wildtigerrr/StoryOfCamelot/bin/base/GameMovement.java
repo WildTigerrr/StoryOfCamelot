@@ -18,6 +18,7 @@ import com.wildtigerrr.StoryOfCamelot.web.service.message.IncomingMessage;
 import com.wildtigerrr.StoryOfCamelot.web.service.message.template.EditResponseMessage;
 import com.wildtigerrr.StoryOfCamelot.web.service.message.template.ImageResponseMessage;
 import com.wildtigerrr.StoryOfCamelot.web.service.message.template.TextResponseMessage;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -26,6 +27,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 
 @Service
+@Log4j2
 public class GameMovement {
 
     private ResponseManager messages;
@@ -62,6 +64,7 @@ public class GameMovement {
     }
 
     public void handleMove(IncomingMessage message) {
+        log.warn(message.getPlayer().getStatus());
         if (message.getPlayer().getStatus() == PlayerStatus.MOVEMENT) {
             if (message.isQuery()) {
                 messages.sendMessage(EditResponseMessage.builder().lang(message)
@@ -164,6 +167,7 @@ public class GameMovement {
                 Integer.parseInt(action.additionalValue) / 10,
                 true
         );
+        log.warn(player.getStatus());
         playerService.update(player);
     }
 }
