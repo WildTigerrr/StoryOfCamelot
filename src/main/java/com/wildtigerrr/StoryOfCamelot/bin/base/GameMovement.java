@@ -8,14 +8,13 @@ import com.wildtigerrr.StoryOfCamelot.bin.translation.TranslationManager;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.Location;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.Player;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.enums.PlayerStatus;
-import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.enums.PlayerStatusExtended;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.enums.Stats;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.service.implementation.LocationNearServiceImpl;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.service.implementation.LocationServiceImpl;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.service.implementation.PlayerServiceImpl;
-import com.wildtigerrr.StoryOfCamelot.web.bot.update.UpdateWrapper;
 import com.wildtigerrr.StoryOfCamelot.web.service.DataProvider;
 import com.wildtigerrr.StoryOfCamelot.web.service.ResponseManager;
+import com.wildtigerrr.StoryOfCamelot.web.service.message.IncomingMessage;
 import com.wildtigerrr.StoryOfCamelot.web.service.message.template.EditResponseMessage;
 import com.wildtigerrr.StoryOfCamelot.web.service.message.template.ImageResponseMessage;
 import com.wildtigerrr.StoryOfCamelot.web.service.message.template.TextResponseMessage;
@@ -30,13 +29,13 @@ import java.util.Calendar;
 public class GameMovement {
 
     private ResponseManager messages;
-    private ExperienceService experienceService;
-    private GameTutorial tutorial;
-    private LocationServiceImpl locationService;
-    private LocationNearServiceImpl locationNearService;
-    private PlayerServiceImpl playerService;
     private DataProvider dataProvider;
     private TranslationManager translation;
+
+    private PlayerServiceImpl playerService;
+    private ExperienceService experienceService;
+    private LocationServiceImpl locationService;
+    private LocationNearServiceImpl locationNearService;
 
     public GameMovement() {
     }
@@ -44,25 +43,25 @@ public class GameMovement {
     @Autowired
     GameMovement(
             DataProvider dataProvider,
+            ResponseManager messages,
             TranslationManager translation,
+
             PlayerServiceImpl playerService,
-            LocationNearServiceImpl locationNearService,
-            LocationServiceImpl locationService,
-            GameTutorial tutorial,
             ExperienceService experienceService,
-            ResponseManager messages
-    ) {
+            LocationServiceImpl locationService,
+            LocationNearServiceImpl locationNearService
+            ) {
         this.dataProvider = dataProvider;
-        this.translation = translation;
-        this.playerService = playerService;
-        this.locationNearService = locationNearService;
-        this.locationService = locationService;
-        this.tutorial = tutorial;
-        this.experienceService = experienceService;
         this.messages = messages;
+        this.translation = translation;
+
+        this.playerService = playerService;
+        this.locationService = locationService;
+        this.experienceService = experienceService;
+        this.locationNearService = locationNearService;
     }
 
-    public void handleMove(UpdateWrapper message) {
+    public void handleMove(IncomingMessage message) {
         if (message.getPlayer().getStatus() == PlayerStatus.MOVEMENT) {
             if (message.isQuery()) {
                 messages.sendMessage(EditResponseMessage.builder()
@@ -77,7 +76,7 @@ public class GameMovement {
                 );
             }
         } else if (message.isQuery()) {
-            String[] commandParts = message.getText().split(" ", 2);
+            String[] commandParts = message.text().split(" ", 2);
             moveToLocation(message, commandParts[1]);
         } else { // if (commandParts.length < 2)
             sendAvailableLocations(message.getPlayer());
@@ -99,7 +98,7 @@ public class GameMovement {
         }
     }
 
-    public void moveToLocation(UpdateWrapper message, String locationId) {
+    public void moveToLocation(IncomingMessage message, String locationId) {
         Location location = locationService.findById(locationId);
         if (location != null) {
             int distance = locationNearService.getDistance(
@@ -164,10 +163,6 @@ public class GameMovement {
                             new Object[]{location.getName(player.getLanguage())}
                     )).targetId(player).build()
             );
-        }
-        if (player.getAdditionalStatus() == PlayerStatusExtended.TUTORIAL_MOVEMENT) {
-            tutorial.tutorialMovement(player);
-            return;
         }
         experienceService.addExperience(
                 player,

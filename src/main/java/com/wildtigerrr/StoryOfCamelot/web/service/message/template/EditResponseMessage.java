@@ -55,6 +55,9 @@ public class EditResponseMessage implements ResponseMessage {
         public EditResponseMessageBuilder messageId(UpdateWrapper update) {
             return this.messageId(update.getMessageId());
         }
+        public EditResponseMessageBuilder messageId(IncomingMessage message) {
+            return this.messageId(message.getMessageId());
+        }
 
         public EditResponseMessageBuilder lang(Language language) {
             this.lang = language;

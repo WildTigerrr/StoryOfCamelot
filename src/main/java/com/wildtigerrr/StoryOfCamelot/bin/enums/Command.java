@@ -25,13 +25,7 @@ public enum Command {
             return true;
         }
     },
-    NICKNAME ("nicknameCommandHandler") {
-        @Override
-        public boolean execute(UpdateWrapper update) {
-            playerService.setNickname(update.getPlayer(), StringUtils.emptyIfOutOfBounds(update.getText().split(" ", 2), 1));
-            return true;
-        }
-    },
+    NICKNAME ("nicknameCommandHandler"),
     ADD {
         @Override
         public boolean execute(UpdateWrapper update) {
@@ -47,13 +41,7 @@ public enum Command {
             return true;
         }
     },
-    MOVE {
-        @Override
-        public boolean execute(UpdateWrapper update) {
-            gameMovement.handleMove(update);
-            return true;
-        }
-    },
+    MOVE("moveCommandHandler"),
     SKILLS {
         @Override
         public boolean execute(UpdateWrapper update) {
