@@ -148,6 +148,7 @@ public class GameMovement {
         player.setLocation(location);
         player.stop();
         String text = translation.getMessage("movement.location.arrived", player, new Object[]{location.getName(player)});
+        log.warn("Sending message");
         if (location.getImageLink() != null) {
             InputStream stream = dataProvider.getObject(location.getImageLink().getLocation());
             messages.sendMessage(ImageResponseMessage.builder().lang(player)
@@ -161,6 +162,7 @@ public class GameMovement {
                     .text(text).targetId(player).build()
             );
         }
+        log.warn("Message sent");
         experienceService.addExperience(
                 player,
                 Stats.ENDURANCE,
