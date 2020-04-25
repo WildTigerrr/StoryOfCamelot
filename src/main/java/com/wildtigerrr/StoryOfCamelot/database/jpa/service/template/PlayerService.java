@@ -2,6 +2,7 @@ package com.wildtigerrr.StoryOfCamelot.database.jpa.service.template;
 
 import com.wildtigerrr.StoryOfCamelot.bin.enums.Language;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.Player;
+import com.wildtigerrr.StoryOfCamelot.web.service.message.IncomingMessage;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,4 +20,6 @@ public interface PlayerService {
     String getPlayerInfo(String externalId, Language lang);
     Player getPlayer(String externalId);
     void setNickname(Player player, String newName);
+
+    void setMoveStatus(Player player);
 }
