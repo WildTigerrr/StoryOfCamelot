@@ -4,6 +4,7 @@ import com.wildtigerrr.StoryOfCamelot.bin.base.GameMovement;
 import com.wildtigerrr.StoryOfCamelot.bin.enums.ActionType;
 import com.wildtigerrr.StoryOfCamelot.bin.service.Scheduler;
 import com.wildtigerrr.StoryOfCamelot.bin.service.ScheduledAction;
+import com.wildtigerrr.StoryOfCamelot.web.service.ResponseManager;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,11 +55,13 @@ public class TimeDependentActions {
 
     private static FileProcessing fileService;
     private static GameMovement movement;
+    private static ResponseManager messages;
 
     @Autowired
-    private TimeDependentActions(FileProcessing fileService, GameMovement gameMovement) {
+    private TimeDependentActions(FileProcessing fileService, GameMovement gameMovement, ResponseManager messages) {
         TimeDependentActions.fileService = fileService;
         TimeDependentActions.movement = gameMovement;
+        TimeDependentActions.messages = messages;
     }
 
     @PostConstruct
@@ -170,6 +173,14 @@ public class TimeDependentActions {
     }
 
     private static void check() {
+        try {
+            proceedCheck();
+        } catch (Exception e) {
+            messages.sendErrorReport(e);
+        }
+    }
+
+    private static void proceedCheck() {
         log.debug("Checking Active Actions");
         if (scheduledActionMap.isEmpty()) {
             cancelActionsCheck();

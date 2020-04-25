@@ -143,12 +143,19 @@ public class GameMovement {
     }
 
     public void sendLocationUpdate(ScheduledAction action) {
+        try {
+            updateLocation(action);
+        } catch (Exception e) {
+            handleMovementError(action, e);
+        }
+    }
+
+    private void updateLocation(ScheduledAction action) {
         Player player = playerService.findById(action.playerId);
         Location location = locationService.findById(action.target);
         player.setLocation(location);
         player.stop();
         String text = translation.getMessage("movement.location.arrived", player, new Object[]{location.getName(player)});
-        log.warn("Sending message");
         if (location.getImageLink() != null) {
             InputStream stream = dataProvider.getObject(location.getImageLink().getLocation());
             messages.sendMessage(ImageResponseMessage.builder().lang(player)
@@ -162,14 +169,17 @@ public class GameMovement {
                     .text(text).targetId(player).build()
             );
         }
-        log.warn("Message sent");
         experienceService.addExperience(
                 player,
                 Stats.ENDURANCE,
                 Integer.parseInt(action.additionalValue) / 10,
                 true
         );
-        log.warn(player.getStatus());
         playerService.update(player);
     }
+
+    private void handleMovementError(ScheduledAction action, Exception e) {
+        messages.sendErrorReport(action.toString(), e);
+    }
+
 }

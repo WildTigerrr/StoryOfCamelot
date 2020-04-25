@@ -57,7 +57,6 @@ public class ExperienceService {
     }
 
     public Player addExperience(Player player, Stats stat, int experience, Boolean sendExperienceGet) {
-        log.warn("Adding experience");
         try {
             List<String> eventList = player.stats().addStatExp(
                     experience,
@@ -68,27 +67,23 @@ public class ExperienceService {
             if (eventList != null && !eventList.isEmpty()) {
                 for (String event : eventList) {
                     if (event != null && !event.equals("")) {
-                        messages.sendMessage(TextResponseMessage.builder()
+                        messages.sendMessage(TextResponseMessage.builder().lang(player)
                                 .text(event).targetId(player).build()
                         );
                     }
                 }
             }
-            log.warn("Sending experience message");
             if (sendExperienceGet) {
-                messages.sendMessage(TextResponseMessage.builder()
+                messages.sendMessage(TextResponseMessage.builder().lang(player)
                         .text(translation.getMessage("player.stats.experience-taken", player.getLanguage(),
                                 new Object[]{experience}))
                         .targetId(player).build()
                 );
             }
-            log.warn("Experience set");
             return player;
         } catch (InvalidInputException e) {
-            log.warn("Error:", e);
             messages.sendErrorReport(e);
         }
-        log.warn("Experience added");
         return player;
     }
 
