@@ -13,7 +13,7 @@ public class ParsedCommand {
 
     public ParsedCommand(Command command, String text) {
         this.command = command;
-        this.params = text.split(" ");
+        this.params = text.split("[ _]");
     }
 
     public int paramsCount() {

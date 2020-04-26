@@ -14,14 +14,7 @@ import javax.annotation.PostConstruct;
 
 @Log4j2
 public enum Command {
-    ME {
-        @Override
-        public boolean execute(UpdateWrapper update) {
-            log.warn(update.getPlayer().toString());
-            game.sendPlayerInfo(update);
-            return true;
-        }
-    },
+    ME("playerCommandHandler"),
     NICKNAME ("nicknameCommandHandler"),
     ADD {
         @Override
@@ -39,21 +32,9 @@ public enum Command {
         }
     },
     MOVE("moveCommandHandler"),
-    SKILLS {
-        @Override
-        public boolean execute(UpdateWrapper update) {
-            experienceService.sendSkillWindow(update.getPlayer());
-            return true;
-        }
-    },
+    SKILLS("skillsCommandHandler"),
     START("startCommandHandler"),
-    UP {
-        @Override
-        public boolean execute(UpdateWrapper update) {
-            experienceService.statUp(update);
-            return true;
-        }
-    },
+    UP ("skillsCommandHandler"),
     LANG,
     TOP {
         @Override
