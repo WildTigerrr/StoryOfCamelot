@@ -159,7 +159,7 @@ public class GameTutorial {
 
     public void tutorialStart(Player player) {
         log.info("New Player: " + player);
-        player.setup();
+//        player.setup();
         playerService.update(player);
         messages.sendMessage(TextResponseMessage.builder()
                 .text(translation.getMessage("tutorial.player.welcome", player)).targetId(player).applyMarkup(true).build()

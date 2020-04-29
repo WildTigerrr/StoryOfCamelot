@@ -94,8 +94,6 @@ public class Player extends SimpleObject implements Comparable<Player>, Fighter 
         this.externalId = Objects.requireNonNull(externalId);
         this.nickname = nickname;
         this.location = location;
-        isNew = externalId.equals(nickname);
-        language = Language.RUS;
         status = PlayerStatus.TUTORIAL;
         additionalStatus = PlayerStatusExtended.LANGUAGE_CHOOSE;
         stats = new PlayerStats();
@@ -185,8 +183,6 @@ public class Player extends SimpleObject implements Comparable<Player>, Fighter 
 
     // ================================================ END MOVEMENT ================================================ //
 
-    private Boolean isNew;
-
     @OneToMany(
             cascade = {CascadeType.ALL},
             mappedBy = "player"
@@ -197,11 +193,7 @@ public class Player extends SimpleObject implements Comparable<Player>, Fighter 
     private FileLink imageLink;
 
     public Boolean isNew() {
-        return getIsNew();
-    }
-
-    public void setup() {
-        this.isNew = false;
+        return getNickname().equals(getExternalId());
     }
 
     public void addBackpack(Backpack backpack) {

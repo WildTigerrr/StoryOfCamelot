@@ -85,7 +85,13 @@ public class IncomingMessage {
     }
 
     public Command getCommand() {
-        if (this.command == null) this.command = IncomingMessageUtils.fetchCommandFromMessage(this.text, this.player.getLanguage());
+        if (this.command == null) {
+            if (this.player.isNew()) {
+                this.command = Command.START;
+            } else {
+                this.command = IncomingMessageUtils.fetchCommandFromMessage(this.text, this.player.getLanguage());
+            }
+        }
         return this.command;
     }
 
