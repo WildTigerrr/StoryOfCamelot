@@ -48,7 +48,7 @@ public class StartCommandHandler extends TextMessageHandler {
             }
         };
         messages.sendMessage(TextResponseMessage.builder().by(player)
-                .text(translation.getMessage("commands.available-action - // TODO", player)) // TODO
+                .text("commands.available-action - // TODO") // TODO
                 .keyboard(KeyboardManager.getReplyByButtons(buttons, player.getLanguage()))
                 .applyMarkup(true).build()
         );
