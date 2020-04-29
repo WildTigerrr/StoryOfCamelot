@@ -20,6 +20,10 @@ public class ParsedCommand {
         return params.length;
     }
 
+    public boolean hasExtraParams() {
+        return paramsCount() > 1;
+    }
+
     public String paramByNum(int order) {
         if (paramsCount() > order) {
             return params[order];

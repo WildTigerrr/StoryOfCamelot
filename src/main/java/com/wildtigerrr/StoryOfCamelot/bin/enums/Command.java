@@ -35,7 +35,7 @@ public enum Command {
     SKILLS("skillsCommandHandler"),
     START("startCommandHandler"),
     UP ("skillsCommandHandler"),
-    LANG,
+    LANG("languageCommandHandler"),
     TOP {
         @Override
         public boolean execute(UpdateWrapper update) {
