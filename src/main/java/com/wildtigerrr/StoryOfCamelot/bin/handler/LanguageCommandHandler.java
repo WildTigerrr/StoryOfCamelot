@@ -51,7 +51,10 @@ public class LanguageCommandHandler extends TextMessageHandler {
                 );
             }
         } else {
-            sendLanguageSelector(message.getUserId(), message.getPlayer().getLanguage());
+            Language lang = message.getPlayer().getLanguage() == null
+                    ? Language.byCountryCode(message.getAuthor().getLanguageCode())
+                    : message.getPlayer().getLanguage();
+            sendLanguageSelector(message.getUserId(), lang);
         }
     }
 

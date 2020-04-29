@@ -31,8 +31,7 @@ public class StartCommandHandler extends TextMessageHandler {
         Player player = message.getPlayer();
         // TODO Not set default language
         if (player.getLanguage() == null) {
-            Language lang = Language.byCountryCode(message.getAuthor().getLanguageCode());
-            languageCommandHandler.sendLanguageSelector(message.getUserId(), lang);
+            languageCommandHandler.process(message);
         } else if (!message.text().startsWith("/start") && player.getNickname().equals(player.getExternalId())) {
             nicknameCommandHandler.process(message);
         } else {
