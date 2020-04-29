@@ -24,7 +24,6 @@ public class TextResponseMessage implements ResponseMessage {
     private final ResponseType type = ResponseType.TEXT;
     @NonNull
     private final String targetId;
-    @NonNull
     private final String text;
     @Builder.Default
     private final boolean applyMarkup = false;
