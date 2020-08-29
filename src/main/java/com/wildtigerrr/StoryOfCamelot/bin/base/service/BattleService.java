@@ -2,6 +2,7 @@ package com.wildtigerrr.StoryOfCamelot.bin.base.service;
 
 import com.wildtigerrr.StoryOfCamelot.bin.base.BattleLog;
 import com.wildtigerrr.StoryOfCamelot.bin.enums.EnemyType;
+import com.wildtigerrr.StoryOfCamelot.bin.service.ListUtils;
 import com.wildtigerrr.StoryOfCamelot.bin.translation.TranslationManager;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.Backpack;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.BackpackItem;
@@ -69,10 +70,10 @@ public class BattleService {
 
     private void applyDrop(BattleLog battleLog) {
         List<MobDrop> dropMap = dropService.findByMobId(battleLog.getEnemyId());
-        if (dropMap == null || dropMap.isEmpty()) return;
+        if (ListUtils.isEmpty(dropMap)) return;
         Backpack backpack = backpackService.findMainByPlayerId(battleLog.getAttackerId());
         List<BackpackItem> newItems = dropCalculator.calculate(dropMap);
-        if (newItems.isEmpty()) return;
+        if (ListUtils.isEmpty(newItems)) return;
         StringBuilder builder = new StringBuilder();
         builder.append("Добыча:\n\n");
         newItems.forEach(item -> builder.append(item.backpackInfo(translation, backpack.getPlayer().getLanguage())));
