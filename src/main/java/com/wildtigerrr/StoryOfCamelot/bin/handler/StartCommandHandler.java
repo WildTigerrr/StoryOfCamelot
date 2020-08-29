@@ -1,8 +1,6 @@
 package com.wildtigerrr.StoryOfCamelot.bin.handler;
 
 import com.wildtigerrr.StoryOfCamelot.bin.base.service.KeyboardManager;
-import com.wildtigerrr.StoryOfCamelot.bin.base.service.LanguageService;
-import com.wildtigerrr.StoryOfCamelot.bin.enums.Language;
 import com.wildtigerrr.StoryOfCamelot.bin.enums.ReplyButton;
 import com.wildtigerrr.StoryOfCamelot.bin.translation.TranslationManager;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.Player;
@@ -48,7 +46,7 @@ public class StartCommandHandler extends TextMessageHandler {
             }
         };
         messages.sendMessage(TextResponseMessage.builder().by(player)
-                .text("commands.available-action - // TODO") // TODO
+                .text(translation.getMessage("commands.available-action", player))
                 .keyboard(KeyboardManager.getReplyByButtons(buttons, player.getLanguage()))
                 .applyMarkup(true).build()
         );
