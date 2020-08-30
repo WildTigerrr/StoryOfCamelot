@@ -2,6 +2,7 @@ package com.wildtigerrr.StoryOfCamelot.bin.handler;
 
 import com.wildtigerrr.StoryOfCamelot.bin.translation.TranslationManager;
 import com.wildtigerrr.StoryOfCamelot.exception.InvalidInputException;
+import com.wildtigerrr.StoryOfCamelot.web.bot.update.ParsedCommand;
 import com.wildtigerrr.StoryOfCamelot.web.service.ResponseManager;
 import com.wildtigerrr.StoryOfCamelot.web.service.impl.AsyncMessageSender;
 import com.wildtigerrr.StoryOfCamelot.web.service.message.IncomingMessage;
@@ -39,16 +40,22 @@ public class NotifyCommandHandler extends TextMessageHandler {
                 .build()
         );
 
+        String text = getText(textMessage, value);
         try {
             asyncMessageSender.sendDelayedMessage(
                     value * 60 * 1000,
-                    translation.getMessage("commands.notify_finish", textMessage, new Object[]{value}),
+                    translation.getMessage("commands.notify_finish", textMessage, new Object[]{value}) + text,
                     message.getUserId(),
                     message.getPlayer().getLanguage()
             );
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+    }
+
+    private String getText(TextIncomingMessage textMessage, int value) {
+        if (textMessage.getParsedCommand().paramsCount() <= 2) return "";
+        return ": " + textMessage.text().split(String.valueOf(value), 2)[1];
     }
 
 }
