@@ -7,7 +7,8 @@ public enum ReplyButton {
     MOVE(NameTranslation.BUTTON_MOVE, Command.MOVE),
     SKILLS(NameTranslation.BUTTON_SKILLS, Command.SKILLS),
     ME(NameTranslation.BUTTON_ME, Command.ME),
-    FIGHT(NameTranslation.BUTTON_FIGHT, Command.FIGHT);
+    FIGHT(NameTranslation.BUTTON_FIGHT, Command.FIGHT),
+    SEARCH_ENEMIES(NameTranslation.BUTTON_SEARCH_ENEMIES, Command.FIGHT);
 
     private final NameTranslation label;
     @Getter

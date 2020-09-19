@@ -34,6 +34,7 @@ public class Location extends SimpleObject {
     @Enumerated(EnumType.STRING)
     private NameTranslation name;
     private Boolean hasStores;
+    private Boolean hasEnemies;
 
     @ManyToOne(optional = true)
     @JoinColumn(name = "filelink_id")
@@ -57,6 +58,7 @@ public class Location extends SimpleObject {
         this.name = locationTemplate.getTranslations();
         this.imageLink = locationTemplate.getFileLink();
         this.hasStores = locationTemplate.hasStores();
+        this.hasEnemies = locationTemplate.hasEnemies();
     }
 
     public String getName(Language lang) {

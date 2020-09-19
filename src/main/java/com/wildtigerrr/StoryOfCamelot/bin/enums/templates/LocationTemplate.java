@@ -9,33 +9,35 @@ import java.util.HashMap;
 public enum LocationTemplate {
     FOREST(
             FileLinkTemplate.FOREST,
-            false,
+            false, true,
             NameTranslation.LOC_FOREST
 
     ),
     THICKET(
             FileLinkTemplate.THICKET,
-            false,
+            false, true,
             NameTranslation.LOC_THICKET
     ),
     CAVE(
             null,
-            false,
+            false, true,
             NameTranslation.LOC_CAVE
     ),
     TRADING_SQUARE(
             FileLinkTemplate.MERCHANTS_SQUARE,
-            false,
+            true, false,
             NameTranslation.LOC_TRADING_SQUARE
     );
 
     private final FileLinkTemplate imageLink;
     private final Boolean hasStores;
+    private final Boolean hasEnemies;
     private final NameTranslation name;
 
-    LocationTemplate(FileLinkTemplate imageLink, Boolean hasStores, NameTranslation name) {
+    LocationTemplate(FileLinkTemplate imageLink, Boolean hasStores, Boolean hasEnemies, NameTranslation name) {
         this.imageLink = imageLink;
         this.hasStores = hasStores;
+        this.hasEnemies = hasEnemies;
         this.name = name;
     }
 
@@ -50,6 +52,10 @@ public enum LocationTemplate {
 
     public Boolean hasStores() {
         return hasStores;
+    }
+
+    public Boolean hasEnemies() {
+        return hasEnemies;
     }
 
     public static HashMap<String, Location> getLocations() {
