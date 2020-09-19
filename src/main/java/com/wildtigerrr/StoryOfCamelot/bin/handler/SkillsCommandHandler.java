@@ -17,6 +17,14 @@ import org.springframework.stereotype.Service;
 @Service
 public class SkillsCommandHandler extends TextMessageHandler {
 
+    /*
+    First action - add skill (Gathering Resources, Hunt, Fishing)
+    On each 10 skill levels - add new action or improve existing ?:
+    Searching, 10 Level -> Choose Gathering vs Hunting
+    Hunting, 10 Level -> Advanced Hunt (Wild Animals vs Cursed Creatures)
+    Gathering, 10 Level -> Advanced Gathering (Rare Resources vs Resource Quantity)
+     */
+
     private final PlayerService playerService;
 
     public SkillsCommandHandler(ResponseManager messages, TranslationManager translation, PlayerService playerService) {

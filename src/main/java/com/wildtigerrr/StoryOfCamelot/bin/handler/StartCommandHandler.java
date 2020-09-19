@@ -1,5 +1,6 @@
 package com.wildtigerrr.StoryOfCamelot.bin.handler;
 
+import com.wildtigerrr.StoryOfCamelot.bin.base.service.ActionHandler;
 import com.wildtigerrr.StoryOfCamelot.bin.base.service.KeyboardManager;
 import com.wildtigerrr.StoryOfCamelot.bin.enums.ReplyButton;
 import com.wildtigerrr.StoryOfCamelot.bin.translation.TranslationManager;
@@ -15,11 +16,13 @@ import java.util.List;
 @Service
 public class StartCommandHandler extends TextMessageHandler {
 
+    private final ActionHandler actionHandler;
     private final LanguageCommandHandler languageCommandHandler;
     private final NicknameCommandHandler nicknameCommandHandler;
 
-    public StartCommandHandler(ResponseManager messages, TranslationManager translation, LanguageCommandHandler languageCommandHandler, NicknameCommandHandler nicknameCommandHandler) {
+    public StartCommandHandler(ResponseManager messages, TranslationManager translation, ActionHandler actionHandler, LanguageCommandHandler languageCommandHandler, NicknameCommandHandler nicknameCommandHandler) {
         super(messages, translation);
+        this.actionHandler = actionHandler;
         this.languageCommandHandler = languageCommandHandler;
         this.nicknameCommandHandler = nicknameCommandHandler;
     }
@@ -38,13 +41,7 @@ public class StartCommandHandler extends TextMessageHandler {
     }
 
     private void sendAvailableActions(Player player) {
-        // TODO Action Service (?) for pulling available actions
-        List<ReplyButton> buttons = new ArrayList<>() {
-            {
-                add(ReplyButton.ME);
-                add(ReplyButton.MOVE);
-            }
-        };
+        List<ReplyButton> buttons = actionHandler.getAvailableActions(player);
         messages.sendMessage(TextResponseMessage.builder().by(player)
                 .text(translation.getMessage("commands.available-action", player))
                 .keyboard(KeyboardManager.getReplyByButtons(buttons, player.getLanguage()))

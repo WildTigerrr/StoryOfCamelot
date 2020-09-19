@@ -42,8 +42,8 @@ public class NicknameCommandHandler extends CommandHandler {
             message = translation.getMessage("player.nickname.accept", player,
                     new Object[]{player.getNickname()});
         }
-        messages.sendMessage(TextResponseMessage.builder().lang(player)
-                .text(message).targetId(player).applyMarkup(true).build()
+        messages.sendMessage(TextResponseMessage.builder().by(player)
+                .text(message).applyMarkup(true).build()
         );
     }
 
