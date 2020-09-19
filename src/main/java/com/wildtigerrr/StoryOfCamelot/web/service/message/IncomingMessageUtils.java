@@ -8,12 +8,10 @@ import com.wildtigerrr.StoryOfCamelot.web.BotConfig;
 import com.wildtigerrr.StoryOfCamelot.web.bot.update.Author;
 import com.wildtigerrr.StoryOfCamelot.web.bot.update.MessageType;
 import lombok.experimental.UtilityClass;
-import lombok.extern.log4j.Log4j2;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.User;
 
 @UtilityClass
-@Log4j2
 public class IncomingMessageUtils {
 
     public MessageType defineUpdateType(Update update) {
@@ -52,7 +50,6 @@ public class IncomingMessageUtils {
     }
 
     public Command fetchCommandFromMessage(String message, Language language) {
-        log.debug("Fetching command from message: " + message);
         if (message == null || message.length() == 0) return null;
         if (message.startsWith("/")) {
             try {
@@ -68,4 +65,3 @@ public class IncomingMessageUtils {
     }
 
 }
-
