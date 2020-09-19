@@ -1,7 +1,10 @@
 package com.wildtigerrr.StoryOfCamelot.database.jpa.service.implementation;
 
 import com.wildtigerrr.StoryOfCamelot.database.jpa.dataaccessobject.LocationPossibleDao;
+import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.Location;
+import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.LocationNear;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.LocationPossible;
+import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.Mob;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.service.template.LocationPossibleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -52,5 +55,15 @@ public class LocationPossibleServiceImpl implements LocationPossibleService {
     @Override
     public List<LocationPossible> getAll() {
         return (List<LocationPossible>) possibleLocationDao.findAll();
+    }
+
+    @Override
+    public List<Mob> getPossibleMobs(Location location) {
+        ArrayList<LocationPossible> possibleLocations = (ArrayList<LocationPossible>) possibleLocationDao.findAllByLocation(location);
+        List<Mob> mobs = new ArrayList<>();
+        for (LocationPossible loc : possibleLocations) {
+            mobs.add(loc.getMob());
+        }
+        return mobs;
     }
 }
