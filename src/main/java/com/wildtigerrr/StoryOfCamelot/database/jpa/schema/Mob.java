@@ -9,6 +9,7 @@ import com.wildtigerrr.StoryOfCamelot.database.jpa.interfaces.Fighter;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.interfaces.SimpleObject;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.enums.ObjectType;
 import com.wildtigerrr.StoryOfCamelot.web.bot.update.UpdateWrapper;
+import com.wildtigerrr.StoryOfCamelot.web.service.message.IncomingMessage;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -96,6 +97,10 @@ public class Mob extends SimpleObject implements Fighter {
 
     public String getName(Player player) {
         return getName(player.getLanguage());
+    }
+
+    public String getName(IncomingMessage message) {
+        return getName(message.getPlayer());
     }
 
     public String getName(UpdateWrapper update) {

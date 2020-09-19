@@ -35,9 +35,9 @@ public class DropCalculator {
     }
 
     static class DropValue {
-        private RandomDistribution distributionType;
-        private double valueMin;
-        private double valueMax;
+        private final RandomDistribution distributionType;
+        private final double valueMin;
+        private final double valueMax;
 
         public double drop() {
             if (distributionType == null) {

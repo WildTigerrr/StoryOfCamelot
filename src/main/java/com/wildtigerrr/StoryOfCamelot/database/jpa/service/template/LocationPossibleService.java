@@ -13,5 +13,5 @@ public interface LocationPossibleService {
     void delete(String id);
     LocationPossible update(LocationPossible possibleLocation);
     List<LocationPossible> getAll();
-    List<Mob> getPossibleMobs(Location location);
+    List<LocationPossible> getPossibleMobs(Location location);
 }

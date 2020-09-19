@@ -6,26 +6,26 @@ import java.util.HashMap;
 public enum PossibleLocationTemplate {
     FOREST_MOBS(
             LocationTemplate.FOREST.name(),
-            new ArrayList<>() {
+            new HashMap<>() {
                 {
-                    add(MobTemplate.FLYING_SWORD.name());
+                    put(MobTemplate.FLYING_SWORD.name(), 100);
                 }
             }
     ),
     THICKET_MOBS(
             LocationTemplate.THICKET.name(),
-            new ArrayList<>() {
+            new HashMap<>() {
                 {
-                    add(MobTemplate.FLYING_SWORD.name());
-                    add(MobTemplate.SUPER_FLYING_SWORD.name());
+                    put(MobTemplate.FLYING_SWORD.name(), 90);
+                    put(MobTemplate.SUPER_FLYING_SWORD.name(), 10);
                 }
             }
     );
 
     private final String location;
-    private final ArrayList<String> mobs;
+    private final HashMap<String, Integer> mobs;
 
-    PossibleLocationTemplate(String location, ArrayList<String> mobs) {
+    PossibleLocationTemplate(String location, HashMap<String, Integer> mobs) {
         this.location = location;
         this.mobs = mobs;
     }
@@ -34,11 +34,11 @@ public enum PossibleLocationTemplate {
         return location;
     }
 
-    public ArrayList<String> getMobs() {
+    public HashMap<String, Integer> getMobs() {
         return mobs;
     }
 
-    public static HashMap<String, ArrayList<String>> getPossibleLocationsMapping() {
+    public static HashMap<String, HashMap<String, Integer>> getPossibleLocationsMapping() {
         return new HashMap<>() {
             {
                 for (PossibleLocationTemplate template : PossibleLocationTemplate.values()) {

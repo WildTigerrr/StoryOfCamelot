@@ -1,7 +1,9 @@
 package com.wildtigerrr.StoryOfCamelot.bin.handler;
 
+import com.wildtigerrr.StoryOfCamelot.bin.enums.RandomDistribution;
 import com.wildtigerrr.StoryOfCamelot.bin.translation.TranslationManager;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.Location;
+import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.LocationPossible;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.Mob;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.service.template.LocationPossibleService;
 import com.wildtigerrr.StoryOfCamelot.web.service.ResponseManager;
@@ -31,21 +33,29 @@ public class FightCommandHandler extends TextMessageHandler {
 
     private void findEnemy(TextIncomingMessage message) {
         Location playerLocation = message.getPlayer().getLocation();
-        List<Mob> locationMobs = locationPossibleService.getPossibleMobs(playerLocation);
-        if (locationMobs.isEmpty()) {
+        List<LocationPossible> locationMobs = locationPossibleService.getPossibleMobs(playerLocation);
+        Mob enemy = getRandomMob(locationMobs);
+        if (enemy == null) {
             messages.sendMessage(TextResponseMessage.builder().by(message)
                     .text("Кажется, тут никого нет").build() // TODO
             );
         } else {
-            StringBuilder mobs = new StringBuilder();
-            mobs.append("Здесь у нас: ");
-            for (Mob mob : locationMobs) {
-                mobs.append(mob.getName(message.getPlayer()));
-            }
             messages.sendMessage(TextResponseMessage.builder().by(message)
-                    .text(mobs.toString()).build() // TODO
+                    .text("Враг: " + enemy.getName(message)).build() // TODO
             );
         }
+    }
+
+    private Mob getRandomMob(List<LocationPossible> possibleList) {
+        if (possibleList.isEmpty()) return null;
+        int total = possibleList.stream().mapToInt(LocationPossible::getFrequency).sum();
+        int random = RandomDistribution.DISCRETE.nextInt(total);
+        int counter = 0;
+        for (LocationPossible possible : possibleList) {
+            if (random < counter + possible.getFrequency()) return possible.getMob();
+            else counter += possible.getFrequency();
+        }
+        return null;
     }
 
 }

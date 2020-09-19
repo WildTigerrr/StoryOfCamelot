@@ -58,12 +58,7 @@ public class LocationPossibleServiceImpl implements LocationPossibleService {
     }
 
     @Override
-    public List<Mob> getPossibleMobs(Location location) {
-        ArrayList<LocationPossible> possibleLocations = (ArrayList<LocationPossible>) possibleLocationDao.findAllByLocation(location);
-        List<Mob> mobs = new ArrayList<>();
-        for (LocationPossible loc : possibleLocations) {
-            mobs.add(loc.getMob());
-        }
-        return mobs;
+    public List<LocationPossible> getPossibleMobs(Location location) {
+        return possibleLocationDao.findAllByLocation(location);
     }
 }

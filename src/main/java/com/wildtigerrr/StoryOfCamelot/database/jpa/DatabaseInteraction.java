@@ -80,15 +80,16 @@ public class DatabaseInteraction {
     private HashMap<String, Mob> insertMobs(HashMap<String, Location> locations) {
         log.debug("Inserting Mobs");
         HashMap<String, Mob> initialMobsMap = MobTemplate.getMobs();
-        HashMap<String, ArrayList<String>> locationsMapping = PossibleLocationTemplate.getPossibleLocationsMapping();
+        HashMap<String, HashMap<String, Integer>> locationsMapping = PossibleLocationTemplate.getPossibleLocationsMapping();
         for (String locationName : locationsMapping.keySet()) {
-            for (String mobName : locationsMapping.get(locationName)) {
+            for (String mobName : locationsMapping.get(locationName).keySet()) {
                 initialMobsMap.put(
                         mobName,
                         initialMobsMap.get(mobName).addPossibleLocation(
                                 new LocationPossible(
                                         initialMobsMap.get(mobName),
-                                        locations.get(locationName)
+                                        locations.get(locationName),
+                                        locationsMapping.get(locationName).get(mobName)
                                 )
                         )
                 );

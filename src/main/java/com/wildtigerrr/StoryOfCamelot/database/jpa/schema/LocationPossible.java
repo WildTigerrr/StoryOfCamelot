@@ -33,6 +33,7 @@ public class LocationPossible extends SimpleObject {
     @ManyToOne(optional = false)
     @JoinColumn(name = "location_id")
     private Location location;
+    private int frequency;
 
     @Override
     public ObjectType type() {
@@ -42,9 +43,10 @@ public class LocationPossible extends SimpleObject {
     protected LocationPossible() {
     }
 
-    public LocationPossible(@NotNull Mob mob, @NotNull Location location) {
+    public LocationPossible(@NotNull Mob mob, @NotNull Location location, int frequency) {
         this.mob = mob;
         this.location = location;
+        this.frequency = frequency;
     }
 
 }
