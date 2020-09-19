@@ -90,6 +90,8 @@ public class IncomingMessage {
                 this.command = Command.START;
             } else {
                 this.command = IncomingMessageUtils.fetchCommandFromMessage(this.text, this.player.getLanguage());
+                log.debug(this.command.name());
+                log.debug(this.command.handler());
             }
         }
         return this.command;
