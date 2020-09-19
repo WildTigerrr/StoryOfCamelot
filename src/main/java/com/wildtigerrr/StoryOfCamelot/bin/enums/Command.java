@@ -50,6 +50,7 @@ public enum Command {
             return true;
         }
     },
+    SEARCH_ENEMIES("fightCommandHandler"),
     NOTIFY("notifyCommandHandler"),
     DEFAULT;
 

@@ -21,14 +21,22 @@ public class ActionHandler {
     }
 
     public List<ReplyButton> getAvailableActions(Player player) {
-        PlayerState state = (PlayerState) cacheService.findObject(CacheType.PLAYER_STATE, player.getId());
+//        PlayerState state = (PlayerState) cacheService.findObject(CacheType.PLAYER_STATE, player.getId());
         // TODO Enhance CacheService & PlayerState to keep full state & current states, update them on movement & actions
         if (player.getStatus() != PlayerStatus.MOVEMENT) {
+            if (player.getLocation().getHasEnemies()) {
+                return new ArrayList<>() {{
+                    add(ReplyButton.ME);
+                    add(ReplyButton.MOVE);
+                    add(ReplyButton.SEARCH_ENEMIES);
+                }};
+            }
             return new ArrayList<>() {{
                 add(ReplyButton.ME);
                 add(ReplyButton.MOVE);
             }};
         }
+
         return new ArrayList<>() {{
             add(ReplyButton.ME);
         }};
