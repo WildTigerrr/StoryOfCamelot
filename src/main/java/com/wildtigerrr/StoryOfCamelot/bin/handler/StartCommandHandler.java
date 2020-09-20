@@ -43,7 +43,7 @@ public class StartCommandHandler extends TextMessageHandler {
     private void sendAvailableActions(Player player) {
         List<ReplyButton> buttons = actionHandler.getAvailableActions(player);
         messages.sendMessage(TextResponseMessage.builder().by(player)
-                .text(translation.getMessage("commands.available-action", player))
+//                .text(translation.getMessage("commands.available-action", player))
                 .keyboard(KeyboardManager.getReplyByButtons(buttons, player.getLanguage()))
                 .applyMarkup(true).build()
         );
