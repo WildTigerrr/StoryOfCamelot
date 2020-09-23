@@ -29,7 +29,7 @@
         <jedis.version>3.2.0</jedis.version>
         <h2.version>1.4.199</h2.version>
         <jupiter.version>5.3.2</jupiter.version>
-        <mockito.version>3.0.0</mockito.version>
+        <mockito.version>3.3.3</mockito.version>
         <jetbrains.annotations.version>17.0.0</jetbrains.annotations.version>
     </properties>
 
