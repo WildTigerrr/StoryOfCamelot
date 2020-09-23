@@ -30,7 +30,7 @@ import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 @Log4j2
-@Service
+@Service("responseManager")
 @Profile("!test")
 public class TelegramResponseManager implements ResponseManager, Runnable {
 

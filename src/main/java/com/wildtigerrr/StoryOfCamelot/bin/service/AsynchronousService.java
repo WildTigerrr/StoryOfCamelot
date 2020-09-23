@@ -1,7 +1,7 @@
 package com.wildtigerrr.StoryOfCamelot.bin.service;
 
 import com.wildtigerrr.StoryOfCamelot.web.UpdateReceiver;
-import com.wildtigerrr.StoryOfCamelot.web.service.impl.TelegramResponseManager;
+import com.wildtigerrr.StoryOfCamelot.web.service.ResponseManager;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.core.task.TaskExecutor;
@@ -34,8 +34,8 @@ public class AsynchronousService {
     }
 
     private void launchSenderService() {
-        log.info("Starting TelegramResponseManager");
-        TelegramResponseManager sender = ApplicationContextProvider.bean("telegramResponseManager");
+        log.info("Starting ResponseManager");
+        ResponseManager sender = ApplicationContextProvider.bean("responseManager");
         executor.execute(sender);
     }
 

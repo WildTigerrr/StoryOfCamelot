@@ -3,7 +3,7 @@ package com.wildtigerrr.StoryOfCamelot.web.service;
 import com.wildtigerrr.StoryOfCamelot.web.TelegramWebHookHandler;
 import com.wildtigerrr.StoryOfCamelot.web.service.message.ResponseMessage;
 
-public interface ResponseManager {
+public interface ResponseManager extends Runnable {
 
     void setExecutor(TelegramWebHookHandler telegramWebHookHandler);
 
