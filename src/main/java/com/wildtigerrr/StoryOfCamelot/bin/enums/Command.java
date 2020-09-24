@@ -43,13 +43,7 @@ public enum Command {
             return true;
         }
     },
-    FIGHT {
-        @Override
-        public boolean execute(UpdateWrapper update) {
-            battleService.fight(update);
-            return true;
-        }
-    },
+    FIGHT("fightCommandHandler"),
     SEARCH_ENEMIES("fightCommandHandler"),
     NOTIFY("notifyCommandHandler"),
     BAN("adminCommandHandler"),
@@ -58,7 +52,6 @@ public enum Command {
     private final String handlerName;
 
     private static GameMain game;
-    private static BattleService battleService;
     private static ExperienceService experienceService;
 
     Command(String handlerName) {
@@ -81,33 +74,28 @@ public enum Command {
     @Component
     public static class DependencyInjector {
         private final GameMain game;
-        private final BattleService battleService;
         private final ExperienceService experienceService;
 
         @Autowired
         public DependencyInjector(
                 GameMain game,
-                BattleService battleService,
                 ExperienceService experienceService
         ) {
             this.game = game;
-            this.battleService = battleService;
             this.experienceService = experienceService;
         }
 
         @PostConstruct
         public void postConstruct() {
-            Command.setDependencies(game, battleService, experienceService);
+            Command.setDependencies(game, experienceService);
         }
     }
 
     private static void setDependencies(
             GameMain gameDep,
-            BattleService battleServiceDep,
             ExperienceService experienceServiceDep
     ) {
         game = gameDep;
-        battleService = battleServiceDep;
         experienceService = experienceServiceDep;
     }
 
