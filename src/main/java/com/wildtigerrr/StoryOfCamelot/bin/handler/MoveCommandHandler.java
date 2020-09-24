@@ -147,6 +147,13 @@ public class MoveCommandHandler extends TextMessageHandler {
         player.setLocation(location);
         cacheService.add(CacheType.PLAYER_STATE, playerState.stop());
         String text = translation.getMessage("movement.location.arrived", player, new Object[]{location.getName(player)});
+        experienceService.addExperience(
+                player,
+                Stats.ENDURANCE,
+                Integer.parseInt(action.additionalValue) / 10,
+                true
+        );
+        playerService.update(player);
         if (location.getImageLink() != null) {
             InputStream stream = dataProvider.getObject(location.getImageLink().getLocation());
             messages.sendMessage(ImageResponseMessage.builder().by(player)
@@ -159,13 +166,6 @@ public class MoveCommandHandler extends TextMessageHandler {
                     .text(text).build()
             );
         }
-        experienceService.addExperience(
-                player,
-                Stats.ENDURANCE,
-                Integer.parseInt(action.additionalValue) / 10,
-                true
-        );
-        playerService.update(player);
     }
 
     private void handleMovementError(ScheduledAction action, Exception e) {
