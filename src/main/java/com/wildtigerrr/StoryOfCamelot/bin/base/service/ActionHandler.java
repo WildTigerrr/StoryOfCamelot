@@ -1,6 +1,7 @@
 package com.wildtigerrr.StoryOfCamelot.bin.base.service;
 
 import com.wildtigerrr.StoryOfCamelot.bin.enums.ReplyButton;
+import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.Location;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.Player;
 import com.wildtigerrr.StoryOfCamelot.database.redis.schema.PlayerState;
 import com.wildtigerrr.StoryOfCamelot.web.service.CacheProvider;
@@ -37,7 +38,11 @@ public class ActionHandler {
                 add(ReplyButton.FIGHT);
             }};
         }
-        if (player.getLocation().getHasEnemies()) {
+        return getLocationActionsKeyboard(player.getLocation());
+    }
+
+    public List<ReplyButton> getLocationActionsKeyboard(Location location) {
+        if (location.getHasEnemies()) {
             return new ArrayList<>() {{
                 add(ReplyButton.ME);
                 add(ReplyButton.MOVE);
