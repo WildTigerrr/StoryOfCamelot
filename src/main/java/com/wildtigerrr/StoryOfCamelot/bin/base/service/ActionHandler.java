@@ -27,27 +27,27 @@ public class ActionHandler {
 
     public List<ReplyButton> getAvailableActions(Player player) {
         PlayerState state = (PlayerState) cacheService.findObject(CacheType.PLAYER_STATE, player.getId());
-        if (!state.isMoving()) {
-            if (state.hasEnemy()) {
-                return new ArrayList<>() {{
-                    add(ReplyButton.ME);
-                    add(ReplyButton.FIGHT);
-                }};
-            } else if (player.getLocation().getHasEnemies()) {
-                return new ArrayList<>() {{
-                    add(ReplyButton.ME);
-                    add(ReplyButton.MOVE);
-                    add(ReplyButton.SEARCH_ENEMIES);
-                }};
-            }
+        if (state.isMoving()) {
+            return new ArrayList<>() {{
+                add(ReplyButton.ME);
+            }};
+        }
+        if (state.hasEnemy()) {
+            return new ArrayList<>() {{
+                add(ReplyButton.ME);
+                add(ReplyButton.FIGHT);
+            }};
+        }
+        if (player.getLocation().getHasEnemies()) {
             return new ArrayList<>() {{
                 add(ReplyButton.ME);
                 add(ReplyButton.MOVE);
+                add(ReplyButton.SEARCH_ENEMIES);
             }};
         }
-
         return new ArrayList<>() {{
             add(ReplyButton.ME);
+            add(ReplyButton.MOVE);
         }};
     }
 
