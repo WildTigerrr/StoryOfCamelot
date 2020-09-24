@@ -30,7 +30,7 @@ public class PlayerCommandHandler extends TextMessageHandler {
     private void sendPlayerInfo(IncomingMessage message) {
         log.warn(message.getPlayer().toString());
         messages.sendMessage(TextResponseMessage.builder().by(message)
-                .keyboard(KeyboardManager.getReplyByButtons(actionHandler.getAvailableActions(message.getPlayer()), message.getPlayer().getLanguage()))
+                .keyboard(KeyboardManager.getReplyByButtons(actionHandler.getPlayerInfoActions(message.getPlayer()), message.getPlayer().getLanguage()))
                 .text(message.getPlayer().toString())
                 .applyMarkup(true).build()
         );
