@@ -37,7 +37,7 @@ public class AdminCommandHandler extends TextMessageHandler {
             PlayerState state = (PlayerState) cacheService.findObject(CacheType.PLAYER_STATE, message.getPlayer().getId());
             state.ban();
             cacheService.add(CacheType.PLAYER_STATE, message.getPlayer().getId(), state);
-            messages.sendMessage(TextResponseMessage.builder()
+            messages.sendMessage(TextResponseMessage.builder().by(message)
                     .text("User banned")
                     .build()
             );
