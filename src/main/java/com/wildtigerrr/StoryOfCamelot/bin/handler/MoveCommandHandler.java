@@ -25,6 +25,7 @@ import com.wildtigerrr.StoryOfCamelot.web.service.message.template.ImageResponse
 import com.wildtigerrr.StoryOfCamelot.web.service.message.template.TextIncomingMessage;
 import com.wildtigerrr.StoryOfCamelot.web.service.message.template.TextResponseMessage;
 import org.springframework.stereotype.Service;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
 
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -146,15 +147,17 @@ public class MoveCommandHandler extends TextMessageHandler {
         Location location = locationService.findById(action.target);
         player.setLocation(location);
         String text = translation.getMessage("movement.location.arrived", player, new Object[]{location.getName(player)});
+        ReplyKeyboardMarkup keyboardMarkup = KeyboardManager.getReplyByButtons(actionHandler.getLocationActionsKeyboard(player.getLocation()), player.getLanguage());
         if (location.getImageLink() != null) {
             InputStream stream = dataProvider.getObject(location.getImageLink().getLocation());
             messages.sendMessage(ImageResponseMessage.builder().by(player)
+                    .keyboard(keyboardMarkup)
                     .fileName(location.getSystemName()).fileStream(stream)
                     .caption(text).build()
             );
         } else {
             messages.sendMessage(TextResponseMessage.builder().by(player)
-                    .keyboard(KeyboardManager.getReplyByButtons(actionHandler.getLocationActionsKeyboard(player.getLocation()), player.getLanguage()))
+                    .keyboard(keyboardMarkup)
                     .text(text).build()
             );
         }

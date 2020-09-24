@@ -142,7 +142,8 @@ public class TelegramResponseManager implements ResponseManager, Runnable {
     private void proceedImageSend(ImageResponseMessage messageTemplate) {
         SendPhoto newMessage = new SendPhoto()
                 .setCaption(messageTemplate.getCaption())
-                .setChatId(messageTemplate.getTargetId());
+                .setChatId(messageTemplate.getTargetId())
+                .setReplyMarkup(messageTemplate.getKeyboard());
         if (messageTemplate.getFile() != null) {
             newMessage.setPhoto(messageTemplate.getFile());
         } else if (messageTemplate.getFileStream() != null) {

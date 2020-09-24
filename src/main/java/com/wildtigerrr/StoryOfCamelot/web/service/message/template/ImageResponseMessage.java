@@ -9,6 +9,8 @@ import com.wildtigerrr.StoryOfCamelot.web.service.message.ResponseMessage;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NonNull;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.ForceReplyKeyboard;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboard;
 
 import java.io.File;
 import java.io.InputStream;
@@ -27,8 +29,17 @@ public class ImageResponseMessage implements ResponseMessage {
     private final String fileId;
     private final String fileName;
     private final InputStream fileStream;
+    @Builder.Default
+    private final boolean forceReply = false;
+    private final ReplyKeyboard keyboard;
     @NonNull
     private final Language lang;
+
+    public ReplyKeyboard getKeyboard() {
+        return keyboard != null
+                ? keyboard
+                : forceReply ? new ForceReplyKeyboard() : null;
+    }
 
     @Override
     public Language getLanguage() {
