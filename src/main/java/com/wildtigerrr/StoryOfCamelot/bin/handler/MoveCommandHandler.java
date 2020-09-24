@@ -161,8 +161,7 @@ public class MoveCommandHandler extends TextMessageHandler {
                 true
         );
         playerService.update(player);
-        playerState.stop();
-        cacheService.add(CacheType.PLAYER_STATE, playerState);
+        cacheService.add(CacheType.PLAYER_STATE, playerState.stop());
     }
 
     private void handleMovementError(ScheduledAction action, Exception e) {
