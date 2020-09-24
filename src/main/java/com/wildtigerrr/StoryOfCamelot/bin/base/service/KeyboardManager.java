@@ -8,7 +8,6 @@ import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,24 +17,12 @@ public class KeyboardManager {
 
     public static InlineKeyboardMarkup getKeyboardForStatUp(int freePoints) {
         if (freePoints < 1) return null;
-        ArrayList<String> addings = new ArrayList<>();
-        addings.add("1");
-        if (freePoints > 1) {
-            if (freePoints > 4) {
-                addings.add("5");
-                if (freePoints > 24) {
-                    addings.add("25");
-                }
-            }
-            if (freePoints != 5 && freePoints != 25) {
-                addings.add("" + freePoints);
-            }
-        }
+        List<String> statMilestones = getStatMilestones(freePoints);
 
-        int buttonsLine = addings.size() != 1 ? addings.size() : 3;
+        int buttonsLine = statMilestones.size() != 1 ? statMilestones.size() : 3;
         KeyboardBuilder<InlineKeyboardMarkup> builder = new KeyboardBuilder<>(KeyboardBuilder.Type.INLINE, buttonsLine);
         for (Stats stat : Stats.values()) {
-            for (String val : addings) {
+            for (String val : statMilestones) {
                 builder.addButton(
                         new InlineKeyboardButton()
                                 .setText(stat.emoji() + "+" + val)
@@ -44,6 +31,23 @@ public class KeyboardManager {
             }
         }
         return builder.build();
+    }
+
+    private static List<String> getStatMilestones(int freePoints) {
+        List<String> milestones = new ArrayList<>();
+        milestones.add("1");
+        if (freePoints > 1) {
+            if (freePoints > 4) {
+                milestones.add("5");
+                if (freePoints > 24) {
+                    milestones.add("25");
+                }
+            }
+            if (freePoints != 5 && freePoints != 25) {
+                milestones.add("" + freePoints);
+            }
+        }
+        return milestones;
     }
 
     public static InlineKeyboardMarkup getKeyboardForLanguageSelect() {

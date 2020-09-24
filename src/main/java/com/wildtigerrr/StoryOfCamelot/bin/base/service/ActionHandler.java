@@ -2,7 +2,6 @@ package com.wildtigerrr.StoryOfCamelot.bin.base.service;
 
 import com.wildtigerrr.StoryOfCamelot.bin.enums.ReplyButton;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.Player;
-import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.enums.CharacterStatus;
 import com.wildtigerrr.StoryOfCamelot.database.redis.schema.PlayerState;
 import com.wildtigerrr.StoryOfCamelot.web.service.CacheProvider;
 import com.wildtigerrr.StoryOfCamelot.web.service.CacheType;
@@ -48,6 +47,13 @@ public class ActionHandler {
         return new ArrayList<>() {{
             add(ReplyButton.ME);
             add(ReplyButton.MOVE);
+        }};
+    }
+
+    public List<ReplyButton> getPlayerInfoActions(Player player) {
+        return new ArrayList<>() {{
+            add(ReplyButton.BACK);
+            add(ReplyButton.SKILLS);
         }};
     }
 

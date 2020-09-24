@@ -65,6 +65,9 @@ public enum NameTranslation {
     BUTTON_SEARCH_ENEMIES(
             Emoji.FIGHT.getCode(), "button.search_enemies"
     ),
+    BUTTON_BACK(
+            Emoji.BACK.getCode(), "button.back"
+    ),
 
 
     // SKILLS

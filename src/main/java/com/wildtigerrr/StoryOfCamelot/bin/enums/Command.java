@@ -15,6 +15,7 @@ import javax.annotation.PostConstruct;
 @Log4j2
 public enum Command {
     ME("playerCommandHandler"),
+    BACK("startCommandHandler"),
     NICKNAME ("nicknameCommandHandler"),
     ADD {
         @Override

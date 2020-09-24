@@ -1,5 +1,7 @@
 package com.wildtigerrr.StoryOfCamelot.bin.handler;
 
+import com.wildtigerrr.StoryOfCamelot.bin.base.service.ActionHandler;
+import com.wildtigerrr.StoryOfCamelot.bin.base.service.KeyboardManager;
 import com.wildtigerrr.StoryOfCamelot.bin.translation.TranslationManager;
 import com.wildtigerrr.StoryOfCamelot.web.service.ResponseManager;
 import com.wildtigerrr.StoryOfCamelot.web.service.message.IncomingMessage;
@@ -11,8 +13,11 @@ import org.springframework.stereotype.Service;
 @Log4j2
 public class PlayerCommandHandler extends TextMessageHandler {
 
-    public PlayerCommandHandler(ResponseManager messages, TranslationManager translation) {
+    private final ActionHandler actionHandler;
+
+    public PlayerCommandHandler(ResponseManager messages, TranslationManager translation, ActionHandler actionHandler) {
         super(messages, translation);
+        this.actionHandler = actionHandler;
     }
 
     @Override
@@ -25,6 +30,7 @@ public class PlayerCommandHandler extends TextMessageHandler {
     private void sendPlayerInfo(IncomingMessage message) {
         log.warn(message.getPlayer().toString());
         messages.sendMessage(TextResponseMessage.builder().by(message)
+                .keyboard(KeyboardManager.getReplyByButtons(actionHandler.getAvailableActions(message.getPlayer()), message.getPlayer().getLanguage()))
                 .text(message.getPlayer().toString())
                 .applyMarkup(true).build()
         );
