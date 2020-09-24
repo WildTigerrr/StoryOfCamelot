@@ -145,6 +145,7 @@ public class MoveCommandHandler extends TextMessageHandler {
         PlayerState playerState = (PlayerState) cacheService.findObject(CacheType.PLAYER_STATE, player.getId());
         Location location = locationService.findById(action.target);
         player.setLocation(location);
+        cacheService.add(CacheType.PLAYER_STATE, playerState.stop());
         String text = translation.getMessage("movement.location.arrived", player, new Object[]{location.getName(player)});
         if (location.getImageLink() != null) {
             InputStream stream = dataProvider.getObject(location.getImageLink().getLocation());
@@ -165,7 +166,6 @@ public class MoveCommandHandler extends TextMessageHandler {
                 true
         );
         playerService.update(player);
-        cacheService.add(CacheType.PLAYER_STATE, playerState.stop());
     }
 
     private void handleMovementError(ScheduledAction action, Exception e) {
