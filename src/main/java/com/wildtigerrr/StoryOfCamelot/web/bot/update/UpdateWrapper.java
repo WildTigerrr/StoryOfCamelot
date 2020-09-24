@@ -17,12 +17,12 @@ public class UpdateWrapper {
     private final int messageId;
     private final String queryId;
     private final Author author;
-    private String userLanguageCode;
+    private final String userLanguageCode;
     private Player player;
     private final Boolean isQuery;
     private Command command;
 
-    private MessageType messageType;
+    private final MessageType messageType;
 
     // TODO Add escaped entire Update for debug and logs
 

@@ -2,6 +2,7 @@ package com.wildtigerrr.StoryOfCamelot.web.service.impl;
 
 import com.wildtigerrr.StoryOfCamelot.web.service.CacheProvider;
 import com.wildtigerrr.StoryOfCamelot.web.service.CacheType;
+import com.wildtigerrr.StoryOfCamelot.web.service.CacheTypeObject;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
@@ -33,6 +34,11 @@ public class RedisCacheService implements CacheProvider {
     @Override
     public void add(CacheType channel, Object key, Object object) {
         hashOperations.put(channel.key(), String.valueOf(key), object);
+    }
+
+    @Override
+    public void add(CacheType channel, CacheTypeObject object) {
+        add(channel, object.getKey(), object);
     }
 
     @Override

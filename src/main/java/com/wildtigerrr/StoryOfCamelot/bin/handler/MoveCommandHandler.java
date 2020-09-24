@@ -13,6 +13,9 @@ import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.enums.Stats;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.service.implementation.LocationNearServiceImpl;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.service.implementation.LocationServiceImpl;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.service.template.PlayerService;
+import com.wildtigerrr.StoryOfCamelot.database.redis.schema.PlayerState;
+import com.wildtigerrr.StoryOfCamelot.web.service.CacheProvider;
+import com.wildtigerrr.StoryOfCamelot.web.service.CacheType;
 import com.wildtigerrr.StoryOfCamelot.web.service.DataProvider;
 import com.wildtigerrr.StoryOfCamelot.web.service.ResponseManager;
 import com.wildtigerrr.StoryOfCamelot.web.service.message.IncomingMessage;
@@ -30,14 +33,16 @@ public class MoveCommandHandler extends TextMessageHandler {
 
     private final DataProvider dataProvider;
 
+    private final CacheProvider cacheService;
     private final PlayerService playerService;
     private final ExperienceService experienceService;
     private final LocationServiceImpl locationService;
     private final LocationNearServiceImpl locationNearService;
 
-    public MoveCommandHandler(ResponseManager messages, TranslationManager translation, DataProvider dataProvider, PlayerService playerService, ExperienceService experienceService, LocationServiceImpl locationService, LocationNearServiceImpl locationNearService) {
+    public MoveCommandHandler(ResponseManager messages, TranslationManager translation, DataProvider dataProvider, CacheProvider cacheService, PlayerService playerService, ExperienceService experienceService, LocationServiceImpl locationService, LocationNearServiceImpl locationNearService) {
         super(messages, translation);
         this.dataProvider = dataProvider;
+        this.cacheService = cacheService;
         this.playerService = playerService;
         this.experienceService = experienceService;
         this.locationService = locationService;
@@ -50,7 +55,8 @@ public class MoveCommandHandler extends TextMessageHandler {
     }
 
     public void handleMove(IncomingMessage message) {
-        if (message.getPlayer().getStatus() == CharacterStatus.MOVEMENT) {
+        PlayerState playerState = (PlayerState) cacheService.findObject(CacheType.PLAYER_STATE, message.getPlayer().getId());
+        if (playerState.isMoving()) {
             if (message.isQuery()) {
                 messages.sendMessage(EditResponseMessage.builder().by(message)
                         .text(translation.getMessage("movement.location.in-progress", message))
@@ -62,7 +68,7 @@ public class MoveCommandHandler extends TextMessageHandler {
                 );
             }
         } else if (message.isQuery()) {
-            moveToLocation(message, ((TextIncomingMessage) message).getParsedCommand().paramByNum(1));
+            moveToLocation(message, playerState, ((TextIncomingMessage) message).getParsedCommand().paramByNum(1));
         } else {
             sendAvailableLocations(message.getPlayer());
         }
@@ -82,7 +88,7 @@ public class MoveCommandHandler extends TextMessageHandler {
         }
     }
 
-    public void moveToLocation(IncomingMessage message, String locationId) {
+    public void moveToLocation(IncomingMessage message, PlayerState playerState, String locationId) {
         Location location = locationService.findById(locationId);
         if (location == null) {
             messages.sendMessage(TextResponseMessage.builder().by(message)
@@ -113,7 +119,7 @@ public class MoveCommandHandler extends TextMessageHandler {
         ) {
             newText = translation.getMessage("movement.location.in-progress", message);
         } else {
-            playerService.setMoveStatus(message.getPlayer());
+            cacheService.add(CacheType.PLAYER_STATE, playerState.move());
         }
         messages.sendMessage(EditResponseMessage.builder().lang(message)
                 .messageId(message)
@@ -133,9 +139,9 @@ public class MoveCommandHandler extends TextMessageHandler {
 
     private void updateLocation(ScheduledAction action) {
         Player player = playerService.findById(action.playerId);
+        PlayerState playerState = (PlayerState) cacheService.findObject(CacheType.PLAYER_STATE, player.getId());
         Location location = locationService.findById(action.target);
         player.setLocation(location);
-        player.stop();
         String text = translation.getMessage("movement.location.arrived", player, new Object[]{location.getName(player)});
         if (location.getImageLink() != null) {
             InputStream stream = dataProvider.getObject(location.getImageLink().getLocation());
@@ -155,6 +161,8 @@ public class MoveCommandHandler extends TextMessageHandler {
                 true
         );
         playerService.update(player);
+        playerState.stop();
+        cacheService.add(CacheType.PLAYER_STATE, playerState);
     }
 
     private void handleMovementError(ScheduledAction action, Exception e) {

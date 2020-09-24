@@ -20,6 +20,4 @@ public interface PlayerService {
     String getPlayerInfo(String externalId, Language lang);
     Player getPlayer(String externalId);
     void setNickname(Player player, String newName);
-
-    void setMoveStatus(Player player);
 }

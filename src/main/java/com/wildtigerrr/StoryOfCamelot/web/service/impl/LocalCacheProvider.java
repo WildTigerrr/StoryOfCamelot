@@ -2,6 +2,7 @@ package com.wildtigerrr.StoryOfCamelot.web.service.impl;
 
 import com.wildtigerrr.StoryOfCamelot.web.service.CacheProvider;
 import com.wildtigerrr.StoryOfCamelot.web.service.CacheType;
+import com.wildtigerrr.StoryOfCamelot.web.service.CacheTypeObject;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Repository;
 
@@ -22,6 +23,11 @@ public class LocalCacheProvider implements CacheProvider {
     public void add(CacheType channel, Object key, Object object) {
         createChannelIfNotExist(channel);
         cache.get(channel.key()).put(String.valueOf(key), object);
+    }
+
+    @Override
+    public void add(CacheType channel, CacheTypeObject object) {
+        add(channel, object.getKey(), object);
     }
 
     @Override

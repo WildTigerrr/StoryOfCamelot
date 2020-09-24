@@ -137,10 +137,4 @@ public class PlayerServiceImpl implements PlayerService {
         );
     }
 
-    @Override
-    public void setMoveStatus(Player player) {
-        player.move();
-        update(player);
-    }
-
 }

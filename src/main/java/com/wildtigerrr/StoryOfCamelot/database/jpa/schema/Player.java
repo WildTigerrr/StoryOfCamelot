@@ -63,26 +63,18 @@ public class Player extends SimpleObject implements Comparable<Player>, Fighter 
         return ObjectType.PLAYER;
     }
 
-    public void ban() {
-        status = CharacterStatus.BANNED;
+    public void activate() { // DELETE
+//        status = CharacterStatus.ACTIVE;
     }
 
-    public void activate() {
-        status = CharacterStatus.ACTIVE;
-    }
-
-    public void move() {
-        status = CharacterStatus.MOVEMENT;
-    }
-
-    public void stop() {
-        if (additionalStatus.getNumber() == 0) {
-            status = CharacterStatus.ACTIVE;
-        } else if (additionalStatus.getNumber() > 100) {
-            status = CharacterStatus.BANNED;
-        } else {
-            status = CharacterStatus.TUTORIAL;
-        }
+    public void stop() { // DELETE
+//        if (additionalStatus.getNumber() == 0) {
+//            status = CharacterStatus.ACTIVE;
+//        } else if (additionalStatus.getNumber() > 100) {
+//            status = CharacterStatus.BANNED;
+//        } else {
+//            status = CharacterStatus.TUTORIAL;
+//        }
     }
 
     // ------------------- CONSTRUCTORS ----------------------------------------------------------------------------- //

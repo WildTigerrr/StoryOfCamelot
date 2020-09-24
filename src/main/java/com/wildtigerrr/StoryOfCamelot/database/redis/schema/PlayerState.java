@@ -8,6 +8,7 @@ import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.Player;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.enums.CharacterStatus;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.enums.UserStatus;
 import com.wildtigerrr.StoryOfCamelot.exception.InvalidFighterException;
+import com.wildtigerrr.StoryOfCamelot.web.service.CacheTypeObject;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.redis.core.RedisHash;
@@ -16,7 +17,7 @@ import java.io.Serializable;
 
 @RedisHash("PlayerState")
 @Getter
-public class PlayerState implements Serializable {
+public class PlayerState implements Serializable, CacheTypeObject {
 
     private String id;
     private CharacterStatus status;
@@ -39,8 +40,9 @@ public class PlayerState implements Serializable {
         this.enemy = enemyOf(fighter);
     }
 
-    public void ban() {
-        this.userStatus = userStatus.ifBan();
+    @Override
+    public String getKey() {
+        return getId();
     }
 
     private Enemy enemyOf(Fighter fighter) {
@@ -61,6 +63,25 @@ public class PlayerState implements Serializable {
 
     public boolean isBanned() {
         return userStatus != UserStatus.ACTIVE;
+    }
+
+    public boolean isMoving() {
+        return status == CharacterStatus.MOVEMENT;
+    }
+
+    public PlayerState ban() {
+        this.userStatus = userStatus.ifBan();
+        return this;
+    }
+
+    public PlayerState move() {
+        this.status = CharacterStatus.MOVEMENT;
+        return this;
+    }
+
+    public PlayerState stop() {
+        this.status = CharacterStatus.ACTIVE;
+        return this;
     }
 
     @Getter
