@@ -62,7 +62,7 @@ public class UpdateReceiver implements Runnable {
     }
 
     private boolean checkUserPermission(IncomingMessage message) {
-        PlayerState state = (PlayerState) cacheService.findObject(CacheType.PLAYER_STATE, message.getUserId());
+        PlayerState state = (PlayerState) cacheService.findObject(CacheType.PLAYER_STATE, message.getPlayer().getId());
         log.debug(state);
         if (state == null) {
             cacheService.add(CacheType.PLAYER_STATE, message.getPlayer().getId(), new PlayerState(message.getPlayer().getId()));
