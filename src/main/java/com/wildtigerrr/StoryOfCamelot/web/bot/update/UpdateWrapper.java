@@ -13,13 +13,13 @@ import org.telegram.telegrambots.meta.api.objects.User;
 public class UpdateWrapper {
 
     private String message;
-    private Long chatId;
-    private int messageId;
-    private String queryId;
-    private Author author;
+    private final Long chatId;
+    private final int messageId;
+    private final String queryId;
+    private final Author author;
     private String userLanguageCode;
     private Player player;
-    private Boolean isQuery;
+    private final Boolean isQuery;
     private Command command;
 
     private MessageType messageType;

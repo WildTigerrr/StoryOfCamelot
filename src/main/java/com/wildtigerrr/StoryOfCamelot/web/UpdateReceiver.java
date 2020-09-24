@@ -2,6 +2,9 @@ package com.wildtigerrr.StoryOfCamelot.web;
 
 import com.wildtigerrr.StoryOfCamelot.bin.enums.Language;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.service.template.PlayerService;
+import com.wildtigerrr.StoryOfCamelot.database.redis.schema.PlayerState;
+import com.wildtigerrr.StoryOfCamelot.web.service.CacheProvider;
+import com.wildtigerrr.StoryOfCamelot.web.service.CacheType;
 import com.wildtigerrr.StoryOfCamelot.web.service.ResponseManager;
 import com.wildtigerrr.StoryOfCamelot.web.service.ResponseType;
 import com.wildtigerrr.StoryOfCamelot.web.service.message.IncomingMessage;
@@ -21,14 +24,16 @@ public class UpdateReceiver implements Runnable {
     private final ResponseHandler responseHandler;
     private final ResponseManager messages;
     private final PlayerService playerService;
+    private final CacheProvider cacheService;
 
     public final Queue<IncomingMessage> messageQueue = new ConcurrentLinkedQueue<>();
     private boolean active;
 
-    public UpdateReceiver(ResponseHandler responseHandler, ResponseManager messages, PlayerService playerService) {
+    public UpdateReceiver(ResponseHandler responseHandler, ResponseManager messages, PlayerService playerService, CacheProvider cacheService) {
         this.responseHandler = responseHandler;
         this.messages = messages;
         this.playerService = playerService;
+        this.cacheService = cacheService;
     }
 
     @Override
@@ -53,7 +58,17 @@ public class UpdateReceiver implements Runnable {
     public void process(Update update) {
         IncomingMessage message = IncomingMessage.from(update);
         message.setPlayer(playerService.getPlayer(message.getUserId()));
-        process(message);
+        if (checkUserPermission(message)) process(message);
+    }
+
+    private boolean checkUserPermission(IncomingMessage message) {
+        PlayerState state = (PlayerState) cacheService.findObject(CacheType.PLAYER_STATE, message.getUserId());
+        if (state == null) {
+            cacheService.add(CacheType.PLAYER_STATE, message.getPlayer().getId(), new PlayerState(message.getPlayer().getId()));
+            return true;
+        } else {
+            return !state.isBanned();
+        }
     }
 
     private void logSender(IncomingMessage message) {

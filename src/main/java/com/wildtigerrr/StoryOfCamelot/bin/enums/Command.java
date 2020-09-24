@@ -52,6 +52,7 @@ public enum Command {
     },
     SEARCH_ENEMIES("fightCommandHandler"),
     NOTIFY("notifyCommandHandler"),
+    BAN("adminCommandHandler"),
     DEFAULT;
 
     private final String handlerName;

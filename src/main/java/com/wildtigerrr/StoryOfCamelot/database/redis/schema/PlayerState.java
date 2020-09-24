@@ -27,6 +27,12 @@ public class PlayerState implements Serializable {
     @Setter
     private BattleLog lastBattle;
 
+    public PlayerState(String playerId) {
+        this.id = playerId;
+        this.status = CharacterStatus.ACTIVE;
+        this.userStatus = UserStatus.ACTIVE;
+    }
+
     public PlayerState(Player player, Fighter fighter) {
         this.id = player.getId();
         this.status = player.getStatus();
@@ -51,6 +57,10 @@ public class PlayerState implements Serializable {
 
     private Enemy enemyOf(Mob mob) {
         return new Enemy(mob.getId(), EnemyType.MOB);
+    }
+
+    public boolean isBanned() {
+        return userStatus != UserStatus.ACTIVE;
     }
 
     @Getter
