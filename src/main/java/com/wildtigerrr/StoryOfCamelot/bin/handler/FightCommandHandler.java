@@ -114,8 +114,7 @@ public class FightCommandHandler extends TextMessageHandler {
         StringBuilder builder = new StringBuilder();
         builder.append("Добыча:\n\n");
         newItems.forEach(item -> builder.append(item.backpackInfo(translation, backpack.getPlayer().getLanguage())));
-        messages.sendMessage(TextResponseMessage.builder()
-                .targetId(backpack.getPlayer())
+        messages.sendMessage(TextResponseMessage.builder().by(backpack.getPlayer())
                 .text(builder.toString()).build()
         );
         backpack.put(newItems);
