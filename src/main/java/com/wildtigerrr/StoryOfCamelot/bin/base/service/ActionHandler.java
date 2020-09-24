@@ -7,6 +7,7 @@ import com.wildtigerrr.StoryOfCamelot.database.redis.schema.PlayerState;
 import com.wildtigerrr.StoryOfCamelot.web.service.CacheProvider;
 import com.wildtigerrr.StoryOfCamelot.web.service.CacheType;
 import org.springframework.stereotype.Service;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,6 +19,10 @@ public class ActionHandler {
 
     public ActionHandler(CacheProvider cacheService) {
         this.cacheService = cacheService;
+    }
+
+    public ReplyKeyboardMarkup getAvailableActionsKeyboard(Player player) {
+        return KeyboardManager.getReplyByButtons(getAvailableActions(player), player.getLanguage());
     }
 
     public List<ReplyButton> getAvailableActions(Player player) {

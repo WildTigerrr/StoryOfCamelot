@@ -1,5 +1,6 @@
 package com.wildtigerrr.StoryOfCamelot.bin.handler;
 
+import com.wildtigerrr.StoryOfCamelot.bin.base.service.ActionHandler;
 import com.wildtigerrr.StoryOfCamelot.bin.base.service.KeyboardManager;
 import com.wildtigerrr.StoryOfCamelot.bin.base.service.TimeDependentActions;
 import com.wildtigerrr.StoryOfCamelot.bin.base.service.player.ExperienceService;
@@ -38,8 +39,9 @@ public class MoveCommandHandler extends TextMessageHandler {
     private final ExperienceService experienceService;
     private final LocationServiceImpl locationService;
     private final LocationNearServiceImpl locationNearService;
+    private final ActionHandler actionHandler;
 
-    public MoveCommandHandler(ResponseManager messages, TranslationManager translation, DataProvider dataProvider, CacheProvider cacheService, PlayerService playerService, ExperienceService experienceService, LocationServiceImpl locationService, LocationNearServiceImpl locationNearService) {
+    public MoveCommandHandler(ResponseManager messages, TranslationManager translation, DataProvider dataProvider, CacheProvider cacheService, PlayerService playerService, ExperienceService experienceService, LocationServiceImpl locationService, LocationNearServiceImpl locationNearService, ActionHandler actionHandler) {
         super(messages, translation);
         this.dataProvider = dataProvider;
         this.cacheService = cacheService;
@@ -47,6 +49,7 @@ public class MoveCommandHandler extends TextMessageHandler {
         this.experienceService = experienceService;
         this.locationService = locationService;
         this.locationNearService = locationNearService;
+        this.actionHandler = actionHandler;
     }
 
     @Override
@@ -151,6 +154,7 @@ public class MoveCommandHandler extends TextMessageHandler {
             );
         } else {
             messages.sendMessage(TextResponseMessage.builder().by(player)
+                    .keyboard(actionHandler.getAvailableActionsKeyboard(player))
                     .text(text).build()
             );
         }

@@ -52,7 +52,7 @@ public class FightCommandHandler extends TextMessageHandler {
             PlayerState playerState = (PlayerState) cacheService.findObject(CacheType.PLAYER_STATE, message.getPlayer().getId());
             cacheService.add(CacheType.PLAYER_STATE, playerState.setEnemy(enemy));
             messages.sendMessage(TextResponseMessage.builder().by(message)
-                    .keyboard(KeyboardManager.getReplyByButtons(actionHandler.getAvailableActions(message.getPlayer()), message.getPlayer().getLanguage()))
+                    .keyboard(actionHandler.getAvailableActionsKeyboard(message.getPlayer()))
                     .text("Враг: " + enemy.getName(message)).build() // TODO
             );
         }
