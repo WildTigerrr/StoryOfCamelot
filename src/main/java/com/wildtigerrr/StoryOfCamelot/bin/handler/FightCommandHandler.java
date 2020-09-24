@@ -76,10 +76,17 @@ public class FightCommandHandler extends TextMessageHandler {
     }
 
     private void fight(TextIncomingMessage message) {
+        PlayerState state = (PlayerState) cacheService.findObject(CacheType.PLAYER_STATE, message.getPlayer().getId());
+        if (!state.hasEnemy()) {
+            messages.sendMessage(TextResponseMessage.builder().by(message)
+                    .text("У вас нет противника").build()
+            );
+            return;
+        }
+
         messages.sendMessage(TextResponseMessage.builder().by(message)
                 .text(translation.getMessage("battle.start", message)).build()
         );
-        PlayerState state = (PlayerState) cacheService.findObject(CacheType.PLAYER_STATE, message.getPlayer().getId());
         Mob mob = mobService.findById(state.getEnemy().getId());
 
         BattleLog battleLog = battleHandler.fight(message.getPlayer(), mob, message.getPlayer().getLanguage());
