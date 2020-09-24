@@ -8,7 +8,7 @@ import com.wildtigerrr.StoryOfCamelot.bin.translation.TranslationManager;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.interfaces.Fighter;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.interfaces.SimpleObject;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.enums.ObjectType;
-import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.enums.PlayerStatus;
+import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.enums.CharacterStatus;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.enums.PlayerStatusExtended;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.enums.Stats;
 import lombok.AccessLevel;
@@ -49,7 +49,7 @@ public class Player extends SimpleObject implements Comparable<Player>, Fighter 
     @Enumerated(EnumType.STRING)
     private Language language;
     @Enumerated(EnumType.STRING)
-    private PlayerStatus status;
+    private CharacterStatus status;
     @Enumerated(EnumType.STRING)
     private PlayerStatusExtended additionalStatus;
 
@@ -64,24 +64,24 @@ public class Player extends SimpleObject implements Comparable<Player>, Fighter 
     }
 
     public void ban() {
-        status = PlayerStatus.BANNED;
+        status = CharacterStatus.BANNED;
     }
 
     public void activate() {
-        status = PlayerStatus.ACTIVE;
+        status = CharacterStatus.ACTIVE;
     }
 
     public void move() {
-        status = PlayerStatus.MOVEMENT;
+        status = CharacterStatus.MOVEMENT;
     }
 
     public void stop() {
         if (additionalStatus.getNumber() == 0) {
-            status = PlayerStatus.ACTIVE;
+            status = CharacterStatus.ACTIVE;
         } else if (additionalStatus.getNumber() > 100) {
-            status = PlayerStatus.BANNED;
+            status = CharacterStatus.BANNED;
         } else {
-            status = PlayerStatus.TUTORIAL;
+            status = CharacterStatus.TUTORIAL;
         }
     }
 
@@ -94,7 +94,7 @@ public class Player extends SimpleObject implements Comparable<Player>, Fighter 
         this.externalId = Objects.requireNonNull(externalId);
         this.nickname = nickname;
         this.location = location;
-        status = PlayerStatus.TUTORIAL;
+        status = CharacterStatus.TUTORIAL;
         additionalStatus = PlayerStatusExtended.LANGUAGE_CHOOSE;
         stats = new PlayerStats();
         stats.setUnassignedPoints(stats.getDefaultPoints() + 5);

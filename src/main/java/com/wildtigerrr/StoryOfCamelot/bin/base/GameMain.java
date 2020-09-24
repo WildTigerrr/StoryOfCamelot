@@ -3,17 +3,12 @@ package com.wildtigerrr.StoryOfCamelot.bin.base;
 import com.wildtigerrr.StoryOfCamelot.bin.base.service.FileProcessing;
 import com.wildtigerrr.StoryOfCamelot.bin.base.service.TimeDependentActions;
 import com.wildtigerrr.StoryOfCamelot.bin.enums.Command;
-import com.wildtigerrr.StoryOfCamelot.bin.service.StringUtils;
 import com.wildtigerrr.StoryOfCamelot.bin.translation.TranslationManager;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.Backpack;
-import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.BackpackItem;
-import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.Item;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.Player;
-import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.enums.ItemStatus;
-import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.enums.PlayerStatus;
+import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.enums.CharacterStatus;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.enums.PlayerStatusExtended;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.service.implementation.PlayerServiceImpl;
-import com.wildtigerrr.StoryOfCamelot.database.jpa.service.template.BackpackItemService;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.service.template.BackpackService;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.service.template.ItemService;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.service.template.PlayerService;
@@ -33,8 +28,6 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
@@ -172,7 +165,7 @@ public class GameMain {
     }
 
     private Boolean executePlayerCommand(UpdateWrapper message) {
-        if (message.getPlayer().getStatus() == PlayerStatus.TUTORIAL && tutorial.proceedTutorial(message)) return true;
+        if (message.getPlayer().getStatus() == CharacterStatus.TUTORIAL && tutorial.proceedTutorial(message)) return true;
 
         Command command = message.getCommand();
         if (command == null) return false;

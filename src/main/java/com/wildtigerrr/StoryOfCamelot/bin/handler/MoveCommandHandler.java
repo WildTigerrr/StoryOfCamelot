@@ -8,7 +8,7 @@ import com.wildtigerrr.StoryOfCamelot.bin.service.Time;
 import com.wildtigerrr.StoryOfCamelot.bin.translation.TranslationManager;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.Location;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.Player;
-import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.enums.PlayerStatus;
+import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.enums.CharacterStatus;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.enums.Stats;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.service.implementation.LocationNearServiceImpl;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.service.implementation.LocationServiceImpl;
@@ -50,7 +50,7 @@ public class MoveCommandHandler extends TextMessageHandler {
     }
 
     public void handleMove(IncomingMessage message) {
-        if (message.getPlayer().getStatus() == PlayerStatus.MOVEMENT) {
+        if (message.getPlayer().getStatus() == CharacterStatus.MOVEMENT) {
             if (message.isQuery()) {
                 messages.sendMessage(EditResponseMessage.builder().by(message)
                         .text(translation.getMessage("movement.location.in-progress", message))

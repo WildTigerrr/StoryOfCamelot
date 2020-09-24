@@ -1,6 +1,6 @@
 package com.wildtigerrr.StoryOfCamelot.database.jpa.schema.enums;
 
-public enum PlayerStatus {
+public enum CharacterStatus {
     MOVEMENT,
     ACTIVE,
     BANNED,

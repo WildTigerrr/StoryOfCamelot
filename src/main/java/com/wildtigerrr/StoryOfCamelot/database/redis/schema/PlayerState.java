@@ -5,7 +5,7 @@ import com.wildtigerrr.StoryOfCamelot.bin.enums.EnemyType;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.interfaces.Fighter;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.Mob;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.Player;
-import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.enums.PlayerStatus;
+import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.enums.CharacterStatus;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.enums.UserStatus;
 import com.wildtigerrr.StoryOfCamelot.exception.InvalidFighterException;
 import lombok.Getter;
@@ -19,7 +19,7 @@ import java.io.Serializable;
 public class PlayerState implements Serializable {
 
     private String id;
-    private PlayerStatus status;
+    private CharacterStatus status;
     @Setter
     private UserStatus userStatus;
     @Setter
