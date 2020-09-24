@@ -22,8 +22,13 @@ public class ActionHandler {
 
     public List<ReplyButton> getAvailableActions(Player player) {
         PlayerState state = (PlayerState) cacheService.findObject(CacheType.PLAYER_STATE, player.getId());
-        if (state.isMoving()) {
-            if (player.getLocation().getHasEnemies()) {
+        if (!state.isMoving()) {
+            if (state.hasEnemy()) {
+                return new ArrayList<>() {{
+                    add(ReplyButton.ME);
+                    add(ReplyButton.FIGHT);
+                }};
+            } else if (player.getLocation().getHasEnemies()) {
                 return new ArrayList<>() {{
                     add(ReplyButton.ME);
                     add(ReplyButton.MOVE);
@@ -33,11 +38,6 @@ public class ActionHandler {
             return new ArrayList<>() {{
                 add(ReplyButton.ME);
                 add(ReplyButton.MOVE);
-            }};
-        } else if (state.hasEnemy()) {
-            return new ArrayList<>() {{
-                add(ReplyButton.ME);
-                add(ReplyButton.FIGHT);
             }};
         }
 
