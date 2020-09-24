@@ -34,6 +34,12 @@ public class PlayerState implements Serializable, CacheTypeObject {
         this.userStatus = UserStatus.ACTIVE;
     }
 
+    public PlayerState setEnemy(Fighter fighter) {
+        this.enemy = enemyOf(fighter);
+        this.status = CharacterStatus.HAS_ENEMY;
+        return this;
+    }
+
     public PlayerState(Player player, Fighter fighter) {
         this.id = player.getId();
         this.status = player.getStatus();
@@ -67,6 +73,10 @@ public class PlayerState implements Serializable, CacheTypeObject {
 
     public boolean isMoving() {
         return status == CharacterStatus.MOVEMENT;
+    }
+
+    public boolean hasEnemy() {
+        return status == CharacterStatus.HAS_ENEMY;
     }
 
     public PlayerState ban() {
