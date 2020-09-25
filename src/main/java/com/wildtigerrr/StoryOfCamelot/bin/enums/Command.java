@@ -37,7 +37,7 @@ public enum Command {
     START("startCommandHandler"),
     UP ("skillsCommandHandler"),
     LANG("languageCommandHandler"),
-    TOP("playerCommandHandler"),
+    PLAYERS_TOP("playerCommandHandler"),
     FIGHT("fightCommandHandler"),
     SEARCH_ENEMIES("fightCommandHandler"),
     NOTIFY("notifyCommandHandler"),

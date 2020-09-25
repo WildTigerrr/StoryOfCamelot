@@ -9,7 +9,8 @@ public enum ReplyButton {
     ME(NameTranslation.BUTTON_ME, Command.ME),
     FIGHT(NameTranslation.BUTTON_FIGHT, Command.FIGHT),
     SEARCH_ENEMIES(NameTranslation.BUTTON_SEARCH_ENEMIES, Command.SEARCH_ENEMIES),
-    BACK(NameTranslation.BUTTON_BACK, Command.BACK);
+    BACK(NameTranslation.BUTTON_BACK, Command.BACK),
+    PLAYERS_TOP(NameTranslation.BUTTON_PLAYERS_TOP, Command.PLAYERS_TOP);
 
     private final NameTranslation label;
     @Getter

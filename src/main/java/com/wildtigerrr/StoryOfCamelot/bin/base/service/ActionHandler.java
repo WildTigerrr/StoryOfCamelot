@@ -59,6 +59,7 @@ public class ActionHandler {
         return new ArrayList<>() {{
             add(ReplyButton.BACK);
             add(ReplyButton.SKILLS);
+            add(ReplyButton.PLAYERS_TOP);
         }};
     }
 

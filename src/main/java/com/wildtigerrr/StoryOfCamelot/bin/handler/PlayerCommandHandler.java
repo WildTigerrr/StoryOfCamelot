@@ -7,7 +7,6 @@ import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.Player;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.service.template.PlayerService;
 import com.wildtigerrr.StoryOfCamelot.web.service.ResponseManager;
 import com.wildtigerrr.StoryOfCamelot.web.service.message.IncomingMessage;
-import com.wildtigerrr.StoryOfCamelot.web.service.message.template.TextIncomingMessage;
 import com.wildtigerrr.StoryOfCamelot.web.service.message.template.TextResponseMessage;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
@@ -33,7 +32,7 @@ public class PlayerCommandHandler extends TextMessageHandler {
     public void process(IncomingMessage message) {
         switch (message.getCommand()) {
             case ME: sendPlayerInfo(message); break;
-            case TOP: sendTopPlayers(message); break;
+            case PLAYERS_TOP: sendTopPlayers(message); break;
         }
     }
 
@@ -53,8 +52,8 @@ public class PlayerCommandHandler extends TextMessageHandler {
                 players.stream()
                         .map(pl -> pl.toStatString(index.incrementAndGet()))
                         .collect(Collectors.joining());
-        messages.sendMessage(TextResponseMessage.builder()
-                .text(top).targetId(message.getPlayer().getId()).build()
+        messages.sendMessage(TextResponseMessage.builder().by(message)
+                .text(top).build()
         );
     }
 

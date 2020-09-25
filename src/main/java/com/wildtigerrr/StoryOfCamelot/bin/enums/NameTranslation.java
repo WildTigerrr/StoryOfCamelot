@@ -59,6 +59,9 @@ public enum NameTranslation {
     BUTTON_ME(
             Emoji.SCROLL.getCode(), "button.me"
     ),
+    BUTTON_PLAYERS_TOP(
+            Emoji.CROWN.getCode(), "button.players_top"
+    ),
     BUTTON_FIGHT(
             Emoji.FIGHT.getCode(), "button.fight"
     ),
@@ -140,8 +143,12 @@ public enum NameTranslation {
 
     @Component
     public static class TranslationInjector {
-        @Autowired
-        private TranslationManager translations;
+        private final TranslationManager translations;
+
+        public TranslationInjector(TranslationManager translations) {
+            this.translations = translations;
+        }
+
         @PostConstruct
         public void postConstruct() {
             NameTranslation.setTranslationManager(translations);
