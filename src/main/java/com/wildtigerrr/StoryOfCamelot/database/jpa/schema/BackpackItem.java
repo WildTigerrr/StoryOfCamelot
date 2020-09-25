@@ -81,6 +81,10 @@ public class BackpackItem extends SimpleObject {
         return ObjectType.BACKPACK_ITEM;
     }
 
+    public boolean isEquipped() {
+        return getStatus() == ItemStatus.EQUIPPED;
+    }
+
     public String backpackInfo(TranslationManager translation) {
         String template = getMaximumDurability() > 0 ? "player.backpack.item-durability" : "player.backpack.item-quantity";
         double value = getMaximumDurability() > 0 ? getDurabilityPercent() : getQuantity();

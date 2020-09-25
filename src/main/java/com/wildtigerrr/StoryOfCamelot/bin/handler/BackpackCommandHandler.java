@@ -1,5 +1,6 @@
 package com.wildtigerrr.StoryOfCamelot.bin.handler;
 
+import com.wildtigerrr.StoryOfCamelot.bin.base.service.KeyboardManager;
 import com.wildtigerrr.StoryOfCamelot.bin.translation.TranslationManager;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.Backpack;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.service.template.BackpackService;
@@ -31,6 +32,7 @@ public class BackpackCommandHandler extends TextMessageHandler {
         builder.append(translation.getMessage("player.backpack.info", message));
         backpack.getItems().forEach(item -> builder.append(item.backpackInfo(translation)));
         messages.sendMessage(TextResponseMessage.builder().by(message)
+                .keyboard(KeyboardManager.getKeyboardForBackpack(backpack, 1, translation))
                 .text(builder.toString()).build()
         );
     }

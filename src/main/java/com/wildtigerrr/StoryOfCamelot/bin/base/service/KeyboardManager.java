@@ -2,6 +2,9 @@ package com.wildtigerrr.StoryOfCamelot.bin.base.service;
 
 import com.wildtigerrr.StoryOfCamelot.bin.enums.Language;
 import com.wildtigerrr.StoryOfCamelot.bin.enums.ReplyButton;
+import com.wildtigerrr.StoryOfCamelot.bin.translation.TranslationManager;
+import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.Backpack;
+import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.BackpackItem;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.Location;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.enums.Stats;
 import org.springframework.stereotype.Component;
@@ -86,5 +89,43 @@ public class KeyboardManager {
         return builder.resize().build();
     }
 
+    public static InlineKeyboardMarkup getKeyboardForBackpack(Backpack backpack, int page, TranslationManager translation) {
+        int pageSize = 10;
+        KeyboardBuilder<InlineKeyboardMarkup> builder = new KeyboardBuilder<>(KeyboardBuilder.Type.INLINE);
+        List<BackpackItem> items = backpack.getItems();
+        if (items.isEmpty() || items.size() < pageSize*page) {
+            return null;
+        }
+        BackpackItem item;
+        for (int i = pageSize * (page - 1); i < pageSize * page; i++) {
+            item = items.get(i);
+            builder.addButton(new InlineKeyboardButton()
+                    .setText(item.backpackInfo(translation))
+                    .setCallbackData("/backpack " + page + " item_info " + item.getId())
+            );
+            if (item.getItem().isEquippable()) {
+                builder.addButton(new InlineKeyboardButton()
+                        .setText(item.isEquipped() ? "Снять" : "Надеть")
+                        .setCallbackData(item.isEquipped()
+                                ? "/backpack " + page + " item_unequip " + item.getId()
+                                : "/backpack " + page + " item_equip " + item.getId())
+                );
+            }
+            builder.nextRow();
+        }
+        if (page > 1) {
+            builder.addButton(new InlineKeyboardButton()
+                    .setText("<")
+                    .setCallbackData("/backpack page " + (page - 1))
+            );
+        }
+        if (items.size() > pageSize * page) {
+            builder.addButton(new InlineKeyboardButton()
+                    .setText(">")
+                    .setCallbackData("/backpack page " + (page - 1))
+            );
+        }
+        return builder.build();
+    }
 
 }

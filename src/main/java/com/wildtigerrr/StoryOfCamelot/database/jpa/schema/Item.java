@@ -98,6 +98,10 @@ public class Item extends SimpleObject {
     public String getName(@NotNull Player player) {
         return getName(player.getLanguage());
     }
+    
+    public boolean isEquippable() {
+        return getType() == ItemSubType.SWORD;
+    }
 
     @Override
     public String toString() {
