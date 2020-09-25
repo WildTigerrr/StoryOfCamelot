@@ -61,11 +61,15 @@ public class KeyboardBuilder<T extends ReplyKeyboard> {
 
     public KeyboardBuilder<T> nextRow() {
         if (type == Type.INLINE) {
-            this.rowInlineList.add(buttonsInlineRow);
-            this.buttonsInlineRow = new ArrayList<>();
+            if (!buttonsInlineRow.isEmpty()) {
+                this.rowInlineList.add(buttonsInlineRow);
+                this.buttonsInlineRow = new ArrayList<>();
+            }
         } else if (type == Type.REPLY) {
-            this.rowReplyList.add(buttonsReplyRow);
-            this.buttonsReplyRow = new KeyboardRow();
+            if (buttonsReplyRow.size() > 0) {
+                this.rowReplyList.add(buttonsReplyRow);
+                this.buttonsReplyRow = new KeyboardRow();
+            }
         }
         return this;
     }
