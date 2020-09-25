@@ -93,7 +93,7 @@ public class KeyboardManager {
         int pageSize = 10;
         KeyboardBuilder<InlineKeyboardMarkup> builder = new KeyboardBuilder<>(KeyboardBuilder.Type.INLINE);
         List<BackpackItem> items = backpack.getItems();
-        if (items.isEmpty() || items.size() < pageSize*page) {
+        if (items.isEmpty() || items.size() < pageSize * (page - 1)) {
             return null;
         }
         BackpackItem item;
