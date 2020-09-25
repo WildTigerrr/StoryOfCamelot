@@ -97,7 +97,7 @@ public class KeyboardManager {
             return null;
         }
         BackpackItem item;
-        for (int i = pageSize * (page - 1); i < pageSize * page; i++) {
+        for (int i = pageSize * (page - 1); i < Math.min(pageSize * page, items.size() - pageSize * (page - 1)); i++) {
             item = items.get(i);
             builder.addButton(new InlineKeyboardButton()
                     .setText(item.backpackInfo(translation))
