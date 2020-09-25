@@ -14,9 +14,19 @@ import javax.annotation.PostConstruct;
 
 @Log4j2
 public enum Command {
-    ME("playerCommandHandler"),
+    START("startCommandHandler"),
     BACK("startCommandHandler"),
+    ME("playerCommandHandler"),
+    PLAYERS_TOP("playerCommandHandler"),
     NICKNAME ("nicknameCommandHandler"),
+    LANG("languageCommandHandler"),
+    MOVE("moveCommandHandler"),
+    SKILLS("skillsCommandHandler"),
+    UP ("skillsCommandHandler"),
+    FIGHT("fightCommandHandler"),
+    SEARCH_ENEMIES("fightCommandHandler"),
+    NOTIFY("notifyCommandHandler"),
+    BAN("adminCommandHandler"),
     ADD {
         @Override
         public boolean execute(UpdateWrapper update) {
@@ -32,16 +42,6 @@ public enum Command {
             return true;
         }
     },
-    MOVE("moveCommandHandler"),
-    SKILLS("skillsCommandHandler"),
-    START("startCommandHandler"),
-    UP ("skillsCommandHandler"),
-    LANG("languageCommandHandler"),
-    PLAYERS_TOP("playerCommandHandler"),
-    FIGHT("fightCommandHandler"),
-    SEARCH_ENEMIES("fightCommandHandler"),
-    NOTIFY("notifyCommandHandler"),
-    BAN("adminCommandHandler"),
     DEFAULT;
 
     private final String handlerName;
