@@ -37,13 +37,7 @@ public enum Command {
     START("startCommandHandler"),
     UP ("skillsCommandHandler"),
     LANG("languageCommandHandler"),
-    TOP {
-        @Override
-        public boolean execute(UpdateWrapper update) {
-            game.sendTopPlayers(update.getUserId());
-            return true;
-        }
-    },
+    TOP("playerCommandHandler"),
     FIGHT("fightCommandHandler"),
     SEARCH_ENEMIES("fightCommandHandler"),
     NOTIFY("notifyCommandHandler"),
