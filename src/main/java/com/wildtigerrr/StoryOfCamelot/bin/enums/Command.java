@@ -43,6 +43,7 @@ public enum Command {
             return true;
         }
     },
+    TEST("adminCommandHandler"),
     DEFAULT;
 
     private final String handlerName;

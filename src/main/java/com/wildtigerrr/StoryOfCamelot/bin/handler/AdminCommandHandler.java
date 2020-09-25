@@ -26,10 +26,16 @@ public class AdminCommandHandler extends TextMessageHandler {
     @Override
     public void process(IncomingMessage message) {
         switch (message.getCommand()) {
-            case BAN:
-                ban((TextIncomingMessage) message);
-                break;
+            case BAN: ban((TextIncomingMessage) message);break;
+            case TEST: test(message); break;
         }
+    }
+
+    private void test(IncomingMessage message) {
+        messages.sendMessage(TextResponseMessage.builder().by(message)
+                .text("[Тест](/start)")
+                .applyMarkup(true)
+                .build());
     }
 
     private void ban(TextIncomingMessage message) {
