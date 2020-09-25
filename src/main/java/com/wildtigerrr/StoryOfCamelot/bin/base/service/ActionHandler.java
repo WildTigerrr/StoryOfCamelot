@@ -30,12 +30,15 @@ public class ActionHandler {
         if (state.isMoving()) {
             return new ArrayList<>() {{
                 add(ReplyButton.ME);
+                add(ReplyButton.BACKPACK);
             }};
         }
         if (state.hasEnemy()) {
             return new ArrayList<>() {{
-                add(ReplyButton.ME);
                 add(ReplyButton.FIGHT);
+                add(ReplyButton.SKIP_LINE);
+                add(ReplyButton.ME);
+                add(ReplyButton.BACKPACK);
             }};
         }
         return getLocationActionsKeyboard(player.getLocation());
@@ -46,12 +49,14 @@ public class ActionHandler {
             return new ArrayList<>() {{
                 add(ReplyButton.ME);
                 add(ReplyButton.MOVE);
+                add(ReplyButton.BACKPACK);
                 add(ReplyButton.SEARCH_ENEMIES);
             }};
         }
         return new ArrayList<>() {{
             add(ReplyButton.ME);
             add(ReplyButton.MOVE);
+            add(ReplyButton.BACKPACK);
         }};
     }
 
@@ -59,6 +64,7 @@ public class ActionHandler {
         return new ArrayList<>() {{
             add(ReplyButton.BACK);
             add(ReplyButton.SKILLS);
+            add(ReplyButton.BACKPACK);
             add(ReplyButton.PLAYERS_TOP);
         }};
     }

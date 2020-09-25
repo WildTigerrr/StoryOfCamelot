@@ -25,6 +25,7 @@ public enum Command {
     UP ("skillsCommandHandler"),
     FIGHT("fightCommandHandler"),
     SEARCH_ENEMIES("fightCommandHandler"),
+    BACKPACK("backpackCommandHandler"),
     NOTIFY("notifyCommandHandler"),
     BAN("adminCommandHandler"),
     ADD {

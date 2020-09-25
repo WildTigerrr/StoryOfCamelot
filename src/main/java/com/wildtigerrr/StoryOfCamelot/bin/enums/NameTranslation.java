@@ -71,6 +71,9 @@ public enum NameTranslation {
     BUTTON_BACK(
             Emoji.BACK.getCode(), "button.back"
     ),
+    BACKPACK(
+            Emoji.BACKPACK.getCode(), "button.backpack"
+    ),
 
 
     // SKILLS

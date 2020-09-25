@@ -11,6 +11,7 @@ public enum ReplyButton {
     SEARCH_ENEMIES(NameTranslation.BUTTON_SEARCH_ENEMIES, Command.SEARCH_ENEMIES),
     BACK(NameTranslation.BUTTON_BACK, Command.BACK),
     PLAYERS_TOP(NameTranslation.BUTTON_PLAYERS_TOP, Command.PLAYERS_TOP),
+    BACKPACK(NameTranslation.BACKPACK, Command.BACKPACK),
 
     SKIP_LINE(NameTranslation.BUTTON_BACK, Command.ACTION);
 
