@@ -33,7 +33,7 @@ public class AdminCommandHandler extends TextMessageHandler {
 
     private void test(IncomingMessage message) {
         messages.sendMessage(TextResponseMessage.builder().by(message)
-                .text("[Тест](/start)")
+                .text("[Тест](https://t.me/StoryOfCamelotBot?start=test)")
                 .applyMarkup(true)
                 .build());
     }
