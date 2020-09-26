@@ -20,6 +20,7 @@ import com.wildtigerrr.StoryOfCamelot.web.service.CacheType;
 import com.wildtigerrr.StoryOfCamelot.web.service.DataProvider;
 import com.wildtigerrr.StoryOfCamelot.web.service.ResponseManager;
 import com.wildtigerrr.StoryOfCamelot.web.service.message.IncomingMessage;
+import com.wildtigerrr.StoryOfCamelot.web.service.message.ResponseMessage;
 import com.wildtigerrr.StoryOfCamelot.web.service.message.template.EditResponseMessage;
 import com.wildtigerrr.StoryOfCamelot.web.service.message.template.ImageResponseMessage;
 import com.wildtigerrr.StoryOfCamelot.web.service.message.template.TextIncomingMessage;
@@ -125,6 +126,7 @@ public class MoveCommandHandler extends TextMessageHandler {
         } else {
             cacheService.add(CacheType.PLAYER_STATE, playerState.move());
         }
+        messages.sendAnswer(message.getQueryId(), translation.getMessage("movement.location.accepted-answer", message));
         messages.sendMessage(EditResponseMessage.builder().lang(message)
                 .messageId(message)
                 .text(newText)
