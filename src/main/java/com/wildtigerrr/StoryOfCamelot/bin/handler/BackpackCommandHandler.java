@@ -34,9 +34,14 @@ public class BackpackCommandHandler extends TextMessageHandler {
         } else if (command.paramsCount() > 2) {
             switch (command.paramByNum(2)) {
                 case "page": sendBackpack(textIncomingMessage.getPlayer(), command.intByNum(1)); break;
-                case "item_info": sendItemInfo((TextIncomingMessage) message); break;
-                case "item_equip": equipItem((TextIncomingMessage) message); break;
-                case "item_unequip": unequipItem((TextIncomingMessage) message); break;
+                case "item": {
+                    switch (command.paramByNum(3)) {
+                        case "info": sendItemInfo((TextIncomingMessage) message); break;
+                        case "equip": equipItem((TextIncomingMessage) message); break;
+                        case "unequip": unequipItem((TextIncomingMessage) message); break;
+                        default: log.debug(command.paramByNum(3));
+                    }
+                }
                 default: log.debug(command.paramByNum(2));
             }
         } else {
@@ -47,21 +52,21 @@ public class BackpackCommandHandler extends TextMessageHandler {
 
     private void equipItem(TextIncomingMessage message) {
         ParsedCommand command = message.getParsedCommand();
-        if (command.paramsCount() < 3) return;
-        // equip id command.paramByNum(3);
+        if (command.paramsCount() < 4) return;
+        // equip id command.paramByNum(4);
     }
 
     private void unequipItem(TextIncomingMessage message) {
         ParsedCommand command = message.getParsedCommand();
-        if (command.paramsCount() < 3) return;
-        // unequip id command.paramByNum(3);
+        if (command.paramsCount() < 4) return;
+        // unequip id command.paramByNum(4);
     }
 
     private void sendItemInfo(TextIncomingMessage message) {
         ParsedCommand command = message.getParsedCommand();
-        if (command.paramsCount() < 3) return;
+        if (command.paramsCount() < 4) return;
         Backpack backpack = backpackService.findMainByPlayerId(message.getPlayer().getId());
-        BackpackItem item = backpack.getItemById(command.paramByNum(3));
+        BackpackItem item = backpack.getItemById(command.paramByNum(4));
         if (item != null) {
             messages.sendMessage(TextResponseMessage.builder().by(message)
                     .text(item.getItem().getDescribe(message.getPlayer()))
