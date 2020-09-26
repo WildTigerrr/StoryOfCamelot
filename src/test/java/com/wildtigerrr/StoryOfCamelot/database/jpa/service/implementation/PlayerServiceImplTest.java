@@ -8,6 +8,7 @@ import com.wildtigerrr.StoryOfCamelot.database.jpa.dataaccessobject.PlayerDao;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.Location;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.Player;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.service.template.LocationService;
+import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.Test;
 import org.mockito.stubbing.Answer;
 import org.opentest4j.AssertionFailedError;
@@ -21,6 +22,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
+@Log4j2
 class PlayerServiceImplTest extends ServiceBaseTest {
 
     @Autowired
@@ -28,8 +30,8 @@ class PlayerServiceImplTest extends ServiceBaseTest {
 
     @MockBean
     PlayerDao playerDao;
-    @MockBean(name = "locationService")
-    LocationService locationService;
+//    @MockBean(name = "locationService")
+//    LocationService locationService;
 
     @Test
     void whenCreateShouldSearchForExistingAndCreateTest() {
@@ -139,7 +141,7 @@ class PlayerServiceImplTest extends ServiceBaseTest {
         // Given
         String externalId = "test";
         when(playerDao.findByExternalId(externalId)).thenReturn(null);
-        when(locationService.findByName(GameSettings.DEFAULT_LOCATION.get())).thenReturn(new Location(LocationTemplate.THICKET));
+//        when(locationService.findByName(GameSettings.DEFAULT_LOCATION.get())).thenReturn(new Location(LocationTemplate.THICKET));
         when(playerDao.save(any(Player.class))).thenAnswer((Answer<Player>) invocationOnMock -> invocationOnMock.getArgument(0));
 
         // When
@@ -156,9 +158,11 @@ class PlayerServiceImplTest extends ServiceBaseTest {
         // Given
         String externalId = "test";
         Player player = new Player(externalId, "Tiger", new Location(LocationTemplate.TRADING_SQUARE));
-        when(playerDao.findByExternalId(externalId)).thenReturn(player);
 
         for (Language lang : Language.values()) {
+            player.setLanguage(lang);
+            when(playerDao.findByExternalId(externalId)).thenReturn(player);
+
             // When
             String response = service.getPlayerInfo("test", lang);
 
