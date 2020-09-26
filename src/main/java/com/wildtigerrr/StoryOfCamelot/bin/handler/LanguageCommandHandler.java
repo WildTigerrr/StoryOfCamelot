@@ -18,10 +18,12 @@ public class LanguageCommandHandler extends TextMessageHandler {
     // TODO After language selected check for nickname update needed -> Subscribe for actions. By QuestHandler?
 
     private final PlayerService playerService;
+    private final NicknameCommandHandler nicknameCommandHandler;
 
-    public LanguageCommandHandler(ResponseManager messages, TranslationManager translation, PlayerService playerService) {
+    public LanguageCommandHandler(ResponseManager messages, TranslationManager translation, PlayerService playerService, NicknameCommandHandler nicknameCommandHandler) {
         super(messages, translation);
         this.playerService = playerService;
+        this.nicknameCommandHandler = nicknameCommandHandler;
     }
 
     @Override
@@ -45,6 +47,9 @@ public class LanguageCommandHandler extends TextMessageHandler {
                 player.setLanguage(Language.values()[Integer.parseInt(langCode)]);
                 playerService.update(player);
                 sendLanguageSelectedMessage(message);
+                if (player.getNickname().equals(player.getExternalId())) {
+                    nicknameCommandHandler.sendNicknameChangeRequest(message);
+                }
             } else {
                 messages.sendMessage(TextResponseMessage.builder().by(message)
                         .text(translation.getMessage("commands.invalid", message)).build()

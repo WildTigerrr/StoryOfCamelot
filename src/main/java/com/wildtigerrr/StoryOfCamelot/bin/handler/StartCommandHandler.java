@@ -1,17 +1,11 @@
 package com.wildtigerrr.StoryOfCamelot.bin.handler;
 
 import com.wildtigerrr.StoryOfCamelot.bin.base.service.ActionHandler;
-import com.wildtigerrr.StoryOfCamelot.bin.base.service.KeyboardManager;
-import com.wildtigerrr.StoryOfCamelot.bin.enums.ReplyButton;
 import com.wildtigerrr.StoryOfCamelot.bin.translation.TranslationManager;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.Player;
 import com.wildtigerrr.StoryOfCamelot.web.service.ResponseManager;
 import com.wildtigerrr.StoryOfCamelot.web.service.message.IncomingMessage;
-import com.wildtigerrr.StoryOfCamelot.web.service.message.template.TextResponseMessage;
 import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Service
 public class StartCommandHandler extends TextMessageHandler {
@@ -36,17 +30,8 @@ public class StartCommandHandler extends TextMessageHandler {
         } else if (!message.text().startsWith("/start") && player.getNickname().equals(player.getExternalId())) {
             nicknameCommandHandler.process(message);
         } else {
-            sendAvailableActions(player);
+            actionHandler.sendAvailableActions(player);
         }
-    }
-
-    private void sendAvailableActions(Player player) {
-        List<ReplyButton> buttons = actionHandler.getAvailableActions(player);
-        messages.sendMessage(TextResponseMessage.builder().by(player)
-                .text(translation.getMessage("commands.available-action", player))
-                .keyboard(KeyboardManager.getReplyByButtons(buttons, player.getLanguage()))
-                .applyMarkup(true).build()
-        );
     }
 
 }

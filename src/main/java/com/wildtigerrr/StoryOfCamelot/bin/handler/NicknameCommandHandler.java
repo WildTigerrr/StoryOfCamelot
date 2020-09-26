@@ -1,5 +1,6 @@
 package com.wildtigerrr.StoryOfCamelot.bin.handler;
 
+import com.wildtigerrr.StoryOfCamelot.bin.base.service.ActionHandler;
 import com.wildtigerrr.StoryOfCamelot.bin.base.service.ValidationResult;
 import com.wildtigerrr.StoryOfCamelot.bin.enums.Language;
 import com.wildtigerrr.StoryOfCamelot.bin.translation.TranslationManager;
@@ -17,10 +18,12 @@ public class NicknameCommandHandler extends CommandHandler {
     private final int NICKNAME_MAX_LENGTH = 40;
 
     private final PlayerService playerService;
+    private final ActionHandler actionHandler;
 
-    protected NicknameCommandHandler(ResponseManager messages, TranslationManager translation, PlayerService playerService) {
+    protected NicknameCommandHandler(ResponseManager messages, TranslationManager translation, PlayerService playerService, ActionHandler actionHandler) {
         super(messages, translation);
         this.playerService = playerService;
+        this.actionHandler = actionHandler;
     }
 
     @Override
@@ -30,6 +33,13 @@ public class NicknameCommandHandler extends CommandHandler {
                 ? textMessage.getParsedCommand().paramByNum(1)
                 : textMessage.text();
         setNickname(textMessage.getPlayer(), nickname);
+    }
+
+    public void sendNicknameChangeRequest(TextIncomingMessage message) {
+        messages.sendMessage(TextResponseMessage.builder()
+                .text(translation.getMessage("player.nickname.request", message))
+                .build()
+        );
     }
 
     public void setNickname(Player player, String newName) {
@@ -45,6 +55,7 @@ public class NicknameCommandHandler extends CommandHandler {
         messages.sendMessage(TextResponseMessage.builder().by(player)
                 .text(message).applyMarkup(true).build()
         );
+        actionHandler.sendAvailableActions(player);
     }
 
     class NicknameValidator {
