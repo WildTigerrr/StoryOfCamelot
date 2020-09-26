@@ -77,6 +77,7 @@ public class BackpackCommandHandler extends TextMessageHandler {
                     .text("У Вас нет этого предмета").build()
             );
         }
+        messages.sendAnswer(message.getQueryId());
     }
 
     private void sendBackpack(IncomingMessage message) {
@@ -85,12 +86,11 @@ public class BackpackCommandHandler extends TextMessageHandler {
 
     private void sendBackpack(Player player, int page) {
         Backpack backpack = backpackService.findMainByPlayerId(player.getId());
-        StringBuilder builder = new StringBuilder();
-        builder.append(translation.getMessage("player.backpack.info", player));
-        backpack.getItems().forEach(item -> builder.append(item.backpackInfo(translation)));
+        //        backpack.getItems().forEach(item -> builder.append(item.backpackInfo(translation)));
         messages.sendMessage(TextResponseMessage.builder().by(player)
                 .keyboard(KeyboardManager.getKeyboardForBackpack(backpack, page, translation))
-                .text(builder.toString()).build()
+                .text(translation.getMessage("player.backpack.info", player)
+                ).build()
         );
     }
 
