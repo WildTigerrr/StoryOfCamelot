@@ -27,6 +27,7 @@ public enum Command {
     SEARCH_ENEMIES("fightCommandHandler"),
     BACKPACK("backpackCommandHandler"),
     NOTIFY("notifyCommandHandler"),
+    ID("adminCommandHandler"),
     BAN("adminCommandHandler"),
     ADD {
         @Override
@@ -64,7 +65,6 @@ public enum Command {
     }
 
     public boolean execute(UpdateWrapper update) {
-        game.sendDumb(update);
         return false;
     }
 

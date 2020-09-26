@@ -27,11 +27,16 @@ public class AdminCommandHandler extends TextMessageHandler {
     public void process(IncomingMessage message) {
         switch (message.getCommand()) {
             case BAN: ban((TextIncomingMessage) message);break;
+            case ID: sendIdsToAdminChannel(message.getUserId(), message.getChatId()); break;
             case TEST: test(message); break;
         }
     }
 
     private void test(IncomingMessage message) {
+        if (!isAdmin(message.getUserId())) {
+            defaultCommandHandler.process(message);
+            return;
+        }
         messages.sendMessage(TextResponseMessage.builder().by(message)
                 .text("[Тест](https://t.me/StoryOfCamelotBot?start=test)")
                 .applyMarkup(true)
@@ -39,16 +44,20 @@ public class AdminCommandHandler extends TextMessageHandler {
     }
 
     private void ban(TextIncomingMessage message) {
-        if (isAdmin(message.getUserId())) {
-            PlayerState state = (PlayerState) cacheService.findObject(CacheType.PLAYER_STATE, message.getPlayer().getId());
-            cacheService.add(CacheType.PLAYER_STATE, state.ban());
-            messages.sendMessage(TextResponseMessage.builder().by(message)
-                    .text("User banned")
-                    .build()
-            );
-        } else {
+        if (!isAdmin(message.getUserId())) {
             defaultCommandHandler.process(message);
+            return;
         }
+        PlayerState state = (PlayerState) cacheService.findObject(CacheType.PLAYER_STATE, message.getPlayer().getId());
+        cacheService.add(CacheType.PLAYER_STATE, state.ban());
+        messages.sendMessage(TextResponseMessage.builder().by(message)
+                .text("User banned")
+                .build()
+        );
+    }
+
+    private void sendIdsToAdminChannel(String userId, long chatId) {
+        messages.postMessageToAdminChannel("User Id: " + userId + ", Chat Id: " + chatId);
     }
 
     private Boolean isAdmin(String userId) {

@@ -37,37 +37,19 @@ import java.util.stream.Collectors;
 public class GameMain {
 
     private final ResponseManager messages;
-    private final PlayerService playerService;
-    private final TranslationManager translation;
-    private final GameTutorial tutorial;
     private final FileProcessing imageService;
-    private final BackpackService backpackService;
-    private final ItemService itemService;
 
     @Autowired
     public GameMain(
             ResponseManager messages,
-            PlayerServiceImpl playerService,
-            TranslationManager translation,
-            GameTutorial tutorial,
-            FileProcessing imageService,
-            BackpackService backpackService,
-            ItemService itemService
+            FileProcessing imageService
     ) {
         this.messages = messages;
-        this.playerService = playerService;
-        this.translation = translation;
-        this.tutorial = tutorial;
         this.imageService = imageService;
-        this.backpackService = backpackService;
-        this.itemService = itemService;
     }
 
     @Transactional
     public void handleTextMessage(UpdateWrapper message) {
-        setPlayerToMessage(message);
-        logSender(message);
-        executeCommand(message);
     }
 
     public void handleImageMessage(Update update) {
@@ -94,99 +76,17 @@ public class GameMain {
         messages.postMessageToAdminChannel("Message not supported: " + update.toString());
     }
 
-    public void sendTopPlayers(String currentPlayerId) {
-        List<Player> players = playerService.getTopPlayers(10);
-        AtomicInteger index = new AtomicInteger();
-        String top = "Топ игроков: \n\n" +
-                players.stream()
-                        .map(pl -> pl.toStatString(index.incrementAndGet()))
-                        .collect(Collectors.joining());
-        messages.sendMessage(TextResponseMessage.builder()
-                .text(top).targetId(currentPlayerId).build()
-        );
-    }
-
-    public void sendPlayerInfo(UpdateWrapper message) {
-        messages.sendMessage(TextResponseMessage.builder()
-                .text(message.getPlayer().toString())
-                .targetId(message)
-                .applyMarkup(true).build()
-        );
-    }
-
-    private void executeCommand(UpdateWrapper message) {
-        if (!executeAdminCommand(message) && !executePlayerCommand(message)) {
-            commandNotExecuted(message);
-        }
-    }
-
-    private boolean executeAdminCommand(UpdateWrapper message) {
-        return message.getUserId().equals(BotConfig.WEBHOOK_ADMIN_ID) && performAdminCommands(message);
-    }
-
     private Boolean performAdminCommands(UpdateWrapper message) {
         switch (message.getText()) {
             case "image test":
                 sendTestImage(message.getUserId());
                 return true;
-            case "/tutorial off": {
-                disableTutorial(message.getPlayer());
-                return true;
-            }
-            case "/tutorial on": {
-                enableTutorial(message.getPlayer());
-                return true;
-            }
-            case "/id": {
-                sendIdsToAdminChannel(message.getUserId(), message.getChatId());
-                return true;
-            }
-            case "/backpack": {
-                getBackpack(message);
-                return true;
-            }
         }
         if (message.getText().startsWith("/ping")) {
             messages.postMessageToAdminChannel(message.getText(), true);
             return true;
         }
         return false;
-    }
-
-    private void getBackpack(UpdateWrapper message) {
-        Backpack backpack = backpackService.findMainByPlayerId(message.getPlayer().getId());
-        StringBuilder builder = new StringBuilder();
-        builder.append(translation.getMessage("player.backpack.info", message));
-        backpack.getItems().forEach(item -> builder.append(item.backpackInfo(translation)));
-        messages.sendMessage(TextResponseMessage.builder()
-                .text(builder.toString())
-                .targetId(message).build()
-        );
-    }
-
-    private Boolean executePlayerCommand(UpdateWrapper message) {
-        if (message.getPlayer().getStatus() == CharacterStatus.TUTORIAL && tutorial.proceedTutorial(message)) return true;
-
-        Command command = message.getCommand();
-        if (command == null) return false;
-        String[] commandParts = message.getText().split(" ", 2);
-        if (command == Command.ACTION) {
-            proceedTimeAction(message.getText(), commandParts);
-            return true;
-        } else if (command == Command.START) {
-            startGame(message);
-            return true;
-        } else {
-            return command.execute(message);
-        }
-    }
-
-    private void commandNotExecuted(UpdateWrapper message) {
-        String answer = "Я не знаю как это обработать: " + message.getText();
-        log.debug("Answer: " + answer);
-        messages.sendMessage(TextResponseMessage.builder()
-                .text(answer).targetId(message).build()
-        );
     }
 
     private void sendTestImage(String userId) {
@@ -209,27 +109,6 @@ public class GameMain {
         }
     }
 
-    private void disableTutorial(Player player) {
-        player.activate();
-        playerService.update(player);
-        messages.sendMessage(TextResponseMessage.builder()
-                .text("Туториал отключен").targetId(player).build()
-        );
-    }
-
-    private void enableTutorial(Player player) {
-        player.setAdditionalStatus(PlayerStatusExtended.TUTORIAL_NICKNAME);
-        player.stop();
-        playerService.update(player);
-        messages.sendMessage(TextResponseMessage.builder()
-                .text("Туториал перезапущен").targetId(player).build()
-        );
-    }
-
-    private void sendIdsToAdminChannel(String userId, long chatId) {
-        messages.postMessageToAdminChannel("User Id: " + userId + ", Chat Id: " + chatId);
-    }
-
     private void proceedTimeAction(String message, String[] commandParts) {
         if (commandParts.length <= 1) return;
         commandParts = message.split(" ", 3);
@@ -246,20 +125,6 @@ public class GameMain {
         }
     }
 
-    private void startGame(UpdateWrapper message) {
-        if (message.getPlayer().isNew()) {
-            tutorial.tutorialStart(message.getPlayer());
-        } else {
-            messages.sendMessage(TextResponseMessage.builder()
-                    .text(translation.getMessage("commands.expired", message)).targetId(message).build()
-            );
-        }
-    }
-
-    private void setPlayerToMessage(UpdateWrapper message) {
-        message.setPlayer(playerService.getPlayer(message.getUserId()));
-    }
-
     public void sendMessageToUser(String message) {
         String[] commandParts = message.split(" ", 3);
 //        Player receiver = playerService.findByExternalId(commandParts[1]);
@@ -267,23 +132,6 @@ public class GameMain {
                 .text(commandParts[2]).targetId(commandParts[1]).build()
         );
         //                    messages.sendMessage("Пользователь не найден", message.getUserId());
-    }
-
-    public void sendDumb(UpdateWrapper update) {
-        messages.sendMessage(TextResponseMessage.builder()
-                .text(translation.getMessage("commands.not-defined", update))
-                .targetId(update)
-                .applyMarkup(true).build()
-        );
-    }
-
-    private void logSender(UpdateWrapper message) {
-        log.debug("Working with message: " + message);
-        if (!message.getUserId().equals(BotConfig.WEBHOOK_ADMIN_ID)) {
-            messages.sendMessage(TextResponseMessage.builder()
-                    .text(message.toString()).type(ResponseType.POST_TO_ADMIN_CHANNEL).build()
-            );
-        }
     }
 
     private void handleError(String message, Exception e) {
