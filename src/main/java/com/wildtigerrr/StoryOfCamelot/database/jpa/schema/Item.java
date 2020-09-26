@@ -91,6 +91,7 @@ public class Item extends SimpleObject {
         this.quality = quality;
         this.systemName = systemName;
         this.nameTranslation = translation;
+        this.description = description;
         this.imageLink = imageLink;
     }
 
