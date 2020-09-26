@@ -11,9 +11,11 @@ import com.wildtigerrr.StoryOfCamelot.web.service.ResponseManager;
 import com.wildtigerrr.StoryOfCamelot.web.service.message.IncomingMessage;
 import com.wildtigerrr.StoryOfCamelot.web.service.message.template.TextIncomingMessage;
 import com.wildtigerrr.StoryOfCamelot.web.service.message.template.TextResponseMessage;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 
 @Service
+@Log4j2
 public class BackpackCommandHandler extends TextMessageHandler {
 
     private final BackpackService backpackService;
@@ -35,7 +37,11 @@ public class BackpackCommandHandler extends TextMessageHandler {
                 case "item_info": sendItemInfo((TextIncomingMessage) message); break;
                 case "item_equip": equipItem((TextIncomingMessage) message); break;
                 case "item_unequip": unequipItem((TextIncomingMessage) message); break;
+                default: log.debug(command.paramByNum(2));
             }
+        } else {
+            log.debug(command.paramsCount());
+            log.debug(command.paramByNum(2));
         }
     }
 
