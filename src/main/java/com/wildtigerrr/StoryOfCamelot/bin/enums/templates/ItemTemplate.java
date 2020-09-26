@@ -14,19 +14,19 @@ import java.util.HashMap;
 public enum ItemTemplate {
     SWORD_COMMON(
             10.0, 100.0, 10.0, false, ItemSubType.SWORD, ItemQuality.COMMON,
-            NameTranslation.ITEM_WEAPON_SWORD_COMMON, FileLinkTemplate.FLYING_SWORD
+            NameTranslation.ITEM_WEAPON_SWORD_COMMON, NameTranslation.DESC_ITEM_SWORD_COMMON, FileLinkTemplate.FLYING_SWORD
     ),
     SWORD_UNCOMMON(
             15.0, 150.0, 25.0, false, ItemSubType.SWORD, ItemQuality.UNCOMMON,
-            NameTranslation.ITEM_WEAPON_SWORD_UNCOMMON, FileLinkTemplate.FLYING_SWORD
+            NameTranslation.ITEM_WEAPON_SWORD_UNCOMMON, NameTranslation.DESC_ITEM_SWORD_UNCOMMON, FileLinkTemplate.FLYING_SWORD
     ),
     STICK(
             1.0, 0, 1.0, true, ItemSubType.CRAFTING, ItemQuality.COMMON,
-            NameTranslation.ITEM_MATERIAL_STICK, null
+            NameTranslation.ITEM_MATERIAL_STICK, NameTranslation.DESC_ITEM_STICK, null
     ),
     STONE(
             3.0, 0, 1.0, true, ItemSubType.CRAFTING, ItemQuality.COMMON,
-            NameTranslation.ITEM_MATERIAL_STONE, null
+            NameTranslation.ITEM_MATERIAL_STONE, NameTranslation.DESC_ITEM_STONE, null
     );
 
     private final double value;
@@ -36,10 +36,11 @@ public enum ItemTemplate {
     private final ItemSubType subType;
     private final ItemQuality quality;
     private final NameTranslation nameTranslation;
+    private final NameTranslation description;
     @Getter(AccessLevel.NONE)
     private final FileLinkTemplate imageLink;
 
-    ItemTemplate(double value, double durability, double price, boolean isStackable, ItemSubType subType, ItemQuality quality, NameTranslation translation, FileLinkTemplate imageLink) {
+    ItemTemplate(double value, double durability, double price, boolean isStackable, ItemSubType subType, ItemQuality quality, NameTranslation translation, NameTranslation description, FileLinkTemplate imageLink) {
         this.value = value;
         this.durability = durability;
         this.price = price;
@@ -47,6 +48,7 @@ public enum ItemTemplate {
         this.subType = subType;
         this.quality = quality;
         nameTranslation = translation;
+        this.description = description;
         this.imageLink = imageLink;
     }
 

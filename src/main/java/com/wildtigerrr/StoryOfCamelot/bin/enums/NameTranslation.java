@@ -118,7 +118,13 @@ public enum NameTranslation {
     ),
     SKILL_LUCK_WHICH(
             "skill.name.which.luck"
-    )
+    ),
+
+    // DESCRIPTIONS
+    DESC_ITEM_SWORD_COMMON("description.item.sword.common"),
+    DESC_ITEM_SWORD_UNCOMMON("description.item.sword.uncommon"),
+    DESC_ITEM_STICK("description.item.craft.stick"),
+    DESC_ITEM_STONE("description.item.craft.stone"),
     ;
 
     private final String name;

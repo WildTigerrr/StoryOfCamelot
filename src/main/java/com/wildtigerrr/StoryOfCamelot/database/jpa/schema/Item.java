@@ -35,6 +35,8 @@ public class Item extends SimpleObject {
     @Enumerated(EnumType.STRING)
     private NameTranslation nameTranslation;
     private String systemName;
+    @Enumerated(EnumType.STRING)
+    private NameTranslation description;
 
     private Double value; // Defence, Damage, Speed etc
     private Double durability;
@@ -67,18 +69,19 @@ public class Item extends SimpleObject {
                 template.getQuality(),
                 template.getNameTranslation(),
                 template.name(),
+                template.getDescription(),
                 template.getFileLink()
         );
     }
 
     public Item(Double value, Double durability, Double price, Boolean isStackable, ItemSubType type, ItemQuality quality,
-                NameTranslation translation, String systemName
+                NameTranslation translation, String systemName, NameTranslation description
     ) {
-        this(value, durability, price, isStackable, type, quality, translation, systemName, null);
+        this(value, durability, price, isStackable, type, quality, translation, systemName, description, null);
     }
 
     public Item(Double value, Double durability, Double price, Boolean isStackable, ItemSubType type, ItemQuality quality,
-                NameTranslation translation, String systemName, FileLink imageLink
+                NameTranslation translation, String systemName, NameTranslation description, FileLink imageLink
     ) {
         this.value = value;
         this.durability = durability;
@@ -97,6 +100,14 @@ public class Item extends SimpleObject {
 
     public String getName(@NotNull Player player) {
         return getName(player.getLanguage());
+    }
+
+    public String getDescribe(Language lang) {
+        return description.getName(lang);
+    }
+
+    public String getDescribe(@NotNull Player player) {
+        return getDescribe(player.getLanguage());
     }
     
     public boolean isEquippable() {

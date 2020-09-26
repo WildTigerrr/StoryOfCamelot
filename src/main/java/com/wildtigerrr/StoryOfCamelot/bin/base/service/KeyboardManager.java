@@ -116,13 +116,13 @@ public class KeyboardManager {
         if (page > 1) {
             builder.addButton(new InlineKeyboardButton()
                     .setText("<")
-                    .setCallbackData("/backpack page " + (page - 1))
+                    .setCallbackData("/backpack" + (page - 1) + "page")
             );
         }
         if (items.size() > pageSize * page) {
             builder.addButton(new InlineKeyboardButton()
                     .setText(">")
-                    .setCallbackData("/backpack page " + (page - 1))
+                    .setCallbackData("/backpack" + (page + 1) + "page")
             );
         }
         return builder.build();

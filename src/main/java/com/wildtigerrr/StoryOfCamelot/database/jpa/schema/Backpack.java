@@ -86,6 +86,11 @@ public class Backpack extends SimpleObject {
         items.remove(item);
     }
 
+    public BackpackItem getItemById(String itemId) {
+        if (itemId == null) return null;
+        else return getItems().stream().filter(item -> item.getId().equals(itemId)).findFirst().orElse(null);
+    }
+
     private boolean addQuantity(BackpackItem item) {
         if (item.getItem().getIsStackable()) {
             Optional<BackpackItem> existing = getItems().stream().filter(exItem -> item.getItem().getId().equals(exItem.getItem().getId())).findFirst();
