@@ -36,7 +36,7 @@ public class NicknameCommandHandler extends CommandHandler {
     }
 
     public void sendNicknameChangeRequest(TextIncomingMessage message) {
-        messages.sendMessage(TextResponseMessage.builder()
+        messages.sendMessage(TextResponseMessage.builder().by(message)
                 .text(translation.getMessage("player.nickname.request", message))
                 .build()
         );
