@@ -55,7 +55,7 @@ public class NicknameCommandHandler extends CommandHandler {
         messages.sendMessage(TextResponseMessage.builder().by(player)
                 .text(message).applyMarkup(true).build()
         );
-        actionHandler.sendAvailableActions(player);
+        if (result.success()) actionHandler.sendAvailableActions(player);
     }
 
     class NicknameValidator {
