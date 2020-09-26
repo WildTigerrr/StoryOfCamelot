@@ -268,12 +268,12 @@ public class TelegramResponseManager implements ResponseManager, Runnable {
     }
 
     class MessageQueue {
-        private final Language language;
         private final String targetId;
 
         private final List<Long> timestamps = new CopyOnWriteArrayList<>();
         private final Deque<ResponseMessage> responses = new ConcurrentLinkedDeque<>();
 
+        private Language language;
         private long nextMessageOn;
         private ResponseMessage lastMessage;
         private boolean postponeNext;
@@ -293,6 +293,7 @@ public class TelegramResponseManager implements ResponseManager, Runnable {
             clearOldTimestamps(currentTime);
             timestamps.add(currentTime);
             responses.add(message);
+            language = message.getLanguage();
             checkSpam();
         }
 
@@ -326,7 +327,7 @@ public class TelegramResponseManager implements ResponseManager, Runnable {
         }
 
         private void checkSpam() {
-            if (timestamps.size() > 10 && !postponeNext) {
+            if (timestamps.size() > 20 && !postponeNext) {
                 responses.offerFirst(TextResponseMessage.builder().lang(language)
                         .text(translation().getMessage("commands.too-fast"))
                         .targetId(targetId)
