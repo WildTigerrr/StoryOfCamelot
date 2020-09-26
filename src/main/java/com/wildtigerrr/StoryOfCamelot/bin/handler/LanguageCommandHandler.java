@@ -40,27 +40,31 @@ public class LanguageCommandHandler extends TextMessageHandler {
     }
 
     private void setLanguage(TextIncomingMessage message) {
-        if (message.getParsedCommand().hasExtraParams()) {
-            String langCode = message.getParsedCommand().paramByNum(1);
-            if (Language.isValidLanguageCode(langCode)) {
-                Player player = message.getPlayer();
-                player.setLanguage(Language.values()[Integer.parseInt(langCode)]);
-                playerService.update(player);
-                sendLanguageSelectedMessage(message);
-                if (player.getNickname().equals(player.getExternalId())) {
-                    nicknameCommandHandler.sendNicknameChangeRequest(message);
-                }
-            } else {
-                messages.sendMessage(TextResponseMessage.builder().by(message)
-                        .text(translation.getMessage("commands.invalid", message)).build()
-                );
+        if (!message.getParsedCommand().hasExtraParams()) {
+            Language lang = getDefaultLanguage(message);
+            sendLanguageSelector(message.getUserId(), lang);
+            return;
+        }
+        String langCode = message.getParsedCommand().paramByNum(1);
+        if (Language.isValidLanguageCode(langCode)) {
+            Player player = message.getPlayer();
+            player.setLanguage(Language.values()[Integer.parseInt(langCode)]);
+            playerService.update(player);
+            sendLanguageSelectedMessage(message);
+            if (player.getNickname().equals(player.getExternalId())) {
+                nicknameCommandHandler.sendNicknameChangeRequest(message);
             }
         } else {
-            Language lang = message.getPlayer().getLanguage() == null
-                    ? Language.byCountryCode(message.getAuthor().getLanguageCode())
-                    : message.getPlayer().getLanguage();
-            sendLanguageSelector(message.getUserId(), lang);
+            messages.sendMessage(TextResponseMessage.builder().by(message)
+                    .text(translation.getMessage("commands.invalid", message)).build()
+            );
         }
+    }
+
+    private Language getDefaultLanguage(TextIncomingMessage message) {
+        return message.getPlayer().getLanguage() == null
+                ? Language.byCountryCode(message.getAuthor().getLanguageCode())
+                : message.getPlayer().getLanguage();
     }
 
     private void sendLanguageSelectedMessage(IncomingMessage message) {
