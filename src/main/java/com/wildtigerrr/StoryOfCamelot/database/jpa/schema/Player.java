@@ -1,6 +1,7 @@
 package com.wildtigerrr.StoryOfCamelot.database.jpa.schema;
 
 import com.wildtigerrr.StoryOfCamelot.bin.base.service.IdGenerator;
+import com.wildtigerrr.StoryOfCamelot.bin.base.service.MoneyCalculation;
 import com.wildtigerrr.StoryOfCamelot.bin.enums.EnemyType;
 import com.wildtigerrr.StoryOfCamelot.bin.enums.Language;
 import com.wildtigerrr.StoryOfCamelot.bin.service.ApplicationContextProvider;
@@ -11,6 +12,7 @@ import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.enums.ObjectType;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.enums.CharacterStatus;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.enums.PlayerStatusExtended;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.enums.Stats;
+import com.wildtigerrr.StoryOfCamelot.exception.InvalidInputException;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -63,20 +65,6 @@ public class Player extends SimpleObject implements Comparable<Player>, Fighter 
         return ObjectType.PLAYER;
     }
 
-    public void activate() { // DELETE
-//        status = CharacterStatus.ACTIVE;
-    }
-
-    public void stop() { // DELETE
-//        if (additionalStatus.getNumber() == 0) {
-//            status = CharacterStatus.ACTIVE;
-//        } else if (additionalStatus.getNumber() > 100) {
-//            status = CharacterStatus.BANNED;
-//        } else {
-//            status = CharacterStatus.TUTORIAL;
-//        }
-    }
-
     // ------------------- CONSTRUCTORS ----------------------------------------------------------------------------- //
 
     protected Player() {
@@ -88,6 +76,7 @@ public class Player extends SimpleObject implements Comparable<Player>, Fighter 
         this.location = location;
         status = CharacterStatus.TUTORIAL;
         additionalStatus = PlayerStatusExtended.LANGUAGE_CHOOSE;
+        money = 0L;
         stats = new PlayerStats();
         stats.setUnassignedPoints(stats.getDefaultPoints() + 5);
     }
@@ -155,11 +144,27 @@ public class Player extends SimpleObject implements Comparable<Player>, Fighter 
 
     // =================================================== FINANCE ================================================== //
 
-    private Integer silver;
-    private Integer gold;
+    @Setter(AccessLevel.NONE)
+    private Long money;
     private Integer diamonds;
 
-    // TODO Finance methods
+    public void addMoney(long money) {
+        this.money += money;
+    }
+
+    public void addMoney(int money) {
+        this.money += money;
+    }
+
+    public void retracktMoney(long money) {
+        this.money -= money;
+        if (this.money < 0) throw new InvalidInputException(getId() + " not have enough money");
+    }
+
+    public void retracktMoney(int money) {
+        this.money -= money;
+        if (this.money < 0) throw new InvalidInputException(getId() + " not have enough money");
+    }
 
     // ================================================= END FINANCE ================================================ //
 
@@ -213,6 +218,7 @@ public class Player extends SimpleObject implements Comparable<Player>, Fighter 
         for (Stats stat : Stats.values()) {
             info.append("\n").append(this.stats().getInfoRow(stat, true, language, true));
         }
+        info.append("\n").append(MoneyCalculation.moneyOf(this.money, language));
         info.append("\n\n_").append(translation.getMessage("player.info.what-else", language)).append("?_");
         return info.toString();
     }
