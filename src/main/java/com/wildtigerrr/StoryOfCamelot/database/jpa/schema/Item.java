@@ -8,6 +8,7 @@ import com.wildtigerrr.StoryOfCamelot.database.jpa.interfaces.SimpleObject;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.enums.ItemQuality;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.enums.ItemSubType;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.enums.ObjectType;
+import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.enums.StoreType;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -15,6 +16,7 @@ import org.hibernate.annotations.GenericGenerator;
 import org.jetbrains.annotations.NotNull;
 
 import javax.persistence.*;
+import java.util.Set;
 
 @Entity
 @Table(name = "item")
@@ -51,6 +53,12 @@ public class Item extends SimpleObject {
     @JoinColumn(name = "filelink_id")
     private FileLink imageLink;
 
+    @ElementCollection(targetClass = StoreType.class, fetch = FetchType.EAGER)
+    @JoinTable(name = "ITEM_STORE_TYPE", joinColumns = @JoinColumn(name = "ITEM_ID"))
+    @Column(name = "storeType", nullable = false)
+    @Enumerated(EnumType.STRING)
+    private Set<StoreType> storeType;
+
     @Override
     public ObjectType type() {
         return ObjectType.ITEM;
@@ -70,18 +78,19 @@ public class Item extends SimpleObject {
                 template.getNameTranslation(),
                 template.name(),
                 template.getDescription(),
-                template.getFileLink()
+                template.getFileLink(),
+                template.getStoreType()
         );
     }
 
     public Item(Double value, Double durability, Double price, Boolean isStackable, ItemSubType type, ItemQuality quality,
-                NameTranslation translation, String systemName, NameTranslation description
+                NameTranslation translation, String systemName, NameTranslation description, Set<StoreType> storeType
     ) {
-        this(value, durability, price, isStackable, type, quality, translation, systemName, description, null);
+        this(value, durability, price, isStackable, type, quality, translation, systemName, description, null, storeType);
     }
 
     public Item(Double value, Double durability, Double price, Boolean isStackable, ItemSubType type, ItemQuality quality,
-                NameTranslation translation, String systemName, NameTranslation description, FileLink imageLink
+                NameTranslation translation, String systemName, NameTranslation description, FileLink imageLink, Set<StoreType> storeType
     ) {
         this.value = value;
         this.durability = durability;
@@ -93,6 +102,7 @@ public class Item extends SimpleObject {
         this.nameTranslation = translation;
         this.description = description;
         this.imageLink = imageLink;
+        this.storeType = storeType;
     }
 
     public String getName(Language lang) {
