@@ -13,6 +13,7 @@ import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "location")
@@ -40,10 +41,12 @@ public class Location extends SimpleObject {
     @JoinColumn(name = "filelink_id")
     private FileLink imageLink;
 
-    @OneToMany(fetch=FetchType.LAZY, cascade=CascadeType.ALL, mappedBy="startLocation")
+    @OneToMany(fetch=FetchType.EAGER, cascade=CascadeType.ALL, mappedBy="startLocation")
     private List<LocationNear> locationsAsStart;
     @OneToMany(fetch=FetchType.LAZY, cascade=CascadeType.ALL, mappedBy="finishLocation")
     private List<LocationNear> locationsAsFinish;
+    @OneToMany(fetch=FetchType.EAGER, cascade=CascadeType.ALL, mappedBy = "location")
+    private Set<Store> stores;
 
     @Override
     public ObjectType type() {
@@ -74,8 +77,9 @@ public class Location extends SimpleObject {
                 "id=" + id +
                 ", name=" + name +
                 (locationsAsStart == null ? "" : ", nearLocations=" + locationsAsStart.toString()) +
-                ", imageLink=" + imageLink.toString() +
+                (imageLink == null ? "" : ", imageLink=" + imageLink.toString()) +
                 ", hasStores=" + hasStores +
+                (hasStores ? ", stores=" + stores : "") +
                 "}\n";
     }
 }

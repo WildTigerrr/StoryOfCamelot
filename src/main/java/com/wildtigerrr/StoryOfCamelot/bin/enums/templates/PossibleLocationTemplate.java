@@ -1,8 +1,11 @@
 package com.wildtigerrr.StoryOfCamelot.bin.enums.templates;
 
+import lombok.Getter;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 
+@Getter
 public enum PossibleLocationTemplate {
     FOREST_MOBS(
             LocationTemplate.FOREST.name(),
@@ -28,14 +31,6 @@ public enum PossibleLocationTemplate {
     PossibleLocationTemplate(String location, HashMap<String, Integer> mobs) {
         this.location = location;
         this.mobs = mobs;
-    }
-
-    public String getLocation() {
-        return location;
-    }
-
-    public HashMap<String, Integer> getMobs() {
-        return mobs;
     }
 
     public static HashMap<String, HashMap<String, Integer>> getPossibleLocationsMapping() {

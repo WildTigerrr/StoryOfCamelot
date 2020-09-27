@@ -34,6 +34,9 @@ public enum ObjectType {
     ),
     PLAYER(
             "player_seq", "a0p0"
+    ),
+    STORE(
+            "store_seq", "a0s0"
     );
 
     private final String sequenceName;

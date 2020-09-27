@@ -2,6 +2,7 @@ package com.wildtigerrr.StoryOfCamelot.database.jpa;
 
 import com.wildtigerrr.StoryOfCamelot.bin.enums.templates.*;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.*;
+import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.enums.StoreType;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.service.template.*;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,9 +10,7 @@ import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 @Log4j2
 @Service
@@ -24,15 +23,17 @@ public class DatabaseInteraction {
     private final ItemService itemService;
     private final MobService mobService;
     private final MobDropService mobDropService;
+    private final StoreService storeService;
 
     @Autowired
-    public DatabaseInteraction(FileLinkService fileLinkService, LocationService locationService, LocationNearService locationNearService, ItemService itemService, MobService mobService, MobDropService mobDropService) {
+    public DatabaseInteraction(FileLinkService fileLinkService, LocationService locationService, LocationNearService locationNearService, ItemService itemService, MobService mobService, MobDropService mobDropService, StoreService storeService) {
         this.fileLinkService = fileLinkService;
         this.locationService = locationService;
         this.locationNearService = locationNearService;
         this.itemService = itemService;
         this.mobService = mobService;
         this.mobDropService = mobDropService;
+        this.storeService = storeService;
     }
 
     @PostConstruct
@@ -50,6 +51,7 @@ public class DatabaseInteraction {
         HashMap<String, Mob> mobs = insertMobs(locations);
         HashMap<String, Item> items = insertItems();
         insertDropMap(mobs, items);
+        insertStores(locations);
         log.debug("Database Initialized");
     }
 
@@ -97,6 +99,20 @@ public class DatabaseInteraction {
         }
         mobService.create(new ArrayList<>(initialMobsMap.values()));
         return initialMobsMap;
+    }
+
+    private void insertStores(HashMap<String, Location> locations) {
+        log.debug("Inserting Stores");
+        List<Store> stores = new ArrayList<>();
+        Map<String, List<Set<StoreType>>> storesMapping = StoreTemplate.getStoreMapping();
+        for (String locationName : locations.keySet()) {
+            if (storesMapping.containsKey(locationName)) {
+                for (Set<StoreType> storeTypes : storesMapping.get(locationName)) {
+                    stores.add(new Store(locations.get(locationName), storeTypes));
+                }
+            }
+        }
+        storeService.create(stores);
     }
 
     private HashMap<String, Location> insertLocations() {
