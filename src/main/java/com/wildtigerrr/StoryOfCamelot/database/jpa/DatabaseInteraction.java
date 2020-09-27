@@ -2,7 +2,6 @@ package com.wildtigerrr.StoryOfCamelot.database.jpa;
 
 import com.wildtigerrr.StoryOfCamelot.bin.enums.templates.*;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.*;
-import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.enums.StoreType;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.service.template.*;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -104,11 +103,11 @@ public class DatabaseInteraction {
     private void insertStores(HashMap<String, Location> locations) {
         log.debug("Inserting Stores");
         List<Store> stores = new ArrayList<>();
-        Map<String, List<Set<StoreType>>> storesMapping = StoreTemplate.getStoreMapping();
+        Map<String, List<StoreTemplate>> storesMapping = StoreTemplate.getStoreMapping();
         for (String locationName : locations.keySet()) {
             if (storesMapping.containsKey(locationName)) {
-                for (Set<StoreType> storeTypes : storesMapping.get(locationName)) {
-                    stores.add(new Store(locations.get(locationName), storeTypes));
+                for (StoreTemplate storeTemplate : storesMapping.get(locationName)) {
+                    stores.add(new Store(locations.get(locationName), storeTemplate));
                 }
             }
         }

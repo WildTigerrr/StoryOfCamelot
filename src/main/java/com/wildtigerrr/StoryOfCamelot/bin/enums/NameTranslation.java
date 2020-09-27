@@ -26,6 +26,14 @@ public enum NameTranslation {
             "location.town.merchant-square"
     ),
 
+    // STORES
+    STORE_MERCHANT(
+            "store.name.merchant"
+    ),
+    STORE_GROCERY(
+            "store.name.grocery"
+    ),
+
 
     // MOBS
     MOB_FLYING_SWORD(

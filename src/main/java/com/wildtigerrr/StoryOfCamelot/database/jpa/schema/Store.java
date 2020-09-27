@@ -1,6 +1,8 @@
 package com.wildtigerrr.StoryOfCamelot.database.jpa.schema;
 
 import com.wildtigerrr.StoryOfCamelot.bin.base.service.IdGenerator;
+import com.wildtigerrr.StoryOfCamelot.bin.enums.NameTranslation;
+import com.wildtigerrr.StoryOfCamelot.bin.enums.templates.StoreTemplate;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.interfaces.SimpleObject;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.enums.ObjectType;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.enums.StoreType;
@@ -28,6 +30,8 @@ public class Store extends SimpleObject {
             })
     @Setter(AccessLevel.NONE)
     private String id;
+    @Enumerated(EnumType.STRING)
+    private NameTranslation name;
     @ManyToOne(optional = false)
     @JoinColumn(name = "location_id")
     private Location location;
@@ -40,8 +44,13 @@ public class Store extends SimpleObject {
     protected Store() {
     }
 
-    public Store(Location location, Set<StoreType> storeType) {
+    public Store(Location location, StoreTemplate storeTemplate) {
+        this(location, storeTemplate.getName(), storeTemplate.getStoreTypes());
+    }
+
+    public Store(Location location, NameTranslation name, Set<StoreType> storeType) {
         this.location = location;
+        this.name = name;
         this.storeType = storeType;
     }
 
