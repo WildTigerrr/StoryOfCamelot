@@ -79,8 +79,11 @@ public enum NameTranslation {
     BUTTON_BACK(
             Emoji.BACK.getCode(), "button.back"
     ),
-    BACKPACK(
+    BUTTON_BACKPACK(
             Emoji.BACKPACK.getCode(), "button.backpack"
+    ),
+    BUTTON_STORES(
+            Emoji.STORE.getCode(), "button.stores"
     ),
 
 

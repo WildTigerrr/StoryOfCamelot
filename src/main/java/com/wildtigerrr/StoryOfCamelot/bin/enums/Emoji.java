@@ -29,6 +29,7 @@ public enum Emoji {
     FIGHT(EmojiParser.parseToUnicode(":crossed_swords:")),
     BACK_ARROW(EmojiParser.parseToUnicode(":arrow_right_hook:")),
     BACK(EmojiParser.parseToUnicode(":back:")),
+    STORE(EmojiParser.parseToUnicode(":shopping_bags:")),
 
     // FLAGS
     FLAG_ENGLAND(EmojiParser.parseToUnicode("\uD83C\uDFF4\uDB40\uDC67\uDB40\uDC62\uDB40\uDC65\uDB40\uDC6E\uDB40\uDC67\uDB40\uDC7F")),

@@ -1,6 +1,7 @@
 package com.wildtigerrr.StoryOfCamelot.database.jpa.schema;
 
 import com.wildtigerrr.StoryOfCamelot.bin.base.service.IdGenerator;
+import com.wildtigerrr.StoryOfCamelot.bin.enums.Language;
 import com.wildtigerrr.StoryOfCamelot.bin.enums.NameTranslation;
 import com.wildtigerrr.StoryOfCamelot.bin.enums.templates.StoreTemplate;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.interfaces.SimpleObject;
@@ -52,6 +53,10 @@ public class Store extends SimpleObject {
         this.location = location;
         this.name = name;
         this.storeType = storeType;
+    }
+
+    public String getLabel(Language lang) {
+        return name.getName(lang);
     }
 
     @Override

@@ -11,9 +11,13 @@ public enum ReplyButton {
     SEARCH_ENEMIES(NameTranslation.BUTTON_SEARCH_ENEMIES, Command.SEARCH_ENEMIES),
     BACK(NameTranslation.BUTTON_BACK, Command.BACK),
     PLAYERS_TOP(NameTranslation.BUTTON_PLAYERS_TOP, Command.PLAYERS_TOP),
-    BACKPACK(NameTranslation.BACKPACK, Command.BACKPACK),
+    BACKPACK(NameTranslation.BUTTON_BACKPACK, Command.BACKPACK),
+    STORES(NameTranslation.BUTTON_STORES, Command.STORES),
 
-    SKIP_LINE(NameTranslation.BUTTON_BACK, Command.ACTION);
+    SKIP_LINE(NameTranslation.BUTTON_BACK, Command.ACTION),
+
+    STORE_MERCHANT(NameTranslation.STORE_MERCHANT, Command.STORE_SELECT),
+    STORE_GROCERY(NameTranslation.STORE_GROCERY, Command.STORE_SELECT),;
 
     private final NameTranslation label;
     @Getter

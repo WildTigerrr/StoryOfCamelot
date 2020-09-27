@@ -6,6 +6,7 @@ import com.wildtigerrr.StoryOfCamelot.bin.translation.TranslationManager;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.Backpack;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.BackpackItem;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.Location;
+import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.Store;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.enums.Stats;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
@@ -14,6 +15,7 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKe
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @Component
 public class KeyboardManager {
@@ -85,6 +87,14 @@ public class KeyboardManager {
             } else {
                 builder.addButton(button.getLabel(lang));
             }
+        }
+        return builder.resize().build();
+    }
+
+    public static ReplyKeyboardMarkup getReplyByStores(Set<Store> stores, Language lang) {
+        KeyboardBuilder<ReplyKeyboardMarkup> builder = new KeyboardBuilder<>(KeyboardBuilder.Type.REPLY, 2);
+        for (Store store : stores) {
+            builder.addButton(store.getLabel(lang));
         }
         return builder.resize().build();
     }

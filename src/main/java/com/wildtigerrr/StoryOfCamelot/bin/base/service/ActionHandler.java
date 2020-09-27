@@ -61,19 +61,18 @@ public class ActionHandler {
     }
 
     public List<ReplyButton> getLocationActionsKeyboard(Location location) {
+        List<ReplyButton> buttons = new ArrayList<>();
+        buttons.add(ReplyButton.ME);
+        buttons.add(ReplyButton.MOVE);
+        buttons.add(ReplyButton.BACKPACK);
+        buttons.add(ReplyButton.SEARCH_ENEMIES);
         if (location.getHasEnemies()) {
-            return new ArrayList<>() {{
-                add(ReplyButton.ME);
-                add(ReplyButton.MOVE);
-                add(ReplyButton.BACKPACK);
-                add(ReplyButton.SEARCH_ENEMIES);
-            }};
+            buttons.add(ReplyButton.SEARCH_ENEMIES);
         }
-        return new ArrayList<>() {{
-            add(ReplyButton.ME);
-            add(ReplyButton.MOVE);
-            add(ReplyButton.BACKPACK);
-        }};
+        if (location.getHasStores()) {
+            buttons.add(ReplyButton.STORES);
+        }
+        return buttons;
     }
 
     public List<ReplyButton> getPlayerInfoActions(Player player) {
