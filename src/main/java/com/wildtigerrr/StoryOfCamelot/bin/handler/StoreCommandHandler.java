@@ -78,13 +78,19 @@ public class StoreCommandHandler extends TextMessageHandler {
     private void sendStore(TextIncomingMessage message, String storeId, int page) {
         Store store = storeService.getById(storeId);
         List<Item> items = itemService.getByStoreTypes(store.getStoreType());
-        messages.sendMessage(EditResponseMessage.builder().by(message)
-                .text("Ассоритимент для магазина: " + message.text()) // TODO
-                .keyboard(KeyboardManager.getKeyboardForStoreItems(store, items, page, message.getPlayer().getLanguage(), translation))
-                .build()
-        );
         if (message.isQuery()) {
+            messages.sendMessage(EditResponseMessage.builder().by(message)
+                    .text("Ассоритимент для магазина: " + message.text()) // TODO
+                    .keyboard(KeyboardManager.getKeyboardForStoreItems(store, items, page, message.getPlayer().getLanguage(), translation))
+                    .build()
+            );
             messages.sendAnswer(message.getQueryId(), "Страница: " + page);
+        } else {
+            messages.sendMessage(TextResponseMessage.builder().by(message)
+                    .text("Ассоритимент для магазина: " + message.text()) // TODO
+                    .keyboard(KeyboardManager.getKeyboardForStoreItems(store, items, page, message.getPlayer().getLanguage(), translation))
+                    .build()
+            );
         }
     }
 
