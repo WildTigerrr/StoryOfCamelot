@@ -49,7 +49,7 @@ public class StoreCommandHandler extends TextMessageHandler {
         ParsedCommand command = message.getParsedCommand();
         if (command.paramsCount() > 3) {
             switch (command.paramByNum(2)) {
-                case "page": sendStore(message, command.paramByNum(1), command.intByNum(2)); break;
+                case "page": sendStore(message, command.paramByNum(1), command.intByNum(3)); break;
                 case "item": {
                     switch (command.paramByNum(3)) {
                         case "info": sendItemInfo(message); break;

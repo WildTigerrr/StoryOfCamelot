@@ -159,13 +159,13 @@ public class KeyboardManager {
         if (page > 1) {
             builder.addButton(new InlineKeyboardButton()
                     .setText("<")
-                    .setCallbackData("/store " + store.getId()  + (page - 1) + " page")
+                    .setCallbackData("/store " + store.getId() + " page " + (page - 1))
             );
         }
         if (items.size() > pageSize * page) {
             builder.addButton(new InlineKeyboardButton()
                     .setText(">")
-                    .setCallbackData("/store " + store.getId()  + (page + 1) + " page")
+                    .setCallbackData("/store " + store.getId() + " page " + (page+ 1))
             );
         }
         return builder.build();
