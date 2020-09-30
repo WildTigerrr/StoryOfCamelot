@@ -78,7 +78,7 @@ public class StoreCommandHandler extends TextMessageHandler {
         Store store = storeService.getById(storeId);
         List<Item> items = itemService.getByStoreTypes(store.getStoreType());
         messages.sendMessage(TextResponseMessage.builder().by(message)
-                .text("Ассоритимент для магазина: " + message.text())
+                .text("Ассоритимент для магазина: " + message.text()) // TODO
                 .keyboard(KeyboardManager.getKeyboardForStoreItems(store, items, page, message.getPlayer().getLanguage(), translation))
                 .build()
         );

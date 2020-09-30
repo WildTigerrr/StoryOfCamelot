@@ -31,6 +31,54 @@ public enum ItemTemplate {
             1.0, 0, 1, true, ItemSubType.CRAFTING, ItemQuality.COMMON,
             NameTranslation.ITEM_MATERIAL_STICK, NameTranslation.DESC_ITEM_STICK, null,
             null),
+    STICK1(
+            1.0, 0, 1, true, ItemSubType.CRAFTING, ItemQuality.COMMON,
+            NameTranslation.ITEM_MATERIAL_STICK, NameTranslation.DESC_ITEM_STICK, null,
+            null),
+    STICK2(
+            1.0, 0, 1, true, ItemSubType.CRAFTING, ItemQuality.COMMON,
+            NameTranslation.ITEM_MATERIAL_STICK, NameTranslation.DESC_ITEM_STICK, null,
+            null),
+    STICK3(
+            1.0, 0, 1, true, ItemSubType.CRAFTING, ItemQuality.COMMON,
+            NameTranslation.ITEM_MATERIAL_STICK, NameTranslation.DESC_ITEM_STICK, null,
+            null),
+    STICK4(
+            1.0, 0, 1, true, ItemSubType.CRAFTING, ItemQuality.COMMON,
+            NameTranslation.ITEM_MATERIAL_STICK, NameTranslation.DESC_ITEM_STICK, null,
+            null),
+    STICK5(
+            1.0, 0, 1, true, ItemSubType.CRAFTING, ItemQuality.COMMON,
+            NameTranslation.ITEM_MATERIAL_STICK, NameTranslation.DESC_ITEM_STICK, null,
+            null),
+    STICK6(
+            1.0, 0, 1, true, ItemSubType.CRAFTING, ItemQuality.COMMON,
+            NameTranslation.ITEM_MATERIAL_STICK, NameTranslation.DESC_ITEM_STICK, null,
+            null),
+    STICK7(
+            1.0, 0, 1, true, ItemSubType.CRAFTING, ItemQuality.COMMON,
+            NameTranslation.ITEM_MATERIAL_STICK, NameTranslation.DESC_ITEM_STICK, null,
+            null),
+    STICK8(
+            1.0, 0, 1, true, ItemSubType.CRAFTING, ItemQuality.COMMON,
+            NameTranslation.ITEM_MATERIAL_STICK, NameTranslation.DESC_ITEM_STICK, null,
+            null),
+    STICK9(
+            1.0, 0, 1, true, ItemSubType.CRAFTING, ItemQuality.COMMON,
+            NameTranslation.ITEM_MATERIAL_STICK, NameTranslation.DESC_ITEM_STICK, null,
+            null),
+    STICK10(
+            1.0, 0, 1, true, ItemSubType.CRAFTING, ItemQuality.COMMON,
+            NameTranslation.ITEM_MATERIAL_STICK, NameTranslation.DESC_ITEM_STICK, null,
+            null),
+    STICK11(
+            1.0, 0, 1, true, ItemSubType.CRAFTING, ItemQuality.COMMON,
+            NameTranslation.ITEM_MATERIAL_STICK, NameTranslation.DESC_ITEM_STICK, null,
+            null),
+    STICK12(
+            1.0, 0, 1, true, ItemSubType.CRAFTING, ItemQuality.COMMON,
+            NameTranslation.ITEM_MATERIAL_STICK, NameTranslation.DESC_ITEM_STICK, null,
+            null),
     STONE(
             3.0, 0, 1, true, ItemSubType.CRAFTING, ItemQuality.COMMON,
             NameTranslation.ITEM_MATERIAL_STONE, NameTranslation.DESC_ITEM_STONE, null,
