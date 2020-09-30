@@ -13,6 +13,7 @@ import com.wildtigerrr.StoryOfCamelot.database.jpa.service.template.StoreService
 import com.wildtigerrr.StoryOfCamelot.web.bot.update.ParsedCommand;
 import com.wildtigerrr.StoryOfCamelot.web.service.ResponseManager;
 import com.wildtigerrr.StoryOfCamelot.web.service.message.IncomingMessage;
+import com.wildtigerrr.StoryOfCamelot.web.service.message.template.EditResponseMessage;
 import com.wildtigerrr.StoryOfCamelot.web.service.message.template.TextIncomingMessage;
 import com.wildtigerrr.StoryOfCamelot.web.service.message.template.TextResponseMessage;
 import lombok.extern.log4j.Log4j2;
@@ -39,7 +40,7 @@ public class StoreCommandHandler extends TextMessageHandler {
     @Override
     public void process(IncomingMessage message) {
         switch (message.getCommand()) {
-            case STORE: proceedWithStoreItem((TextIncomingMessage) message);
+            case STORE: proceedWithStoreItem((TextIncomingMessage) message); break;
             case STORES: sendAvailableStores(message); break;
             case STORE_SELECT: sendStore((TextIncomingMessage) message); break;
         }
@@ -77,11 +78,12 @@ public class StoreCommandHandler extends TextMessageHandler {
     private void sendStore(TextIncomingMessage message, String storeId, int page) {
         Store store = storeService.getById(storeId);
         List<Item> items = itemService.getByStoreTypes(store.getStoreType());
-        messages.sendMessage(TextResponseMessage.builder().by(message)
+        messages.sendMessage(EditResponseMessage.builder().by(message)
                 .text("Ассоритимент для магазина: " + message.text()) // TODO
                 .keyboard(KeyboardManager.getKeyboardForStoreItems(store, items, page, message.getPlayer().getLanguage(), translation))
                 .build()
         );
+        messages.sendAnswer(message.getQueryId(), "Страница: " + page);
     }
 
     private void buyItem(TextIncomingMessage message) {
