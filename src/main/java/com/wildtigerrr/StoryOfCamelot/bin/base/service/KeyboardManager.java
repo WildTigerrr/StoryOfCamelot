@@ -92,6 +92,8 @@ public class KeyboardManager {
 
     public static ReplyKeyboardMarkup getReplyByStores(Set<Store> stores, Language lang) {
         KeyboardBuilder<ReplyKeyboardMarkup> builder = new KeyboardBuilder<>(KeyboardBuilder.Type.REPLY, 2);
+        builder.addButton(ReplyButton.BACK.getLabel(lang));
+        builder.nextRow();
         for (Store store : stores) {
             builder.addButton(store.getLabel(lang));
         }
