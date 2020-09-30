@@ -65,7 +65,6 @@ public class ActionHandler {
         buttons.add(ReplyButton.ME);
         buttons.add(ReplyButton.MOVE);
         buttons.add(ReplyButton.BACKPACK);
-        buttons.add(ReplyButton.SEARCH_ENEMIES);
         if (location.getHasEnemies()) {
             buttons.add(ReplyButton.SEARCH_ENEMIES);
         }
