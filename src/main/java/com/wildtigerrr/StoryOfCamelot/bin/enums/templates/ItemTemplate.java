@@ -34,73 +34,127 @@ public enum ItemTemplate {
                 add(StoreType.GROCERY);
             }}),
     STICK1(
-            1.0, 0, 1, true, ItemSubType.CRAFTING, ItemQuality.COMMON,
+            1.0, 0, 2, true, ItemSubType.CRAFTING, ItemQuality.COMMON,
             NameTranslation.ITEM_MATERIAL_STICK, NameTranslation.DESC_ITEM_STICK, null,
             new HashSet<>() {{
                 add(StoreType.GROCERY);
             }}),
     STICK2(
-            1.0, 0, 1, true, ItemSubType.CRAFTING, ItemQuality.COMMON,
+            1.0, 0, 3, true, ItemSubType.CRAFTING, ItemQuality.COMMON,
             NameTranslation.ITEM_MATERIAL_STICK, NameTranslation.DESC_ITEM_STICK, null,
             new HashSet<>() {{
                 add(StoreType.GROCERY);
             }}),
     STICK3(
-            1.0, 0, 1, true, ItemSubType.CRAFTING, ItemQuality.COMMON,
+            1.0, 0, 4, true, ItemSubType.CRAFTING, ItemQuality.COMMON,
             NameTranslation.ITEM_MATERIAL_STICK, NameTranslation.DESC_ITEM_STICK, null,
             new HashSet<>() {{
                 add(StoreType.GROCERY);
             }}),
     STICK4(
-            1.0, 0, 1, true, ItemSubType.CRAFTING, ItemQuality.COMMON,
+            1.0, 0, 5, true, ItemSubType.CRAFTING, ItemQuality.COMMON,
             NameTranslation.ITEM_MATERIAL_STICK, NameTranslation.DESC_ITEM_STICK, null,
             new HashSet<>() {{
                 add(StoreType.GROCERY);
             }}),
     STICK5(
-            1.0, 0, 1, true, ItemSubType.CRAFTING, ItemQuality.COMMON,
+            1.0, 0, 6, true, ItemSubType.CRAFTING, ItemQuality.COMMON,
             NameTranslation.ITEM_MATERIAL_STICK, NameTranslation.DESC_ITEM_STICK, null,
             new HashSet<>() {{
                 add(StoreType.GROCERY);
             }}),
     STICK6(
-            1.0, 0, 1, true, ItemSubType.CRAFTING, ItemQuality.COMMON,
+            1.0, 0, 7, true, ItemSubType.CRAFTING, ItemQuality.COMMON,
             NameTranslation.ITEM_MATERIAL_STICK, NameTranslation.DESC_ITEM_STICK, null,
             new HashSet<>() {{
                 add(StoreType.GROCERY);
             }}),
     STICK7(
-            1.0, 0, 1, true, ItemSubType.CRAFTING, ItemQuality.COMMON,
+            1.0, 0, 8, true, ItemSubType.CRAFTING, ItemQuality.COMMON,
             NameTranslation.ITEM_MATERIAL_STICK, NameTranslation.DESC_ITEM_STICK, null,
             new HashSet<>() {{
                 add(StoreType.GROCERY);
             }}),
     STICK8(
-            1.0, 0, 1, true, ItemSubType.CRAFTING, ItemQuality.COMMON,
+            1.0, 0, 9, true, ItemSubType.CRAFTING, ItemQuality.COMMON,
             NameTranslation.ITEM_MATERIAL_STICK, NameTranslation.DESC_ITEM_STICK, null,
             new HashSet<>() {{
                 add(StoreType.GROCERY);
             }}),
     STICK9(
-            1.0, 0, 1, true, ItemSubType.CRAFTING, ItemQuality.COMMON,
+            1.0, 0, 10, true, ItemSubType.CRAFTING, ItemQuality.COMMON,
             NameTranslation.ITEM_MATERIAL_STICK, NameTranslation.DESC_ITEM_STICK, null,
             new HashSet<>() {{
                 add(StoreType.GROCERY);
             }}),
     STICK10(
-            1.0, 0, 1, true, ItemSubType.CRAFTING, ItemQuality.COMMON,
+            1.0, 0, 11, true, ItemSubType.CRAFTING, ItemQuality.COMMON,
             NameTranslation.ITEM_MATERIAL_STICK, NameTranslation.DESC_ITEM_STICK, null,
             new HashSet<>() {{
                 add(StoreType.GROCERY);
             }}),
     STICK11(
-            1.0, 0, 1, true, ItemSubType.CRAFTING, ItemQuality.COMMON,
+            1.0, 0, 12, true, ItemSubType.CRAFTING, ItemQuality.COMMON,
             NameTranslation.ITEM_MATERIAL_STICK, NameTranslation.DESC_ITEM_STICK, null,
             new HashSet<>() {{
                 add(StoreType.GROCERY);
             }}),
     STICK12(
-            1.0, 0, 1, true, ItemSubType.CRAFTING, ItemQuality.COMMON,
+            1.0, 0, 13, true, ItemSubType.CRAFTING, ItemQuality.COMMON,
+            NameTranslation.ITEM_MATERIAL_STICK, NameTranslation.DESC_ITEM_STICK, null,
+            new HashSet<>() {{
+                add(StoreType.GROCERY);
+            }}),
+    STICK13(
+            1.0, 0, 14, true, ItemSubType.CRAFTING, ItemQuality.COMMON,
+            NameTranslation.ITEM_MATERIAL_STICK, NameTranslation.DESC_ITEM_STICK, null,
+            new HashSet<>() {{
+                add(StoreType.GROCERY);
+            }}),
+    STICK14(
+            1.0, 0, 15, true, ItemSubType.CRAFTING, ItemQuality.COMMON,
+            NameTranslation.ITEM_MATERIAL_STICK, NameTranslation.DESC_ITEM_STICK, null,
+            new HashSet<>() {{
+                add(StoreType.GROCERY);
+            }}),
+    STICK15(
+            1.0, 0, 16, true, ItemSubType.CRAFTING, ItemQuality.COMMON,
+            NameTranslation.ITEM_MATERIAL_STICK, NameTranslation.DESC_ITEM_STICK, null,
+            new HashSet<>() {{
+                add(StoreType.GROCERY);
+            }}),
+    STICK16(
+            1.0, 0, 17, true, ItemSubType.CRAFTING, ItemQuality.COMMON,
+            NameTranslation.ITEM_MATERIAL_STICK, NameTranslation.DESC_ITEM_STICK, null,
+            new HashSet<>() {{
+                add(StoreType.GROCERY);
+            }}),
+    STICK17(
+            1.0, 0, 18, true, ItemSubType.CRAFTING, ItemQuality.COMMON,
+            NameTranslation.ITEM_MATERIAL_STICK, NameTranslation.DESC_ITEM_STICK, null,
+            new HashSet<>() {{
+                add(StoreType.GROCERY);
+            }}),
+    STICK18(
+            1.0, 0, 19, true, ItemSubType.CRAFTING, ItemQuality.COMMON,
+            NameTranslation.ITEM_MATERIAL_STICK, NameTranslation.DESC_ITEM_STICK, null,
+            new HashSet<>() {{
+                add(StoreType.GROCERY);
+            }}),
+    STICK19(
+            1.0, 0, 20, true, ItemSubType.CRAFTING, ItemQuality.COMMON,
+            NameTranslation.ITEM_MATERIAL_STICK, NameTranslation.DESC_ITEM_STICK, null,
+            new HashSet<>() {{
+                add(StoreType.GROCERY);
+            }}),
+    STICK20(
+            1.0, 0, 21, true, ItemSubType.CRAFTING, ItemQuality.COMMON,
+            NameTranslation.ITEM_MATERIAL_STICK, NameTranslation.DESC_ITEM_STICK, null,
+            new HashSet<>() {{
+                add(StoreType.GROCERY);
+            }}),
+    STICK21(
+            1.0, 0, 22, true, ItemSubType.CRAFTING, ItemQuality.COMMON,
             NameTranslation.ITEM_MATERIAL_STICK, NameTranslation.DESC_ITEM_STICK, null,
             new HashSet<>() {{
                 add(StoreType.GROCERY);
