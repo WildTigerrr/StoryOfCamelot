@@ -108,7 +108,7 @@ public class KeyboardManager {
         BackpackItem item;
         String equip = translation.getMessage("player.backpack.item-equip", backpack.getPlayer());
         String unequip = translation.getMessage("player.backpack.item-unequip", backpack.getPlayer());
-        for (int i = pageSize * (page - 1); i < Math.min(pageSize * page, items.size() - pageSize * (page - 1)); i++) {
+        for (int i = pageSize * (page - 1); i < Math.min(pageSize * page, items.size()); i++) {
             item = items.get(i);
             builder.addButton(new InlineKeyboardButton()
                     .setText(item.backpackInfo(translation))
@@ -149,8 +149,8 @@ public class KeyboardManager {
         log.debug("Items:");
         log.debug(items.size());
         log.debug("Start from " + (pageSize * (page - 1)));
-        log.debug("To " + (Math.min(pageSize * page, items.size() - pageSize * (page - 1))));
-        for (int i = pageSize * (page - 1); i < Math.min(pageSize * page, items.size() - pageSize * (page - 1)); i++) {
+        log.debug("To " + (Math.min(pageSize * page, items.size())));
+        for (int i = pageSize * (page - 1); i < Math.min(pageSize * page, items.size()); i++) {
             log.debug("Item #:" + i);
             item = items.get(i);
             builder.addButton(new InlineKeyboardButton()
