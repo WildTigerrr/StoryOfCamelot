@@ -5,6 +5,7 @@ import com.wildtigerrr.StoryOfCamelot.bin.enums.ReplyButton;
 import com.wildtigerrr.StoryOfCamelot.bin.translation.TranslationManager;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.*;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.enums.Stats;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
@@ -15,6 +16,7 @@ import java.util.List;
 import java.util.Set;
 
 @Component
+@Log4j2
 public class KeyboardManager {
 
     public static InlineKeyboardMarkup getKeyboardForStatUp(int freePoints) {
@@ -144,7 +146,12 @@ public class KeyboardManager {
             return null;
         }
         Item item;
+        log.debug("Items:");
+        log.debug(items.size());
+        log.debug("Start from " + (pageSize * (page - 1)));
+        log.debug("To " + (Math.min(pageSize * page, items.size() - pageSize * (page - 1))));
         for (int i = pageSize * (page - 1); i < Math.min(pageSize * page, items.size() - pageSize * (page - 1)); i++) {
+            log.debug("Item #:" + i);
             item = items.get(i);
             builder.addButton(new InlineKeyboardButton()
                     .setText(item.getName(lang))
