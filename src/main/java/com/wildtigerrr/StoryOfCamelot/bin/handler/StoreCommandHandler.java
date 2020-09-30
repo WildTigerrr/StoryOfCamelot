@@ -48,16 +48,16 @@ public class StoreCommandHandler extends TextMessageHandler {
     private void proceedWithStoreItem(TextIncomingMessage message) {
         ParsedCommand command = message.getParsedCommand();
         if (command.paramsCount() > 3) {
-            switch (command.paramByNum(3)) {
+            switch (command.paramByNum(2)) {
                 case "page": sendStore(message, command.paramByNum(1), command.intByNum(2)); break;
                 case "item": {
-                    switch (command.paramByNum(4)) {
+                    switch (command.paramByNum(3)) {
                         case "info": sendItemInfo(message); break;
                         case "buy": buyItem(message); break;
-                        default: log.debug(command.paramByNum(4));
+                        default: log.debug(command.paramByNum(3));
                     }
                 }
-                default: log.debug(command.paramByNum(3));
+                default: log.debug(command.paramByNum(2));
             }
         }
     }
