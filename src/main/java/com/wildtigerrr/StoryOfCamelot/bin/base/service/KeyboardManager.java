@@ -146,19 +146,14 @@ public class KeyboardManager {
             return null;
         }
         Item item;
-        log.debug("Items:");
-        log.debug(items.size());
-        log.debug("Start from " + (pageSize * (page - 1)));
-        log.debug("To " + (Math.min(pageSize * page, items.size())));
         for (int i = pageSize * (page - 1); i < Math.min(pageSize * page, items.size()); i++) {
-            log.debug("Item #:" + i);
             item = items.get(i);
             builder.addButton(new InlineKeyboardButton()
                     .setText(item.getName(lang))
                     .setCallbackData("/store " + store.getId() + page + " item_info " + item.getId())
             );
             builder.addButton(new InlineKeyboardButton()
-                    .setText(MoneyCalculation.moneyOf(item.getPrice(), lang))
+                    .setText(MoneyCalculation.moneyOf(item.getPrice(), lang, translation))
                     .setCallbackData("/store " + store.getId()  + page + " item_buy " + item.getId())
             );
             builder.nextRow();

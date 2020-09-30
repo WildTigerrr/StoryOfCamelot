@@ -15,8 +15,17 @@ public class MoneyCalculation {
         return moneyOf(player.getMoney(), player.getLanguage());
     }
 
+    public static String moneyOf(Player player, TranslationManager translation) {
+        return moneyOf(player.getMoney(), player.getLanguage(), translation);
+    }
+
     public static String moneyOf(long money, Language lang) {
         TranslationManager translation = ApplicationContextProvider.bean(TranslationManager.class);
+        return moneyOf(money, lang, translation);
+    }
+
+    public static String moneyOf(long money, Language lang, TranslationManager translation) {
+
         String moneyString = translation.getMessage("money.none", lang);
         if (money > 0) {
             moneyString = "";
