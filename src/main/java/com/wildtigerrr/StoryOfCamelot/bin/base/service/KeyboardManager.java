@@ -166,6 +166,11 @@ public class KeyboardManager {
                     .setCallbackData("/store " + store.getId() + " " + (page - 1) + " page")
             );
         }
+        if (items.size() > pageSize) {
+            builder.addButton(new InlineKeyboardButton()
+                    .setText(page + " / " + ((int) Math.ceil(((double) items.size()) / pageSize)))
+            );
+        }
         if (items.size() > pageSize * page) {
             builder.addButton(new InlineKeyboardButton()
                     .setText(">")
