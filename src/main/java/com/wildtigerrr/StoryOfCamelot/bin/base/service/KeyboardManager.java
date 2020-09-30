@@ -152,11 +152,11 @@ public class KeyboardManager {
             item = items.get(i);
             builder.addButton(new InlineKeyboardButton()
                     .setText(item.getName(lang))
-                    .setCallbackData("/store " + store.getId() + page + " item_info " + item.getId())
+                    .setCallbackData("/store " + store.getId() + " " + page + " item_info " + item.getId())
             );
             builder.addButton(new InlineKeyboardButton()
                     .setText(MoneyCalculation.moneyOf(item.getPrice(), lang, translation))
-                    .setCallbackData("/store " + store.getId()  + page + " item_buy " + item.getId())
+                    .setCallbackData("/store " + store.getId() + " " + page + " item_buy " + item.getId())
             );
             builder.nextRow();
         }
