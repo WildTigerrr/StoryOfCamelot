@@ -42,7 +42,7 @@ public class StoreServiceImpl implements StoreService {
     }
 
     @Override
-    public Store findById(String id) {
+    public Store getById(String id) {
         Optional<Store> obj = storeDao.findById(id);
         return obj.orElse(null);
     }

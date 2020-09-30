@@ -16,23 +16,23 @@ import java.util.Set;
 @Getter
 public enum ItemTemplate {
     SWORD_COMMON(
-            10.0, 100.0, 10.0, false, ItemSubType.SWORD, ItemQuality.COMMON,
+            10.0, 100.0, 10, false, ItemSubType.SWORD, ItemQuality.COMMON,
             NameTranslation.ITEM_WEAPON_SWORD_COMMON, NameTranslation.DESC_ITEM_SWORD_COMMON, FileLinkTemplate.FLYING_SWORD,
             new HashSet<>() {{
                 add(StoreType.BLACKSMITH);
             }}),
     SWORD_UNCOMMON(
-            15.0, 150.0, 25.0, false, ItemSubType.SWORD, ItemQuality.UNCOMMON,
+            15.0, 150.0, 25, false, ItemSubType.SWORD, ItemQuality.UNCOMMON,
             NameTranslation.ITEM_WEAPON_SWORD_UNCOMMON, NameTranslation.DESC_ITEM_SWORD_UNCOMMON, FileLinkTemplate.FLYING_SWORD,
             new HashSet<>() {{
                 add(StoreType.BLACKSMITH);
             }}),
     STICK(
-            1.0, 0, 1.0, true, ItemSubType.CRAFTING, ItemQuality.COMMON,
+            1.0, 0, 1, true, ItemSubType.CRAFTING, ItemQuality.COMMON,
             NameTranslation.ITEM_MATERIAL_STICK, NameTranslation.DESC_ITEM_STICK, null,
             null),
     STONE(
-            3.0, 0, 1.0, true, ItemSubType.CRAFTING, ItemQuality.COMMON,
+            3.0, 0, 1, true, ItemSubType.CRAFTING, ItemQuality.COMMON,
             NameTranslation.ITEM_MATERIAL_STONE, NameTranslation.DESC_ITEM_STONE, null,
             new HashSet<>() {{
                 add(StoreType.BLACKSMITH);
@@ -41,7 +41,7 @@ public enum ItemTemplate {
 
     private final double value;
     private final double durability;
-    private final double price;
+    private final long price;
     private final boolean isStackable;
     private final ItemSubType subType;
     private final ItemQuality quality;
@@ -51,7 +51,7 @@ public enum ItemTemplate {
     private final FileLinkTemplate imageLink;
     private final Set<StoreType> storeType;
 
-    ItemTemplate(double value, double durability, double price, boolean isStackable, ItemSubType subType, ItemQuality quality, NameTranslation translation, NameTranslation description, FileLinkTemplate imageLink, Set<StoreType> storeType) {
+    ItemTemplate(double value, double durability, long price, boolean isStackable, ItemSubType subType, ItemQuality quality, NameTranslation translation, NameTranslation description, FileLinkTemplate imageLink, Set<StoreType> storeType) {
         this.value = value;
         this.durability = durability;
         this.price = price;

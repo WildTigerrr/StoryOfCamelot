@@ -8,7 +8,7 @@ import java.util.List;
 public interface StoreService {
     Store create(Store store);
     HashMap<String, Store> create(List<Store> stores);
-    Store findById(String id);
+    Store getById(String id);
     void delete(String id);
     Store update(Store store);
     List<Store> getAll();

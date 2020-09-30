@@ -2,6 +2,7 @@ package com.wildtigerrr.StoryOfCamelot.database.jpa.service.implementation;
 
 import com.wildtigerrr.StoryOfCamelot.database.jpa.dataaccessobject.ItemDao;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.Item;
+import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.enums.StoreType;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.service.template.ItemService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -52,5 +53,10 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public List<Item> getAll() {
         return (List<Item>) itemDao.findAll();
+    }
+
+    @Override
+    public List<Item> getByStoreTypes(Iterable<StoreType> storeTypes) {
+        return itemDao.findAllByStoreTypeIn(storeTypes);
     }
 }

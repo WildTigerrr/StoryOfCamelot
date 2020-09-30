@@ -42,7 +42,7 @@ public class Item extends SimpleObject {
 
     private Double value; // Defence, Damage, Speed etc
     private Double durability;
-    private Double price;
+    private Long price;
     private Boolean isStackable;
 
     @Enumerated(EnumType.STRING)
@@ -83,13 +83,13 @@ public class Item extends SimpleObject {
         );
     }
 
-    public Item(Double value, Double durability, Double price, Boolean isStackable, ItemSubType type, ItemQuality quality,
+    public Item(Double value, Double durability, Long price, Boolean isStackable, ItemSubType type, ItemQuality quality,
                 NameTranslation translation, String systemName, NameTranslation description, Set<StoreType> storeType
     ) {
         this(value, durability, price, isStackable, type, quality, translation, systemName, description, null, storeType);
     }
 
-    public Item(Double value, Double durability, Double price, Boolean isStackable, ItemSubType type, ItemQuality quality,
+    public Item(Double value, Double durability, Long price, Boolean isStackable, ItemSubType type, ItemQuality quality,
                 NameTranslation translation, String systemName, NameTranslation description, FileLink imageLink, Set<StoreType> storeType
     ) {
         this.value = value;

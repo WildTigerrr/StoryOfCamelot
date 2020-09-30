@@ -3,10 +3,7 @@ package com.wildtigerrr.StoryOfCamelot.bin.base.service;
 import com.wildtigerrr.StoryOfCamelot.bin.enums.Language;
 import com.wildtigerrr.StoryOfCamelot.bin.enums.ReplyButton;
 import com.wildtigerrr.StoryOfCamelot.bin.translation.TranslationManager;
-import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.Backpack;
-import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.BackpackItem;
-import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.Location;
-import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.Store;
+import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.*;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.enums.Stats;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
@@ -107,6 +104,8 @@ public class KeyboardManager {
             return null;
         }
         BackpackItem item;
+        String equip = translation.getMessage("player.backpack.item-equip", backpack.getPlayer());
+        String unequip = translation.getMessage("player.backpack.item-unequip", backpack.getPlayer());
         for (int i = pageSize * (page - 1); i < Math.min(pageSize * page, items.size() - pageSize * (page - 1)); i++) {
             item = items.get(i);
             builder.addButton(new InlineKeyboardButton()
@@ -115,7 +114,7 @@ public class KeyboardManager {
             );
             if (item.getItem().isEquippable()) {
                 builder.addButton(new InlineKeyboardButton()
-                        .setText(item.isEquipped() ? "Снять" : "Надеть")
+                        .setText(item.isEquipped() ? equip : unequip)
                         .setCallbackData(item.isEquipped()
                                 ? "/backpack " + page + " item_unequip " + item.getId()
                                 : "/backpack " + page + " item_equip " + item.getId())
@@ -126,13 +125,47 @@ public class KeyboardManager {
         if (page > 1) {
             builder.addButton(new InlineKeyboardButton()
                     .setText("<")
-                    .setCallbackData("/backpack" + (page - 1) + "page")
+                    .setCallbackData("/backpack " + (page - 1) + " page")
             );
         }
         if (items.size() > pageSize * page) {
             builder.addButton(new InlineKeyboardButton()
                     .setText(">")
-                    .setCallbackData("/backpack" + (page + 1) + "page")
+                    .setCallbackData("/backpack " + (page + 1) + " page")
+            );
+        }
+        return builder.build();
+    }
+
+    public static InlineKeyboardMarkup getKeyboardForStoreItems(Store store, List<Item> items, int page, Language lang, TranslationManager translation) {
+        int pageSize = 10;
+        KeyboardBuilder<InlineKeyboardMarkup> builder = new KeyboardBuilder<>(KeyboardBuilder.Type.INLINE);
+        if (items.isEmpty() || items.size() < pageSize * (page - 1)) {
+            return null;
+        }
+        Item item;
+        for (int i = pageSize * (page - 1); i < Math.min(pageSize * page, items.size() - pageSize * (page - 1)); i++) {
+            item = items.get(i);
+            builder.addButton(new InlineKeyboardButton()
+                    .setText(item.getName(lang))
+                    .setCallbackData("/store " + store.getId() + page + " item_info " + item.getId())
+            );
+            builder.addButton(new InlineKeyboardButton()
+                    .setText(MoneyCalculation.moneyOf(item.getPrice(), lang))
+                    .setCallbackData("/store " + store.getId()  + page + " item_buy " + item.getId())
+            );
+            builder.nextRow();
+        }
+        if (page > 1) {
+            builder.addButton(new InlineKeyboardButton()
+                    .setText("<")
+                    .setCallbackData("/store " + store.getId()  + (page - 1) + " page")
+            );
+        }
+        if (items.size() > pageSize * page) {
+            builder.addButton(new InlineKeyboardButton()
+                    .setText(">")
+                    .setCallbackData("/store " + store.getId()  + (page + 1) + " page")
             );
         }
         return builder.build();

@@ -3,12 +3,17 @@ package com.wildtigerrr.StoryOfCamelot.bin.base.service;
 import com.wildtigerrr.StoryOfCamelot.bin.enums.Language;
 import com.wildtigerrr.StoryOfCamelot.bin.service.ApplicationContextProvider;
 import com.wildtigerrr.StoryOfCamelot.bin.translation.TranslationManager;
+import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.Player;
 
 public class MoneyCalculation {
 
     private static final int BRONZE = 1;
     private static final int SILVER = BRONZE * 100;
     private static final int GOLD = SILVER * 100;
+
+    public static String moneyOf(Player player) {
+        return moneyOf(player.getMoney(), player.getLanguage());
+    }
 
     public static String moneyOf(long money, Language lang) {
         TranslationManager translation = ApplicationContextProvider.bean(TranslationManager.class);

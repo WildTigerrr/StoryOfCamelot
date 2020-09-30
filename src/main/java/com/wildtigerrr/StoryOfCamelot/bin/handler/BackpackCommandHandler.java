@@ -44,9 +44,6 @@ public class BackpackCommandHandler extends TextMessageHandler {
                 }
                 default: log.debug(command.paramByNum(2));
             }
-        } else {
-            log.debug(command.paramsCount());
-            log.debug(command.paramByNum(2));
         }
     }
 
@@ -74,7 +71,7 @@ public class BackpackCommandHandler extends TextMessageHandler {
             );
         } else {
             messages.sendMessage(TextResponseMessage.builder().by(message)
-                    .text("У Вас нет этого предмета").build()
+                    .text(translation.getMessage("player.backpack.wrong-item", message)).build()
             );
         }
         messages.sendAnswer(message.getQueryId());

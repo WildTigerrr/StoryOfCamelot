@@ -26,6 +26,7 @@ public enum Command {
     FIGHT("fightCommandHandler"),
     SEARCH_ENEMIES("fightCommandHandler"),
     BACKPACK("backpackCommandHandler"),
+    STORE("storeCommandHandler"),
     STORES("storeCommandHandler"),
     STORE_SELECT("storeCommandHandler"),
     NOTIFY("notifyCommandHandler"),
