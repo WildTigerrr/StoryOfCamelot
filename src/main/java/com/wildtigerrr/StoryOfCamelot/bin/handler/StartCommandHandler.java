@@ -1,6 +1,7 @@
 package com.wildtigerrr.StoryOfCamelot.bin.handler;
 
 import com.wildtigerrr.StoryOfCamelot.bin.base.service.ActionHandler;
+import com.wildtigerrr.StoryOfCamelot.bin.enums.Command;
 import com.wildtigerrr.StoryOfCamelot.bin.translation.TranslationManager;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.Player;
 import com.wildtigerrr.StoryOfCamelot.web.service.ResponseManager;
@@ -25,7 +26,9 @@ public class StartCommandHandler extends TextMessageHandler {
     public void process(IncomingMessage message) {
         Player player = message.getPlayer();
         // TODO Not set default language
-        if (player.getLanguage() == null) {
+        if (message.getCommand() == Command.IGNORE && message.isQuery()) {
+            messages.sendAnswer(message.getQueryId());
+        } else if (player.getLanguage() == null) {
             languageCommandHandler.process(message);
         } else if (!message.text().startsWith("/start") && player.getNickname().equals(player.getExternalId())) {
             nicknameCommandHandler.process(message);

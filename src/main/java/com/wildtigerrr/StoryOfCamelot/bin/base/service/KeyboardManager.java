@@ -169,6 +169,7 @@ public class KeyboardManager {
         if (items.size() > pageSize) {
             builder.addButton(new InlineKeyboardButton()
                     .setText(page + " / " + ((int) Math.ceil(((double) items.size()) / pageSize)))
+                    .setCallbackData("/ignore")
             );
         }
         if (items.size() > pageSize * page) {

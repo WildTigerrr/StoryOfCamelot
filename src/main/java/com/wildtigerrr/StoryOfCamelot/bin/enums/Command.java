@@ -16,6 +16,7 @@ import javax.annotation.PostConstruct;
 public enum Command {
     START("startCommandHandler"),
     BACK("startCommandHandler"),
+    IGNORE("startCommandHandler"),
     ME("playerCommandHandler"),
     PLAYERS_TOP("playerCommandHandler"),
     NICKNAME ("nicknameCommandHandler"),
