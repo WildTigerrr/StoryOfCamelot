@@ -51,13 +51,8 @@ public class StoreCommandHandler extends TextMessageHandler {
         if (command.paramsCount() > 3) {
             switch (command.paramByNum(3)) {
                 case "page": sendStore(message, command.paramByNum(1), command.intByNum(2)); break;
-                case "item": {
-                    switch (command.paramByNum(4)) {
-                        case "info": sendItemInfo(message); break;
-                        case "buy": buyItem(message); break;
-                        default: log.debug(command.paramByNum(4));
-                    }
-                }
+                case "item_info": sendItemInfo(message); break;
+                case "item_buy": buyItem(message); break;
                 default: log.debug(command.paramByNum(3));
             }
         }
@@ -101,17 +96,17 @@ public class StoreCommandHandler extends TextMessageHandler {
     private void sendItemInfo(TextIncomingMessage message) {
         ParsedCommand command = message.getParsedCommand();
         if (command.paramsCount() < 4) return;
-//        Item item = itemService.findById(command.paramByNum(4));
-//        if (item != null) {
-//            messages.sendMessage(TextResponseMessage.builder().by(message)
-//                    .text(item.getDescribe(message.getPlayer()))
-//                    .applyMarkup(true).build()
-//            );
-//        } else {
+        Item item = itemService.findById(command.paramByNum(4));
+        if (item != null) {
+            messages.sendMessage(TextResponseMessage.builder().by(message)
+                    .text(item.getDescribe(message.getPlayer()))
+                    .applyMarkup(true).build()
+            );
+        } else {
             messages.sendMessage(TextResponseMessage.builder().by(message)
                     .text(translation.getMessage("location.store.wrong-item", message)).build()
             );
-//        }
+        }
         messages.sendAnswer(message.getQueryId());
     }
 

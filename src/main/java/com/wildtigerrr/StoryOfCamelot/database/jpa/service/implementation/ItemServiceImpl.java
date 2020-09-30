@@ -41,6 +41,11 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
+    public Item findById(String id) {
+        return itemDao.findById(id).orElse(null);
+    }
+
+    @Override
     public void delete(String id) {
         itemDao.findById(id).ifPresent(itemDao::delete);
     }
