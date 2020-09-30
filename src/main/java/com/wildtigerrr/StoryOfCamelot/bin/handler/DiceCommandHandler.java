@@ -40,6 +40,7 @@ public class DiceCommandHandler extends CommandHandler {
     private void sendDice(DiceIncomingMessage message) {
         messages.sendMessage(DiceResponseMessage.builder().lang(message)
                 .incomingMessage(message)
+                .emoji(message.getEmoji())
                 .targetId(message).build()
         );
     }

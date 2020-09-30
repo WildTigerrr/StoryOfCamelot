@@ -19,6 +19,7 @@ public class DiceResponseMessage implements ResponseMessage {
     private final String targetId;
     @NonNull
     private final Language lang;
+    private final String emoji;
 
     private final DiceIncomingMessage incomingMessage;
 

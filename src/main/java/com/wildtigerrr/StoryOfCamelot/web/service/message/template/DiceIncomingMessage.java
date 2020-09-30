@@ -9,12 +9,14 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 public class DiceIncomingMessage extends IncomingMessage {
 
     private final int value;
+    private final String emoji;
     @Setter
     private Integer response;
 
     public DiceIncomingMessage(Update update) {
         super(update);
         value = update.getMessage().getDice().getValue();
+        emoji = update.getMessage().getDice().getEmoji();
     }
 
     public boolean hasAnswer() {

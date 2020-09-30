@@ -190,6 +190,7 @@ public class TelegramResponseManager implements ResponseManager, Runnable {
 
     private void proceedDiceSend(DiceResponseMessage messageTemplate) {
         SendDice newMessage = new SendDice()
+                .setEmoji(messageTemplate.getEmoji())
                 .setChatId(messageTemplate.getTargetId());
         Message response = execute(newMessage);
         DiceIncomingMessage message = messageTemplate.getIncomingMessage();
