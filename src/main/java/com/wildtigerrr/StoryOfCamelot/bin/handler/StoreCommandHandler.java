@@ -83,7 +83,9 @@ public class StoreCommandHandler extends TextMessageHandler {
                 .keyboard(KeyboardManager.getKeyboardForStoreItems(store, items, page, message.getPlayer().getLanguage(), translation))
                 .build()
         );
-        messages.sendAnswer(message.getQueryId(), "Страница: " + page);
+        if (message.isQuery()) {
+            messages.sendAnswer(message.getQueryId(), "Страница: " + page);
+        }
     }
 
     private void buyItem(TextIncomingMessage message) {
