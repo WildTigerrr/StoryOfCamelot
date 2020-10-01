@@ -103,6 +103,7 @@ public class StoreCommandHandler extends TextMessageHandler {
                     .text("Такого предмета нет")
                     .build()
             );
+            messages.sendAnswer(message.getQueryId());
             return;
         }
         Store store = storeService.getById(command.paramByNum(1));
@@ -112,6 +113,7 @@ public class StoreCommandHandler extends TextMessageHandler {
                     .text("Этот предмет здесь не продаётся")
                     .build()
             );
+            messages.sendAnswer(message.getQueryId());
             return;
         }
         if (message.getPlayer().getMoney() < item.getPrice()) {
@@ -119,6 +121,7 @@ public class StoreCommandHandler extends TextMessageHandler {
                     .text("У вас недостаточно денег")
                     .build()
             );
+            messages.sendAnswer(message.getQueryId(), "Остаток: " + MoneyCalculation.moneyOf(message.getPlayer(), translation));
             return;
         }
         message.getPlayer().retracktMoney(item.getPrice());
@@ -127,9 +130,10 @@ public class StoreCommandHandler extends TextMessageHandler {
         backpackService.update(backpack); // TODO Take backpack from Player
         playerService.update(message.getPlayer());
         messages.sendMessage(TextResponseMessage.builder().by(message)
-                .text("Предмет куплен")
+                .text("Предмет куплен: " + item.getDescribe(message.getPlayer()))
                 .build()
         );
+        messages.sendAnswer(message.getQueryId(), "Осталось: " + MoneyCalculation.moneyOf(message.getPlayer(), translation));
     }
 
     private void sendItemInfo(TextIncomingMessage message) {
