@@ -5,10 +5,12 @@ import com.wildtigerrr.StoryOfCamelot.bin.base.service.KeyboardManager;
 import com.wildtigerrr.StoryOfCamelot.bin.base.service.MoneyCalculation;
 import com.wildtigerrr.StoryOfCamelot.bin.enums.Language;
 import com.wildtigerrr.StoryOfCamelot.bin.translation.TranslationManager;
+import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.Backpack;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.Item;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.Store;
-import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.enums.StoreType;
+import com.wildtigerrr.StoryOfCamelot.database.jpa.service.template.BackpackService;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.service.template.ItemService;
+import com.wildtigerrr.StoryOfCamelot.database.jpa.service.template.PlayerService;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.service.template.StoreService;
 import com.wildtigerrr.StoryOfCamelot.web.bot.update.ParsedCommand;
 import com.wildtigerrr.StoryOfCamelot.web.service.ResponseManager;
@@ -29,12 +31,16 @@ public class StoreCommandHandler extends TextMessageHandler {
     private final ActionHandler actionHandler;
     private final ItemService itemService;
     private final StoreService storeService;
+    private final BackpackService backpackService;
+    private final PlayerService playerService;
 
-    public StoreCommandHandler(ResponseManager messages, TranslationManager translation, ActionHandler actionHandler, ItemService itemService, StoreService storeService) {
+    public StoreCommandHandler(ResponseManager messages, TranslationManager translation, ActionHandler actionHandler, ItemService itemService, StoreService storeService, BackpackService backpackService, PlayerService playerService) {
         super(messages, translation);
         this.actionHandler = actionHandler;
         this.itemService = itemService;
         this.storeService = storeService;
+        this.backpackService = backpackService;
+        this.playerService = playerService;
     }
 
     @Override
@@ -90,7 +96,40 @@ public class StoreCommandHandler extends TextMessageHandler {
     }
 
     private void buyItem(TextIncomingMessage message) {
-
+        ParsedCommand command = message.getParsedCommand();
+        Item item = itemService.findById(command.paramByNum(4));
+        if (item == null) {
+            messages.sendMessage(TextResponseMessage.builder().by(message)
+                    .text("Такого предмета нет")
+                    .build()
+            );
+            return;
+        }
+        Store store = storeService.getById(command.paramByNum(1));
+        List<Item> items = itemService.getByStoreTypes(store.getStoreType());
+        if (!items.contains(item)) {
+            messages.sendMessage(TextResponseMessage.builder().by(message)
+                    .text("Этот предмет здесь не продаётся")
+                    .build()
+            );
+            return;
+        }
+        if (message.getPlayer().getMoney() < item.getPrice()) {
+            messages.sendMessage(TextResponseMessage.builder().by(message)
+                    .text("У вас недостаточно денег")
+                    .build()
+            );
+            return;
+        }
+        message.getPlayer().retracktMoney(item.getPrice());
+        Backpack backpack = backpackService.findMainByPlayerId(message.getPlayer().getId());
+        backpack.put(item);
+        backpackService.update(backpack); // TODO Take backpack from Player
+        playerService.update(message.getPlayer());
+        messages.sendMessage(TextResponseMessage.builder().by(message)
+                .text("Предмет куплен")
+                .build()
+        );
     }
 
     private void sendItemInfo(TextIncomingMessage message) {
