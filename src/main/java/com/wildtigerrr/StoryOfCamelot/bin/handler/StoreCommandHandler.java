@@ -130,7 +130,7 @@ public class StoreCommandHandler extends TextMessageHandler {
         backpackService.update(backpack); // TODO Take backpack from Player
         playerService.update(message.getPlayer());
         messages.sendMessage(TextResponseMessage.builder().by(message)
-                .text("Предмет куплен: " + item.getDescribe(message.getPlayer()))
+                .text("Предмет куплен: " + item.getName(message.getPlayer()))
                 .build()
         );
         messages.sendAnswer(message.getQueryId(), "Осталось: " + MoneyCalculation.moneyOf(message.getPlayer(), translation));
