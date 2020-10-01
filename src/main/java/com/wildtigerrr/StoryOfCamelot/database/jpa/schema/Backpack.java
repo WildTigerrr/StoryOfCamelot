@@ -61,11 +61,11 @@ public class Backpack extends SimpleObject {
     }
 
     public void put(@NotNull Item item, @Nullable ItemStatus status) {
-        addBackpackItem(new BackpackItem(this, item, status));
+        put(new BackpackItem(this, item, status));
     }
 
     public void put(@NotNull Item item) {
-        addBackpackItem(new BackpackItem(this, item, null));
+        put(new BackpackItem(this, item, null));
     }
 
     public void put(@NotNull BackpackItem item) {
