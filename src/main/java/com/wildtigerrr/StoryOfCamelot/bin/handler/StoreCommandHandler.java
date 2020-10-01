@@ -124,7 +124,7 @@ public class StoreCommandHandler extends TextMessageHandler {
             messages.sendAnswer(message.getQueryId(), "Остаток: " + MoneyCalculation.moneyOf(message.getPlayer(), translation));
             return;
         }
-        message.getPlayer().retracktMoney(item.getPrice());
+        message.getPlayer().pay(item.getPrice());
         Backpack backpack = backpackService.findMainByPlayerId(message.getPlayer().getId());
         backpack.put(item);
         backpackService.update(backpack); // TODO Take backpack from Player

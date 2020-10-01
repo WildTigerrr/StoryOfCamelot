@@ -78,7 +78,7 @@ public class Backpack extends SimpleObject {
         items.forEach(this::put);
     }
 
-    public void addBackpackItem(BackpackItem item) {
+    private void addBackpackItem(BackpackItem item) {
         items.add(item);
     }
 

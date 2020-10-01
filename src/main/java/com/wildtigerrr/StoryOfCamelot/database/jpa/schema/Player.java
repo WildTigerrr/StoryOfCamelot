@@ -156,12 +156,12 @@ public class Player extends SimpleObject implements Comparable<Player>, Fighter 
         this.money += money;
     }
 
-    public void retracktMoney(long money) {
+    public void pay(long money) {
         this.money -= money;
         if (this.money < 0) throw new InvalidInputException(getId() + " not have enough money");
     }
 
-    public void retracktMoney(int money) {
+    public void pay(int money) {
         this.money -= money;
         if (this.money < 0) throw new InvalidInputException(getId() + " not have enough money");
     }
