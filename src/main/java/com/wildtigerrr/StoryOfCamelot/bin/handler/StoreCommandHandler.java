@@ -61,7 +61,7 @@ public class StoreCommandHandler extends TextMessageHandler {
                 case "item_buy": buyItem(message); break;
                 default: log.debug(command.paramByNum(3));
             }
-        } else if (command.paramsCount() == 2) { // TODO WTF is that condition <<<
+        } else if (command.paramsCount() == 3) { // TODO WTF is that condition <<<
             log.debug(command.paramByNum(2));
             if (command.paramByNum(2).equals("sell")) {
                 messages.sendMessage(TextResponseMessage.builder().by(message)
