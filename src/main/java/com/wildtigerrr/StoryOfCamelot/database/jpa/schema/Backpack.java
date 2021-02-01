@@ -5,6 +5,7 @@ import com.wildtigerrr.StoryOfCamelot.database.jpa.interfaces.SimpleObject;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.enums.BackpackType;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.enums.ItemStatus;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.enums.ObjectType;
+import com.wildtigerrr.StoryOfCamelot.exception.InvalidInputException;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -78,6 +79,12 @@ public class Backpack extends SimpleObject {
         items.forEach(this::put);
     }
 
+    public boolean remove(@NotNull Item item, int quantity) {
+        // TODO Add removal with multiple similar items
+        BackpackItem backpackItem = getItemById(item.getId());
+        return backpackItem != null && backpackItem.remove(quantity);
+    }
+
     private void addBackpackItem(BackpackItem item) {
         items.add(item);
     }
@@ -93,11 +100,9 @@ public class Backpack extends SimpleObject {
 
     private boolean addQuantity(BackpackItem item) {
         if (item.getItem().getIsStackable()) {
-            Optional<BackpackItem> existing = getItems().stream().filter(exItem -> item.getItem().getId().equals(exItem.getItem().getId())).findFirst();
-            if (existing.isPresent()) {
-                BackpackItem existingItem = existing.get();
-                existingItem.setQuantity(existingItem.getQuantity() + item.getQuantity());
-                return true;
+            BackpackItem existing = getItemById(item.getItem().getId());
+            if (existing != null) {
+                return existing.add(item.getQuantity());
             }
         }
         return false;

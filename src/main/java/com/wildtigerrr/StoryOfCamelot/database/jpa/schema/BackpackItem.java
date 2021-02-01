@@ -76,6 +76,30 @@ public class BackpackItem extends SimpleObject {
         return this;
     }
 
+    public boolean add(Integer quantity) {
+        // TODO Add maximum stackable quantity
+        if (item.getIsStackable()) {
+            this.quantity += quantity;
+            return true;
+        }
+        return false;
+    }
+
+    public boolean remove(Integer quantity) {
+        if (item.getIsStackable()) {
+            if (this.getQuantity().equals(quantity)) {
+                getBackpack().removeBackpackItem(this);
+                return true;
+            } else if (this.getQuantity() > quantity){
+                this.quantity -= quantity;
+                return true;
+            }
+        } else {
+            getBackpack().removeBackpackItem(this);
+        }
+        return false;
+    }
+
     @Override
     public ObjectType type() {
         return ObjectType.BACKPACK_ITEM;
