@@ -178,6 +178,11 @@ public class KeyboardManager {
                     .setCallbackData("/store " + store.getId() + " " + (page + 1) + " page")
             );
         }
+
+        builder.addButton(new InlineKeyboardButton()
+                .setText("Продажа")
+                .setCallbackData("/store " + store.getId() + " " + "sell"));
+
         return builder.build();
     }
 
