@@ -62,11 +62,16 @@ public class StoreCommandHandler extends TextMessageHandler {
                 default: log.debug(command.paramByNum(3));
             }
         } else if (command.paramsCount() == 2) { // TODO WTF is that condition <<<
+            log.debug(command.paramByNum(2));
             if (command.paramByNum(2).equals("sell")) {
                 messages.sendMessage(TextResponseMessage.builder().by(message)
                         .text("Здесь может быть ваша реклама").build()
                 );
             }
+            messages.sendAnswer(message.getQueryId(), command.toString());
+        } else {
+            log.debug("Parameters quantity: " + command.paramsCount());
+            messages.sendAnswer(message.getQueryId(), command.paramsCount() + " params");
         }
     }
 
