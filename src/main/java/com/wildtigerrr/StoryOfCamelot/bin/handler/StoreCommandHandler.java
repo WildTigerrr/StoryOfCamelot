@@ -65,7 +65,7 @@ public class StoreCommandHandler extends TextMessageHandler {
             log.debug(command.paramByNum(2));
             if (command.paramByNum(2).equals("sell")) {
                 messages.sendMessage(TextResponseMessage.builder().by(message)
-                        .text("Здесь может быть ваша реклама").build()
+                        .text("Здесь может быть ваша реклама, а может и не быть").build()
                 );
             }
             messages.sendAnswer(message.getQueryId(), command.toString());
