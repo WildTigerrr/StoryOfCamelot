@@ -30,7 +30,7 @@ public class KeyboardManager {
                 builder.addButton(
                         new InlineKeyboardButton()
                                 .setText(stat.emoji() + "+" + val)
-                                .setCallbackData("/up_" + stat.getCharacter().toLowerCase() + "_" + val)
+                                .setCallbackData("/up " + stat.getCharacter().toLowerCase() + " " + val)
                 );
             }
         }

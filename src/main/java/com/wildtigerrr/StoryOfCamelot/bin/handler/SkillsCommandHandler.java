@@ -12,9 +12,11 @@ import com.wildtigerrr.StoryOfCamelot.web.service.message.IncomingMessage;
 import com.wildtigerrr.StoryOfCamelot.web.service.message.template.EditResponseMessage;
 import com.wildtigerrr.StoryOfCamelot.web.service.message.template.TextIncomingMessage;
 import com.wildtigerrr.StoryOfCamelot.web.service.message.template.TextResponseMessage;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 
 @Service
+@Log4j2
 public class SkillsCommandHandler extends TextMessageHandler {
 
     /*
@@ -76,6 +78,10 @@ public class SkillsCommandHandler extends TextMessageHandler {
                 }
             }
         } else {
+            log.debug(message.text());
+            log.debug(command.paramsCount());
+            log.debug(command.paramByNum(1));
+            log.debug(command.paramByNum(2));
             messages.sendMessage(TextResponseMessage.builder().by(message)
                     .text(translation.getMessage("commands.invalid", message)).build()
             );

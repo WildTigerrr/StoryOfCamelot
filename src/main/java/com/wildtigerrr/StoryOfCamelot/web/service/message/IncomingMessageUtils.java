@@ -53,7 +53,6 @@ public class IncomingMessageUtils {
         if (message == null || message.length() == 0) return Command.START;
         if (message.startsWith("/")) {
             try {
-                if (message.startsWith("/up")) return Command.UP;
                 String[] commandParts = message.split(" ", 2);
                 return Command.valueOf(commandParts[0].substring(1).toUpperCase());
             } catch (IllegalArgumentException e) {
