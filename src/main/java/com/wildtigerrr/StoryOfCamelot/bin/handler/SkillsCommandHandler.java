@@ -78,10 +78,6 @@ public class SkillsCommandHandler extends TextMessageHandler {
                 }
             }
         } else {
-            log.debug(message.text());
-            log.debug(command.paramsCount());
-            log.debug(command.paramByNum(1));
-            log.debug(command.paramByNum(2));
             messages.sendMessage(TextResponseMessage.builder().by(message)
                     .text(translation.getMessage("commands.invalid", message)).build()
             );

@@ -95,7 +95,7 @@ public class Backpack extends SimpleObject {
 
     public BackpackItem getItemById(String itemId) {
         if (itemId == null) return null;
-        else return getItems().stream().filter(item -> item.getId().equals(itemId)).findFirst().orElse(null);
+        else return getItems().stream().filter(item -> item.getId().equals(itemId)).map(Optional::ofNullable).findFirst().get().orElse(null);
     }
 
     private boolean addQuantity(BackpackItem item) {
