@@ -40,7 +40,7 @@ public class LanguageCommandHandler extends TextMessageHandler {
     }
 
     private void setLanguage(TextIncomingMessage message) {
-        if (!message.getParsedCommand().hasExtraParams()) {
+        if (!message.text().startsWith("/lang")) {
             Language lang = getDefaultLanguage(message);
             sendLanguageSelector(message.getUserId(), lang);
             return;
