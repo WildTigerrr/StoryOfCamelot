@@ -102,7 +102,7 @@ public class Backpack extends SimpleObject {
 
             log.debug(this::getItems);
             Optional<BackpackItem> backpackItemOptional = getItems().stream()
-                    .filter(item -> itemId.equals(item.getId()))
+                    .filter(item -> item.getItem().getId().equals(itemId))
                     .map(Optional::ofNullable).findFirst().orElse(Optional.empty());
             log.debug(backpackItemOptional);
             return backpackItemOptional.orElse(null);
