@@ -1,6 +1,7 @@
 package com.wildtigerrr.StoryOfCamelot.database.jpa.schema;
 
 import com.wildtigerrr.StoryOfCamelot.bin.base.service.IdGenerator;
+import com.wildtigerrr.StoryOfCamelot.bin.enums.Language;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.interfaces.SimpleObject;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.enums.BackpackType;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.enums.ItemStatus;
@@ -9,6 +10,7 @@ import com.wildtigerrr.StoryOfCamelot.exception.InvalidInputException;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.extern.log4j.Log4j2;
 import org.hibernate.annotations.GenericGenerator;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -21,6 +23,7 @@ import java.util.Optional;
 @Entity
 @Table(name = "backpack")
 @Getter @Setter
+@Log4j2
 public class Backpack extends SimpleObject {
 
     @Id
@@ -96,16 +99,21 @@ public class Backpack extends SimpleObject {
     public BackpackItem getItemById(String itemId) {
         if (itemId == null) return null;
         else {
+
+            log.debug(this::getItems);
             Optional<BackpackItem> backpackItemOptional = getItems().stream()
                     .filter(item -> itemId.equals(item.getId()))
                     .map(Optional::ofNullable).findFirst().orElse(Optional.empty());
+            log.debug(backpackItemOptional);
             return backpackItemOptional.orElse(null);
         }
     }
 
     private boolean addQuantity(BackpackItem item) {
         if (item.getItem().getIsStackable()) {
+            log.debug("Adding quantity for: " + item.getItem().getName(Language.ENG));
             BackpackItem existing = getItemById(item.getItem().getId());
+            log.debug(existing);
             if (existing != null) {
                 return existing.add(item.getQuantity());
             }
