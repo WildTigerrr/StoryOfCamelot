@@ -23,7 +23,6 @@ import java.util.Optional;
 @Entity
 @Table(name = "backpack")
 @Getter @Setter
-@Log4j2
 public class Backpack extends SimpleObject {
 
     @Id
@@ -100,11 +99,9 @@ public class Backpack extends SimpleObject {
         if (itemId == null) return null;
         else {
 
-            log.debug(this::getItems);
             Optional<BackpackItem> backpackItemOptional = getItems().stream()
                     .filter(item -> item.getItem().getId().equals(itemId))
                     .map(Optional::ofNullable).findFirst().orElse(Optional.empty());
-            log.debug(backpackItemOptional);
             return backpackItemOptional.orElse(null);
         }
     }
@@ -113,20 +110,16 @@ public class Backpack extends SimpleObject {
         if (itemId == null) return null;
         else {
 
-            log.debug(this::getItems);
             Optional<BackpackItem> backpackItemOptional = getItems().stream()
                     .filter(item -> item.getId() != null && item.getId().equals(itemId))
                     .map(Optional::ofNullable).findFirst().orElse(Optional.empty());
-            log.debug(backpackItemOptional);
             return backpackItemOptional.orElse(null);
         }
     }
 
     private boolean addQuantity(BackpackItem item) {
         if (item.getItem().getIsStackable()) {
-            log.debug("Adding quantity for: " + item.getItem().getName(Language.ENG));
             BackpackItem existing = getItemById(item.getItem().getId());
-            log.debug(existing);
             if (existing != null) {
                 return existing.add(item.getQuantity());
             }
