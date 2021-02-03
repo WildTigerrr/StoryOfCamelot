@@ -109,6 +109,19 @@ public class Backpack extends SimpleObject {
         }
     }
 
+    public BackpackItem getItemByItemId(String itemId) {
+        if (itemId == null) return null;
+        else {
+
+            log.debug(this::getItems);
+            Optional<BackpackItem> backpackItemOptional = getItems().stream()
+                    .filter(item -> item.getId() != null && item.getId().equals(itemId))
+                    .map(Optional::ofNullable).findFirst().orElse(Optional.empty());
+            log.debug(backpackItemOptional);
+            return backpackItemOptional.orElse(null);
+        }
+    }
+
     private boolean addQuantity(BackpackItem item) {
         if (item.getItem().getIsStackable()) {
             log.debug("Adding quantity for: " + item.getItem().getName(Language.ENG));
