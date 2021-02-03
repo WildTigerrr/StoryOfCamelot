@@ -97,7 +97,7 @@ public class Backpack extends SimpleObject {
         if (itemId == null) return null;
         else {
             Optional<BackpackItem> backpackItemOptional = getItems().stream()
-                    .filter(item -> item.getId().equals(itemId))
+                    .filter(item -> itemId.equals(item.getId()))
                     .map(Optional::ofNullable).findFirst().orElse(Optional.empty());
             return backpackItemOptional.orElse(null);
         }
