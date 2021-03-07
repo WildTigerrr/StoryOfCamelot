@@ -29,29 +29,47 @@ public class BackpackCommandHandler extends TextMessageHandler {
     public void process(IncomingMessage message) {
         TextIncomingMessage textIncomingMessage = (TextIncomingMessage) message;
         ParsedCommand command = textIncomingMessage.getParsedCommand();
-        if (!command.hasExtraParams()) {
+        if (!command.hasExtraParams() || command.paramsCount() <= 2) {
             sendBackpack(message);
-        } else if (command.paramsCount() > 2) {
-            switch (command.paramByNum(2)) {
-                case "page": sendBackpack(textIncomingMessage.getPlayer(), command.intByNum(1)); break;
-                case "item_info": sendItemInfo((TextIncomingMessage) message); break;
-                case "item_equip": equipItem((TextIncomingMessage) message); break;
-                case "item_unequip": unequipItem((TextIncomingMessage) message); break;
-                default: log.debug(command.paramByNum(2));
-            }
+            return;
+        }
+        switch (command.paramByNum(2)) {
+            case "page": sendBackpack(textIncomingMessage.getPlayer(), command.intByNum(1)); break;
+            case "item_info": sendItemInfo((TextIncomingMessage) message); break;
+            case "item_equip": equipItem((TextIncomingMessage) message); break;
+            case "item_unequip": unequipItem((TextIncomingMessage) message); break;
+            default: log.debug(command.paramByNum(2));
+        }
+    }
+
+    private void toggleItemEquipped(TextIncomingMessage message, boolean equip) {
+        ParsedCommand command = message.getParsedCommand();
+        if (!command.hasExtraParams() || command.paramsCount() < 3) {
+            sendBackpack(message);
+            return;
+        }
+        Backpack backpack = backpackService.findMainByPlayerId(message.getPlayer().getId());
+        BackpackItem item = backpack.getItemByItemId(command.paramByNum(3));
+        if (item != null) {
+            if (equip) item.equip();
+            else item.unequip();
+            backpackService.update(backpack);
+            sendBackpack(message);
+            messages.sendAnswer(message.getQueryId(), equip ? "Надето" : "Снято");
+        } else {
+            messages.sendMessage(TextResponseMessage.builder().by(message)
+                    .text(translation.getMessage("player.backpack.wrong-item", message)).build()
+            );
+            messages.sendAnswer(message.getQueryId());
         }
     }
 
     private void equipItem(TextIncomingMessage message) {
-        ParsedCommand command = message.getParsedCommand();
-        if (command.paramsCount() < 3) return;
-        // equip id command.paramByNum(3);
+        toggleItemEquipped(message, true);
     }
 
     private void unequipItem(TextIncomingMessage message) {
-        ParsedCommand command = message.getParsedCommand();
-        if (command.paramsCount() < 3) return;
-        // unequip id command.paramByNum(3);
+        toggleItemEquipped(message, false);
     }
 
     private void sendItemInfo(TextIncomingMessage message) {

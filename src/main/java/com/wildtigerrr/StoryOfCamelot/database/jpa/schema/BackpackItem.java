@@ -7,6 +7,7 @@ import com.wildtigerrr.StoryOfCamelot.bin.translation.TranslationManager;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.interfaces.SimpleObject;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.enums.ItemStatus;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.enums.ObjectType;
+import com.wildtigerrr.StoryOfCamelot.exception.InvalidInputException;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -54,7 +55,7 @@ public class BackpackItem extends SimpleObject {
         this.item = item;
         this.currentDurability = item.getDurability();
         this.maximumDurability = item.getDurability();
-        this.status = status;
+        this.status = status != null ? status : ItemStatus.IN_STACK;
         this.quantity = 1;
     }
 
@@ -107,6 +108,22 @@ public class BackpackItem extends SimpleObject {
 
     public boolean isEquipped() {
         return getStatus() == ItemStatus.EQUIPPED;
+    }
+
+    public boolean equip() {
+        if (this.status == ItemStatus.IN_STACK && this.item.isEquippable()) {
+            this.status = ItemStatus.EQUIPPED;
+            return true;
+        }
+        return false;
+    }
+
+    public boolean unequip() {
+        if (this.status == ItemStatus.EQUIPPED) {
+            this.status = ItemStatus.IN_STACK;
+            return true;
+        }
+        return false;
     }
 
     public String backpackInfo(TranslationManager translation) {
