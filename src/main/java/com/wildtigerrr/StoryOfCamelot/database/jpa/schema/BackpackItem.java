@@ -46,6 +46,7 @@ public class BackpackItem extends SimpleObject {
     @Enumerated(EnumType.STRING)
     private ItemStatus status;
     private Boolean isDeleted;
+    private Long addedDate;
 
     protected BackpackItem() {
     }
@@ -57,6 +58,7 @@ public class BackpackItem extends SimpleObject {
         this.maximumDurability = item.getDurability();
         this.status = status != null ? status : ItemStatus.IN_STACK;
         this.quantity = 1;
+        this.addedDate = System.currentTimeMillis();
     }
 
     public BackpackItem(@NotNull Item item, @Nullable ItemStatus status) {
@@ -81,6 +83,7 @@ public class BackpackItem extends SimpleObject {
         // TODO Add maximum stackable quantity
         if (item.getIsStackable()) {
             this.quantity += quantity;
+            this.addedDate = System.currentTimeMillis();
             return true;
         }
         return false;
@@ -93,6 +96,7 @@ public class BackpackItem extends SimpleObject {
                 return true;
             } else if (this.getQuantity() > quantity){
                 this.quantity -= quantity;
+                this.addedDate = System.currentTimeMillis();
                 return true;
             }
         } else {

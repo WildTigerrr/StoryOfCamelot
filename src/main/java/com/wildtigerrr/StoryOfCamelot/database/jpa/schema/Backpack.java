@@ -16,9 +16,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Entity
 @Table(name = "backpack")
@@ -93,6 +91,12 @@ public class Backpack extends SimpleObject {
 
     public void removeBackpackItem(BackpackItem item) {
         items.remove(item);
+    }
+
+    public List<BackpackItem> getItems() {
+        items.sort(Comparator.comparing(BackpackItem::getAddedDate)
+                .thenComparing(BackpackItem::getId));
+        return items;
     }
 
     public BackpackItem getItemById(String itemId) {
