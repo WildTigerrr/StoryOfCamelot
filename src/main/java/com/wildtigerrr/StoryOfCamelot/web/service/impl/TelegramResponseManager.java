@@ -62,6 +62,10 @@ public class TelegramResponseManager implements ResponseManager, Runnable {
     }
 
     public void sendMessage(ResponseMessage message) {
+        log.debug(message.getText());
+        if (message instanceof EditResponseMessage) {
+            log.debug(((EditResponseMessage) message).getKeyboard());
+        }
         if (responsesByChat.containsKey(message.getTargetId())) {
             responsesByChat.get(message.getTargetId()).add(message);
         } else {
