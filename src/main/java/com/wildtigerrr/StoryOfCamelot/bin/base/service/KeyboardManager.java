@@ -118,7 +118,7 @@ public class KeyboardManager {
             );
             if (item.getItem().isEquippable()) {
                 builder.addButton(new InlineKeyboardButton()
-                        .setText(item.isEquipped() ? equip : unequip)
+                        .setText(item.isEquipped() ? unequip : equip)
                         .setCallbackData(item.isEquipped()
                                 ? "/backpack " + page + " item_unequip " + item.getId()
                                 : "/backpack " + page + " item_equip " + item.getId())

@@ -9,6 +9,7 @@ import com.wildtigerrr.StoryOfCamelot.database.jpa.service.template.BackpackServ
 import com.wildtigerrr.StoryOfCamelot.web.bot.update.ParsedCommand;
 import com.wildtigerrr.StoryOfCamelot.web.service.ResponseManager;
 import com.wildtigerrr.StoryOfCamelot.web.service.message.IncomingMessage;
+import com.wildtigerrr.StoryOfCamelot.web.service.message.template.EditResponseMessage;
 import com.wildtigerrr.StoryOfCamelot.web.service.message.template.TextIncomingMessage;
 import com.wildtigerrr.StoryOfCamelot.web.service.message.template.TextResponseMessage;
 import lombok.extern.log4j.Log4j2;
@@ -34,7 +35,7 @@ public class BackpackCommandHandler extends TextMessageHandler {
             return;
         }
         switch (command.paramByNum(2)) {
-            case "page": sendBackpack(textIncomingMessage.getPlayer(), command.intByNum(1)); break;
+            case "page": sendBackpackEdit(textIncomingMessage, command.intByNum(1)); break;
             case "item_info": sendItemInfo((TextIncomingMessage) message); break;
             case "item_equip": equipItem((TextIncomingMessage) message); break;
             case "item_unequip": unequipItem((TextIncomingMessage) message); break;
@@ -54,7 +55,7 @@ public class BackpackCommandHandler extends TextMessageHandler {
             if (equip) item.equip();
             else item.unequip();
             backpackService.update(backpack);
-            sendBackpack(message);
+            sendBackpackEdit(message, command.intByNum(1));
             messages.sendAnswer(message.getQueryId(), equip ? "Надето" : "Снято");
         } else {
             messages.sendMessage(TextResponseMessage.builder().by(message)
@@ -100,6 +101,15 @@ public class BackpackCommandHandler extends TextMessageHandler {
         messages.sendMessage(TextResponseMessage.builder().by(player)
                 .keyboard(KeyboardManager.getKeyboardForBackpack(backpack, page, translation))
                 .text(translation.getMessage("player.backpack.info", player)
+                ).build()
+        );
+    }
+
+    private void sendBackpackEdit(IncomingMessage message, int page) {
+        Backpack backpack = backpackService.findMainByPlayerId(message.getPlayer().getId());
+        messages.sendMessage(EditResponseMessage.builder().by(message)
+                .keyboard(KeyboardManager.getKeyboardForBackpack(backpack, page, translation))
+                .text(translation.getMessage("player.backpack.info", message)
                 ).build()
         );
     }
