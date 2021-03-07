@@ -37,8 +37,8 @@ public class BackpackCommandHandler extends TextMessageHandler {
         switch (command.paramByNum(2)) {
             case "page": sendBackpackEdit(textIncomingMessage, command.intByNum(1)); break;
             case "item_info": sendItemInfo((TextIncomingMessage) message); break;
-            case "item_equip": equipItem((TextIncomingMessage) message); break;
-            case "item_unequip": unequipItem((TextIncomingMessage) message); break;
+            case "item_equip": toggleItemEquipped((TextIncomingMessage) message, true); break;
+            case "item_unequip": toggleItemEquipped((TextIncomingMessage) message, false); break;
             default: log.debug(command.paramByNum(2));
         }
     }
@@ -63,14 +63,6 @@ public class BackpackCommandHandler extends TextMessageHandler {
             );
             messages.sendAnswer(message.getQueryId());
         }
-    }
-
-    private void equipItem(TextIncomingMessage message) {
-        toggleItemEquipped(message, true);
-    }
-
-    private void unequipItem(TextIncomingMessage message) {
-        toggleItemEquipped(message, false);
     }
 
     private void sendItemInfo(TextIncomingMessage message) {
