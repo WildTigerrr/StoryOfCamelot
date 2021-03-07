@@ -113,6 +113,7 @@ public class BackpackItem extends SimpleObject {
     public boolean equip() {
         if (this.status == ItemStatus.IN_STACK && this.item.isEquippable()) {
             this.status = ItemStatus.EQUIPPED;
+            this.backpack.getItems().stream().filter(item -> item.getItem().getType() == this.getItem().getType()).forEach(BackpackItem::unequip);
             return true;
         }
         return false;

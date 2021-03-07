@@ -89,7 +89,6 @@ public class BackpackCommandHandler extends TextMessageHandler {
 
     private void sendBackpack(Player player, int page) {
         Backpack backpack = backpackService.findMainByPlayerId(player.getId());
-        //        backpack.getItems().forEach(item -> builder.append(item.backpackInfo(translation)));
         messages.sendMessage(TextResponseMessage.builder().by(player)
                 .keyboard(KeyboardManager.getKeyboardForBackpack(backpack, page, translation))
                 .text(translation.getMessage("player.backpack.info", player)
