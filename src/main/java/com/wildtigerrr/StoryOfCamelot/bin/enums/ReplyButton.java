@@ -21,8 +21,8 @@ public enum ReplyButton {
 
     // Skills
     FIGHT_ATTACK(NameTranslation.SKILL_FIGHT_ATTACK, Skill.BASIC_ATTACK),
-    FIGHT_STRONG_ATTACK(NameTranslation.SKILL_FIGHT_ATTACK, Skill.STRONG_ATTACK),
-    FIGHT_FAST_ATTACK(NameTranslation.SKILL_FIGHT_ATTACK, Skill.FAST_ATTACK),
+    FIGHT_STRONG_ATTACK(NameTranslation.SKILL_FIGHT_STRONG_ATTACK, Skill.STRONG_ATTACK),
+    FIGHT_FAST_ATTACK(NameTranslation.SKILL_FIGHT_FAST_ATTACK, Skill.FAST_ATTACK),
     FIGHT_DEFENCE(NameTranslation.SKILL_FIGHT_DEFENCE, Skill.BASIC_DEFENCE),;
 
     private final NameTranslation label;
