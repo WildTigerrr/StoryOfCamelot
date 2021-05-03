@@ -109,6 +109,7 @@ public class TelegramResponseManager implements ResponseManager, Runnable {
                 .targetId(BotConfig.ADMIN_CHANNEL_ID)
                 .type(ResponseType.POST_TO_ADMIN_CHANNEL)
                 .text(text)
+                .disableNotification(true)
                 .applyMarkup(applyMarkup).build()
         );
     }
