@@ -99,6 +99,7 @@ public class FightCommandHandler extends TextMessageHandler {
         Mob mob = mobService.findById(state.getEnemy().getId());
 
         messages.sendMessage(TextResponseMessage.builder().by(message)
+                .text("Выберите следующее действие:")
                 .keyboard(KeyboardManager.getReplyByButtons(actionHandler.getAvailableFightingActions(message.getPlayer()), message.getPlayer().getLanguage()))
                 .build()
         );
