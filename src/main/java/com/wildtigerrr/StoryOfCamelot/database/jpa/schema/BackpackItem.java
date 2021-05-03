@@ -7,7 +7,6 @@ import com.wildtigerrr.StoryOfCamelot.bin.translation.TranslationManager;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.interfaces.SimpleObject;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.enums.ItemStatus;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.enums.ObjectType;
-import com.wildtigerrr.StoryOfCamelot.exception.InvalidInputException;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;

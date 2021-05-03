@@ -131,6 +131,9 @@ public enum NameTranslation {
             "skill.name.which.luck"
     ),
 
+    SKILL_FIGHT_ATTACK("Атаковать", ""), // TODO Translate
+    SKILL_FIGHT_DEFENCE("Защищаться", ""),
+
     // DESCRIPTIONS
     DESC_ITEM_SWORD_COMMON("description.item.sword.common"),
     DESC_ITEM_SWORD_UNCOMMON("description.item.sword.uncommon"),

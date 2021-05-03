@@ -83,4 +83,13 @@ public class ActionHandler {
         }};
     }
 
+    public List<ReplyButton> getAvailableFightingActions(Player player) {
+        return new ArrayList<>() {{
+            add(ReplyButton.FIGHT_ATTACK);
+            add(ReplyButton.FIGHT_STRONG_ATTACK);
+            add(ReplyButton.FIGHT_FAST_ATTACK);
+            add(ReplyButton.FIGHT_DEFENCE);
+        }};
+    }
+
 }

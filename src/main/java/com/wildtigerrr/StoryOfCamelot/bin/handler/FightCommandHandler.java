@@ -7,6 +7,8 @@ import com.wildtigerrr.StoryOfCamelot.bin.base.service.DropCalculator;
 import com.wildtigerrr.StoryOfCamelot.bin.base.service.KeyboardManager;
 import com.wildtigerrr.StoryOfCamelot.bin.enums.EnemyType;
 import com.wildtigerrr.StoryOfCamelot.bin.enums.RandomDistribution;
+import com.wildtigerrr.StoryOfCamelot.bin.enums.ReplyButton;
+import com.wildtigerrr.StoryOfCamelot.bin.enums.Skill;
 import com.wildtigerrr.StoryOfCamelot.bin.service.ListUtils;
 import com.wildtigerrr.StoryOfCamelot.bin.translation.TranslationManager;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.*;
@@ -53,8 +55,15 @@ public class FightCommandHandler extends TextMessageHandler {
     public void process(IncomingMessage message) {
         switch (message.getCommand()) {
             case SEARCH_ENEMIES: findEnemy((TextIncomingMessage) message); break;
-            case FIGHT: fight((TextIncomingMessage) message); break;
+//            case FIGHT: fight((TextIncomingMessage) message); break;
+            case FIGHT: proceedFight((TextIncomingMessage) message); break;
         }
+    }
+
+    private void proceedFight(TextIncomingMessage message) {
+        ReplyButton button = ReplyButton.getButton(message.text(), message.getPlayer().getLanguage());
+        if (button.hasSkill()) fightAction(message, button.getSkill());
+        else fightDynamic(message);
     }
 
     private void findEnemy(TextIncomingMessage message) {
@@ -73,6 +82,42 @@ public class FightCommandHandler extends TextMessageHandler {
                     .text("Враг: " + enemy.getName(message)).build() // TODO
             );
         }
+    }
+
+    private void fightDynamic(TextIncomingMessage message) {
+        PlayerState state = (PlayerState) cacheService.findObject(CacheType.PLAYER_STATE, message.getPlayer().getId());
+        if (!state.hasEnemy()) {
+            messages.sendMessage(TextResponseMessage.builder().by(message)
+                    .text("У вас нет противника").build()
+            );
+            return;
+        }
+
+        messages.sendMessage(TextResponseMessage.builder().by(message)
+                .text(translation.getMessage("battle.start", message)).build()
+        );
+        Mob mob = mobService.findById(state.getEnemy().getId());
+
+        messages.sendMessage(TextResponseMessage.builder().by(message)
+                .keyboard(KeyboardManager.getReplyByButtons(actionHandler.getAvailableFightingActions(message.getPlayer()), message.getPlayer().getLanguage()))
+                .build()
+        );
+    }
+
+    private void fightAction(TextIncomingMessage message, Skill skill) {
+        PlayerState state = (PlayerState) cacheService.findObject(CacheType.PLAYER_STATE, message.getPlayer().getId());
+        if (!state.hasEnemy()) {
+            messages.sendMessage(TextResponseMessage.builder().by(message)
+                    .text("У вас нет противника").build()
+            );
+            return;
+        }
+
+        Mob mob = mobService.findById(state.getEnemy().getId());
+
+        messages.sendMessage(TextResponseMessage.builder().by(message)
+                .text("Вы пытаетесь применить " + skill.name() + " против " + mob.getName(message) + ", эта функция пока не реализована.").build()
+        );
     }
 
     private void fight(TextIncomingMessage message) {
