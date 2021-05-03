@@ -21,6 +21,8 @@ public class DocumentResponseMessage implements ResponseMessage {
     private final File file;
     @NonNull
     private final Language lang;
+    @Builder.Default
+    private final boolean disableNotification = false;
 
     @Override
     public Language getLanguage() {

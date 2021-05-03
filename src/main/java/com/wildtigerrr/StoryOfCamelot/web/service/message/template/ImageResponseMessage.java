@@ -32,6 +32,8 @@ public class ImageResponseMessage implements ResponseMessage {
     @Builder.Default
     private final boolean forceReply = false;
     private final ReplyKeyboard keyboard;
+    @Builder.Default
+    private final boolean disableNotification = false;
     @NonNull
     private final Language lang;
 

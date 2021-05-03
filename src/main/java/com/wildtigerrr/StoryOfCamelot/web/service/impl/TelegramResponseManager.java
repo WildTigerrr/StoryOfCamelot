@@ -137,6 +137,7 @@ public class TelegramResponseManager implements ResponseManager, Runnable {
                         ? BotConfig.ADMIN_CHANNEL_ID : messageTemplate.getTargetId())
                 .setText(messageTemplate.getText())
                 .setReplyMarkup(messageTemplate.getKeyboard());
+        if (messageTemplate.isDisableNotification()) message.disableNotification();
         execute(message);
     }
     private void proceedImageSend(ImageResponseMessage messageTemplate) {
@@ -151,12 +152,14 @@ public class TelegramResponseManager implements ResponseManager, Runnable {
         } else if (messageTemplate.getFileId() != null) {
             newMessage.setPhoto(messageTemplate.getFileId());
         }
+        if (messageTemplate.isDisableNotification()) newMessage.disableNotification();
         execute(newMessage);
     }
     private void proceedDocumentSend(DocumentResponseMessage messageTemplate) {
         SendDocument sendMessage = new SendDocument()
                 .setDocument(messageTemplate.getFile())
                 .setChatId(messageTemplate.getTargetId());
+        if (messageTemplate.isDisableNotification()) sendMessage.disableNotification();
         execute(sendMessage);
     }
     private void proceedStickerSend(StickerResponseMessage messageTemplate) {
@@ -169,6 +172,7 @@ public class TelegramResponseManager implements ResponseManager, Runnable {
         } else if (messageTemplate.getFileId() != null) {
             newMessage.setSticker(messageTemplate.getFileId());
         }
+        if (messageTemplate.isDisableNotification()) newMessage.disableNotification();
         execute(newMessage);
     }
     private void proceedMessageEdit(EditResponseMessage messageTemplate) {

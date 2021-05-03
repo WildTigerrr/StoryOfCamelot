@@ -23,6 +23,8 @@ public class StickerResponseMessage implements ResponseMessage {
     private final String fileId;
     private final String fileName;
     private final InputStream inputStream;
+    @Builder.Default
+    private final boolean disableNotification = false;
     @NonNull
     private final Language lang;
 
