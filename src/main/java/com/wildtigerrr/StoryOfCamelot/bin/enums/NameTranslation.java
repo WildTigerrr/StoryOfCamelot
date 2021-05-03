@@ -2,8 +2,8 @@ package com.wildtigerrr.StoryOfCamelot.bin.enums;
 
 import com.wildtigerrr.StoryOfCamelot.bin.translation.TranslationManager;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.Player;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
 import javax.annotation.PostConstruct;
 
@@ -131,8 +131,18 @@ public enum NameTranslation {
             "skill.name.which.luck"
     ),
 
-    SKILL_FIGHT_ATTACK("Атаковать", ""), // TODO Translate
-    SKILL_FIGHT_DEFENCE("Защищаться", ""),
+    SKILL_FIGHT_ATTACK(
+            Emoji.FIGHT.getCode(), "skill.fight.base_attack"
+    ),
+    SKILL_FIGHT_STRONG_ATTACK(
+            Emoji.STRENGTH.getCode(), "skill.fight.strong_attack"
+    ),
+    SKILL_FIGHT_FAST_ATTACK(
+            Emoji.DAGGER.getCode(), "skill.fight.fast_attack"
+    ),
+    SKILL_FIGHT_DEFENCE(
+            Emoji.SHIELD.getCode(), "skill.fight.base_defence"
+    ),
 
     // DESCRIPTIONS
     DESC_ITEM_SWORD_COMMON("description.item.sword.common"),

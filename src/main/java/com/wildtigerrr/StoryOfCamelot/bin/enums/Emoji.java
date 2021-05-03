@@ -22,6 +22,8 @@ public enum Emoji {
     ENDURANCE(EmojiParser.parseToUnicode(":runner:")),
     LUCK(EmojiParser.parseToUnicode(":four_leaf_clover:")),
 
+    SHIELD(EmojiParser.parseToUnicode(":shield:")),
+
     // BUTTONS
     FOOTPRINTS(EmojiParser.parseToUnicode(":footprints:")),
     SKILLS(EmojiParser.parseToUnicode(":mortar_board:")),
