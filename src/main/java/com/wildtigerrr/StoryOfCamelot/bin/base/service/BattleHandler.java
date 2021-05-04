@@ -2,8 +2,10 @@ package com.wildtigerrr.StoryOfCamelot.bin.base.service;
 
 import com.wildtigerrr.StoryOfCamelot.bin.base.BattleLog;
 import com.wildtigerrr.StoryOfCamelot.bin.enums.Language;
+import com.wildtigerrr.StoryOfCamelot.bin.enums.Skill;
 import com.wildtigerrr.StoryOfCamelot.bin.translation.TranslationManager;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.interfaces.Fighter;
+import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.Player;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -53,9 +55,36 @@ public class BattleHandler {
         );
     }
 
+    public BattleLog fightDynamic(Player attacker, Fighter defender, Language lang, BattleLog battleLog, Skill skill) {
+        applyDamageAndLog(attacker, defender, lang, battleLog.getLog(), skill);
+        if (defender.isAlive())
+            applyDamageAndLog(defender, attacker, lang, battleLog.getLog());
+
+        if (!defender.isAlive()) {
+            battleLog.getLog().add("\n");
+            battleLog.getLog().add(translation.getMessage("battle.log.winner", lang,
+                    new Object[]{attacker.getName(lang)}));
+        } else if (!attacker.isAlive()) {
+            battleLog.getLog().add("\n");
+            battleLog.getLog().add(translation.getMessage("battle.log.winner", lang,
+                    new Object[]{defender.getName(lang)}));
+        }
+        return battleLog;
+    }
+
     private void applyDamageAndLog(Fighter attacker, Fighter defender, Language lang, List<String> log) {
         boolean isCrit = isCrit();
         int damage = calculateDamage(attacker.getDamage(), defender.getDefence(), isCrit);
+        String messageTemplate = isCrit ? "battle.log.row-crit" : "battle.log.row";
+        log.add(translation.getMessage(messageTemplate, lang, new Object[]{
+                attacker.getName(lang), attacker.getHealth(), defender.getName(lang), defender.getHealth(), damage
+        }));
+        defender.applyDamage(damage);
+    }
+
+    private void applyDamageAndLog(Player attacker, Fighter defender, Language lang, List<String> log, Skill skill) {
+        boolean isCrit = isCrit();
+        int damage = calculateDamage(skill.calculateStrength(attacker), defender.getDefence(), isCrit);
         String messageTemplate = isCrit ? "battle.log.row-crit" : "battle.log.row";
         log.add(translation.getMessage(messageTemplate, lang, new Object[]{
                 attacker.getName(lang), attacker.getHealth(), defender.getName(lang), defender.getHealth(), damage

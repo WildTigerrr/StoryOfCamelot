@@ -116,9 +116,19 @@ public class FightCommandHandler extends TextMessageHandler {
 
         Mob mob = mobService.findById(state.getEnemy().getId());
 
+        BattleLog battleLog = battleHandler.fightDynamic(message.getPlayer(), mob, message.getPlayer().getLanguage(), state.getLastBattle(), skill);
         messages.sendMessage(TextResponseMessage.builder().by(message)
-                .text("Вы пытаетесь применить " + skill.name() + " против " + mob.getName(message) + ", эта функция пока не реализована.").build()
+                .text(battleLog.getBattleHistory()).build()
         );
+
+        state.setLastBattle(battleLog);
+
+        if (battleLog.isWin() && battleLog.getEnemyType() == EnemyType.MOB) {
+            applyDrop(battleLog);
+            state.stop();
+        }
+
+        cacheService.add(CacheType.PLAYER_STATE, state.getId(), state);
     }
 
     private void fight(TextIncomingMessage message) {
