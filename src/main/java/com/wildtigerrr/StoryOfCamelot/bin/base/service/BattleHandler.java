@@ -51,6 +51,7 @@ public class BattleHandler {
                 defender.getId(),
                 defender.getType(),
                 attacker.isAlive(),
+                true,
                 battleLog
         );
     }
@@ -64,10 +65,12 @@ public class BattleHandler {
             battleLog.getLog().add("\n");
             battleLog.getLog().add(translation.getMessage("battle.log.winner", lang,
                     new Object[]{attacker.getName(lang)}));
+            battleLog = new BattleLog(battleLog, true, true);
         } else if (!attacker.isAlive()) {
             battleLog.getLog().add("\n");
             battleLog.getLog().add(translation.getMessage("battle.log.winner", lang,
                     new Object[]{defender.getName(lang)}));
+            battleLog = new BattleLog(battleLog, false, true);
         }
         return battleLog;
     }

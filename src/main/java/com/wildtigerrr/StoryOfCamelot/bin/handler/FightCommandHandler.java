@@ -25,6 +25,7 @@ import com.wildtigerrr.StoryOfCamelot.web.service.message.template.TextIncomingM
 import com.wildtigerrr.StoryOfCamelot.web.service.message.template.TextResponseMessage;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -103,6 +104,18 @@ public class FightCommandHandler extends TextMessageHandler {
                 .keyboard(KeyboardManager.getReplyByButtons(actionHandler.getAvailableFightingActions(message.getPlayer()), message.getPlayer().getLanguage()))
                 .build()
         );
+
+        BattleLog battleLog = new BattleLog(
+                state.getId(),
+                mob.getId(),
+                EnemyType.MOB,
+                false,
+                false,
+                new ArrayList<>()
+        );
+
+        state.setLastBattle(battleLog);
+        cacheService.add(CacheType.PLAYER_STATE, state.getId(), state);
     }
 
     private void fightAction(TextIncomingMessage message, Skill skill) {
