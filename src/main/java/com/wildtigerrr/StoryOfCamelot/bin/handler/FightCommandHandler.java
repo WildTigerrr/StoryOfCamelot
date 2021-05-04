@@ -23,12 +23,14 @@ import com.wildtigerrr.StoryOfCamelot.web.service.ResponseManager;
 import com.wildtigerrr.StoryOfCamelot.web.service.message.IncomingMessage;
 import com.wildtigerrr.StoryOfCamelot.web.service.message.template.TextIncomingMessage;
 import com.wildtigerrr.StoryOfCamelot.web.service.message.template.TextResponseMessage;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Service
+@Log4j2
 public class FightCommandHandler extends TextMessageHandler {
 
     private final LocationPossibleService locationPossibleService;
@@ -128,6 +130,9 @@ public class FightCommandHandler extends TextMessageHandler {
         }
 
         Mob mob = mobService.findById(state.getEnemy().getId());
+
+        log.debug(mob);
+        log.debug(mob.getHitpoints());
 
         BattleLog battleLog = battleHandler.fightDynamic(message.getPlayer(), mob, message.getPlayer().getLanguage(), state.getLastBattle(), skill);
         messages.sendMessage(TextResponseMessage.builder().by(message)
