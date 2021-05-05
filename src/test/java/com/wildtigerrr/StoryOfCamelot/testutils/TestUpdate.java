@@ -2,7 +2,7 @@ package com.wildtigerrr.StoryOfCamelot.testutils;
 
 import lombok.Builder;
 import org.springframework.test.util.ReflectionTestUtils;
-import org.telegram.telegrambots.meta.api.objects.*;
+import org.telegram.telegrambots.meta.api.objects.Update;
 
 @Builder
 public class TestUpdate {
