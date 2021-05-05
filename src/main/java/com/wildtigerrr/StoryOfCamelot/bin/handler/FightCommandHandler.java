@@ -146,6 +146,7 @@ public class FightCommandHandler extends TextMessageHandler {
         if (battleLog.isWin() && battleLog.getEnemyType() == EnemyType.MOB) {
             applyDrop(battleLog);
             state.finishBattle();
+            actionHandler.sendAvailableActions(message.getPlayer());
         }
 
         cacheService.add(CacheType.PLAYER_STATE, state.getId(), state);

@@ -9,12 +9,12 @@ import java.util.HashMap;
 public enum MobTemplate {
     FLYING_SWORD(
             NameTranslation.MOB_FLYING_SWORD,
-            1, 2, 3, 0, 0,
+            1, 2, 50, 0, 0,
             FileLinkTemplate.FLYING_SWORD
     ),
     SUPER_FLYING_SWORD(
             NameTranslation.MOB_SUPER_FLYING_SWORD,
-            2, 2, 7, 2, 2,
+            2, 3, 75, 2, 2,
             FileLinkTemplate.FLYING_SWORD
     );
 
