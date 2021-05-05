@@ -1,6 +1,7 @@
 package com.wildtigerrr.StoryOfCamelot.database.redis.schema;
 
 import com.wildtigerrr.StoryOfCamelot.database.jpa.interfaces.Fighter;
+import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.Mob;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -19,8 +20,8 @@ public class EnemyState {
         return new EnemyState(hitpoints, endurance);
     }
 
-    public static EnemyState of(Fighter fighter) {
-        return new EnemyState(fighter.getHealth(), 0);
+    public static EnemyState of(Mob mob) {
+        return new EnemyState(mob.getHitpointsMax(), 0);
     }
 
 }

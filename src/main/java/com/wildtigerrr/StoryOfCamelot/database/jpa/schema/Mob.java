@@ -125,7 +125,7 @@ public class Mob extends SimpleObject implements Fighter {
 
     @Override
     public int getHealth() {
-        return getHitpointsMax();
+        return getHitpoints();
     }
 
     @Override
