@@ -85,11 +85,15 @@ public class BattleHandler {
         defender.applyDamage(damage);
     }
 
-    private void applyDamageAndLog(Player attacker, Fighter defender, Language lang, List<String> log, Skill skill) {
+    private void applyDamageAndLog(Player attacker, Fighter defender, Language lang, List<String> logRows, Skill skill) {
         boolean isCrit = isCrit();
         int damage = calculateDamage(skill.calculateStrength(attacker), defender.getDefence(), isCrit);
         String messageTemplate = isCrit ? "battle.log.row-crit" : "battle.log.row";
-        log.add(translation.getMessage(messageTemplate, lang, new Object[]{
+        log.debug(logRows);
+        log.debug(translation);
+        log.debug(attacker);
+        log.debug(defender);
+        logRows.add(translation.getMessage(messageTemplate, lang, new Object[]{
                 attacker.getName(lang), attacker.getHealth(), defender.getName(lang), defender.getHealth(), damage
         }));
         defender.applyDamage(damage);

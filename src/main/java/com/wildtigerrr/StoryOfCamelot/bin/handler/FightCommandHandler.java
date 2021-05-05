@@ -108,13 +108,15 @@ public class FightCommandHandler extends TextMessageHandler {
                 .build()
         );
 
+        List<String> logRows = new ArrayList<>();
+        logRows.add(translation.getMessage("battle.log.fight", message.getPlayer().getLanguage()));
         BattleLog battleLog = new BattleLog(
                 state.getId(),
                 mob.getId(),
                 EnemyType.MOB,
                 false,
                 false,
-                new ArrayList<>()
+                logRows
         );
 
         state.setLastBattle(battleLog);
@@ -133,9 +135,6 @@ public class FightCommandHandler extends TextMessageHandler {
 
         Mob mob = mobService.findById(state.getEnemy().getId());
         mob.setHitpoints(state.getEnemyState().getHitpoints());
-
-        log.debug(mob);
-        log.debug(mob.getHitpoints());
 
         BattleLog battleLog = battleHandler.fightDynamic(message.getPlayer(), mob, message.getPlayer().getLanguage(), state.getLastBattle(), skill);
         messages.sendMessage(TextResponseMessage.builder().by(message)
