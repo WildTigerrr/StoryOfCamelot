@@ -144,7 +144,7 @@ public class FightCommandHandler extends TextMessageHandler {
         );
 
         state.setLastBattle(battleLog);
-        state.setEnemyState(EnemyState.of(mob));
+        state.getEnemyState().setHitpoints(mob.getHitpoints());
         playerService.update(message.getPlayer());
 
         if (battleLog.isWin() && battleLog.getEnemyType() == EnemyType.MOB) {
