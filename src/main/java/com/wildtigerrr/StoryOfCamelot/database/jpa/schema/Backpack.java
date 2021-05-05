@@ -94,6 +94,7 @@ public class Backpack extends SimpleObject {
     }
 
     public List<BackpackItem> getItems() {
+        if (items == null || items.isEmpty()) return new ArrayList<>();
         items.sort(Comparator.comparing(BackpackItem::getAddedDate)
                 .thenComparing(BackpackItem::getId));
         return items;
