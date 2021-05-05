@@ -150,10 +150,11 @@ public class FightCommandHandler extends TextMessageHandler {
         if (battleLog.isWin() && battleLog.getEnemyType() == EnemyType.MOB) {
             applyDrop(battleLog);
             state.finishBattle();
+            cacheService.add(CacheType.PLAYER_STATE, state.getId(), state);
             actionHandler.sendAvailableActions(message.getPlayer());
+        } else {
+            cacheService.add(CacheType.PLAYER_STATE, state.getId(), state);
         }
-
-        cacheService.add(CacheType.PLAYER_STATE, state.getId(), state);
     }
 
     private void fight(TextIncomingMessage message) {
