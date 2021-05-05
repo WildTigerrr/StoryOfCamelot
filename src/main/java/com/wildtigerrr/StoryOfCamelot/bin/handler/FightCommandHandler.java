@@ -108,7 +108,7 @@ public class FightCommandHandler extends TextMessageHandler {
                 .build()
         );
 
-        List<String> logRows = new ArrayList<>();
+        ArrayList<String> logRows = new ArrayList<>();
         logRows.add(translation.getMessage("battle.log.fight", message.getPlayer().getLanguage()));
         BattleLog battleLog = new BattleLog(
                 state.getId(),

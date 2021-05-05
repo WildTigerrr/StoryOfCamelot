@@ -29,7 +29,7 @@ public class BattleHandler {
     }
 
     public BattleLog fight(Fighter attacker, Fighter defender, Language lang) {
-        List<String> battleLog = new ArrayList<>();
+        ArrayList<String> battleLog = new ArrayList<>();
         battleLog.add(translation.getMessage("battle.log.start", lang,
                 new Object[]{attacker.getName(lang), defender.getName(lang)}));
         battleLog.add(translation.getMessage("battle.log.fight", lang));
@@ -90,9 +90,6 @@ public class BattleHandler {
         int damage = calculateDamage(skill.calculateStrength(attacker), defender.getDefence(), isCrit);
         String messageTemplate = isCrit ? "battle.log.row-crit" : "battle.log.row";
         log.debug(logRows);
-        log.debug(translation);
-        log.debug(attacker);
-        log.debug(defender);
         logRows.add(translation.getMessage(messageTemplate, lang, new Object[]{
                 attacker.getName(lang), attacker.getHealth(), defender.getName(lang), defender.getHealth(), damage
         }));

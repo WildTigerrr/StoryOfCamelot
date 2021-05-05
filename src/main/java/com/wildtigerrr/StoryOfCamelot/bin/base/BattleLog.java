@@ -4,6 +4,7 @@ import com.wildtigerrr.StoryOfCamelot.bin.enums.EnemyType;
 import lombok.Getter;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -15,9 +16,9 @@ public class BattleLog implements Serializable {
     
     private final Boolean attackerWins;
     private final Boolean battleFinished;
-    private final transient List<String> log;
+    private final ArrayList<String> log;
 
-    public BattleLog(String attackerId, String enemyId, EnemyType enemyType, Boolean attackerWins, Boolean battleFinished, List<String> log) {
+    public BattleLog(String attackerId, String enemyId, EnemyType enemyType, Boolean attackerWins, Boolean battleFinished, ArrayList<String> log) {
         this.attackerId = attackerId;
         this.enemyId = enemyId;
         this.enemyType = enemyType;
