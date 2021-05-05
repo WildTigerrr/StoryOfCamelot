@@ -145,16 +145,21 @@ public class FightCommandHandler extends TextMessageHandler {
 
         state.setLastBattle(battleLog);
         state.getEnemyState().setHitpoints(mob.getHitpoints());
-        playerService.update(message.getPlayer());
 
         if (battleLog.isWin() && battleLog.getEnemyType() == EnemyType.MOB) {
             applyDrop(battleLog);
             state.finishBattle();
             cacheService.add(CacheType.PLAYER_STATE, state.getId(), state);
             actionHandler.sendAvailableActions(message.getPlayer());
+        } else if (battleLog.getBattleFinished()) {
+            messages.sendMessage(TextResponseMessage.builder().by(message)
+                    .text("Lol. You died.").build()
+            );
+            cacheService.add(CacheType.PLAYER_STATE, state.getId(), state);
         } else {
             cacheService.add(CacheType.PLAYER_STATE, state.getId(), state);
         }
+        playerService.update(message.getPlayer());
     }
 
     private void fight(TextIncomingMessage message) {
