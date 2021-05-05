@@ -23,8 +23,9 @@ public class PlayerState implements Serializable, CacheTypeObject {
     private CharacterStatus status;
     @Setter
     private UserStatus userStatus;
-    @Setter
     private Enemy enemy;
+    @Setter
+    private EnemyState enemyState;
     @Setter
     private BattleLog lastBattle;
 
@@ -91,6 +92,13 @@ public class PlayerState implements Serializable, CacheTypeObject {
 
     public PlayerState stop() {
         this.status = CharacterStatus.ACTIVE;
+        return this;
+    }
+
+    public PlayerState finishBattle() {
+        this.status = CharacterStatus.ACTIVE;
+        this.enemy = null;
+        this.enemyState = null;
         return this;
     }
 

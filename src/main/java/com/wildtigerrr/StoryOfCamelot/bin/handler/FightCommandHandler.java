@@ -16,6 +16,7 @@ import com.wildtigerrr.StoryOfCamelot.database.jpa.service.template.BackpackServ
 import com.wildtigerrr.StoryOfCamelot.database.jpa.service.template.LocationPossibleService;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.service.template.MobDropService;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.service.template.MobService;
+import com.wildtigerrr.StoryOfCamelot.database.redis.schema.EnemyState;
 import com.wildtigerrr.StoryOfCamelot.database.redis.schema.PlayerState;
 import com.wildtigerrr.StoryOfCamelot.web.service.CacheProvider;
 import com.wildtigerrr.StoryOfCamelot.web.service.CacheType;
@@ -117,6 +118,7 @@ public class FightCommandHandler extends TextMessageHandler {
         );
 
         state.setLastBattle(battleLog);
+        state.setEnemyState(EnemyState.of(mob));
         cacheService.add(CacheType.PLAYER_STATE, state.getId(), state);
     }
 
@@ -130,6 +132,7 @@ public class FightCommandHandler extends TextMessageHandler {
         }
 
         Mob mob = mobService.findById(state.getEnemy().getId());
+        mob.setHitpoints(state.getEnemyState().getHitpoints());
 
         log.debug(mob);
         log.debug(mob.getHitpoints());
@@ -143,7 +146,7 @@ public class FightCommandHandler extends TextMessageHandler {
 
         if (battleLog.isWin() && battleLog.getEnemyType() == EnemyType.MOB) {
             applyDrop(battleLog);
-            state.stop();
+            state.finishBattle();
         }
 
         cacheService.add(CacheType.PLAYER_STATE, state.getId(), state);
