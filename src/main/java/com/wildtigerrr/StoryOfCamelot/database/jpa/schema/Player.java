@@ -120,7 +120,6 @@ public class Player extends SimpleObject implements Comparable<Player>, Fighter 
     @Override
     public void applyDamage(int damage) {
         setCurrentHealth(getCurrentHealth() - damage);
-        stats.setHealth(stats.getHealth() - damage);
     }
 
     @Override

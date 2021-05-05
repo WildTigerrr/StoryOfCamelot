@@ -2,6 +2,7 @@ package com.wildtigerrr.StoryOfCamelot.web;
 
 import com.wildtigerrr.StoryOfCamelot.ServiceBaseTest;
 import com.wildtigerrr.StoryOfCamelot.web.bot.update.UpdateWrapper;
+import com.wildtigerrr.StoryOfCamelot.web.service.message.IncomingMessage;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
@@ -28,7 +29,7 @@ class TelegramWebHookHandlerMockTest extends ServiceBaseTest {
     private TelegramWebHookHandler telegramWebHookHandler;
 
     @MockBean
-    private ResponseHandler responseHandlerMock;
+    private UpdateReceiver updateReceiver;
 
     @Captor
     ArgumentCaptor<Update> messageArguments;
@@ -45,7 +46,7 @@ class TelegramWebHookHandlerMockTest extends ServiceBaseTest {
 
         telegramWebHookHandler.onWebhookUpdateReceived(update);
 
-        verify(responseHandlerMock).handleUpdate(messageArguments.capture());
+        verify(updateReceiver).process(messageArguments.capture());
 
         assertEquals("Success", messageArguments.getValue().getMessage().getText());
     }

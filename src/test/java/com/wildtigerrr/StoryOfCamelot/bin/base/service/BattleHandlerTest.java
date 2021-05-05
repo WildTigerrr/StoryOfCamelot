@@ -11,6 +11,7 @@ import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @Log4j2
@@ -24,10 +25,15 @@ public class BattleHandlerTest extends ServiceBaseTest {
     void whenOverkillShouldWinTest() {
         Player strongFighter = new Player("test", "Strong One", new Location(LocationTemplate.TRADING_SQUARE));
         strongFighter.stats().setHealth(100);
+        strongFighter.setCurrentHealth(100);
         strongFighter.stats().setStrength(100);
-        Fighter weakFighter = new Player("test", "Weak One", new Location(LocationTemplate.TRADING_SQUARE));
+        Player weakFighter = new Player("test", "Weak One", new Location(LocationTemplate.TRADING_SQUARE));
+        weakFighter.setCurrentHealth(1);
 
         BattleLog battleLog = battleHandler.fight(strongFighter, weakFighter, Language.RUS);
+
+        assertEquals(Integer.valueOf(1), weakFighter.stats().getHealth());
+        assertTrue(weakFighter.getCurrentHealth() < 0);
 
         assertTrue(battleLog.getLog().get(0).contains("Strong One"));
         assertTrue(battleLog.getLog().get(0).contains("Weak One"));
