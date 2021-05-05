@@ -6,10 +6,12 @@ import com.wildtigerrr.StoryOfCamelot.bin.service.StringUtils;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.Player;
 import com.wildtigerrr.StoryOfCamelot.web.bot.utils.UpdateWrapperUtils;
 import lombok.Getter;
+import lombok.extern.log4j.Log4j2;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.User;
 
 @Getter
+@Log4j2
 public class UpdateWrapper {
 
     private String message;
@@ -28,6 +30,10 @@ public class UpdateWrapper {
 
     public UpdateWrapper(Update update) {
         this.isQuery = update.hasCallbackQuery();
+        log.debug(isQuery);
+        log.debug(update);
+        log.debug(update.getCallbackQuery());
+        log.debug(update.getMessage());
         User user = isQuery ? update.getCallbackQuery().getMessage().getFrom() : update.getMessage().getFrom();
         this.messageType = UpdateWrapperUtils.defineUpdateType(update);
         if (isCommand()) {
