@@ -5,8 +5,10 @@ import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.Mob;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.io.Serializable;
+
 @Getter @Setter
-public class EnemyState {
+public class EnemyState implements Serializable {
 
     private Integer hitpoints;
     private Integer endurance;
