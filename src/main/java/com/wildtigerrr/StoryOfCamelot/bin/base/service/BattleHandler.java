@@ -89,7 +89,7 @@ public class BattleHandler {
         boolean isCrit = isCrit();
         int damage = calculateDamage(skill.calculateStrength(attacker), defender.getDefence(), isCrit);
         String messageTemplate = isCrit ? "battle.log.row-crit" : "battle.log.row";
-        log.debug(logRows);
+
         logRows.add(translation.getMessage(messageTemplate, lang, new Object[]{
                 attacker.getName(lang), attacker.getHealth(), defender.getName(lang), defender.getHealth(), damage
         }));

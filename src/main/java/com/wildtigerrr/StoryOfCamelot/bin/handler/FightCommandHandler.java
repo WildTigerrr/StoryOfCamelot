@@ -12,10 +12,7 @@ import com.wildtigerrr.StoryOfCamelot.bin.enums.Skill;
 import com.wildtigerrr.StoryOfCamelot.bin.service.ListUtils;
 import com.wildtigerrr.StoryOfCamelot.bin.translation.TranslationManager;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.*;
-import com.wildtigerrr.StoryOfCamelot.database.jpa.service.template.BackpackService;
-import com.wildtigerrr.StoryOfCamelot.database.jpa.service.template.LocationPossibleService;
-import com.wildtigerrr.StoryOfCamelot.database.jpa.service.template.MobDropService;
-import com.wildtigerrr.StoryOfCamelot.database.jpa.service.template.MobService;
+import com.wildtigerrr.StoryOfCamelot.database.jpa.service.template.*;
 import com.wildtigerrr.StoryOfCamelot.database.redis.schema.EnemyState;
 import com.wildtigerrr.StoryOfCamelot.database.redis.schema.PlayerState;
 import com.wildtigerrr.StoryOfCamelot.web.service.CacheProvider;
@@ -38,17 +35,19 @@ public class FightCommandHandler extends TextMessageHandler {
     private final CacheProvider cacheService;
     private final ActionHandler actionHandler;
     private final MobService mobService;
+    private final PlayerService playerService;
     private final BattleHandler battleHandler;
     private final MobDropService dropService;
     private final BackpackService backpackService;
     private final DropCalculator dropCalculator;
 
-    public FightCommandHandler(ResponseManager messages, TranslationManager translation, LocationPossibleService locationPossibleService, CacheProvider cacheService, ActionHandler actionHandler, MobService mobService, BattleHandler battleHandler, MobDropService dropService, BackpackService backpackService, DropCalculator dropCalculator) {
+    public FightCommandHandler(ResponseManager messages, TranslationManager translation, LocationPossibleService locationPossibleService, CacheProvider cacheService, ActionHandler actionHandler, MobService mobService, PlayerService playerService, BattleHandler battleHandler, MobDropService dropService, BackpackService backpackService, DropCalculator dropCalculator) {
         super(messages, translation);
         this.locationPossibleService = locationPossibleService;
         this.cacheService = cacheService;
         this.actionHandler = actionHandler;
         this.mobService = mobService;
+        this.playerService = playerService;
         this.battleHandler = battleHandler;
         this.dropService = dropService;
         this.backpackService = backpackService;
@@ -122,6 +121,9 @@ public class FightCommandHandler extends TextMessageHandler {
         state.setLastBattle(battleLog);
         state.setEnemyState(EnemyState.of(mob));
         cacheService.add(CacheType.PLAYER_STATE, state.getId(), state);
+
+        message.getPlayer().setCurrentHealth(message.getPlayer().getStats().getHealth());
+        playerService.update(message.getPlayer());
     }
 
     private void fightAction(TextIncomingMessage message, Skill skill) {
@@ -142,6 +144,8 @@ public class FightCommandHandler extends TextMessageHandler {
         );
 
         state.setLastBattle(battleLog);
+        state.setEnemyState(EnemyState.of(mob));
+        playerService.update(message.getPlayer());
 
         if (battleLog.isWin() && battleLog.getEnemyType() == EnemyType.MOB) {
             applyDrop(battleLog);

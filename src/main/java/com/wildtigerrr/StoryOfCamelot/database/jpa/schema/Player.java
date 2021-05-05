@@ -18,6 +18,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
+import org.jetbrains.annotations.NotNull;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -54,6 +55,7 @@ public class Player extends SimpleObject implements Comparable<Player>, Fighter 
     private CharacterStatus status;
     @Enumerated(EnumType.STRING)
     private PlayerStatusExtended additionalStatus;
+    private Integer currentHealth;
 
     @Embedded
     private PlayerStats stats;
@@ -112,11 +114,12 @@ public class Player extends SimpleObject implements Comparable<Player>, Fighter 
 
     @Override
     public boolean isAlive() {
-        return stats.getHealth() > 0;
+        return getCurrentHealth() > 0;
     }
 
     @Override
     public void applyDamage(int damage) {
+        setCurrentHealth(getCurrentHealth() - damage);
         stats.setHealth(stats.getHealth() - damage);
     }
 
@@ -127,7 +130,7 @@ public class Player extends SimpleObject implements Comparable<Player>, Fighter 
 
     @Override
     public int getHealth() {
-        return stats.getHealth();
+        return getCurrentHealth();
     }
 
     public int getLevel() {
@@ -249,7 +252,7 @@ public class Player extends SimpleObject implements Comparable<Player>, Fighter 
     }
 
     @Override
-    public int compareTo(Player p) {
+    public int compareTo(@NotNull Player p) {
         return getComparator().compare(this, p);
     }
 
