@@ -5,6 +5,7 @@ import com.wildtigerrr.StoryOfCamelot.bin.handler.MoveCommandHandler;
 import com.wildtigerrr.StoryOfCamelot.bin.service.Scheduler;
 import com.wildtigerrr.StoryOfCamelot.bin.service.ScheduledAction;
 import com.wildtigerrr.StoryOfCamelot.web.service.ResponseManager;
+import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,40 +18,9 @@ import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.concurrent.ScheduledFuture;
 
-@Log4j2
 @Service
+@Log4j2
 public class TimeDependentActions {
-
-    private static HashMap<Long, ScheduledAction> scheduledActionMap = new HashMap<>();
-    private static HashMap<String, List<Long>> playerToScheduled = new HashMap<>();
-
-    public static Boolean scheduleMove(String playerId, Long timestamp, String target, String distance) {
-        while (scheduledActionMap.containsKey(timestamp)) timestamp++;
-        List<Long> playerActions;
-        if (playerToScheduled.containsKey(playerId)) {
-            playerActions = playerToScheduled.get(playerId);
-            for (Long key : playerActions) {
-                if (scheduledActionMap.get(key).type == ActionType.MOVEMENT) {
-                    return false;
-                }
-            }
-            playerActions.add(timestamp);
-            playerToScheduled.put(playerId, playerActions);
-        } else {
-            playerActions = new ArrayList<>();
-            playerActions.add(timestamp);
-            playerToScheduled.put(playerId, playerActions);
-        }
-        scheduledActionMap.put(timestamp, new ScheduledAction(
-                timestamp,
-                ActionType.MOVEMENT,
-                playerId,
-                target,
-                distance
-        ));
-        startActionsCheck();
-        return true;
-    }
 
     private static FileProcessing fileService;
     private static MoveCommandHandler movement;
@@ -62,6 +32,87 @@ public class TimeDependentActions {
         TimeDependentActions.movement = moveHandler;
         TimeDependentActions.messages = messages;
     }
+
+    @Getter
+    private static HashMap<Long, ScheduledAction> scheduledActionMap = new HashMap<>();
+    @Getter
+    private static HashMap<String, List<Long>> playerToScheduled = new HashMap<>();
+
+    public static void scheduleAction(ScheduledAction action) {
+        while (scheduledActionMap.containsKey(action.timeToExecute)) action.timeToExecute++;
+        List<Long> playerActions;
+        if (playerToScheduled.containsKey(action.playerId)) {
+            playerActions = playerToScheduled.get(action.playerId);
+        } else {
+            playerActions = new ArrayList<>();
+        }
+        playerActions.add(action.timeToExecute);
+        playerToScheduled.put(action.playerId, playerActions);
+        scheduledActionMap.put(action.timeToExecute, action);
+        startActionsCheck();
+    }
+
+    private static void check() {
+        try {
+            proceedCheck();
+        } catch (Exception e) {
+            messages.sendErrorReport(e);
+        }
+    }
+
+    private static void proceedCheck() {
+        log.debug("Checking Active Actions");
+        if (scheduledActionMap.isEmpty()) {
+            cancelActionsCheck();
+        } else {
+            Iterator<Map.Entry<Long, ScheduledAction>> iterator = scheduledActionMap.entrySet().iterator();
+            Long currentTime = Calendar.getInstance().getTimeInMillis();
+            log.debug("Processing on Action: " + currentTime);
+            while (iterator.hasNext()) {
+                if (processCurrentAction(iterator.next(), currentTime)) iterator.remove();
+            }
+            if (scheduledActionMap.isEmpty()) cancelActionsCheck();
+        }
+    }
+
+    private static Boolean processCurrentAction(
+            Map.Entry<Long, ScheduledAction> actionEntry,
+            Long currentTime
+    ) {
+        log.debug("Action: " + actionEntry.getValue());
+        if (currentTime < actionEntry.getKey()) return false;
+        log.debug("Updating location...");
+        movement.sendLocationUpdate(scheduledActionMap.get(actionEntry.getKey()));
+        log.debug("Location updated");
+        String playerId = actionEntry.getValue().playerId;
+        List<Long> playerActions = playerToScheduled.get(playerId);
+        playerActions.remove(actionEntry.getValue().timeToExecute);
+        if (playerActions.isEmpty()) {
+            playerToScheduled.remove(playerId);
+        } else {
+            playerToScheduled.put(playerId, playerActions);
+        }
+        log.debug("Action Finished");
+        return true;
+    }
+
+    private static ScheduledFuture<?> task;
+
+    private static void startActionsCheck() {
+        log.trace("Attempt To Start Checking");
+        if (!Scheduler.isActive(task)) task = Scheduler.schedule(TimeDependentActions::check);
+        log.debug("Start checking");
+    }
+
+    private static void cancelActionsCheck() {
+        log.trace("Attempt To Stop Checking");
+        Scheduler.cancel(task);
+        log.debug("Stop checking");
+    }
+
+
+    // =========================================== Backup-Restore Utils =========================================== //
+
 
     @PostConstruct
     public void restoreValuesFromBackup() {
@@ -125,72 +176,14 @@ public class TimeDependentActions {
         List<Long> schedules;
         for (String value : values) {
             action = new ScheduledAction(value);
-            scheduledActionMap.put(action.timestamp, action);
+            scheduledActionMap.put(action.timeToExecute, action);
             if (playerToScheduled.containsKey(action.playerId)) {
                 schedules = playerToScheduled.get(action.playerId);
-                schedules.add(action.timestamp);
+                schedules.add(action.timeToExecute);
                 playerToScheduled.put(action.playerId, schedules);
             }
         }
         startActionsCheck();
-    }
-
-    private static void check() {
-        try {
-            proceedCheck();
-        } catch (Exception e) {
-            messages.sendErrorReport(e);
-        }
-    }
-
-    private static void proceedCheck() {
-        log.debug("Checking Active Actions");
-        if (scheduledActionMap.isEmpty()) {
-            cancelActionsCheck();
-        } else {
-            Iterator<Map.Entry<Long, ScheduledAction>> iterator = scheduledActionMap.entrySet().iterator();
-            Long currentTime = Calendar.getInstance().getTimeInMillis();
-            log.debug("Processing on Action: " + currentTime);
-            while (iterator.hasNext()) {
-                if (processCurrentAction(iterator.next(), currentTime)) iterator.remove();
-            }
-            if (scheduledActionMap.isEmpty()) cancelActionsCheck();
-        }
-    }
-
-    private static Boolean processCurrentAction(
-            Map.Entry<Long, ScheduledAction> actionEntry,
-            Long currentTime
-    ) {
-        log.debug("Action: " + actionEntry.getValue());
-        if (currentTime < actionEntry.getKey()) return false;
-        log.debug("Updating location...");
-        movement.sendLocationUpdate(scheduledActionMap.get(actionEntry.getKey()));
-        log.debug("Location updated");
-        String playerId = actionEntry.getValue().playerId;
-        List<Long> playerActions = playerToScheduled.get(playerId);
-        playerActions.remove(actionEntry.getValue().timestamp);
-        if (playerActions.isEmpty()) {
-            playerToScheduled.remove(playerId);
-        } else {
-            playerToScheduled.put(playerId, playerActions);
-        }
-        log.debug("Action Finished");
-        return true;
-    }
-
-    private static ScheduledFuture<?> task;
-
-    private static void startActionsCheck() {
-        log.trace("Attempt To Start Checking");
-        if (!Scheduler.isActive(task)) task = Scheduler.schedule(TimeDependentActions::check);
-        log.debug("Start checking");
-    }
-
-    private static void cancelActionsCheck() {
-        log.trace("Attempt To Stop Checking");
-        Scheduler.cancel(task);
-        log.debug("Stop checking");
     }
 
 }

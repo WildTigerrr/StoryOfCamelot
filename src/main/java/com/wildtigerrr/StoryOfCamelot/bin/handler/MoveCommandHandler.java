@@ -4,6 +4,7 @@ import com.wildtigerrr.StoryOfCamelot.bin.base.service.ActionHandler;
 import com.wildtigerrr.StoryOfCamelot.bin.base.service.KeyboardManager;
 import com.wildtigerrr.StoryOfCamelot.bin.base.service.TimeDependentActions;
 import com.wildtigerrr.StoryOfCamelot.bin.base.service.player.ExperienceService;
+import com.wildtigerrr.StoryOfCamelot.bin.enums.ActionType;
 import com.wildtigerrr.StoryOfCamelot.bin.service.ScheduledAction;
 import com.wildtigerrr.StoryOfCamelot.bin.service.Time;
 import com.wildtigerrr.StoryOfCamelot.bin.translation.TranslationManager;
@@ -116,14 +117,16 @@ public class MoveCommandHandler extends TextMessageHandler {
                 message,
                 new Object[]{location.getName(message.getPlayer().getLanguage())}
         );
-        if (!TimeDependentActions.scheduleMove(
-                message.getPlayer().getId(),
-                Time.getTimeAfter(Time.seconds(distance)),
-                locationId,
-                String.valueOf(distance))
-        ) {
+        if (isMoving(message.getPlayer().getId())) {
             newText = translation.getMessage("movement.location.in-progress", message);
         } else {
+            TimeDependentActions.scheduleAction(new ScheduledAction(
+                    Time.getTimeAfter(Time.seconds(distance)),
+                    ActionType.MOVEMENT,
+                    message.getPlayer().getId(),
+                    locationId,
+                    String.valueOf(distance)
+            ));
             cacheService.add(CacheType.PLAYER_STATE, playerState.move());
         }
         messages.sendAnswer(message.getQueryId(), translation.getMessage("movement.location.accepted-answer", message));
@@ -141,6 +144,17 @@ public class MoveCommandHandler extends TextMessageHandler {
         } catch (Exception e) {
             handleMovementError(action, e);
         }
+    }
+
+    private boolean isMoving(String playerId) {
+        if (TimeDependentActions.getPlayerToScheduled().containsKey(playerId)) {
+            for (Long key : TimeDependentActions.getPlayerToScheduled().get(playerId)) {
+                if (TimeDependentActions.getScheduledActionMap().get(key).type == ActionType.MOVEMENT) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     private void updateLocation(ScheduledAction action) {

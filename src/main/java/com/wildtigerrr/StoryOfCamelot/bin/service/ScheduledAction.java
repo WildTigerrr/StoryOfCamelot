@@ -11,20 +11,20 @@ public class ScheduledAction {
     public ActionType type;
     public String target;
     public String additionalValue;
-    public Long timestamp;
+    public Long timeToExecute;
     public String playerId;
 
-    public ScheduledAction(Long timestamp, ActionType type, String playerId, String target) {
+    public ScheduledAction(Long timeToExecute, ActionType type, String playerId, String target) {
         this.type = type;
         this.target = target;
-        this.timestamp = timestamp;
+        this.timeToExecute = timeToExecute;
         this.playerId = playerId;
     }
-    public ScheduledAction(Long timestamp, ActionType type, String playerId, String target, String additionalValue) {
+    public ScheduledAction(Long timeToExecute, ActionType type, String playerId, String target, String additionalValue) {
         this.type = type;
         this.target = target;
         this.additionalValue = additionalValue;
-        this.timestamp = timestamp;
+        this.timeToExecute = timeToExecute;
         this.playerId = playerId;
     }
     public ScheduledAction(String stringifiedAction) {
@@ -39,7 +39,7 @@ public class ScheduledAction {
         this.type = ActionType.valueOf(actionValues.get("type"));
         this.target = actionValues.get("target").replace("'", "");
         this.additionalValue = actionValues.get("additionalValue").replace("'", "");
-        this.timestamp = Long.valueOf(actionValues.get("timestamp"));
+        this.timeToExecute = Long.valueOf(actionValues.get("timeToExecute"));
         this.playerId = actionValues.get("playerId");
 
         log.trace("Created action from: " + stringifiedAction);
@@ -65,7 +65,7 @@ public class ScheduledAction {
                 "type=" + type.name() +
                 "|target='" + target + '\'' +
                 "|additionalValue='" + additionalValue + '\'' +
-                "|timestamp=" + timestamp +
+                "|timeToExecute=" + timeToExecute +
                 "|playerId=" + playerId +
                 '}';
     }
