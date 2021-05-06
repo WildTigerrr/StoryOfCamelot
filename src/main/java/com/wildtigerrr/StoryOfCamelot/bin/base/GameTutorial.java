@@ -166,7 +166,7 @@ public class GameTutorial {
     }
 
     private void tutorialNickname(Player player, String nickname) {
-        playerService.setNickname(player, nickname);
+        // Nickname should be set here
         if (player.getNickname().equals(nickname)) {
             tutorialSetNickname(player);
         }

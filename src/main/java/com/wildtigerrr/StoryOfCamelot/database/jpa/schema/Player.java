@@ -91,11 +91,7 @@ public class Player extends SimpleObject implements Comparable<Player>, Fighter 
         return stats;
     }
 
-    private Integer hitpoints;
-    private Integer hitpointsMax;
-    private Integer damage;
     private Integer speed;
-    private Integer hunger;
 
     @Override
     public int getDamage() {
@@ -155,7 +151,7 @@ public class Player extends SimpleObject implements Comparable<Player>, Fighter 
     }
 
     public void addMoney(int money) {
-        this.money += money;
+        addMoney((long) money);
     }
 
     public void pay(long money) {
@@ -164,8 +160,7 @@ public class Player extends SimpleObject implements Comparable<Player>, Fighter 
     }
 
     public void pay(int money) {
-        this.money -= money;
-        if (this.money < 0) throw new InvalidInputException(getId() + " not have enough money");
+        pay((long) money);
     }
 
     // ================================================= END FINANCE ================================================ //
@@ -239,15 +234,6 @@ public class Player extends SimpleObject implements Comparable<Player>, Fighter 
             info.append("\n").append(this.stats().getInfoRow(stat, false, language, false));
         }
         return info.toString();
-    }
-
-    public static int getNicknameLengthMax() {
-        return 40;
-    }
-
-    public static Boolean containsSpecialCharacters(String newNickname) {
-        String updated = newNickname.replaceAll(" {2,}", " ").replaceAll("[*_`\\\\/]", "");
-        return !newNickname.equals(updated);
     }
 
     @Override
