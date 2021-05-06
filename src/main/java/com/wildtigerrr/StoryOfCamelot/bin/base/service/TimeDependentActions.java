@@ -21,7 +21,6 @@ import java.util.concurrent.ScheduledFuture;
 @Service
 public class TimeDependentActions {
 
-    private static ArrayList<String> actions = new ArrayList<>();
     private static HashMap<Long, ScheduledAction> scheduledActionMap = new HashMap<>();
     private static HashMap<String, List<Long>> playerToScheduled = new HashMap<>();
 
@@ -73,8 +72,7 @@ public class TimeDependentActions {
 
     public static void backupValues() {
         log.debug("Creating Actions Backup");
-        String data = "actions===" + actionsToString() + "|||"
-                + "scheduledActionMap===" + scheduledActionMapToString();
+        String data = "scheduledActionMap===" + scheduledActionMapToString(); // May add more separated by "|||"
         fileService.saveFile("temp/", "BackupValues", data);
         log.info("Actions Backup Created");
     }
@@ -90,28 +88,13 @@ public class TimeDependentActions {
                 for (String str : values.split("\\|\\|\\|")) {
                     line = str.split("===", 2);
                     if (line.length < 2) continue;
-                    switch (line[0]) {
-                        case "actions":
-                            stringToActions(line[1]);
-                            break;
-                        case "scheduledActionMap":
-//                            stringToScheduledActionMap(line[1]);
-                            break;
+                    if ("scheduledActionMap".equals(line[0])) {
+//                        stringToScheduledActionMap(line[1]); // Uncomment when DB would be stable
                     }
                 }
             }
         } catch (IOException e) {
             log.error("Error During Restoring Actions", e);
-        }
-    }
-
-    public static void addElement(String str) {
-        actions.add(str);
-    }
-
-    public static void removeFirst() {
-        if (actions != null && !actions.isEmpty()) {
-            actions.remove(0);
         }
     }
 
@@ -150,26 +133,6 @@ public class TimeDependentActions {
             }
         }
         startActionsCheck();
-    }
-
-    private static String actionsToString() {
-        log.debug("Actions: " + actions);
-        if (actions == null || actions.isEmpty()) {
-            return "null";
-        }
-        StringBuilder data = new StringBuilder();
-        for (String action : actions) {
-            data.append(";").append(action);
-        }
-        log.debug("Scheduled: " + data);
-        data.deleteCharAt(0);
-        return data.toString();
-    }
-
-    private static void stringToActions(String data) {
-        actions = new ArrayList<>();
-        if (data == null) return;
-        actions.addAll(Arrays.asList(data.split(";")));
     }
 
     private static void check() {
