@@ -40,22 +40,6 @@ public class ExperienceService {
         );
     }
 
-    public void addStatPoints(UpdateWrapper update) {
-        Player player = update.getPlayer();
-        String[] values = update.getText().split(" ", 3);
-        try {
-            player = addExperience(
-                    player,
-                    Stats.valueOf(values[1].toUpperCase()),
-                    Integer.parseInt(values[2]),
-                    true
-            );
-            playerService.update(player);
-        } catch (IllegalArgumentException e) {
-            handleError("Wrong Stat" + values[1].toUpperCase(), e);
-        }
-    }
-
     public Player addExperience(Player player, Stats stat, int experience, Boolean sendExperienceGet) {
         if (experience == 0) return player;
         try {

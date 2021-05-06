@@ -79,7 +79,6 @@ public class GameTutorial {
                 break;
             case TUTORIAL_STATS:
                 if (command == Command.ME) {
-                    command.execute(update);
                     tutorialStats(update.getPlayer());
                 } else {
                     noRush(update.getPlayer().getLanguage(), update.getUserId());
@@ -244,8 +243,6 @@ public class GameTutorial {
     }
 
     private void tutorialBattle(UpdateWrapper update) {
-        update.getCommand().execute(update);
-
         PlayerState state = (PlayerState) cacheService.findObject(CacheType.PLAYER_STATE, update.getPlayer().getId());
         Mob mob = mobService.findById(state.getLastBattle().getEnemyId());
         String messageTemplate = state.getLastBattle().isWin() ? "battle.enemy-defeated" : "battle.player-defeated";

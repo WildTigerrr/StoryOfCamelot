@@ -3,6 +3,7 @@ package com.wildtigerrr.StoryOfCamelot.bin.handler;
 import com.wildtigerrr.StoryOfCamelot.bin.translation.TranslationManager;
 import com.wildtigerrr.StoryOfCamelot.web.service.ResponseManager;
 import com.wildtigerrr.StoryOfCamelot.web.service.message.IncomingMessage;
+import com.wildtigerrr.StoryOfCamelot.web.service.message.template.TextResponseMessage;
 
 public class SendCommandHandler extends TextMessageHandler {
 
@@ -25,5 +26,14 @@ public class SendCommandHandler extends TextMessageHandler {
         // /muted - get personal block-list
         // /unmute {nickname} - remove user from black-list
     }
+
+//    public void sendMessageToUser(String message) {
+//        String[] commandParts = message.split(" ", 3);
+////        Player receiver = playerService.findByExternalId(commandParts[1]);
+//        messages.sendMessage(TextResponseMessage.builder()
+//                .text(commandParts[2]).targetId(commandParts[1]).build()
+//        );
+//        //                    messages.sendMessage("Пользователь не найден", message.getUserId());
+//    }
 
 }

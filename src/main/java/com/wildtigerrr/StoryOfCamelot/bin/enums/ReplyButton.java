@@ -14,7 +14,7 @@ public enum ReplyButton {
     BACKPACK(NameTranslation.BUTTON_BACKPACK, Command.BACKPACK),
     STORES(NameTranslation.BUTTON_STORES, Command.STORES),
 
-    SKIP_LINE(NameTranslation.BUTTON_BACK, Command.ACTION),
+    SKIP_LINE(NameTranslation.BUTTON_BACK, Command.DEFAULT),
 
     STORE_MERCHANT(NameTranslation.STORE_MERCHANT, Command.STORE_SELECT),
     STORE_GROCERY(NameTranslation.STORE_GROCERY, Command.STORE_SELECT),
