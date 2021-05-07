@@ -24,6 +24,7 @@ import com.wildtigerrr.StoryOfCamelot.web.service.message.template.EditResponseM
 import com.wildtigerrr.StoryOfCamelot.web.service.message.template.ImageResponseMessage;
 import com.wildtigerrr.StoryOfCamelot.web.service.message.template.TextIncomingMessage;
 import com.wildtigerrr.StoryOfCamelot.web.service.message.template.TextResponseMessage;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
 
@@ -136,6 +137,7 @@ public class MoveCommandHandler extends TextMessageHandler {
         );
     }
 
+    @Async
     public void sendLocationUpdate(ScheduledAction action) {
         try {
             updateLocation(action);
