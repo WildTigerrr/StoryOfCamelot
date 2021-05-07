@@ -83,6 +83,7 @@ public class Player extends SimpleObject implements Comparable<Player>, Fighter 
         status = CharacterStatus.TUTORIAL;
         additionalStatus = PlayerStatusExtended.LANGUAGE_CHOOSE;
         money = 10L;
+        currentHealth = 1.0;
         stats = new PlayerStats();
         stats.setUnassignedPoints(stats.getDefaultPoints() + 5);
     }

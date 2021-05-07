@@ -123,11 +123,13 @@ public class PlayerServiceImpl implements PlayerService {
             player.setCurrentHealth(Math.min(player.getCurrentHealth() + Double.parseDouble(quantity), player.stats().getHealth().doubleValue()));
             System.out.println("Healed to: " + player.getCurrentHealth());
             update(player);
-            TimeDependentActions.scheduleAction(
-                    new ScheduledAction(
-                            Time.minutes(1), ActionType.REGENERATION, player.getId(), String.valueOf(player.stats().getHealth() / 10.0)
-                    ), false
-            );
+            if (player.getHealth() < player.stats().getHealth()) {
+                TimeDependentActions.scheduleAction(
+                        new ScheduledAction(
+                                Time.minutes(1), ActionType.REGENERATION, player.getId(), String.valueOf(player.stats().getHealth() / 10.0)
+                        ), false
+                );
+            }
         }
     }
 
