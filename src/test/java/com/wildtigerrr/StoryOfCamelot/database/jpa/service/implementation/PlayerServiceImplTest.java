@@ -1,13 +1,11 @@
 package com.wildtigerrr.StoryOfCamelot.database.jpa.service.implementation;
 
 import com.wildtigerrr.StoryOfCamelot.ServiceBaseTest;
-import com.wildtigerrr.StoryOfCamelot.bin.enums.GameSettings;
 import com.wildtigerrr.StoryOfCamelot.bin.enums.Language;
 import com.wildtigerrr.StoryOfCamelot.bin.enums.templates.LocationTemplate;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.dataaccessobject.PlayerDao;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.Location;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.Player;
-import com.wildtigerrr.StoryOfCamelot.database.jpa.service.template.LocationService;
 import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.Test;
 import org.mockito.stubbing.Answer;
@@ -19,7 +17,7 @@ import org.springframework.test.util.ReflectionTestUtils;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
 @Log4j2
@@ -30,8 +28,6 @@ class PlayerServiceImplTest extends ServiceBaseTest {
 
     @MockBean
     PlayerDao playerDao;
-//    @MockBean(name = "locationService")
-//    LocationService locationService;
 
     @Test
     void whenCreateShouldSearchForExistingAndCreateTest() {

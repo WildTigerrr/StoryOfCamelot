@@ -10,7 +10,6 @@ import com.wildtigerrr.StoryOfCamelot.bin.service.Time;
 import com.wildtigerrr.StoryOfCamelot.bin.translation.TranslationManager;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.Location;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.Player;
-import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.enums.CharacterStatus;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.enums.Stats;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.service.implementation.LocationNearServiceImpl;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.service.implementation.LocationServiceImpl;
@@ -21,7 +20,6 @@ import com.wildtigerrr.StoryOfCamelot.web.service.CacheType;
 import com.wildtigerrr.StoryOfCamelot.web.service.DataProvider;
 import com.wildtigerrr.StoryOfCamelot.web.service.ResponseManager;
 import com.wildtigerrr.StoryOfCamelot.web.service.message.IncomingMessage;
-import com.wildtigerrr.StoryOfCamelot.web.service.message.ResponseMessage;
 import com.wildtigerrr.StoryOfCamelot.web.service.message.template.EditResponseMessage;
 import com.wildtigerrr.StoryOfCamelot.web.service.message.template.ImageResponseMessage;
 import com.wildtigerrr.StoryOfCamelot.web.service.message.template.TextIncomingMessage;
@@ -117,17 +115,17 @@ public class MoveCommandHandler extends TextMessageHandler {
                 message,
                 new Object[]{location.getName(message.getPlayer().getLanguage())}
         );
-        if (isMoving(message.getPlayer().getId())) {
-            newText = translation.getMessage("movement.location.in-progress", message);
-        } else {
-            TimeDependentActions.scheduleAction(new ScheduledAction(
-                    Time.getTimeAfter(Time.seconds(distance)),
-                    ActionType.MOVEMENT,
-                    message.getPlayer().getId(),
-                    locationId,
-                    String.valueOf(distance)
-            ));
+        if (TimeDependentActions.scheduleAction(new ScheduledAction(
+                Time.getTimeAfter(Time.seconds(distance)),
+                ActionType.MOVEMENT,
+                message.getPlayer().getId(),
+                locationId,
+                String.valueOf(distance)
+        ), true)) {
             cacheService.add(CacheType.PLAYER_STATE, playerState.move());
+        } else {
+            newText = translation.getMessage("movement.location.in-progress", message);
+
         }
         messages.sendAnswer(message.getQueryId(), translation.getMessage("movement.location.accepted-answer", message));
         messages.sendMessage(EditResponseMessage.builder().lang(message)
@@ -144,17 +142,6 @@ public class MoveCommandHandler extends TextMessageHandler {
         } catch (Exception e) {
             handleMovementError(action, e);
         }
-    }
-
-    private boolean isMoving(String playerId) {
-        if (TimeDependentActions.getPlayerToScheduled().containsKey(playerId)) {
-            for (Long key : TimeDependentActions.getPlayerToScheduled().get(playerId)) {
-                if (TimeDependentActions.getScheduledActionMap().get(key).type == ActionType.MOVEMENT) {
-                    return true;
-                }
-            }
-        }
-        return false;
     }
 
     private void updateLocation(ScheduledAction action) {

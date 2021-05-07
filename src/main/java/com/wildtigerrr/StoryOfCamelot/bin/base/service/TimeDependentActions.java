@@ -38,11 +38,14 @@ public class TimeDependentActions {
     @Getter
     private static HashMap<String, List<Long>> playerToScheduled = new HashMap<>();
 
-    public static void scheduleAction(ScheduledAction action) {
+    public static boolean scheduleAction(ScheduledAction action, boolean oneOfAType) {
         while (scheduledActionMap.containsKey(action.timeToExecute)) action.timeToExecute++;
         List<Long> playerActions;
         if (playerToScheduled.containsKey(action.playerId)) {
             playerActions = playerToScheduled.get(action.playerId);
+            if (oneOfAType && hasSameType(action.playerId, action.type)) {
+                return false;
+            }
         } else {
             playerActions = new ArrayList<>();
         }
@@ -50,6 +53,16 @@ public class TimeDependentActions {
         playerToScheduled.put(action.playerId, playerActions);
         scheduledActionMap.put(action.timeToExecute, action);
         startActionsCheck();
+        return true;
+    }
+
+    private static boolean hasSameType(String playerId, ActionType type) {
+        for (Long key : getPlayerToScheduled().get(playerId)) {
+            if (getScheduledActionMap().get(key).type == type) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private static void check() {
@@ -184,6 +197,12 @@ public class TimeDependentActions {
             }
         }
         startActionsCheck();
+    }
+
+    public static void clearActions() {
+        scheduledActionMap = new HashMap<>();
+        playerToScheduled = new HashMap<>();
+        if (Scheduler.isActive(task)) cancelActionsCheck();
     }
 
 }
