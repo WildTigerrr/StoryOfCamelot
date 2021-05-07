@@ -12,7 +12,7 @@ import com.wildtigerrr.StoryOfCamelot.database.jpa.dataaccessobject.LocationNear
 import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.Location;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.LocationNear;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.Player;
-import com.wildtigerrr.StoryOfCamelot.database.jpa.service.implementation.PlayerServiceImpl;
+import com.wildtigerrr.StoryOfCamelot.database.jpa.service.template.PlayerService;
 import com.wildtigerrr.StoryOfCamelot.database.redis.schema.PlayerState;
 import com.wildtigerrr.StoryOfCamelot.testutils.TestUpdate;
 import com.wildtigerrr.StoryOfCamelot.testutils.TestUpdateMessage;
@@ -43,7 +43,7 @@ class MoveCommandHandlerTest extends ServiceBaseTest {
     private MoveCommandHandler moveCommandHandler;
 
     @Autowired
-    private PlayerServiceImpl service;
+    private PlayerService playerService;
 
     @Autowired
     private CacheProvider cacheService;
@@ -55,7 +55,7 @@ class MoveCommandHandlerTest extends ServiceBaseTest {
     private LocationDao locationDao;
 
     @Autowired
-    private TranslationManager translation;;
+    private TranslationManager translation;
 
     @MockBean
     private ResponseManager messages;
@@ -78,7 +78,7 @@ class MoveCommandHandlerTest extends ServiceBaseTest {
 
         Player player = new Player(playerId, "Nickname", initial);
         player.setLanguage(Language.ENG);
-        player = service.createIfNotExist(player);
+        player = playerService.createIfNotExist(player);
         cacheService.add(CacheType.PLAYER_STATE, new PlayerState(player.getId()));
         message.setPlayer(player);
 
@@ -87,15 +87,15 @@ class MoveCommandHandlerTest extends ServiceBaseTest {
         moveCommandHandler.process(message);
 
         // Then
-        assertNotEquals(LocationTemplate.FOREST.getTranslations().getName(player), service.getPlayer(playerId).getLocation().getName(player));
+        assertNotEquals(LocationTemplate.FOREST.getTranslations().getName(player), playerService.getPlayer(playerId).getLocation().getName(player));
 
         Thread.sleep(Time.seconds(2));
 
-        assertNotEquals(LocationTemplate.FOREST.getTranslations().getName(player), service.getPlayer(playerId).getLocation().getName(player));
+        assertNotEquals(LocationTemplate.FOREST.getTranslations().getName(player), playerService.getPlayer(playerId).getLocation().getName(player));
 
         Thread.sleep(Time.seconds(4));
 
-        assertEquals(LocationTemplate.FOREST.getTranslations().getName(player), service.getPlayer(playerId).getLocation().getName(player));
+        assertEquals(LocationTemplate.FOREST.getTranslations().getName(player), playerService.getPlayer(playerId).getLocation().getName(player));
     }
 
     @Test
@@ -112,7 +112,7 @@ class MoveCommandHandlerTest extends ServiceBaseTest {
 
         Player player = new Player("testId", "Nickname", initial);
         player.setLanguage(Language.ENG);
-        player = service.createIfNotExist(player);
+        player = playerService.createIfNotExist(player);
         cacheService.add(CacheType.PLAYER_STATE, new PlayerState(player.getId()));
         message.setPlayer(player);
 
@@ -122,7 +122,7 @@ class MoveCommandHandlerTest extends ServiceBaseTest {
         moveCommandHandler.process(message);
 
         // Then
-        assertNotEquals(LocationTemplate.FOREST.getTranslations().getName(player), service.getPlayer("testId").getLocation().getName(player));
+        assertNotEquals(LocationTemplate.FOREST.getTranslations().getName(player), playerService.getPlayer("testId").getLocation().getName(player));
 
         verify(messages, Mockito.atMost(3)).sendMessage(messageArguments.capture());
 
@@ -146,7 +146,7 @@ class MoveCommandHandlerTest extends ServiceBaseTest {
 
         Player player = new Player("testId", "Nickname", initial);
         player.setLanguage(Language.ENG);
-        player = service.createIfNotExist(player);
+        player = playerService.createIfNotExist(player);
         cacheService.add(CacheType.PLAYER_STATE, new PlayerState(player.getId()));
         messageMove.setPlayer(player);
         message.setPlayer(player);
@@ -157,7 +157,7 @@ class MoveCommandHandlerTest extends ServiceBaseTest {
         moveCommandHandler.process(message);
 
         // Then
-        assertNotEquals(LocationTemplate.FOREST.getTranslations().getName(player), service.getPlayer("testId").getLocation().getName(player));
+        assertNotEquals(LocationTemplate.FOREST.getTranslations().getName(player), playerService.getPlayer("testId").getLocation().getName(player));
 
         verify(messages, Mockito.atMost(3)).sendMessage(messageArguments.capture());
 
@@ -178,7 +178,7 @@ class MoveCommandHandlerTest extends ServiceBaseTest {
 
         Player player = new Player("testId", "Nickname", initial);
         player.setLanguage(Language.ENG);
-        player = service.createIfNotExist(player);
+        player = playerService.createIfNotExist(player);
         cacheService.add(CacheType.PLAYER_STATE, new PlayerState(player.getId()));
         message.setPlayer(player);
 
@@ -189,7 +189,7 @@ class MoveCommandHandlerTest extends ServiceBaseTest {
         moveCommandHandler.process(message);
 
         // Then
-        assertNotEquals(LocationTemplate.FOREST.getTranslations().getName(player), service.getPlayer("testId").getLocation().getName(player));
+        assertNotEquals(LocationTemplate.FOREST.getTranslations().getName(player), playerService.getPlayer("testId").getLocation().getName(player));
 
         verify(messages, Mockito.atMost(3)).sendMessage(messageArguments.capture());
 
@@ -212,7 +212,7 @@ class MoveCommandHandlerTest extends ServiceBaseTest {
 
         Player player = new Player("testId", "Nickname", initial);
         player.setLanguage(Language.ENG);
-        player = service.createIfNotExist(player);
+        player = playerService.createIfNotExist(player);
         cacheService.add(CacheType.PLAYER_STATE, new PlayerState(player.getId()));
         message.setPlayer(player);
 
@@ -220,7 +220,7 @@ class MoveCommandHandlerTest extends ServiceBaseTest {
         moveCommandHandler.process(message);
 
         // Then
-        assertNotEquals(LocationTemplate.FOREST.getTranslations().getName(player), service.getPlayer("testId").getLocation().getName(player));
+        assertNotEquals(LocationTemplate.FOREST.getTranslations().getName(player), playerService.getPlayer("testId").getLocation().getName(player));
 
         verify(messages).sendMessage(messageArguments.capture());
 
@@ -241,7 +241,7 @@ class MoveCommandHandlerTest extends ServiceBaseTest {
 
         Player player = new Player("testId", "Nickname", initial);
         player.setLanguage(Language.ENG);
-        player = service.createIfNotExist(player);
+        player = playerService.createIfNotExist(player);
         cacheService.add(CacheType.PLAYER_STATE, new PlayerState(player.getId()));
         message.setPlayer(player);
 
@@ -266,7 +266,7 @@ class MoveCommandHandlerTest extends ServiceBaseTest {
 
         Player player = new Player("testId", "Nickname", initial);
         player.setLanguage(Language.ENG);
-        player = service.createIfNotExist(player);
+        player = playerService.createIfNotExist(player);
         cacheService.add(CacheType.PLAYER_STATE, new PlayerState(player.getId()));
         message.setPlayer(player);
 
@@ -293,7 +293,7 @@ class MoveCommandHandlerTest extends ServiceBaseTest {
 
         Player player = new Player("testId", "Nickname", initial);
         player.setLanguage(Language.ENG);
-        player = service.createIfNotExist(player);
+        player = playerService.createIfNotExist(player);
         cacheService.add(CacheType.PLAYER_STATE, new PlayerState(player.getId()));
         message.setPlayer(player);
 

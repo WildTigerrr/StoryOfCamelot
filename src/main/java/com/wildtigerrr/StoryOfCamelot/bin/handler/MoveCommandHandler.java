@@ -117,7 +117,7 @@ public class MoveCommandHandler extends TextMessageHandler {
                 new Object[]{location.getName(message.getPlayer().getLanguage())}
         );
         if (TimeDependentActions.scheduleAction(new ScheduledAction(
-                Time.getTimeAfter(Time.seconds(distance)),
+                Time.seconds(distance),
                 ActionType.MOVEMENT,
                 message.getPlayer().getId(),
                 locationId,

@@ -19,4 +19,5 @@ public interface PlayerService {
     List<Player> getTopPlayers(int count);
     String getPlayerInfo(String externalId, Language lang);
     Player getPlayer(String externalId);
+    void heal(String playerId, String quantity);
 }

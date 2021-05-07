@@ -17,14 +17,14 @@ public class ScheduledAction {
     public ScheduledAction(Long timeToExecute, ActionType type, String playerId, String target) {
         this.type = type;
         this.target = target;
-        this.timeToExecute = timeToExecute;
+        this.timeToExecute = Time.getTimeAfter(timeToExecute);
         this.playerId = playerId;
     }
     public ScheduledAction(Long timeToExecute, ActionType type, String playerId, String target, String additionalValue) {
         this.type = type;
         this.target = target;
         this.additionalValue = additionalValue;
-        this.timeToExecute = timeToExecute;
+        this.timeToExecute = Time.getTimeAfter(timeToExecute);
         this.playerId = playerId;
     }
     public ScheduledAction(String stringifiedAction) {

@@ -2,9 +2,13 @@ package com.wildtigerrr.StoryOfCamelot.database.jpa.schema;
 
 import com.wildtigerrr.StoryOfCamelot.bin.base.service.IdGenerator;
 import com.wildtigerrr.StoryOfCamelot.bin.base.service.MoneyCalculation;
+import com.wildtigerrr.StoryOfCamelot.bin.base.service.TimeDependentActions;
+import com.wildtigerrr.StoryOfCamelot.bin.enums.ActionType;
 import com.wildtigerrr.StoryOfCamelot.bin.enums.EnemyType;
 import com.wildtigerrr.StoryOfCamelot.bin.enums.Language;
 import com.wildtigerrr.StoryOfCamelot.bin.service.ApplicationContextProvider;
+import com.wildtigerrr.StoryOfCamelot.bin.service.ScheduledAction;
+import com.wildtigerrr.StoryOfCamelot.bin.service.Time;
 import com.wildtigerrr.StoryOfCamelot.bin.translation.TranslationManager;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.interfaces.Fighter;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.interfaces.SimpleObject;
@@ -55,7 +59,7 @@ public class Player extends SimpleObject implements Comparable<Player>, Fighter 
     private CharacterStatus status;
     @Enumerated(EnumType.STRING)
     private PlayerStatusExtended additionalStatus;
-    private Integer currentHealth;
+    private Double currentHealth;
 
     @Embedded
     private PlayerStats stats;
@@ -116,6 +120,11 @@ public class Player extends SimpleObject implements Comparable<Player>, Fighter 
     @Override
     public void applyDamage(int damage) {
         setCurrentHealth(getCurrentHealth() - damage);
+        TimeDependentActions.scheduleAction(
+                new ScheduledAction(
+                        Time.minutes(1), ActionType.REGENERATION, getId(), String.valueOf(stats().getHealth() / 10.0)
+                ), true
+        );
     }
 
     @Override
@@ -125,7 +134,7 @@ public class Player extends SimpleObject implements Comparable<Player>, Fighter 
 
     @Override
     public int getHealth() {
-        return getCurrentHealth();
+        return getCurrentHealth().intValue();
     }
 
     public int getLevel() {
@@ -211,7 +220,8 @@ public class Player extends SimpleObject implements Comparable<Player>, Fighter 
                 .append(translation.getMessage("player.info.level", language).toLowerCase())
                 .append(" (").append(stats.getTotalStats() - stats.getAssignedPoints())
                 .append("/").append(stats.getStatsToNextLevelUp()).append(")")
-                .append(stats.getUnassignedPoints() > 0 ? " (+" + stats.getUnassignedPoints() + ")" : "");
+                .append(stats.getUnassignedPoints() > 0 ? " (+" + stats.getUnassignedPoints() + ") " : " ")
+                .append(Stats.HEALTH.emoji()).append(getHealth()).append("/").append(stats().getHealth());
         for (Stats stat : Stats.values()) {
             info.append("\n").append(this.stats().getInfoRow(stat, true, language, true));
         }

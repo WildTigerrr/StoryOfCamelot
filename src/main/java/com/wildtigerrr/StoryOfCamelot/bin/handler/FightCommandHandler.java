@@ -122,7 +122,7 @@ public class FightCommandHandler extends TextMessageHandler {
         state.setEnemyState(EnemyState.of(mob));
         cacheService.add(CacheType.PLAYER_STATE, state.getId(), state);
 
-        message.getPlayer().setCurrentHealth(message.getPlayer().getStats().getHealth());
+        message.getPlayer().setCurrentHealth(message.getPlayer().getStats().getHealth().doubleValue());
         playerService.update(message.getPlayer());
     }
 

@@ -25,10 +25,10 @@ public class BattleHandlerTest extends ServiceBaseTest {
     void whenOverkillShouldWinTest() {
         Player strongFighter = new Player("test", "Strong One", new Location(LocationTemplate.TRADING_SQUARE));
         strongFighter.stats().setHealth(100);
-        strongFighter.setCurrentHealth(100);
+        strongFighter.setCurrentHealth(100.0);
         strongFighter.stats().setStrength(100);
         Player weakFighter = new Player("test", "Weak One", new Location(LocationTemplate.TRADING_SQUARE));
-        weakFighter.setCurrentHealth(1);
+        weakFighter.setCurrentHealth(1.0);
 
         BattleLog battleLog = battleHandler.fight(strongFighter, weakFighter, Language.RUS);
 

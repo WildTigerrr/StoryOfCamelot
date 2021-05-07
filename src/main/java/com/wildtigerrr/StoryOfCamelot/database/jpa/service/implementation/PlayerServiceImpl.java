@@ -1,16 +1,19 @@
 package com.wildtigerrr.StoryOfCamelot.database.jpa.service.implementation;
 
+import com.wildtigerrr.StoryOfCamelot.bin.base.service.TimeDependentActions;
+import com.wildtigerrr.StoryOfCamelot.bin.enums.ActionType;
 import com.wildtigerrr.StoryOfCamelot.bin.enums.GameSettings;
 import com.wildtigerrr.StoryOfCamelot.bin.enums.Language;
+import com.wildtigerrr.StoryOfCamelot.bin.service.ScheduledAction;
+import com.wildtigerrr.StoryOfCamelot.bin.service.Time;
 import com.wildtigerrr.StoryOfCamelot.bin.translation.TranslationManager;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.dataaccessobject.PlayerDao;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.Player;
-import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.enums.PlayerStatusExtended;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.service.template.LocationService;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.service.template.PlayerService;
 import com.wildtigerrr.StoryOfCamelot.web.service.ResponseManager;
-import com.wildtigerrr.StoryOfCamelot.web.service.message.template.TextResponseMessage;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -110,6 +113,22 @@ public class PlayerServiceImpl implements PlayerService {
             player = save(player);
         }
         return player;
+    }
+
+    @Override
+    @Async
+    public void heal(String playerId, String quantity) {
+        Player player = findById(playerId);
+        if (player != null) {
+            player.setCurrentHealth(Math.min(player.getCurrentHealth() + Double.parseDouble(quantity), player.stats().getHealth().doubleValue()));
+            System.out.println("Healed to: " + player.getCurrentHealth());
+            update(player);
+            TimeDependentActions.scheduleAction(
+                    new ScheduledAction(
+                            Time.minutes(1), ActionType.REGENERATION, player.getId(), String.valueOf(player.stats().getHealth() / 10.0)
+                    ), false
+            );
+        }
     }
 
 }

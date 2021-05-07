@@ -33,6 +33,7 @@ class PlayerCommandHandlerTest extends ServiceBaseTest {
         );
         Player player = new Player("testId", "Nickname", new Location(LocationTemplate.TRADING_SQUARE));
         player.setLanguage(Language.ENG);
+        player.setCurrentHealth(15.0);
         message.setPlayer(player);
 
         playerCommandHandler.process(message);

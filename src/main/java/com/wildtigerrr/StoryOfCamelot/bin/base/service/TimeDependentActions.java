@@ -4,6 +4,7 @@ import com.wildtigerrr.StoryOfCamelot.bin.enums.ActionType;
 import com.wildtigerrr.StoryOfCamelot.bin.handler.MoveCommandHandler;
 import com.wildtigerrr.StoryOfCamelot.bin.service.Scheduler;
 import com.wildtigerrr.StoryOfCamelot.bin.service.ScheduledAction;
+import com.wildtigerrr.StoryOfCamelot.database.jpa.service.template.PlayerService;
 import com.wildtigerrr.StoryOfCamelot.web.service.ResponseManager;
 import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
@@ -24,12 +25,14 @@ public class TimeDependentActions {
 
     private static FileProcessing fileService;
     private static MoveCommandHandler movement;
+    private static PlayerService playerService;
     private static ResponseManager messages;
 
     @Autowired
-    private TimeDependentActions(FileProcessing fileService, MoveCommandHandler moveHandler, ResponseManager messages) {
+    private TimeDependentActions(FileProcessing fileService, MoveCommandHandler moveHandler, PlayerService playerService, ResponseManager messages) {
         TimeDependentActions.fileService = fileService;
         TimeDependentActions.movement = moveHandler;
+        TimeDependentActions.playerService = playerService;
         TimeDependentActions.messages = messages;
     }
 
@@ -94,9 +97,6 @@ public class TimeDependentActions {
     ) {
         log.debug("Action: " + actionEntry.getValue());
         if (currentTime < actionEntry.getKey()) return false;
-        log.debug("Updating location...");
-        movement.sendLocationUpdate(scheduledActionMap.get(actionEntry.getKey()));
-        log.debug("Location updated");
         String playerId = actionEntry.getValue().playerId;
         List<Long> playerActions = playerToScheduled.get(playerId);
         playerActions.remove(actionEntry.getValue().timeToExecute);
@@ -105,8 +105,23 @@ public class TimeDependentActions {
         } else {
             playerToScheduled.put(playerId, playerActions);
         }
-        log.debug("Action Finished");
+        executeByType(scheduledActionMap.get(actionEntry.getKey()));
+        log.trace("Action Finished");
         return true;
+    }
+
+    private static void executeByType(ScheduledAction action) {
+        switch (action.type) {
+            case MOVEMENT: {
+                log.trace("Updating location...");
+                movement.sendLocationUpdate(action);
+                log.trace("Location updated");
+            }
+            case REGENERATION: {
+                log.debug("Should be heal");
+                playerService.heal(action.playerId, action.target);
+            }
+        }
     }
 
     private static ScheduledFuture<?> task;
