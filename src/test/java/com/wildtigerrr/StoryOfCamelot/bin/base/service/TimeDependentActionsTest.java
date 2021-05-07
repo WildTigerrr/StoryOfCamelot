@@ -14,9 +14,11 @@ import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.enums.Stats;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.service.template.PlayerService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.annotation.DirtiesContext;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 class TimeDependentActionsTest extends ServiceBaseTest {
 
     @Autowired
@@ -29,7 +31,7 @@ class TimeDependentActionsTest extends ServiceBaseTest {
     private TranslationManager translation;
 
     @Test
-    void whenAddActionShouldStartChecking() throws InterruptedException {
+    void whenAddActionShouldStartCheckingTest() throws InterruptedException {
         // Given
         Location initial = new Location(LocationTemplate.TRADING_SQUARE);
         locationDao.save(initial);
@@ -45,15 +47,72 @@ class TimeDependentActionsTest extends ServiceBaseTest {
 
         // When
         TimeDependentActions.scheduleAction(new ScheduledAction(
-                Time.seconds(3), ActionType.REGENERATION, player.getId(), "10"
+                Time.seconds(1), ActionType.REGENERATION, player.getId(), "10"
         ), false);
 
         // Then
         assertEquals(Double.valueOf(5.0), playerService.findById(player.getId()).getCurrentHealth());
 
-        Thread.sleep(Time.seconds(20));
+        Thread.sleep(Time.seconds(6));
 
         assertEquals(Double.valueOf(15.0), playerService.findById(player.getId()).getCurrentHealth());
+        assertFalse(TimeDependentActions.getPlayerToScheduled().isEmpty());
+    }
+
+    @Test
+    void whenAddActionShouldStartCheckingAndContinueRegenTest() throws InterruptedException {
+        // Given
+        Location initial = new Location(LocationTemplate.TRADING_SQUARE);
+        locationDao.save(initial);
+
+        Player player = new Player("testId", "Nickname", initial);
+        player.setLanguage(Language.ENG);
+        player.stats().raiseStat(Stats.HEALTH, 14, Language.ENG, translation);
+        player.setCurrentHealth(5.0);
+        player = playerService.createIfNotExist(player);
+
+        TimeDependentActions.clearActions();
+        assertTrue(TimeDependentActions.getPlayerToScheduled().isEmpty());
+
+        // When
+        TimeDependentActions.scheduleAction(new ScheduledAction(
+                Time.seconds(1), ActionType.REGENERATION, player.getId(), "10"
+        ), false);
+
+        // Then
+        assertEquals(Double.valueOf(5.0), playerService.findById(player.getId()).getCurrentHealth());
+
+        Thread.sleep(Time.seconds(6));
+
+        assertEquals(Double.valueOf(15.0), playerService.findById(player.getId()).getCurrentHealth());
+        assertTrue(TimeDependentActions.getPlayerToScheduled().isEmpty());
+    }
+
+    @Test
+    void whenAlreadyHaveOneOfATypeActionShouldNotAllowOneMoreTest() {
+        // Given
+        Location initial = new Location(LocationTemplate.TRADING_SQUARE);
+        locationDao.save(initial);
+
+        Player player = new Player("testId", "Nickname", initial);
+        player.setLanguage(Language.ENG);
+        player.stats().raiseStat(Stats.HEALTH, 14, Language.ENG, translation);
+        player.setCurrentHealth(5.0);
+        player = playerService.createIfNotExist(player);
+
+        TimeDependentActions.clearActions();
+        assertTrue(TimeDependentActions.getPlayerToScheduled().isEmpty());
+
+        // When
+        TimeDependentActions.scheduleAction(new ScheduledAction(
+                Time.minutes(1), ActionType.MOVEMENT, player.getId(), initial.getId()
+        ), true);
+        TimeDependentActions.scheduleAction(new ScheduledAction(
+                Time.minutes(2), ActionType.MOVEMENT, player.getId(), initial.getId()
+        ), true);
+
+        // Then
+        assertEquals(1, TimeDependentActions.getPlayerToScheduled().size());
     }
 
 }
