@@ -12,6 +12,7 @@ import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.Player;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.service.template.LocationService;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.service.template.PlayerService;
 import com.wildtigerrr.StoryOfCamelot.web.service.ResponseManager;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
@@ -23,6 +24,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
+@Log4j2
 public class PlayerServiceImpl implements PlayerService {
 
     private final ResponseManager messages;
@@ -121,15 +123,19 @@ public class PlayerServiceImpl implements PlayerService {
         Player player = findById(playerId);
         if (player != null) {
             player.setCurrentHealth(Math.min(player.getCurrentHealth() + Double.parseDouble(quantity), player.stats().getHealth().doubleValue()));
-            System.out.println("Healed to: " + player.getCurrentHealth());
+            log.debug("Healed " + player.getNickname() + " to: " + player.getCurrentHealth());
             update(player);
-            if (player.getHealth() < player.stats().getHealth()) {
-                TimeDependentActions.scheduleAction(
-                        new ScheduledAction(
-                                Time.minutes(1), ActionType.REGENERATION, player.getId(), String.valueOf(player.stats().getHealth() / 10.0)
-                        ), false
-                );
-            }
+            enableRegeneration(player);
+        }
+    }
+
+    public static void enableRegeneration(Player player) {
+        if (player.getHealth() < player.stats().getHealth()) {
+            TimeDependentActions.scheduleAction(
+                    new ScheduledAction(
+                            Time.minutes(1), ActionType.REGENERATION, player.getId(), String.valueOf(player.stats().getHealth() / 10.0)
+                    ), false
+            );
         }
     }
 

@@ -16,6 +16,7 @@ import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.enums.ObjectType;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.enums.CharacterStatus;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.enums.PlayerStatusExtended;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.enums.Stats;
+import com.wildtigerrr.StoryOfCamelot.database.jpa.service.implementation.PlayerServiceImpl;
 import com.wildtigerrr.StoryOfCamelot.exception.InvalidInputException;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -121,11 +122,7 @@ public class Player extends SimpleObject implements Comparable<Player>, Fighter 
     @Override
     public void applyDamage(int damage) {
         setCurrentHealth(getCurrentHealth() - damage);
-        TimeDependentActions.scheduleAction(
-                new ScheduledAction(
-                        Time.minutes(1), ActionType.REGENERATION, getId(), String.valueOf(stats().getHealth() / 10.0)
-                ), true
-        );
+        PlayerServiceImpl.enableRegeneration(this);
     }
 
     @Override
