@@ -83,10 +83,8 @@ public class ExperienceService {
             } else {
                 Player player = message.getPlayer();
                 String result = player.stats().raiseStat(stat, Integer.valueOf(commandParts[2]), player.getLanguage(), translation);
-                if (!result.equals(translation.getMessage("player.stats.invalid", message))) {
+                if (!result.equals(translation.getMessage("player.stats.invalid", message)))
                     playerService.update(player);
-                    PlayerServiceImpl.enableRegeneration(player);
-                }
 
                 messages.sendAnswer(message.getQueryId(), result);
                 if (player.stats().getUnassignedPoints() == 0) {

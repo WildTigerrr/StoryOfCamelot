@@ -5,6 +5,7 @@ import com.wildtigerrr.StoryOfCamelot.bin.service.StringUtils;
 import com.wildtigerrr.StoryOfCamelot.bin.translation.TranslationManager;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.Player;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.enums.Stats;
+import com.wildtigerrr.StoryOfCamelot.database.jpa.service.implementation.PlayerServiceImpl;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.service.template.PlayerService;
 import com.wildtigerrr.StoryOfCamelot.web.bot.update.ParsedCommand;
 import com.wildtigerrr.StoryOfCamelot.web.service.ResponseManager;
@@ -64,6 +65,7 @@ public class SkillsCommandHandler extends TextMessageHandler {
                 String result = player.stats().raiseStat(stat, command.intByNum(2), player.getLanguage(), translation);
                 if (!result.equals(translation.getMessage("player.stats.invalid", message))){
                     playerService.update(player);
+                    PlayerServiceImpl.enableRegeneration(player);
                 }
                 messages.sendAnswer(message.getQueryId(), result);
                 if (player.stats().getUnassignedPoints() == 0) {
