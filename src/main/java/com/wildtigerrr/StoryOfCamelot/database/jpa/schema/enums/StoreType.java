@@ -6,4 +6,5 @@ public enum StoreType {
     , MERCHANT // ?
     , FISHMONGER // Fish & Fishing rods
     , GROCERY // Food & items
+    , EMPTY // Nothing, for test purposes
 }

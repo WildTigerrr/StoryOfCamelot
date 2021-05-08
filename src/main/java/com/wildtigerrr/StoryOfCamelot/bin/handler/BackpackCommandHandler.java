@@ -50,7 +50,7 @@ public class BackpackCommandHandler extends TextMessageHandler {
             return;
         }
         Backpack backpack = backpackService.findMainByPlayerId(message.getPlayer().getId());
-        BackpackItem item = backpack.getItemByItemId(command.paramByNum(3));
+        BackpackItem item = backpack.getItemByBackpackItemId(command.paramByNum(3));
         if (item != null) {
             if (equip) item.equip();
             else item.unequip();
@@ -69,7 +69,7 @@ public class BackpackCommandHandler extends TextMessageHandler {
         ParsedCommand command = message.getParsedCommand();
         if (command.paramsCount() < 3) return;
         Backpack backpack = backpackService.findMainByPlayerId(message.getPlayer().getId());
-        BackpackItem item = backpack.getItemByItemId(command.paramByNum(3));
+        BackpackItem item = backpack.getItemByBackpackItemId(command.paramByNum(3));
         if (item != null) {
             messages.sendMessage(TextResponseMessage.builder().by(message)
                     .text(item.getItem().getDescribe(message.getPlayer()))

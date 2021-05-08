@@ -111,7 +111,7 @@ public class Backpack extends SimpleObject {
         }
     }
 
-    public BackpackItem getItemByItemId(String itemId) {
+    public BackpackItem getItemByBackpackItemId(String itemId) {
         if (itemId == null) return null;
         else {
 

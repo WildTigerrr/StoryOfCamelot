@@ -37,6 +37,12 @@ public enum ItemTemplate {
             new HashSet<>() {{
                 add(StoreType.BLACKSMITH);
                 add(StoreType.MERCHANT);
+            }}),
+    IMPOSSIBLE_ITEM(
+            666.0, 0, 666, false, ItemSubType.CRAFTING, ItemQuality.LEGENDARY,
+            NameTranslation.ITEM_MATERIAL_STONE, NameTranslation.DESC_ITEM_STONE, null,
+            new HashSet<>() {{
+                add(StoreType.EMPTY);
             }});
 
     private final double value;

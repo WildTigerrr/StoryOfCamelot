@@ -21,6 +21,7 @@ import com.wildtigerrr.StoryOfCamelot.web.service.message.template.TextResponseM
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
@@ -59,19 +60,21 @@ public class StoreCommandHandler extends TextMessageHandler {
                 case "page": sendStore(message, command.paramByNum(1), command.intByNum(2)); break;
                 case "item_info": sendItemInfo(message); break;
                 case "item_buy": buyItem(message); break;
-                default: log.debug(command.paramByNum(3));
+                default: {
+                    log.error(command.paramByNum(3));
+                    messages.postMessageToAdminChannel("Wrong parameters for STORE: " + message.text());
+                }
             }
-        } else if (command.paramsCount() == 3) { // TODO WTF is that condition <<<
-            log.debug(command.paramByNum(2));
+        } else if (command.paramsCount() == 3) { // "/store " + store.getId() + " sell" should open sell window
             if (command.paramByNum(2).equals("sell")) {
                 messages.sendMessage(TextResponseMessage.builder().by(message)
-                        .text("Здесь может быть ваша реклама, а может и не быть").build()
+                        .text("Продажа скоро будет здесь").build()
                 );
             }
             messages.sendAnswer(message.getQueryId(), command.toString());
         } else {
-            log.debug("Parameters quantity: " + command.paramsCount());
-            messages.sendAnswer(message.getQueryId(), command.paramsCount() + " params");
+            log.error("Wrong parameters quantity: " + message.text());
+            messages.postMessageToAdminChannel("Wrong parameters quantity for STORE: " + message.text());
         }
     }
 
@@ -79,7 +82,7 @@ public class StoreCommandHandler extends TextMessageHandler {
         String storeId = getStoreId(message.getPlayer().getLocation().getStores(), message.text(), message.getPlayer().getLanguage());
         if (storeId == null) {
             messages.sendMessage(TextResponseMessage.builder().by(message)
-                    .text("Здесь нет такого магазина") // TODO
+                    .text(translation.getMessage("location.store.wrong-store", message))
                     .build()
             );
             return;
@@ -92,14 +95,14 @@ public class StoreCommandHandler extends TextMessageHandler {
         List<Item> items = itemService.getByStoreTypes(store.getStoreType());
         if (message.isQuery()) {
             messages.sendMessage(EditResponseMessage.builder().by(message)
-                    .text("Ассоритимент для магазина: " + message.text()) // TODO
+                    .text(translation.getMessage("location.store.assortment", message, new Object[]{message.text()}))
                     .keyboard(KeyboardManager.getKeyboardForStoreItems(store, items, page, message.getPlayer().getLanguage(), translation))
                     .build()
             );
             messages.sendAnswer(message.getQueryId(), "Страница: " + page);
         } else {
             messages.sendMessage(TextResponseMessage.builder().by(message)
-                    .text("Ассоритимент для магазина: " + message.text()) // TODO
+                    .text(translation.getMessage("location.store.assortment", message, new Object[]{message.text()}))
                     .keyboard(KeyboardManager.getKeyboardForStoreItems(store, items, page, message.getPlayer().getLanguage(), translation))
                     .build()
             );
@@ -111,25 +114,25 @@ public class StoreCommandHandler extends TextMessageHandler {
         Item item = itemService.findById(command.paramByNum(4));
         if (item == null) {
             messages.sendMessage(TextResponseMessage.builder().by(message)
-                    .text("Такого предмета нет")
+                    .text(translation.getMessage("location.store.item.not-exist", message))
                     .build()
             );
             messages.sendAnswer(message.getQueryId());
             return;
         }
         Store store = storeService.getById(command.paramByNum(1));
-        List<Item> items = itemService.getByStoreTypes(store.getStoreType());
-        if (!items.contains(item)) {
+        if (Collections.disjoint(store.getStoreType(), item.getStoreType())) {
             messages.sendMessage(TextResponseMessage.builder().by(message)
-                    .text("Этот предмет здесь не продаётся")
+                    .text(translation.getMessage("location.store.wrong-item", message))
                     .build()
             );
             messages.sendAnswer(message.getQueryId());
             return;
         }
+        message.setPlayer(playerService.findById(message.getPlayer().getId()));
         if (message.getPlayer().getMoney() < item.getPrice()) {
             messages.sendMessage(TextResponseMessage.builder().by(message)
-                    .text("У вас недостаточно денег")
+                    .text(translation.getMessage("location.store.item.not-enough-money", message))
                     .build()
             );
             messages.sendAnswer(message.getQueryId(), "Остаток: " + MoneyCalculation.moneyOf(message.getPlayer(), translation));
@@ -141,7 +144,7 @@ public class StoreCommandHandler extends TextMessageHandler {
         backpackService.update(backpack); // TODO Take backpack from Player
         playerService.update(message.getPlayer());
         messages.sendMessage(TextResponseMessage.builder().by(message)
-                .text("Предмет куплен: " + item.getName(message.getPlayer()))
+                .text(translation.getMessage("location.store.item.purchased", message, new Object[]{item.getName(message.getPlayer())}))
                 .build()
         );
         messages.sendAnswer(message.getQueryId(), "Осталось: " + MoneyCalculation.moneyOf(message.getPlayer(), translation));
@@ -172,7 +175,7 @@ public class StoreCommandHandler extends TextMessageHandler {
                     .build()
             );
         } else {
-            messages.sendMessage(TextResponseMessage.builder()
+            messages.sendMessage(TextResponseMessage.builder().by(message)
                     .text(translation.getMessage("location.store.no-stores", message))
                     .build()
             );
@@ -181,6 +184,7 @@ public class StoreCommandHandler extends TextMessageHandler {
     }
 
     private String getStoreId(Set<Store> stores, String storeName, Language lang) {
+        if (stores == null || stores.isEmpty()) return null;
         Store store = stores.stream().filter(str -> str.getLabel(lang).equals(storeName)).findFirst().orElse(null);
         return store == null ? null : store.getId();
     }
