@@ -10,6 +10,7 @@ import com.wildtigerrr.StoryOfCamelot.web.service.ResponseManager;
 import com.wildtigerrr.StoryOfCamelot.web.service.message.IncomingMessage;
 import com.wildtigerrr.StoryOfCamelot.web.service.message.template.TextIncomingMessage;
 import com.wildtigerrr.StoryOfCamelot.web.service.message.template.TextResponseMessage;
+import lombok.Getter;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -30,7 +31,7 @@ public class NicknameCommandHandler extends CommandHandler {
     public void process(IncomingMessage message) {
         TextIncomingMessage textMessage = (TextIncomingMessage) message;
         String nickname = textMessage.text().startsWith("/nickname ")
-                ? textMessage.getParsedCommand().paramByNum(1)
+                ? textMessage.text().replaceFirst("/nickname ", "")
                 : textMessage.text();
         setNickname(textMessage.getPlayer(), nickname);
     }
@@ -56,6 +57,10 @@ public class NicknameCommandHandler extends CommandHandler {
                 .text(message).applyMarkup(true).build()
         );
         if (result.success()) actionHandler.sendAvailableActions(player);
+    }
+
+    public int getNicknameMaxLength() {
+        return this.NICKNAME_MAX_LENGTH;
     }
 
     class NicknameValidator {
