@@ -13,8 +13,7 @@ import org.springframework.test.util.ReflectionTestUtils;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.anyString;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class FightCommandHandlerTest extends ServiceBaseTest {
 
@@ -24,7 +23,7 @@ class FightCommandHandlerTest extends ServiceBaseTest {
     @Test
     void whenRandomizingEnemyShouldIncludeAllVariantsTest() {
         List<LocationPossible> possibleList = new ArrayList<>();
-        Location testLocation = TestFactory.createLocation();
+        Location testLocation = TestFactory.createLocationMock();
         possibleList.add(new LocationPossible(TestFactory.createMob("First"), testLocation, 2));
         possibleList.add(new LocationPossible(TestFactory.createMob("Second"), testLocation, 1));
 

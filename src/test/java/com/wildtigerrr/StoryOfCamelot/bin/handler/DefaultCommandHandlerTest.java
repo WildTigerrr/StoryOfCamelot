@@ -1,13 +1,9 @@
 package com.wildtigerrr.StoryOfCamelot.bin.handler;
 
 import com.wildtigerrr.StoryOfCamelot.ServiceBaseTest;
-import com.wildtigerrr.StoryOfCamelot.bin.enums.Language;
-import com.wildtigerrr.StoryOfCamelot.bin.enums.templates.LocationTemplate;
+import com.wildtigerrr.StoryOfCamelot.TestFactory;
 import com.wildtigerrr.StoryOfCamelot.bin.translation.TranslationManager;
-import com.wildtigerrr.StoryOfCamelot.database.jpa.dataaccessobject.LocationDao;
-import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.Location;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.Player;
-import com.wildtigerrr.StoryOfCamelot.database.jpa.service.template.PlayerService;
 import com.wildtigerrr.StoryOfCamelot.testutils.TestUpdate;
 import com.wildtigerrr.StoryOfCamelot.testutils.TestUpdateMessage;
 import com.wildtigerrr.StoryOfCamelot.web.service.ResponseManager;
@@ -29,10 +25,7 @@ class DefaultCommandHandlerTest extends ServiceBaseTest {
     private DefaultCommandHandler defaultCommandHandler;
 
     @Autowired
-    private PlayerService playerService;
-
-    @Autowired
-    private LocationDao locationDao;
+    private TestFactory testFactory;
 
     @Autowired
     private TranslationManager translation;
@@ -46,16 +39,10 @@ class DefaultCommandHandlerTest extends ServiceBaseTest {
     @Test
     void whenMoveAlreadyScheduledShouldInformPlayerTest() {
         // Given
-        Location initial = new Location(LocationTemplate.TRADING_SQUARE);
-        locationDao.save(initial);
-
+        Player player = testFactory.createPlayer();
         TextIncomingMessage message = (TextIncomingMessage) IncomingMessage.from(
                 TestUpdate.builder().isCallback(true).message(TestUpdateMessage.builder().text("/rattata").build()).build().get()
         );
-
-        Player player = new Player("testId", "Nickname", initial);
-        player.setLanguage(Language.ENG);
-        player = playerService.createIfNotExist(player);
         message.setPlayer(player);
 
         // When
