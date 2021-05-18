@@ -2,6 +2,7 @@ package com.wildtigerrr.StoryOfCamelot.bin.translation;
 
 import com.wildtigerrr.StoryOfCamelot.bin.enums.Emoji;
 import com.wildtigerrr.StoryOfCamelot.bin.enums.Language;
+import com.wildtigerrr.StoryOfCamelot.bin.enums.RandomDistribution;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.Player;
 import com.wildtigerrr.StoryOfCamelot.exception.InvalidPropertyException;
 import com.wildtigerrr.StoryOfCamelot.web.bot.update.UpdateWrapper;
@@ -31,6 +32,7 @@ public class TranslationManager {
         String message;
         try {
             message = messageSource.getMessage(code, args, locale);
+            if (message.startsWith("*random:")) message = getRandomMessage(message, code, locale, args);
         } catch (NoSuchMessageException e) {
             throw new InvalidPropertyException("Attempt to access invalid message code: " + code);
         }
@@ -74,6 +76,10 @@ public class TranslationManager {
     }
 
     public String getMessage(String code, IncomingMessage message) {return getMessage(code, message.getPlayer());}
+
+    private String getRandomMessage(String randomValue, String code, Locale locale, Object[] args) {
+        return messageSource.getMessage(code + "." + (RandomDistribution.DISCRETE.nextInt(Integer.parseInt(randomValue.substring(8))) + 1), args, locale);
+    }
 
     private String applyEmoji(String message) {
         if (!message.contains("[emj:")) {
