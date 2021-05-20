@@ -75,14 +75,14 @@ public class FightCommandHandler extends TextMessageHandler {
         Mob enemy = getRandomMob(locationMobs);
         if (enemy == null) {
             messages.sendMessage(TextResponseMessage.builder().by(message)
-                    .text("Кажется, тут никого нет").build() // TODO
+                    .text(translation.getMessage("battle.no-enemy-here", message)).build()
             );
         } else {
             PlayerState playerState = (PlayerState) cacheService.findObject(CacheType.PLAYER_STATE, message.getPlayer().getId());
             cacheService.add(CacheType.PLAYER_STATE, playerState.setEnemy(enemy));
             messages.sendMessage(TextResponseMessage.builder().by(message)
                     .keyboard(actionHandler.getAvailableActionsKeyboard(message.getPlayer()))
-                    .text("Враг: " + enemy.getName(message)).build() // TODO
+                    .text(translation.getMessage("battle.enemy", message) + enemy.getName(message)).build()
             );
         }
     }
@@ -91,7 +91,7 @@ public class FightCommandHandler extends TextMessageHandler {
         PlayerState state = (PlayerState) cacheService.findObject(CacheType.PLAYER_STATE, message.getPlayer().getId());
         if (!state.hasEnemy()) {
             messages.sendMessage(TextResponseMessage.builder().by(message)
-                    .text("У вас нет противника").build()
+                    .text(translation.getMessage("battle.no-enemy", message)).build()
             );
             return;
         }
@@ -102,7 +102,7 @@ public class FightCommandHandler extends TextMessageHandler {
         Mob mob = mobService.findById(state.getEnemy().getId());
 
         messages.sendMessage(TextResponseMessage.builder().by(message)
-                .text("Выберите следующее действие:")
+                .text(translation.getMessage("battle.choose-next-action", message))
                 .keyboard(KeyboardManager.getReplyByButtons(actionHandler.getAvailableFightingActions(message.getPlayer()), message.getPlayer().getLanguage()))
                 .build()
         );
@@ -130,7 +130,7 @@ public class FightCommandHandler extends TextMessageHandler {
         PlayerState state = (PlayerState) cacheService.findObject(CacheType.PLAYER_STATE, message.getPlayer().getId());
         if (!state.hasEnemy()) {
             messages.sendMessage(TextResponseMessage.builder().by(message)
-                    .text("У вас нет противника").build()
+                    .text(translation.getMessage("battle.no-enemy", message)).build()
             );
             return;
         }
@@ -153,7 +153,7 @@ public class FightCommandHandler extends TextMessageHandler {
             actionHandler.sendAvailableActions(message.getPlayer());
         } else if (battleLog.getBattleFinished()) {
             messages.sendMessage(TextResponseMessage.builder().by(message)
-                    .text("Lol. You died.").build()
+                    .text(translation.getMessage("battle.death", message)).build()
             );
             cacheService.add(CacheType.PLAYER_STATE, state.getId(), state);
         } else {
@@ -166,7 +166,7 @@ public class FightCommandHandler extends TextMessageHandler {
         PlayerState state = (PlayerState) cacheService.findObject(CacheType.PLAYER_STATE, message.getPlayer().getId());
         if (!state.hasEnemy()) {
             messages.sendMessage(TextResponseMessage.builder().by(message)
-                    .text("У вас нет противника").build()
+                    .text(translation.getMessage("battle.no-enemy", message)).build()
             );
             return;
         }
@@ -206,7 +206,7 @@ public class FightCommandHandler extends TextMessageHandler {
         List<BackpackItem> newItems = dropCalculator.calculate(dropMap);
         if (ListUtils.isEmpty(newItems)) return;
         StringBuilder builder = new StringBuilder();
-        builder.append("Добыча:\n\n");
+        builder.append(translation.getMessage("battle.loot", backpack.getPlayer()));
         newItems.forEach(item -> builder.append(item.backpackInfo(translation, backpack.getPlayer().getLanguage())));
         messages.sendMessage(TextResponseMessage.builder().by(backpack.getPlayer())
                 .text(builder.toString()).build()
