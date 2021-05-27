@@ -47,4 +47,24 @@ class NumberUtilsTest extends ServiceBaseTest {
         assertEquals(0.01, NumberUtils.round(0.005));
     }
 
+    @Test
+    void whenSubtractPercentageShouldReturnValidValueTest() {
+        assertEquals(99, NumberUtils.percentageSubtract(100, 1));
+        assertEquals(95, NumberUtils.percentageSubtract(100, 5));
+        assertEquals(50, NumberUtils.percentageSubtract(100, 50));
+        assertEquals(1, NumberUtils.percentageSubtract(100, 99));
+        assertEquals(0, NumberUtils.percentageSubtract(100, 100));
+        assertEquals(-50, NumberUtils.percentageSubtract(100, 150));
+    }
+
+    @Test
+    void whenSubtractLongPercentageShouldReturnValidValueTest() {
+        assertEquals(99, NumberUtils.percentageSubtract(100L, 1));
+        assertEquals(95, NumberUtils.percentageSubtract(100L, 5));
+        assertEquals(50, NumberUtils.percentageSubtract(100L, 50));
+        assertEquals(1, NumberUtils.percentageSubtract(100L, 99));
+        assertEquals(0, NumberUtils.percentageSubtract(100L, 100));
+        assertEquals(-50, NumberUtils.percentageSubtract(100L, 150));
+    }
+
 }

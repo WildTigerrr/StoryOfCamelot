@@ -4,6 +4,7 @@ import com.wildtigerrr.StoryOfCamelot.ServiceBaseTest;
 
 import com.wildtigerrr.StoryOfCamelot.bin.enums.Language;
 import com.wildtigerrr.StoryOfCamelot.bin.service.ApplicationContextProvider;
+import com.wildtigerrr.StoryOfCamelot.bin.service.NumberUtils;
 import com.wildtigerrr.StoryOfCamelot.bin.translation.TranslationManager;
 import org.junit.jupiter.api.Test;
 
@@ -89,15 +90,15 @@ class MoneyCalculationTest extends ServiceBaseTest {
 
     @Test
     void whenDivideShouldReturnValidTest() {
-        assertEquals(4, MoneyCalculation.round(7 * 7/10));
-        assertEquals(5, MoneyCalculation.round(8 * 7/10));
-        assertEquals(14, MoneyCalculation.round(21 * 7/10));
-        assertEquals(99, MoneyCalculation.round(142 * 7/10));
-        assertEquals(100, MoneyCalculation.round(143 * 7/10));
-        assertEquals(100, MoneyCalculation.round(157 * 7/10));
-        assertEquals(110, MoneyCalculation.round(158 * 7/10));
-        assertEquals(7770, MoneyCalculation.round((MoneyCalculation.goldOf(1) + MoneyCalculation.silverOf(11) + 11) * 7/10));
-        assertEquals(10000, MoneyCalculation.round((MoneyCalculation.goldOf(1) + MoneyCalculation.silverOf(43) + 99) * 7/10));
+        assertEquals(4, MoneyCalculation.round(NumberUtils.percentageSubtract(7L, 30)));
+        assertEquals(5, MoneyCalculation.round(NumberUtils.percentageSubtract(8L, 30)));
+        assertEquals(14, MoneyCalculation.round(NumberUtils.percentageSubtract(21L, 30)));
+        assertEquals(99, MoneyCalculation.round(NumberUtils.percentageSubtract(142L, 30)));
+        assertEquals(100, MoneyCalculation.round(NumberUtils.percentageSubtract(143L, 30)));
+        assertEquals(100, MoneyCalculation.round(NumberUtils.percentageSubtract(157L, 30)));
+        assertEquals(110, MoneyCalculation.round(NumberUtils.percentageSubtract(158L, 30)));
+        assertEquals(7770, MoneyCalculation.round(NumberUtils.percentageSubtract(MoneyCalculation.goldOf(1) + MoneyCalculation.silverOf(11) + 11, 30)));
+        assertEquals(10000, MoneyCalculation.round(NumberUtils.percentageSubtract(MoneyCalculation.goldOf(1) + MoneyCalculation.silverOf(43) + 99, 30)));
     }
 
 }

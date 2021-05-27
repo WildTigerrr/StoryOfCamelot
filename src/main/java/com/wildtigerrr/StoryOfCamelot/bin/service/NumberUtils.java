@@ -60,4 +60,24 @@ public class NumberUtils {
         return Math.round(value * 100) / 100.0;
     }
 
+    /**
+     *
+     * @param value - value to subtract percentage from
+     * @param percentage - how much to subtract
+     * @return int
+     */
+    public static int percentageSubtract(int value, int percentage) {
+        return (int) (value * ((100 - percentage) / 100.0F));
+    }
+
+    /**
+     *
+     * @param value - value to subtract percentage from
+     * @param percentage - how much to subtract
+     * @return long
+     */
+    public static long percentageSubtract(long value, int percentage) {
+        return (long) (value * ((100 - percentage) / 100.0F));
+    }
+
 }
