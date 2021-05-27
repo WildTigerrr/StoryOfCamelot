@@ -31,4 +31,9 @@ public class ApplicationContextProvider implements ApplicationContextAware {
         return (T) context.getBean(name);
     }
 
+    private static boolean IS_TEST = false; /* Can be changed by ReflectionUtils from ServiceBaseTest */
+    public static boolean isRunningTest() {
+        return IS_TEST;
+    }
+
 }

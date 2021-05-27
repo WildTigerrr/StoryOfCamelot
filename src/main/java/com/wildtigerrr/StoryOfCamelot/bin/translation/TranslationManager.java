@@ -3,6 +3,7 @@ package com.wildtigerrr.StoryOfCamelot.bin.translation;
 import com.wildtigerrr.StoryOfCamelot.bin.enums.Emoji;
 import com.wildtigerrr.StoryOfCamelot.bin.enums.Language;
 import com.wildtigerrr.StoryOfCamelot.bin.enums.RandomDistribution;
+import com.wildtigerrr.StoryOfCamelot.bin.service.ApplicationContextProvider;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.Player;
 import com.wildtigerrr.StoryOfCamelot.exception.InvalidPropertyException;
 import com.wildtigerrr.StoryOfCamelot.web.bot.update.UpdateWrapper;
@@ -78,7 +79,12 @@ public class TranslationManager {
     public String getMessage(String code, IncomingMessage message) {return getMessage(code, message.getPlayer());}
 
     private String getRandomMessage(String randomValue, String code, Locale locale, Object[] args) {
+        if (ApplicationContextProvider.isRunningTest()) return getTestMessage(code, locale, args);
         return messageSource.getMessage(code + "." + (RandomDistribution.DISCRETE.nextInt(Integer.parseInt(randomValue.substring(8))) + 1), args, locale);
+    }
+
+    private String getTestMessage(String code, Locale locale, Object[] args) {
+        return messageSource.getMessage(code + "." + 1, args, locale);
     }
 
     private String applyEmoji(String message) {
