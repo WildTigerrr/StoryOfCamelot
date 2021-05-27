@@ -75,4 +75,29 @@ class MoneyCalculationTest extends ServiceBaseTest {
         
     }
 
+    @Test
+    void whenRoundShouldRoundDownDependingOnTheValueTest() {
+        assertEquals(7, MoneyCalculation.round(7));
+        assertEquals(73, MoneyCalculation.round(73));
+        assertEquals(100, MoneyCalculation.round(MoneyCalculation.silverOf(1)));
+        assertEquals(100, MoneyCalculation.round(MoneyCalculation.silverOf(1) + 1));
+        assertEquals(100, MoneyCalculation.round(MoneyCalculation.silverOf(1) + 9));
+        assertEquals(110, MoneyCalculation.round(MoneyCalculation.silverOf(1) + 13));
+        assertEquals(1110, MoneyCalculation.round(MoneyCalculation.silverOf(11) + 11));
+        assertEquals(11100, MoneyCalculation.round(MoneyCalculation.goldOf(1) + MoneyCalculation.silverOf(11) + 11));
+    }
+
+    @Test
+    void whenDivideShouldReturnValidTest() {
+        assertEquals(4, MoneyCalculation.round(7 * 7/10));
+        assertEquals(5, MoneyCalculation.round(8 * 7/10));
+        assertEquals(14, MoneyCalculation.round(21 * 7/10));
+        assertEquals(99, MoneyCalculation.round(142 * 7/10));
+        assertEquals(100, MoneyCalculation.round(143 * 7/10));
+        assertEquals(100, MoneyCalculation.round(157 * 7/10));
+        assertEquals(110, MoneyCalculation.round(158 * 7/10));
+        assertEquals(7770, MoneyCalculation.round((MoneyCalculation.goldOf(1) + MoneyCalculation.silverOf(11) + 11) * 7/10));
+        assertEquals(10000, MoneyCalculation.round((MoneyCalculation.goldOf(1) + MoneyCalculation.silverOf(43) + 99) * 7/10));
+    }
+
 }

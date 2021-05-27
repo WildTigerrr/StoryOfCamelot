@@ -4,6 +4,7 @@ import com.wildtigerrr.StoryOfCamelot.bin.enums.Language;
 import com.wildtigerrr.StoryOfCamelot.bin.service.ApplicationContextProvider;
 import com.wildtigerrr.StoryOfCamelot.bin.translation.TranslationManager;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.Player;
+import org.h2.util.MathUtils;
 
 public class MoneyCalculation {
 
@@ -26,9 +27,8 @@ public class MoneyCalculation {
 
     public static String moneyOf(long money, Language lang, TranslationManager translation) {
 
-        String moneyString = translation.getMessage("money.none", lang);
         if (money > 0) {
-            moneyString = "";
+            String moneyString = "";
             if (bronzeFrom(money) != 0) {
                 moneyString += translation.getMessage("money.bronze", lang) + ": " + bronzeFrom(money);
             }
@@ -40,8 +40,16 @@ public class MoneyCalculation {
                 moneyString += moneyString.isBlank() ? "" : ", ";
                 moneyString += translation.getMessage("money.gold", lang) + ": " + goldFrom(money);
             }
+            return moneyString;
+        } else {
+            return translation.getMessage("money.none", lang);
         }
-        return moneyString;
+    }
+
+    public static long round(long money) {
+        if (money < SILVER) return money;
+        if (money < GOLD) return money / 10 * 10;
+        else return money / 100 * 100;
     }
 
     public static long goldFrom(long money) {
