@@ -14,5 +14,6 @@ public class BotConfig {
     public final static float ARMOR_EFFECTIVENESS = 33.0f;
     public final static float CRIT_MULTIPLIER = 1.5f;
     public final static int DEFAULT_SKILL_POINTS = 20;
+    public final static int STORE_SELL_MARKDOWN = 30;
 
 }

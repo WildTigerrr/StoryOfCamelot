@@ -1,14 +1,17 @@
 package com.wildtigerrr.StoryOfCamelot.database.jpa.schema;
 
 import com.wildtigerrr.StoryOfCamelot.bin.base.service.IdGenerator;
+import com.wildtigerrr.StoryOfCamelot.bin.base.service.MoneyCalculation;
 import com.wildtigerrr.StoryOfCamelot.bin.enums.Language;
 import com.wildtigerrr.StoryOfCamelot.bin.enums.NameTranslation;
 import com.wildtigerrr.StoryOfCamelot.bin.enums.templates.ItemTemplate;
+import com.wildtigerrr.StoryOfCamelot.bin.service.NumberUtils;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.interfaces.SimpleObject;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.enums.ItemQuality;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.enums.ItemSubType;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.enums.ObjectType;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.enums.StoreType;
+import com.wildtigerrr.StoryOfCamelot.web.BotConfig;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -123,6 +126,10 @@ public class Item extends SimpleObject {
     
     public boolean isEquippable() {
         return getType() == ItemSubType.SWORD;
+    }
+
+    public long getSalePrice() {
+        return MoneyCalculation.round(NumberUtils.percentageSubtract(getPrice(), BotConfig.STORE_SELL_MARKDOWN));
     }
 
     @Override

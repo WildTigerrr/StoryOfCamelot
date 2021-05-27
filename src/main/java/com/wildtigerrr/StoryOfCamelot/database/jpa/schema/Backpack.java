@@ -79,6 +79,20 @@ public class Backpack extends SimpleObject {
         items.forEach(this::put);
     }
 
+    public void addItems(@NotNull List<BackpackItem> items) {
+        items.forEach(this::put);
+    }
+
+    public void addItem(@NotNull Item item, @Nullable ItemStatus status) {
+        put(new BackpackItem(this, item, status));
+    }
+
+    public void addItem(@NotNull Item item) {
+        put(new BackpackItem(this, item, null));
+    }
+
+    public void addItem(@NotNull BackpackItem item) {put(item);}
+
     public boolean remove(@NotNull Item item, int quantity) {
         // TODO Add removal with multiple similar items
         BackpackItem backpackItem = getItemById(item.getId());
