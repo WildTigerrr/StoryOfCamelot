@@ -22,6 +22,7 @@ import java.util.stream.Collectors;
 @Entity
 @Table(name = "backpack")
 @Getter @Setter
+@Log4j2
 public class Backpack extends SimpleObject {
 
     @Id
@@ -111,6 +112,13 @@ public class Backpack extends SimpleObject {
     public List<BackpackItem> getItems() {
         if (items == null || items.isEmpty()) return new ArrayList<>();
         items = items.stream().filter(item -> !item.getIsDeleted()).collect(Collectors.toList());
+        log.debug("Sorting:");
+        log.debug(items);
+        if (!items.isEmpty()) {
+            for (BackpackItem item : items) {
+                log.debug(item);
+            }
+        }
         items.sort(Comparator.comparing(BackpackItem::getAddedDate)
                 .thenComparing(BackpackItem::getId));
         return items;
