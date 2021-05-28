@@ -310,7 +310,7 @@ public class TelegramResponseManager implements ResponseManager, Runnable {
                     nextMessageOn = time + Time.seconds(20);
                     postponeNext = false;
                 } else {
-                    nextMessageOn = time + Time.seconds(2);
+                    nextMessageOn = time + Time.seconds(BotConfig.MESSAGE_DELAY);
                 }
                 lastMessage = responses.pollFirst();
                 return lastMessage;
