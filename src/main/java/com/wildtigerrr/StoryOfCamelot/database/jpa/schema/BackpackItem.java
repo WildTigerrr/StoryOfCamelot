@@ -1,12 +1,14 @@
 package com.wildtigerrr.StoryOfCamelot.database.jpa.schema;
 
 import com.wildtigerrr.StoryOfCamelot.bin.base.service.IdGenerator;
+import com.wildtigerrr.StoryOfCamelot.bin.base.service.MoneyCalculation;
 import com.wildtigerrr.StoryOfCamelot.bin.enums.Language;
 import com.wildtigerrr.StoryOfCamelot.bin.service.NumberUtils;
 import com.wildtigerrr.StoryOfCamelot.bin.translation.TranslationManager;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.interfaces.SimpleObject;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.enums.ItemStatus;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.enums.ObjectType;
+import com.wildtigerrr.StoryOfCamelot.web.BotConfig;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -129,6 +131,10 @@ public class BackpackItem extends SimpleObject {
             return true;
         }
         return false;
+    }
+
+    public long getSalePrice() {
+        return MoneyCalculation.round(NumberUtils.percentageSubtract(getItem().getPrice() * quantity, BotConfig.STORE_SELL_MARKDOWN));
     }
 
     public String backpackInfo(TranslationManager translation) {

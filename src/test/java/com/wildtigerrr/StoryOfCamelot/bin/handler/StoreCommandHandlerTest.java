@@ -376,7 +376,7 @@ class StoreCommandHandlerTest extends ServiceBaseTest {
                 "Sell " + backpack.getItems().get(0).backpackInfo(translation))
         );
         assertTrue(((EditResponseMessage) messageArguments.getValue()).getKeyboard().toString().contains(
-                MoneyCalculation.moneyOf(backpack.getItems().get(0).getItem().getSalePrice(), player.getLanguage())
+                MoneyCalculation.moneyOf(backpack.getItems().get(0).getSalePrice(), player.getLanguage())
         ));
         System.out.println(((EditResponseMessage) messageArguments.getValue()).getKeyboard().toString());
     }

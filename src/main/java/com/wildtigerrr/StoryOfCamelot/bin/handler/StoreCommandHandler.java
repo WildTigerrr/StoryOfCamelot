@@ -167,7 +167,7 @@ public class StoreCommandHandler extends TextMessageHandler {
     private void sellItem(BackpackItem item) {
         Backpack backpack = item.getBackpack();
         backpack.removeBackpackItem(item);
-        backpack.getPlayer().addMoney(item.getItem().getSalePrice());
+        backpack.getPlayer().addMoney(item.getSalePrice());
         backpackService.update(backpack);
     }
 

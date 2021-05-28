@@ -142,7 +142,7 @@ public class KeyboardManager {
             item = items.get(i);
             builder.addButton(new InlineKeyboardButton()
                     .setText("Sell " + item.backpackInfo(translation) + (item.isEquipped() ? " (Equipped)" : "") +
-                            MoneyCalculation.moneyOf(item.getItem().getSalePrice(), backpack.getPlayer().getLanguage(), translation))
+                            MoneyCalculation.moneyOf(item.getSalePrice(), backpack.getPlayer().getLanguage(), translation))
                     .setCallbackData("/store " + store.getId() + " " + page + " item_sell " + item.getId())
             );
             builder.nextRow();

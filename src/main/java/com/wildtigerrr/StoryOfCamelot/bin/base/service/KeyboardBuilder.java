@@ -129,7 +129,7 @@ public class KeyboardBuilder<T extends ReplyKeyboard> {
                     .setCallbackData(pageCommandStart + (page - 1) + pageCommandEnd)
             );
         }
-        if (StringUtil.isNullOrEmpty(separatorValue)) {
+        if (!StringUtil.isNullOrEmpty(separatorValue)) {
             addButton(new InlineKeyboardButton()
                     .setText(separatorValue)
                     .setCallbackData("/ignore")
