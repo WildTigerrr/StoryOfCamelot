@@ -134,7 +134,7 @@ public class PlayerServiceImpl implements PlayerService {
             TimeDependentActions.scheduleAction(
                     new ScheduledAction(
                             Time.minutes(1), ActionType.REGENERATION, player.getId(), String.valueOf(player.stats().getHealth() / 10.0)
-                    ), false
+                    ), true
             );
         }
     }
