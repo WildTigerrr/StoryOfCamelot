@@ -6,6 +6,7 @@ import com.wildtigerrr.StoryOfCamelot.bin.base.service.MoneyCalculation;
 import com.wildtigerrr.StoryOfCamelot.bin.enums.Command;
 import com.wildtigerrr.StoryOfCamelot.bin.enums.ReplyButton;
 import com.wildtigerrr.StoryOfCamelot.bin.enums.templates.StoreTemplate;
+import com.wildtigerrr.StoryOfCamelot.bin.service.NumberUtils;
 import com.wildtigerrr.StoryOfCamelot.bin.translation.TranslationManager;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.Backpack;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.Item;
@@ -191,7 +192,7 @@ class StoreCommandHandlerTest extends ServiceBaseTest {
     }
 
     @Test
-    void whenButItemShouldAddToBackpackTest() {
+    void whenBuyItemShouldAddToBackpackTest() {
         // Given
         Player player = testFactory.createPlayer();
         Store store = new Store(player.getLocation(), StoreTemplate.TRADING_SQUARE_MERCHANT);
@@ -329,25 +330,6 @@ class StoreCommandHandlerTest extends ServiceBaseTest {
     }
 
     @Test
-    void whenItemSellShouldBeDoneLaterTest() {
-        // Given
-        Player player = testFactory.createPlayer();
-        Store store = new Store(player.getLocation(), StoreTemplate.TRADING_SQUARE_MERCHANT);
-        store = storeService.create(store);
-        ReflectionTestUtils.setField(player.getLocation(), "stores", new HashSet<>(Collections.singletonList(store)));
-        TextIncomingMessage message = (TextIncomingMessage) IncomingMessage.from(
-                TestUpdate.builder().isCallback(true).message(TestUpdateMessage.builder().text("/store " + store.getId() + " 1 item_sell wrongId").build()).build().get()
-        );
-        message.setPlayer(player);
-
-        // When
-        storeCommandHandler.process(message);
-
-        // Then
-        verify(messages).postMessageToAdminChannel(any());
-    }
-
-    @Test
     void whenItemWrongCommandShouldInformAdminTest() {
         // Given
         Player player = testFactory.createPlayer();
@@ -364,6 +346,71 @@ class StoreCommandHandlerTest extends ServiceBaseTest {
 
         // Then
         verify(messages).postMessageToAdminChannel(any());
+    }
+
+    @Test
+    void whenSendSellWindowShouldShowBackpackItemsTest() {
+        // Given
+        Player player = testFactory.createPlayer();
+        Store store = new Store(player.getLocation(), StoreTemplate.TRADING_SQUARE_MERCHANT);
+        store = storeService.create(store);
+        List<Item> items = itemService.getByStoreTypes(store.getStoreType());
+        ReflectionTestUtils.setField(player.getLocation(), "stores", new HashSet<>(Collections.singletonList(store)));
+        TextIncomingMessage message = (TextIncomingMessage) IncomingMessage.from(
+                TestUpdate.builder().isCallback(true).message(TestUpdateMessage.builder().text("/store " + store.getId() + " 1 page_sell").build()).build().get()
+        );
+        message.setPlayer(player);
+        Backpack backpack = backpackService.findMainByPlayerId(message.getPlayer().getId());
+        backpack.addItem(items.get(0));
+        backpackService.update(backpack);
+
+        // When
+        storeCommandHandler.process(message);
+
+        // Then
+        verify(messages).sendMessage(messageArguments.capture());
+
+        assertEquals(translation.getMessage("location.store.sell", message, new Object[]{store.getLabel(player.getLanguage())}), messageArguments.getValue().getText());
+        assertTrue(((EditResponseMessage) messageArguments.getValue()).getKeyboard().toString().contains("InlineKeyboardButton"));
+        assertTrue(((EditResponseMessage) messageArguments.getValue()).getKeyboard().toString().contains(
+                "Sell " + backpack.getItems().get(0).backpackInfo(translation))
+        );
+        assertTrue(((EditResponseMessage) messageArguments.getValue()).getKeyboard().toString().contains(
+                MoneyCalculation.moneyOf(backpack.getItems().get(0).getItem().getSalePrice(), player.getLanguage())
+        ));
+        System.out.println(((EditResponseMessage) messageArguments.getValue()).getKeyboard().toString());
+    }
+
+    @Test
+    void whenSellItemShouldRemoveItemAndUpdateWindowTest() {
+        // Given
+        Player player = testFactory.createPlayer();
+        long initialMoney = player.getMoney();
+        Store store = new Store(player.getLocation(), StoreTemplate.TRADING_SQUARE_MERCHANT);
+        store = storeService.create(store);
+        List<Item> items = itemService.getByStoreTypes(store.getStoreType());
+        Backpack backpack = backpackService.findMainByPlayerId(player.getId());
+        backpack.addItem(items.get(0));
+        backpackService.update(backpack);
+        backpack = backpackService.findMainByPlayerId(player.getId());
+        ReflectionTestUtils.setField(player.getLocation(), "stores", new HashSet<>(Collections.singletonList(store)));
+        TextIncomingMessage message = (TextIncomingMessage) IncomingMessage.from(
+                TestUpdate.builder().isCallback(true).message(TestUpdateMessage.builder().text("/store " + store.getId() + " 1 item_sell " + backpack.getItems().get(0).getId()).build()).build().get()
+        );
+        message.setPlayer(player);
+
+        // When
+        storeCommandHandler.process(message);
+
+        // Then
+        verify(messages).sendMessage(messageArguments.capture());
+
+        assertEquals(translation.getMessage("location.store.sell", message, new Object[]{store.getLabel(player.getLanguage())}), messageArguments.getValue().getText());
+        assertNull(((EditResponseMessage) messageArguments.getValue()).getKeyboard());
+        backpack = backpackService.findMainByPlayerId(message.getPlayer().getId());
+        assertNull(backpack.getItemById(items.get(0).getId()));
+        player = playerService.getPlayer(player.getExternalId());
+        assertEquals(initialMoney + items.get(0).getSalePrice(), (long) player.getMoney());
     }
 
 }

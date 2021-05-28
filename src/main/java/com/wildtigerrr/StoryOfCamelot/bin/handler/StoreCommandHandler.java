@@ -6,12 +6,10 @@ import com.wildtigerrr.StoryOfCamelot.bin.base.service.MoneyCalculation;
 import com.wildtigerrr.StoryOfCamelot.bin.enums.Language;
 import com.wildtigerrr.StoryOfCamelot.bin.translation.TranslationManager;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.Backpack;
+import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.BackpackItem;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.Item;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.Store;
-import com.wildtigerrr.StoryOfCamelot.database.jpa.service.template.BackpackService;
-import com.wildtigerrr.StoryOfCamelot.database.jpa.service.template.ItemService;
-import com.wildtigerrr.StoryOfCamelot.database.jpa.service.template.PlayerService;
-import com.wildtigerrr.StoryOfCamelot.database.jpa.service.template.StoreService;
+import com.wildtigerrr.StoryOfCamelot.database.jpa.service.template.*;
 import com.wildtigerrr.StoryOfCamelot.web.bot.update.ParsedCommand;
 import com.wildtigerrr.StoryOfCamelot.web.service.ResponseManager;
 import com.wildtigerrr.StoryOfCamelot.web.service.message.IncomingMessage;
@@ -33,14 +31,16 @@ public class StoreCommandHandler extends TextMessageHandler {
     private final ItemService itemService;
     private final StoreService storeService;
     private final BackpackService backpackService;
+    private final BackpackItemService backpackItemService;
     private final PlayerService playerService;
 
-    public StoreCommandHandler(ResponseManager messages, TranslationManager translation, ActionHandler actionHandler, ItemService itemService, StoreService storeService, BackpackService backpackService, PlayerService playerService) {
+    public StoreCommandHandler(ResponseManager messages, TranslationManager translation, ActionHandler actionHandler, ItemService itemService, StoreService storeService, BackpackService backpackService, BackpackItemService backpackItemService, PlayerService playerService) {
         super(messages, translation);
         this.actionHandler = actionHandler;
         this.itemService = itemService;
         this.storeService = storeService;
         this.backpackService = backpackService;
+        this.backpackItemService = backpackItemService;
         this.playerService = playerService;
     }
 
@@ -58,20 +58,15 @@ public class StoreCommandHandler extends TextMessageHandler {
         if (command.paramsCount() > 3) {
             switch (command.paramByNum(3)) {
                 case "page": sendStore(message, command.paramByNum(1), command.intByNum(2)); break;
+                case "page_sell": sendStoreSellWindow(message, command.paramByNum(1), command.intByNum(2)); break;
                 case "item_info": sendItemInfo(message); break;
                 case "item_buy": buyItem(message); break;
+                case "item_sell": sellItem(message); break;
                 default: {
                     log.error(command.paramByNum(3));
                     messages.postMessageToAdminChannel("Wrong parameters for STORE: " + message.text());
                 }
             }
-        } else if (command.paramsCount() == 3) { // "/store " + store.getId() + " sell" should open sell window
-            if (command.paramByNum(2).equals("sell")) {
-                messages.sendMessage(TextResponseMessage.builder().by(message)
-                        .text("Продажа скоро будет здесь").build()
-                );
-            }
-            messages.sendAnswer(message.getQueryId(), command.toString());
         } else {
             log.error("Wrong parameters quantity: " + message.text());
             messages.postMessageToAdminChannel("Wrong parameters quantity for STORE: " + message.text());
@@ -107,6 +102,16 @@ public class StoreCommandHandler extends TextMessageHandler {
                     .build()
             );
         }
+    }
+
+    private void sendStoreSellWindow(TextIncomingMessage message, String storeId, int page) {
+        Store store = storeService.getById(storeId);
+        Backpack backpack = backpackService.findMainByPlayerId(message.getPlayer().getId());
+        messages.sendMessage(EditResponseMessage.builder().by(message)
+                .text(translation.getMessage("location.store.sell", message, new Object[]{store.getLabel(message.getPlayer().getLanguage())}))
+                .keyboard(KeyboardManager.getKeyboardForBackpackSell(store, backpack, page, translation))
+                .build()
+        );
     }
 
     private void buyItem(TextIncomingMessage message) {
@@ -148,6 +153,22 @@ public class StoreCommandHandler extends TextMessageHandler {
                 .build()
         );
         messages.sendAnswer(message.getQueryId(), "Осталось: " + MoneyCalculation.moneyOf(message.getPlayer(), translation));
+    }
+
+    private void sellItem(TextIncomingMessage message) {
+        ParsedCommand command = message.getParsedCommand();
+        if (command.paramsCount() < 4) return;
+        Backpack backpack = backpackService.findMainByPlayerId(message.getPlayer().getId());
+        BackpackItem item = backpack.getItemByBackpackItemId(command.paramByNum(4));
+        sellItem(item);
+        sendStoreSellWindow(message, command.paramByNum(1), command.intByNum(2));
+    }
+
+    private void sellItem(BackpackItem item) {
+        Backpack backpack = item.getBackpack();
+        backpack.removeBackpackItem(item);
+        backpack.getPlayer().addMoney(item.getItem().getSalePrice());
+        backpackService.update(backpack);
     }
 
     private void sendItemInfo(TextIncomingMessage message) {

@@ -102,11 +102,11 @@ public class KeyboardManager {
 
     public static InlineKeyboardMarkup getKeyboardForBackpack(Backpack backpack, int page, TranslationManager translation) {
         int pageSize = 10;
-        KeyboardBuilder<InlineKeyboardMarkup> builder = new KeyboardBuilder<>(KeyboardBuilder.Type.INLINE);
         List<BackpackItem> items = backpack.getItems();
         if (items.isEmpty() || items.size() < pageSize * (page - 1)) {
             return null;
         }
+        KeyboardBuilder<InlineKeyboardMarkup> builder = new KeyboardBuilder<>(KeyboardBuilder.Type.INLINE);
         BackpackItem item;
         String equip = translation.getMessage("player.backpack.item-equip", backpack.getPlayer());
         String unequip = translation.getMessage("player.backpack.item-unequip", backpack.getPlayer());
@@ -126,18 +126,28 @@ public class KeyboardManager {
             }
             builder.nextRow();
         }
-        if (page > 1) {
-            builder.addButton(new InlineKeyboardButton()
-                    .setText("<")
-                    .setCallbackData("/backpack " + (page - 1) + " page")
-            );
+        builder.addPaginationRow("/backpack ", " page", page, page > 1, items.size() > pageSize * page);
+        return builder.build();
+    }
+
+    public static InlineKeyboardMarkup getKeyboardForBackpackSell(Store store, Backpack backpack, int page, TranslationManager translation) {
+        int pageSize = 10;
+        List<BackpackItem> items = backpack.getItems();
+        if (items.isEmpty() || items.size() < pageSize * (page - 1)) {
+            return null;
         }
-        if (items.size() > pageSize * page) {
+        KeyboardBuilder<InlineKeyboardMarkup> builder = new KeyboardBuilder<>(KeyboardBuilder.Type.INLINE);
+        BackpackItem item;
+        for (int i = pageSize * (page - 1); i < Math.min(pageSize * page, items.size()); i++) {
+            item = items.get(i);
             builder.addButton(new InlineKeyboardButton()
-                    .setText(">")
-                    .setCallbackData("/backpack " + (page + 1) + " page")
+                    .setText("Sell " + item.backpackInfo(translation) + (item.isEquipped() ? " (Equipped)" : "") +
+                            MoneyCalculation.moneyOf(item.getItem().getSalePrice(), backpack.getPlayer().getLanguage(), translation))
+                    .setCallbackData("/store " + store.getId() + " " + page + " item_sell " + item.getId())
             );
+            builder.nextRow();
         }
+        builder.addPaginationRow("/store " + store.getId() + " ", " page_sell", page, page > 1, items.size() > pageSize * page);
         return builder.build();
     }
 
@@ -181,7 +191,7 @@ public class KeyboardManager {
 
         builder.addButton(new InlineKeyboardButton()
                 .setText("Продажа")
-                .setCallbackData("/store " + store.getId() + " " + "sell"));
+                .setCallbackData("/store " + store.getId() + " 1 page_sell"));
 
         return builder.build();
     }

@@ -58,6 +58,7 @@ public class BackpackItem extends SimpleObject {
         this.status = status != null ? status : ItemStatus.IN_STACK;
         this.quantity = 1;
         this.addedDate = System.currentTimeMillis();
+        this.isDeleted = false;
     }
 
     public BackpackItem(@NotNull Item item, @Nullable ItemStatus status) {

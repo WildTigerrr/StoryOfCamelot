@@ -1,6 +1,8 @@
 package com.wildtigerrr.StoryOfCamelot.bin.base.service;
 
+import com.wildtigerrr.StoryOfCamelot.bin.service.StringUtils;
 import com.wildtigerrr.StoryOfCamelot.exception.InvalidKeyboardTypeException;
+import io.netty.util.internal.StringUtil;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboard;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
@@ -12,7 +14,7 @@ import java.util.List;
 
 public class KeyboardBuilder<T extends ReplyKeyboard> {
     private int rowLimit = 100;
-    private Type type;
+    private final Type type;
 
     private InlineKeyboardMarkup inlineKeyboard;
     private List<List<InlineKeyboardButton>> rowInlineList;
@@ -21,6 +23,13 @@ public class KeyboardBuilder<T extends ReplyKeyboard> {
     private ReplyKeyboardMarkup replyKeyboard;
     private List<KeyboardRow> rowReplyList;
     private KeyboardRow buttonsReplyRow;
+
+    private String pageCommandStart;
+    private String pageCommandEnd;
+    private int page;
+    private boolean hasPrevious;
+    private boolean hasNext;
+    private String separatorValue;
 
     public KeyboardBuilder(Type type) {
         this.type = type;
@@ -80,8 +89,28 @@ public class KeyboardBuilder<T extends ReplyKeyboard> {
         return this;
     }
 
+    public KeyboardBuilder<T> addPaginationRow(String pageCommandStart, String pageCommandEnd, int page, boolean hasPrevious, boolean hasNext) {
+        this.pageCommandStart = pageCommandStart;
+        this.pageCommandEnd = pageCommandEnd;
+        this.page = page;
+        this.hasPrevious = hasPrevious;
+        this.hasNext = hasNext;
+        return this;
+    }
+
+    public KeyboardBuilder<T> addPaginationRow(String pageCommandStart, String pageCommandEnd, int page, String separatorValue, boolean hasPrevious, boolean hasNext) {
+        this.pageCommandStart = pageCommandStart;
+        this.pageCommandEnd = pageCommandEnd;
+        this.page = page;
+        this.separatorValue = separatorValue;
+        this.hasPrevious = hasPrevious;
+        this.hasNext = hasNext;
+        return this;
+    }
+
     public T build() {
         if (type == Type.INLINE) {
+            if (page > 0) addPaginationRow();
             nextRow();
             this.inlineKeyboard.setKeyboard(rowInlineList);
             return (T) this.inlineKeyboard;
@@ -91,6 +120,27 @@ public class KeyboardBuilder<T extends ReplyKeyboard> {
             return (T) this.replyKeyboard;
         }
         throw new InvalidKeyboardTypeException("Wrong keyboard type: " + this.type.name());
+    }
+
+    private void addPaginationRow() {
+        if (hasPrevious) {
+            addButton(new InlineKeyboardButton()
+                    .setText("<")
+                    .setCallbackData(pageCommandStart + (page - 1) + pageCommandEnd)
+            );
+        }
+        if (StringUtil.isNullOrEmpty(separatorValue)) {
+            addButton(new InlineKeyboardButton()
+                    .setText(separatorValue)
+                    .setCallbackData("/ignore")
+            );
+        }
+        if (hasNext) {
+            addButton(new InlineKeyboardButton()
+                    .setText(">")
+                    .setCallbackData(pageCommandStart + (page + 1) + pageCommandEnd)
+            );
+        }
     }
 
     public enum Type {

@@ -17,6 +17,7 @@ import org.jetbrains.annotations.Nullable;
 
 import javax.persistence.*;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "backpack")
@@ -104,11 +105,12 @@ public class Backpack extends SimpleObject {
     }
 
     public void removeBackpackItem(BackpackItem item) {
-        items.remove(item);
+        item.setIsDeleted(true);
     }
 
     public List<BackpackItem> getItems() {
         if (items == null || items.isEmpty()) return new ArrayList<>();
+        items = items.stream().filter(item -> !item.getIsDeleted()).collect(Collectors.toList());
         items.sort(Comparator.comparing(BackpackItem::getAddedDate)
                 .thenComparing(BackpackItem::getId));
         return items;
