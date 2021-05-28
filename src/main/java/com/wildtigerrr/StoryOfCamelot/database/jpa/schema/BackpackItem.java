@@ -166,6 +166,7 @@ public class BackpackItem extends SimpleObject {
                 ", quantity=" + quantity +
                 ", status=" + status +
                 ", isDeleted=" + isDeleted +
+                ", addedDate=" + addedDate +
                 '}';
     }
 }
