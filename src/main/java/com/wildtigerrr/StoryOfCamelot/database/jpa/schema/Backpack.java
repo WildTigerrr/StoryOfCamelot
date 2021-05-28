@@ -120,7 +120,9 @@ public class Backpack extends SimpleObject {
             }
         }
         items.sort(Comparator.comparing(BackpackItem::getAddedDate)
-                .thenComparing(BackpackItem::getId));
+                .thenComparing(BackpackItem::getQuantity)
+                .thenComparing(item -> item.getItem().getId())
+        );
         return items;
     }
 
