@@ -92,8 +92,8 @@ public class KeyboardManager {
 
     public static ReplyKeyboardMarkup getReplyByStores(Set<Store> stores, Language lang) {
         KeyboardBuilder<ReplyKeyboardMarkup> builder = new KeyboardBuilder<>(KeyboardBuilder.Type.REPLY, 2);
-        builder.addButton(ReplyButton.BACK.getLabel(lang));
-        builder.nextRow();
+        builder.addButton(ReplyButton.BACK.getLabel(lang))
+                .nextRow();
         for (Store store : stores) {
             builder.addButton(store.getLabel(lang));
         }
@@ -126,8 +126,8 @@ public class KeyboardManager {
             }
             builder.nextRow();
         }
-        builder.addPaginationRow("/backpack ", " page", page, page > 1, items.size() > pageSize * page);
-        return builder.build();
+        return builder.addPaginationRow("/backpack ", " page", page, items.size() > pageSize * page)
+                .build();
     }
 
     public static InlineKeyboardMarkup getKeyboardForBackpackSell(Store store, Backpack backpack, int page, TranslationManager translation) {
@@ -144,11 +144,10 @@ public class KeyboardManager {
                     .setText("Sell " + item.backpackInfo(translation) + (item.isEquipped() ? " (Equipped)" : "") +
                             MoneyCalculation.moneyOf(item.getSalePrice(), backpack.getPlayer().getLanguage(), translation))
                     .setCallbackData("/store " + store.getId() + " " + page + " item_sell " + item.getId())
-            );
-            builder.nextRow();
+            ).nextRow();
         }
-        builder.addPaginationRow("/store " + store.getId() + " ", " page_sell", page, page > 1, items.size() > pageSize * page);
-        return builder.build();
+        return builder.addPaginationRow("/store " + store.getId() + " ", " page_sell", page, items.size() > pageSize * page)
+                .build();
     }
 
     public static InlineKeyboardMarkup getKeyboardForStoreItems(Store store, List<Item> items, int page, Language lang, TranslationManager translation) {
@@ -163,37 +162,17 @@ public class KeyboardManager {
             builder.addButton(new InlineKeyboardButton()
                     .setText(item.getName(lang))
                     .setCallbackData("/store " + store.getId() + " " + page + " item_info " + item.getId())
-            );
-            builder.addButton(new InlineKeyboardButton()
+            ).addButton(new InlineKeyboardButton()
                     .setText(MoneyCalculation.moneyOf(item.getPrice(), lang, translation))
                     .setCallbackData("/store " + store.getId() + " " + page + " item_buy " + item.getId())
-            );
-            builder.nextRow();
+            ).nextRow();
         }
-        if (page > 1) {
-            builder.addButton(new InlineKeyboardButton()
-                    .setText("<")
-                    .setCallbackData("/store " + store.getId() + " " + (page - 1) + " page")
-            );
-        }
-        if (items.size() > pageSize) {
-            builder.addButton(new InlineKeyboardButton()
-                    .setText(page + " / " + ((int) Math.ceil(((double) items.size()) / pageSize)))
-                    .setCallbackData("/ignore")
-            );
-        }
-        if (items.size() > pageSize * page) {
-            builder.addButton(new InlineKeyboardButton()
-                    .setText(">")
-                    .setCallbackData("/store " + store.getId() + " " + (page + 1) + " page")
-            );
-        }
-
-        builder.addButton(new InlineKeyboardButton()
-                .setText("Продажа")
-                .setCallbackData("/store " + store.getId() + " 1 page_sell"));
-
-        return builder.build();
+        return builder.addPaginationRow("/store " + store.getId() + " ", " page", page,
+                page + " / " + ((int) Math.ceil(((double) items.size()) / pageSize)), items.size() > pageSize * page)
+                .addButton(new InlineKeyboardButton()
+                        .setText("Продажа")
+                        .setCallbackData("/store " + store.getId() + " 1 page_sell"))
+                .build();
     }
 
 }

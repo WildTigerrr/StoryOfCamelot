@@ -27,7 +27,6 @@ public class KeyboardBuilder<T extends ReplyKeyboard> {
     private String pageCommandStart;
     private String pageCommandEnd;
     private int page;
-    private boolean hasPrevious;
     private boolean hasNext;
     private String separatorValue;
 
@@ -89,21 +88,19 @@ public class KeyboardBuilder<T extends ReplyKeyboard> {
         return this;
     }
 
-    public KeyboardBuilder<T> addPaginationRow(String pageCommandStart, String pageCommandEnd, int page, boolean hasPrevious, boolean hasNext) {
+    public KeyboardBuilder<T> addPaginationRow(String pageCommandStart, String pageCommandEnd, int page, boolean hasNext) {
         this.pageCommandStart = pageCommandStart;
         this.pageCommandEnd = pageCommandEnd;
         this.page = page;
-        this.hasPrevious = hasPrevious;
         this.hasNext = hasNext;
         return this;
     }
 
-    public KeyboardBuilder<T> addPaginationRow(String pageCommandStart, String pageCommandEnd, int page, String separatorValue, boolean hasPrevious, boolean hasNext) {
+    public KeyboardBuilder<T> addPaginationRow(String pageCommandStart, String pageCommandEnd, int page, String separatorValue, boolean hasNext) {
         this.pageCommandStart = pageCommandStart;
         this.pageCommandEnd = pageCommandEnd;
         this.page = page;
         this.separatorValue = separatorValue;
-        this.hasPrevious = hasPrevious;
         this.hasNext = hasNext;
         return this;
     }
@@ -123,7 +120,7 @@ public class KeyboardBuilder<T extends ReplyKeyboard> {
     }
 
     private void addPaginationRow() {
-        if (hasPrevious) {
+        if (page > 1) {
             addButton(new InlineKeyboardButton()
                     .setText("<")
                     .setCallbackData(pageCommandStart + (page - 1) + pageCommandEnd)
