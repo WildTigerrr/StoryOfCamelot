@@ -49,7 +49,7 @@ public class KeyboardBuilder<T extends ReplyKeyboard> {
     }
 
     public KeyboardBuilder<T> setRowLimit(int rowLimit) {
-        this.rowLimit = rowLimit;
+        this.rowLimit = rowLimit - 1;
         return this;
     }
 
