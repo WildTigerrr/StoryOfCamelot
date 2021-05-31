@@ -60,6 +60,10 @@ public class KeyboardBuilder<T extends ReplyKeyboard> {
         return this;
     }
 
+    public KeyboardBuilder<T> addButton(String text, String callbackData) {
+        return addButton(new InlineKeyboardButton().setText(text).setCallbackData(callbackData));
+    }
+
     public KeyboardBuilder<T> addButton(String buttonText) {
         if (type != Type.REPLY) throw new InvalidKeyboardTypeException("Text button can't be added to " + type.name() + " keyboard");
         if (buttonsReplyRow.size() > rowLimit) nextRow();
