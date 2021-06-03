@@ -30,7 +30,7 @@ public class ExperienceService {
         this.translation = translation;
     }
 
-    public Player addExperience(Player player, Stats stat, int experience, Boolean sendExperienceGet) {
+    public Player addExperience(Player player, Stats stat, double experience, Boolean sendExperienceGet) {
         if (experience == 0) return player;
         try {
             List<String> eventList = player.stats().addStatExp(

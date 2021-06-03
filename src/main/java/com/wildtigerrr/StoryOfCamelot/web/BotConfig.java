@@ -19,6 +19,7 @@ public class BotConfig {
     public final static int DEFAULT_SKILL_POINTS = 20;
     public final static int STORE_SELL_MARKDOWN = 30;
 
-    public final static float EXPERIENCE_MOVEMENT_MULTIPLIER = 1.5F;
+    public final static float EXPERIENCE_MOVEMENT_MULTIPLIER = 1.5F; // Per second
+    public final static float EXPERIENCE_TRADE_MULTIPLIER = 0.5F; // Per copper coin
 
 }

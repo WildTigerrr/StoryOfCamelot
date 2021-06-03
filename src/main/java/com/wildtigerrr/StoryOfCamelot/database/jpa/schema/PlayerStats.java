@@ -31,12 +31,12 @@ public class PlayerStats {
     private Integer endurance;
     private Integer luck;
 
-    private Integer strengthExp;
-    private Integer healthExp;
-    private Integer agilityExp;
-    private Integer charismaExp;
-    private Integer intelligenceExp;
-    private Integer enduranceExp;
+    private Double strengthExp;
+    private Double healthExp;
+    private Double agilityExp;
+    private Double charismaExp;
+    private Double intelligenceExp;
+    private Double enduranceExp;
 
     public PlayerStats() {
         level = 1;
@@ -49,12 +49,12 @@ public class PlayerStats {
         endurance = 1;
         luck = 1;
 
-        strengthExp = 0;
-        healthExp = 0;
-        agilityExp = 0;
-        charismaExp = 0;
-        intelligenceExp = 0;
-        enduranceExp = 0;
+        strengthExp = 0.0;
+        healthExp = 0.0;
+        agilityExp = 0.0;
+        charismaExp = 0.0;
+        intelligenceExp = 0.0;
+        enduranceExp = 0.0;
     }
 
     int getExpToNextStatUp(Integer currentLevel) {
@@ -79,32 +79,32 @@ public class PlayerStats {
         int newQuantity;
         switch (stat) {
             case STRENGTH:
-                strengthExp = 0;
+                strengthExp = 0.0;
                 strength += quantity;
                 newQuantity = strength;
                 break;
             case HEALTH:
-                healthExp = 0;
+                healthExp = 0.0;
                 health += quantity;
                 newQuantity = health;
                 break;
             case AGILITY:
-                agilityExp = 0;
+                agilityExp = 0.0;
                 agility += quantity;
                 newQuantity = agility;
                 break;
             case CHARISMA:
-                charismaExp = 0;
+                charismaExp = 0.0;
                 charisma += quantity;
                 newQuantity = charisma;
                 break;
             case INTELLIGENCE:
-                intelligenceExp = 0;
+                intelligenceExp = 0.0;
                 intelligence += quantity;
                 newQuantity = intelligence;
                 break;
             case ENDURANCE:
-                enduranceExp = 0;
+                enduranceExp = 0.0;
                 endurance += quantity;
                 newQuantity = endurance;
                 break;
@@ -119,7 +119,7 @@ public class PlayerStats {
         return translation.getMessage("player.stats.stat-up", lang, new Object[]{stat.whichLowercase(lang), String.valueOf(newQuantity)});
     }
 
-    public ArrayList<String> addStatExp(int exp, Stats stat, Language lang, TranslationManager translation) {
+    public ArrayList<String> addStatExp(double exp, Stats stat, Language lang, TranslationManager translation) {
         ArrayList<String> events = new ArrayList<>();
         if (exp == 0) return events;
         boolean up = isStatUp(stat, exp);
@@ -164,7 +164,7 @@ public class PlayerStats {
                 levelUp();
                 events.add(translation.getMessage("player.stats.level-up", lang, new Object[]{String.valueOf(getLevel())}));
             }
-            up = isStatUp(stat, 0);
+            up = isStatUp(stat, 0.0);
         }
         return events;
     }
@@ -173,7 +173,7 @@ public class PlayerStats {
         return translation.getMessage("player.stats.stat-up", lang, new Object[]{statName, value});
     }
 
-    private Boolean isStatUp(Stats stat, Integer newExp) {
+    private Boolean isStatUp(Stats stat, Double newExp) {
         return addStatExp(stat, newExp) >= getExpToNextStatUp(getStatValue(stat));
     }
 
@@ -194,7 +194,7 @@ public class PlayerStats {
         return unassignedPoints;
     }
 
-    private Integer addStatExp(Stats stat, Integer exp) throws InvalidInputException {
+    private Double addStatExp(Stats stat, Double exp) throws InvalidInputException {
         switch (stat) {
             case STRENGTH:
                 strengthExp += exp;
@@ -219,7 +219,7 @@ public class PlayerStats {
         }
     }
 
-    private int getStatExpValue(Stats stat) {
+    private double getStatExpValue(Stats stat) {
         switch (stat) {
             case STRENGTH:
                 return strengthExp;

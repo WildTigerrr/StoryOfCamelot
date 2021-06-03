@@ -170,7 +170,7 @@ public class MoveCommandHandler extends TextMessageHandler {
         experienceService.addExperience(
                 player,
                 Stats.ENDURANCE,
-                (int) (Integer.parseInt(action.additionalValue) * BotConfig.EXPERIENCE_MOVEMENT_MULTIPLIER),
+                Integer.parseInt(action.additionalValue) * BotConfig.EXPERIENCE_MOVEMENT_MULTIPLIER,
                 true
         );
         playerService.update(player);
