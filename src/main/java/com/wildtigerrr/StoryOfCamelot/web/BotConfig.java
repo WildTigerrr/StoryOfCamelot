@@ -19,4 +19,6 @@ public class BotConfig {
     public final static int DEFAULT_SKILL_POINTS = 20;
     public final static int STORE_SELL_MARKDOWN = 30;
 
+    public final static float EXPERIENCE_MOVEMENT_MULTIPLIER = 1.5F;
+
 }

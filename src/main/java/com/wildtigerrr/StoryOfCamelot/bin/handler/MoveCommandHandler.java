@@ -15,6 +15,7 @@ import com.wildtigerrr.StoryOfCamelot.database.jpa.service.implementation.Locati
 import com.wildtigerrr.StoryOfCamelot.database.jpa.service.implementation.LocationServiceImpl;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.service.template.PlayerService;
 import com.wildtigerrr.StoryOfCamelot.database.redis.schema.PlayerState;
+import com.wildtigerrr.StoryOfCamelot.web.BotConfig;
 import com.wildtigerrr.StoryOfCamelot.web.service.CacheProvider;
 import com.wildtigerrr.StoryOfCamelot.web.service.CacheType;
 import com.wildtigerrr.StoryOfCamelot.web.service.DataProvider;
@@ -169,7 +170,7 @@ public class MoveCommandHandler extends TextMessageHandler {
         experienceService.addExperience(
                 player,
                 Stats.ENDURANCE,
-                Integer.parseInt(action.additionalValue) / 10,
+                (int) (Integer.parseInt(action.additionalValue) * BotConfig.EXPERIENCE_MOVEMENT_MULTIPLIER),
                 true
         );
         playerService.update(player);
