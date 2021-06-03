@@ -3,13 +3,16 @@ package com.wildtigerrr.StoryOfCamelot.bin.handler;
 import com.wildtigerrr.StoryOfCamelot.bin.base.service.ActionHandler;
 import com.wildtigerrr.StoryOfCamelot.bin.base.service.KeyboardManager;
 import com.wildtigerrr.StoryOfCamelot.bin.base.service.MoneyCalculation;
+import com.wildtigerrr.StoryOfCamelot.bin.base.service.player.ExperienceService;
 import com.wildtigerrr.StoryOfCamelot.bin.enums.Language;
 import com.wildtigerrr.StoryOfCamelot.bin.translation.TranslationManager;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.Backpack;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.BackpackItem;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.Item;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.Store;
+import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.enums.Stats;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.service.template.*;
+import com.wildtigerrr.StoryOfCamelot.web.BotConfig;
 import com.wildtigerrr.StoryOfCamelot.web.bot.update.ParsedCommand;
 import com.wildtigerrr.StoryOfCamelot.web.service.ResponseManager;
 import com.wildtigerrr.StoryOfCamelot.web.service.message.IncomingMessage;
@@ -31,16 +34,16 @@ public class StoreCommandHandler extends TextMessageHandler {
     private final ItemService itemService;
     private final StoreService storeService;
     private final BackpackService backpackService;
-    private final BackpackItemService backpackItemService;
+    private final ExperienceService experienceService;
     private final PlayerService playerService;
 
-    public StoreCommandHandler(ResponseManager messages, TranslationManager translation, ActionHandler actionHandler, ItemService itemService, StoreService storeService, BackpackService backpackService, BackpackItemService backpackItemService, PlayerService playerService) {
+    public StoreCommandHandler(ResponseManager messages, TranslationManager translation, ActionHandler actionHandler, ItemService itemService, StoreService storeService, BackpackService backpackService, ExperienceService experienceService, PlayerService playerService) {
         super(messages, translation);
         this.actionHandler = actionHandler;
         this.itemService = itemService;
         this.storeService = storeService;
         this.backpackService = backpackService;
-        this.backpackItemService = backpackItemService;
+        this.experienceService = experienceService;
         this.playerService = playerService;
     }
 
@@ -152,6 +155,12 @@ public class StoreCommandHandler extends TextMessageHandler {
                 .text(translation.getMessage("location.store.item.purchased", message, new Object[]{item.getName(message.getPlayer())}))
                 .build()
         );
+        experienceService.addExperience(
+                message.getPlayer(),
+                Stats.CHARISMA,
+                item.getPrice() * BotConfig.EXPERIENCE_TRADE_MULTIPLIER,
+                true
+        );
         messages.sendAnswer(message.getQueryId(), "Осталось: " + MoneyCalculation.moneyOf(message.getPlayer(), translation));
     }
 
@@ -161,6 +170,12 @@ public class StoreCommandHandler extends TextMessageHandler {
         Backpack backpack = backpackService.findMainByPlayerId(message.getPlayer().getId());
         BackpackItem item = backpack.getItemByBackpackItemId(command.paramByNum(4));
         sellItem(item);
+        experienceService.addExperience(
+                message.getPlayer(),
+                Stats.CHARISMA,
+                item.getSalePrice() * BotConfig.EXPERIENCE_TRADE_MULTIPLIER,
+                true
+        );
         sendStoreSellWindow(message, command.paramByNum(1), command.intByNum(2));
     }
 
