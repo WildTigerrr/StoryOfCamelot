@@ -2,18 +2,15 @@ package com.wildtigerrr.StoryOfCamelot.database.jpa.schema;
 
 import com.wildtigerrr.StoryOfCamelot.bin.base.service.IdGenerator;
 import com.wildtigerrr.StoryOfCamelot.bin.base.service.MoneyCalculation;
-import com.wildtigerrr.StoryOfCamelot.bin.base.service.TimeDependentActions;
-import com.wildtigerrr.StoryOfCamelot.bin.enums.ActionType;
 import com.wildtigerrr.StoryOfCamelot.bin.enums.EnemyType;
 import com.wildtigerrr.StoryOfCamelot.bin.enums.Language;
+import com.wildtigerrr.StoryOfCamelot.bin.enums.Skill;
 import com.wildtigerrr.StoryOfCamelot.bin.service.ApplicationContextProvider;
-import com.wildtigerrr.StoryOfCamelot.bin.service.ScheduledAction;
-import com.wildtigerrr.StoryOfCamelot.bin.service.Time;
 import com.wildtigerrr.StoryOfCamelot.bin.translation.TranslationManager;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.interfaces.Fighter;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.interfaces.SimpleObject;
-import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.enums.ObjectType;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.enums.CharacterStatus;
+import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.enums.ObjectType;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.enums.PlayerStatusExtended;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.enums.Stats;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.service.implementation.PlayerServiceImpl;
@@ -26,10 +23,7 @@ import org.hibernate.annotations.Parameter;
 import org.jetbrains.annotations.NotNull;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 import static java.util.Comparator.comparingInt;
 
@@ -61,6 +55,12 @@ public class Player extends SimpleObject implements Comparable<Player>, Fighter 
     @Enumerated(EnumType.STRING)
     private PlayerStatusExtended additionalStatus;
     private Double currentHealth;
+
+    @ElementCollection(targetClass = Skill.class, fetch = FetchType.EAGER)
+    @JoinTable(name = "PLAYER_SKILL", joinColumns = @JoinColumn(name = "PLAYER_ID"))
+    @Column(name = "skill")
+    @Enumerated(EnumType.STRING)
+    private Set<Skill> skills = new HashSet<>();
 
     @Embedded
     private PlayerStats stats;

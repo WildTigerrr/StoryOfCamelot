@@ -23,21 +23,11 @@ public class ExperienceService {
 
     private final ResponseManager messages;
     private final TranslationManager translation;
-    private final PlayerServiceImpl playerService;
 
     @Autowired
-    public ExperienceService(ResponseManager messages, TranslationManager translation, PlayerServiceImpl playerService) {
+    public ExperienceService(ResponseManager messages, TranslationManager translation) {
         this.messages = messages;
         this.translation = translation;
-        this.playerService = playerService;
-    }
-
-    public void sendSkillWindow(Player player) {
-        messages.sendMessage(TextResponseMessage.builder()
-                .text(player.getStatMenu(translation))
-                .keyboard(KeyboardManager.getKeyboardForStatUp(player.stats().getUnassignedPoints()))
-                .targetId(player).build()
-        );
     }
 
     public Player addExperience(Player player, Stats stat, int experience, Boolean sendExperienceGet) {
@@ -70,46 +60,6 @@ public class ExperienceService {
             messages.sendErrorReport(e);
         }
         return player;
-    }
-
-    public void statUp(UpdateWrapper message) {
-        String[] commandParts = message.getText().split("_", 3);
-        if (commandParts.length == 3 && commandParts[1].length() == 1 && StringUtils.isNumeric(commandParts[2])) {
-            Stats stat = Stats.getStat(commandParts[1]);
-            if (stat == null) {
-                messages.sendMessage(TextResponseMessage.builder()
-                        .text(translation.getMessage("player.stats.invalid", message)).targetId(message).build()
-                );
-            } else {
-                Player player = message.getPlayer();
-                String result = player.stats().raiseStat(stat, Integer.valueOf(commandParts[2]), player.getLanguage(), translation);
-                if (!result.equals(translation.getMessage("player.stats.invalid", message)))
-                    playerService.update(player);
-
-                messages.sendAnswer(message.getQueryId(), result);
-                if (player.stats().getUnassignedPoints() == 0) {
-                    messages.sendMessage(EditResponseMessage.builder()
-                            .messageId(message).text(player.getStatMenu(translation)).targetId(player).build()
-                    );
-                } else {
-                    messages.sendMessage(EditResponseMessage.builder()
-                            .messageId(message)
-                            .text(player.getStatMenu(translation))
-                            .keyboard(KeyboardManager.getKeyboardForStatUp(player.stats().getUnassignedPoints()))
-                            .targetId(player).build()
-                    );
-                }
-            }
-        } else {
-            messages.sendMessage(TextResponseMessage.builder()
-                    .text(translation.getMessage("commands.invalid", message)).targetId(message).build()
-            );
-        }
-    }
-
-    private void handleError(String message, Exception e) {
-        log.error(message, e);
-        messages.postMessageToAdminChannel(message);
     }
 
 }

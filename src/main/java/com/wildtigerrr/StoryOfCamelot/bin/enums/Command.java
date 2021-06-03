@@ -14,6 +14,8 @@ public enum Command {
     NICKNAME ("nicknameCommandHandler"),
     LANG("languageCommandHandler"),
     MOVE("moveCommandHandler"),
+    SKILL_LEARN("skillsCommandHandler"),
+    NEW_SKILL("skillsCommandHandler"),
     SKILLS("skillsCommandHandler"),
     UP ("skillsCommandHandler"),
     FIGHT("fightCommandHandler"),

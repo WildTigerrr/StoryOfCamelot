@@ -221,11 +221,11 @@ public class GameTutorial {
     private void tutorialInitiateStatsUp(Player player) {
         player.setAdditionalStatus(PlayerStatusExtended.TUTORIAL_STATS_UP_2);
         playerService.update(player);
-        experienceService.sendSkillWindow(player);
+//        experienceService.sendSkillWindow(player);
     }
 
     private void tutorialProceedStatsUpProgress(UpdateWrapper message) {
-        experienceService.statUp(message);
+//        experienceService.statUp(message);
         if (message.getPlayer().stats().getUnassignedPoints() == 0)
             tutorialStatsRaised(message.getPlayer());
     }

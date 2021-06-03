@@ -1,6 +1,7 @@
 package com.wildtigerrr.StoryOfCamelot.bin.base.service;
 
 import com.wildtigerrr.StoryOfCamelot.bin.enums.ReplyButton;
+import com.wildtigerrr.StoryOfCamelot.bin.enums.Skill;
 import com.wildtigerrr.StoryOfCamelot.bin.translation.TranslationManager;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.Location;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.Player;
@@ -13,7 +14,9 @@ import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class ActionHandler {
@@ -77,6 +80,7 @@ public class ActionHandler {
     public List<ReplyButton> getPlayerInfoActions(Player player) {
         return new ArrayList<>() {{
             add(ReplyButton.BACK);
+            if (player.getSkills() != null && player.getLevel() > player.getSkills().size() + 1) add(ReplyButton.LEVEL_UP);
             add(ReplyButton.SKILLS);
             add(ReplyButton.BACKPACK);
             add(ReplyButton.PLAYERS_TOP);
@@ -84,11 +88,14 @@ public class ActionHandler {
     }
 
     public List<ReplyButton> getAvailableFightingActions(Player player) {
+        List<Skill> skills = player.getSkills().stream().sorted(Comparator.comparingInt(Enum::ordinal)).collect(Collectors.toList());
         return new ArrayList<>() {{
-            add(ReplyButton.FIGHT_ATTACK);
-            add(ReplyButton.FIGHT_STRONG_ATTACK);
-            add(ReplyButton.FIGHT_FAST_ATTACK);
-            add(ReplyButton.FIGHT_DEFENCE);
+            for (Skill skill : skills) {
+                add(ReplyButton.skillToButton(skill));
+            }
+            if (skills.isEmpty()) {
+                add(ReplyButton.FIGHT_ATTACK);
+            }
         }};
     }
 

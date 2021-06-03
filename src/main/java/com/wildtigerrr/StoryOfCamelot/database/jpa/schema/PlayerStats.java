@@ -11,6 +11,7 @@ import lombok.Setter;
 
 import javax.persistence.Embeddable;
 import java.util.ArrayList;
+import java.util.Map;
 
 @Embeddable
 @Getter
@@ -262,6 +263,13 @@ public class PlayerStats {
         return (useMarkup ? "*" : "") + stat.emoji() + stat.what(lang)
                 + ":" + (useMarkup ? "* " : " ") + getStatValue(stat)
                 + (!includeExperience || !stat.containsExperience() ? "" : " (" + getStatExpValue(stat) + "/" + getExpToNextStatUp(getStatValue(stat)) + ")");
+    }
+
+    public boolean hasStats(Map<Stats, Integer> requiredStats) {
+        for (Stats stat : requiredStats.keySet()) {
+            if (getStatValue(stat) < requiredStats.get(stat)) return false;
+        }
+        return true;
     }
 
 }

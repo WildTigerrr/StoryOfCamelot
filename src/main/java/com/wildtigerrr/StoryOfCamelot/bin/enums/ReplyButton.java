@@ -6,6 +6,7 @@ import lombok.Getter;
 public enum ReplyButton {
     MOVE(NameTranslation.BUTTON_MOVE, Command.MOVE),
     SKILLS(NameTranslation.BUTTON_SKILLS, Command.SKILLS),
+    LEVEL_UP(NameTranslation.BUTTON_LEVEL_UP, Command.SKILL_LEARN),
     ME(NameTranslation.BUTTON_ME, Command.ME),
     FIGHT(NameTranslation.BUTTON_FIGHT, Command.FIGHT),
     SEARCH_ENEMIES(NameTranslation.BUTTON_SEARCH_ENEMIES, Command.SEARCH_ENEMIES),
@@ -20,10 +21,10 @@ public enum ReplyButton {
     STORE_GROCERY(NameTranslation.STORE_GROCERY, Command.STORE_SELECT),
 
     // Skills
-    FIGHT_ATTACK(NameTranslation.SKILL_FIGHT_ATTACK, Skill.BASIC_ATTACK),
-    FIGHT_STRONG_ATTACK(NameTranslation.SKILL_FIGHT_STRONG_ATTACK, Skill.STRONG_ATTACK),
-    FIGHT_FAST_ATTACK(NameTranslation.SKILL_FIGHT_FAST_ATTACK, Skill.FAST_ATTACK),
-    FIGHT_DEFENCE(NameTranslation.SKILL_FIGHT_DEFENCE, Skill.BASIC_DEFENCE),;
+    FIGHT_ATTACK(Skill.BASIC_ATTACK),
+    FIGHT_STRONG_ATTACK(Skill.STRONG_ATTACK),
+    FIGHT_FAST_ATTACK(Skill.FAST_ATTACK),
+    FIGHT_DEFENCE(Skill.BASIC_DEFENCE),;
 
     private final NameTranslation label;
     @Getter
@@ -37,8 +38,8 @@ public enum ReplyButton {
         this.skill = null;
     }
 
-    ReplyButton(NameTranslation label, Skill skill) {
-        this.label = label;
+    ReplyButton(Skill skill) {
+        this.label = skill.getLabelTranslations();
         this.command = Command.FIGHT;
         this.skill = skill;
     }
@@ -72,6 +73,13 @@ public enum ReplyButton {
 
     public static Skill buttonToSkill(String text, Language lang) {
         return getButton(text, lang).getSkill();
+    }
+
+    public static ReplyButton skillToButton(Skill skill) {
+        for (ReplyButton button : ReplyButton.values()) {
+            if (button.hasSkill() && button.getSkill() == skill) return button;
+        }
+        return ReplyButton.FIGHT_ATTACK;
     }
 
 }

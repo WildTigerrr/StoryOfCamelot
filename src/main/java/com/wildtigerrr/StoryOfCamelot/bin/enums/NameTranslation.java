@@ -64,6 +64,9 @@ public enum NameTranslation {
     BUTTON_SKILLS(
             Emoji.SKILLS.getCode(), "button.skills"
     ),
+    BUTTON_LEVEL_UP(
+            Emoji.CROWN.getCode(), "button.level_up"
+    ),
     BUTTON_ME(
             Emoji.SCROLL.getCode(), "button.me"
     ),
@@ -137,6 +140,9 @@ public enum NameTranslation {
     SKILL_FIGHT_STRONG_ATTACK(
             Emoji.STRENGTH.getCode(), "skill.fight.strong_attack"
     ),
+    SKILL_FIGHT_ADVANCED_STRONG_ATTACK(
+            Emoji.STRENGTH.getCode(), "skill.fight.advanced_strong_attack"
+    ),
     SKILL_FIGHT_FAST_ATTACK(
             Emoji.DAGGER.getCode(), "skill.fight.fast_attack"
     ),
@@ -149,6 +155,9 @@ public enum NameTranslation {
     DESC_ITEM_SWORD_UNCOMMON("description.item.sword.uncommon"),
     DESC_ITEM_STICK("description.item.craft.stick"),
     DESC_ITEM_STONE("description.item.craft.stone"),
+
+    DESC_SKILL_ADVANCED_STRONG_ATTACK("description.skill.advanced_strong_attack"),
+    DESC_SKILL_FAST_ATTACK("description.skill.fast_attack"),
     ;
 
     private final String name;

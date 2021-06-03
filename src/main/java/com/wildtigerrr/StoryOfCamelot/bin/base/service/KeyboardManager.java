@@ -2,6 +2,7 @@ package com.wildtigerrr.StoryOfCamelot.bin.base.service;
 
 import com.wildtigerrr.StoryOfCamelot.bin.enums.Language;
 import com.wildtigerrr.StoryOfCamelot.bin.enums.ReplyButton;
+import com.wildtigerrr.StoryOfCamelot.bin.enums.Skill;
 import com.wildtigerrr.StoryOfCamelot.bin.translation.TranslationManager;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.*;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.enums.Stats;
@@ -173,6 +174,25 @@ public class KeyboardManager {
                         .setText("Продажа")
                         .setCallbackData("/store " + store.getId() + " 1 page_sell"))
                 .build();
+    }
+
+    public static InlineKeyboardMarkup getSkillLearnKeyboard(List<Skill> skills, int page, Language lang) {
+        int pageSize = 10;
+        if (skills.isEmpty() || skills.size() < pageSize * (page - 1)) {
+            return null;
+        }
+        KeyboardBuilder<InlineKeyboardMarkup> builder = new KeyboardBuilder<>(KeyboardBuilder.Type.INLINE, 2);
+        Skill skill;
+        for (int i = pageSize * (page - 1); i < Math.min(pageSize * page, skills.size()); i++) {
+            skill = skills.get(i);
+            builder.addButton(ReplyButton.skillToButton(skill).getLabel(lang), "/new_skill " + page + " skill_info " + skill.name())
+                    .addButton("Learn", "/new_skill " + page + " skill_learn " + skill.name());
+        }
+        if (skills.size() > pageSize) {
+            builder.addPaginationRow("/new_skill ", " page", page,
+                    page + " / " + ((int) Math.ceil(((double) skills.size()) / pageSize)), skills.size() > pageSize * page);
+        }
+        return builder.build();
     }
 
 }
