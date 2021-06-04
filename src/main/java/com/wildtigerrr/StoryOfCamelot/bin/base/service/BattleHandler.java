@@ -1,11 +1,13 @@
 package com.wildtigerrr.StoryOfCamelot.bin.base.service;
 
 import com.wildtigerrr.StoryOfCamelot.bin.base.BattleLog;
+import com.wildtigerrr.StoryOfCamelot.bin.base.service.player.ExperienceService;
 import com.wildtigerrr.StoryOfCamelot.bin.enums.Language;
 import com.wildtigerrr.StoryOfCamelot.bin.enums.Skill;
 import com.wildtigerrr.StoryOfCamelot.bin.translation.TranslationManager;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.interfaces.Fighter;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.Player;
+import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.enums.Stats;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,11 +23,13 @@ import static com.wildtigerrr.StoryOfCamelot.web.BotConfig.*;
 public class BattleHandler {
 
     private final TranslationManager translation;
+    private final ExperienceService experienceService;
     private final Random random = new Random();
 
     @Autowired
-    public BattleHandler(TranslationManager translation) {
+    public BattleHandler(TranslationManager translation, ExperienceService experienceService) {
         this.translation = translation;
+        this.experienceService = experienceService;
     }
 
     public BattleLog fight(Fighter attacker, Fighter defender, Language lang) {
@@ -75,25 +79,24 @@ public class BattleHandler {
         return battleLog;
     }
 
-    private void applyDamageAndLog(Fighter attacker, Fighter defender, Language lang, List<String> log) {
+    private void applyDamageAndLog(Fighter attacker, Fighter defender, Language lang, List<String> log, Skill skill) {
         boolean isCrit = isCrit();
-        int damage = calculateDamage(attacker.getDamage(), defender.getDefence(), isCrit);
+        int damage = calculateDamage(skill == null ? attacker.getDamage() : skill.calculateStrength((Player) attacker), defender.getDefence(), isCrit);
+        if (attacker instanceof Player) {
+            experienceService.addExperience((Player) attacker, Stats.STRENGTH, damage * EXPERIENCE_DAMAGE_DEALT_MULTIPLIER, EXPERIENCE__SEND_DAMAGE_DEALT);
+        }
         String messageTemplate = isCrit ? "battle.log.row-crit" : "battle.log.row";
         log.add(translation.getMessage(messageTemplate, lang, new Object[]{
                 attacker.getName(lang), attacker.getHealth(), defender.getName(lang), defender.getHealth(), damage
         }));
         defender.applyDamage(damage);
+        if (defender instanceof Player) {
+            experienceService.addExperience((Player) defender, Stats.HEALTH, damage * EXPERIENCE_DAMAGE_RECEIVED_MULTIPLIER, EXPERIENCE__SEND_DAMAGE_RECEIVED);
+        }
     }
 
-    private void applyDamageAndLog(Player attacker, Fighter defender, Language lang, List<String> logRows, Skill skill) {
-        boolean isCrit = isCrit();
-        int damage = calculateDamage(skill.calculateStrength(attacker), defender.getDefence(), isCrit);
-        String messageTemplate = isCrit ? "battle.log.row-crit" : "battle.log.row";
-
-        logRows.add(translation.getMessage(messageTemplate, lang, new Object[]{
-                attacker.getName(lang), attacker.getHealth(), defender.getName(lang), defender.getHealth(), damage
-        }));
-        defender.applyDamage(damage);
+    private void applyDamageAndLog(Fighter attacker, Fighter defender, Language lang, List<String> log) {
+        applyDamageAndLog(attacker, defender, lang, log, null);
     }
 
     private int calculateDamage(float attack, float armor, boolean isCrit) {

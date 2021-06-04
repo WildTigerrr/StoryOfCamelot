@@ -212,9 +212,9 @@ class StoreCommandHandlerTest extends ServiceBaseTest {
         storeCommandHandler.process(message);
 
         // Then
-        verify(messages).sendMessage(messageArguments.capture());
+        verify(messages, atLeastOnce()).sendMessage(messageArguments.capture());
 
-        assertEquals(translation.getMessage("location.store.item.purchased", message, new Object[]{items.get(0).getName(message.getPlayer())}), messageArguments.getValue().getText());
+        assertEquals(translation.getMessage("location.store.item.purchased", message, new Object[]{items.get(0).getName(message.getPlayer())}), messageArguments.getAllValues().get(0).getText());
         backpack = backpackService.findMainByPlayerId(message.getPlayer().getId());
         assertNotNull(backpack.getItemById(items.get(0).getId()));
     }
@@ -403,7 +403,7 @@ class StoreCommandHandlerTest extends ServiceBaseTest {
         storeCommandHandler.process(message);
 
         // Then
-        verify(messages).sendMessage(messageArguments.capture());
+        verify(messages, atLeastOnce()).sendMessage(messageArguments.capture());
 
         assertEquals(translation.getMessage("location.store.sell", message, new Object[]{store.getLabel(player.getLanguage())}), messageArguments.getValue().getText());
         assertNull(((EditResponseMessage) messageArguments.getValue()).getKeyboard());

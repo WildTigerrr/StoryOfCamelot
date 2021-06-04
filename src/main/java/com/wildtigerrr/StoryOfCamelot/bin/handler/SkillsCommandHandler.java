@@ -93,10 +93,10 @@ public class SkillsCommandHandler extends TextMessageHandler {
      * @param message "/new_skill " + page + " skill_info " + skill.name()
      */
     private void sendSkillInfo(TextIncomingMessage message) {
-        Skill newSkill;
-        if ((newSkill = availableSkill(message)) == null) return;
-        String description;
-        if ((description = newSkill.getDescription(message.getPlayer().getLanguage())).isBlank()) {
+        Skill newSkill = availableSkill(message);
+        if (newSkill == null) return;
+        String description = newSkill.getDescription(message.getPlayer().getLanguage());
+        if (description.isBlank()) {
             messages.sendAnswer(message.getQueryId());
             return;
         }

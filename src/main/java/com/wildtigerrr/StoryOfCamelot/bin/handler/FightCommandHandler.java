@@ -89,54 +89,27 @@ public class FightCommandHandler extends TextMessageHandler {
 
     private void fightDynamic(TextIncomingMessage message) {
         PlayerState state = (PlayerState) cacheService.findObject(CacheType.PLAYER_STATE, message.getPlayer().getId());
-        if (!state.hasEnemy()) {
-            messages.sendMessage(TextResponseMessage.builder().by(message)
-                    .text(translation.getMessage("battle.no-enemy", message)).build()
-            );
-            return;
-        }
+        Mob mob = getValidatedEnemy(message, state);
+        if (mob == null) return;
 
         messages.sendMessage(TextResponseMessage.builder().by(message)
                 .text(translation.getMessage("battle.start", message)).build()
         );
-        Mob mob = mobService.findById(state.getEnemy().getId());
-
         messages.sendMessage(TextResponseMessage.builder().by(message)
                 .text(translation.getMessage("battle.choose-next-action", message))
                 .keyboard(KeyboardManager.getReplyByButtons(actionHandler.getAvailableFightingActions(message.getPlayer()), message.getPlayer().getLanguage()))
                 .build()
         );
 
-        ArrayList<String> logRows = new ArrayList<>();
-        logRows.add(translation.getMessage("battle.log.fight", message.getPlayer().getLanguage()));
-        BattleLog battleLog = new BattleLog(
-                state.getId(),
-                mob.getId(),
-                EnemyType.MOB,
-                false,
-                false,
-                logRows
-        );
-
-        state.setLastBattle(battleLog);
         state.setEnemyState(EnemyState.of(mob));
+        state.initBattleLog(translation.getMessage("battle.log.fight", message.getPlayer().getLanguage()));
         cacheService.add(CacheType.PLAYER_STATE, state.getId(), state);
-
-        message.getPlayer().setCurrentHealth(message.getPlayer().getStats().getHealth().doubleValue());
-        playerService.update(message.getPlayer());
     }
 
     private void fightAction(TextIncomingMessage message, Skill skill) {
         PlayerState state = (PlayerState) cacheService.findObject(CacheType.PLAYER_STATE, message.getPlayer().getId());
-        if (!state.hasEnemy()) {
-            messages.sendMessage(TextResponseMessage.builder().by(message)
-                    .text(translation.getMessage("battle.no-enemy", message)).build()
-            );
-            return;
-        }
-
-        Mob mob = mobService.findById(state.getEnemy().getId());
-        mob.setHitpoints(state.getEnemyState().getHitpoints());
+        Mob mob = getValidatedEnemy(message, state);
+        if (mob == null) return;
 
         BattleLog battleLog = battleHandler.fightDynamic(message.getPlayer(), mob, message.getPlayer().getLanguage(), state.getLastBattle(), skill);
         messages.sendMessage(TextResponseMessage.builder().by(message)
@@ -162,29 +135,24 @@ public class FightCommandHandler extends TextMessageHandler {
         playerService.update(message.getPlayer());
     }
 
-    private void fight(TextIncomingMessage message) {
-        PlayerState state = (PlayerState) cacheService.findObject(CacheType.PLAYER_STATE, message.getPlayer().getId());
+    private Mob getValidatedEnemy(IncomingMessage message, PlayerState state) {
         if (!state.hasEnemy()) {
             messages.sendMessage(TextResponseMessage.builder().by(message)
                     .text(translation.getMessage("battle.no-enemy", message)).build()
             );
-            return;
+            return null;
         }
-
-        messages.sendMessage(TextResponseMessage.builder().by(message)
-                .text(translation.getMessage("battle.start", message)).build()
-        );
         Mob mob = mobService.findById(state.getEnemy().getId());
-
-        BattleLog battleLog = battleHandler.fight(message.getPlayer(), mob, message.getPlayer().getLanguage());
-        messages.sendMessage(TextResponseMessage.builder().by(message)
-                .text(battleLog.getBattleHistory()).build()
-        );
-
-        state.setLastBattle(battleLog);
-        cacheService.add(CacheType.PLAYER_STATE, state.getId(), state);
-
-        if (battleLog.isWin() && battleLog.getEnemyType() == EnemyType.MOB) applyDrop(battleLog);
+        if (mob == null) {
+            messages.sendMessage(TextResponseMessage.builder().by(message)
+                    .text(translation.getMessage("battle.no-enemy", message)).build()
+            );
+            return null;
+        }
+        if (state.getEnemyState() != null) {
+            mob.setHitpoints(state.getEnemyState().getHitpoints());
+        }
+        return mob;
     }
 
     private Mob getRandomMob(List<LocationPossible> possibleList) {

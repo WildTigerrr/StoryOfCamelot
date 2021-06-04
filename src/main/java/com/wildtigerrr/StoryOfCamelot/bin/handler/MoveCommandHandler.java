@@ -15,7 +15,6 @@ import com.wildtigerrr.StoryOfCamelot.database.jpa.service.implementation.Locati
 import com.wildtigerrr.StoryOfCamelot.database.jpa.service.implementation.LocationServiceImpl;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.service.template.PlayerService;
 import com.wildtigerrr.StoryOfCamelot.database.redis.schema.PlayerState;
-import com.wildtigerrr.StoryOfCamelot.web.BotConfig;
 import com.wildtigerrr.StoryOfCamelot.web.service.CacheProvider;
 import com.wildtigerrr.StoryOfCamelot.web.service.CacheType;
 import com.wildtigerrr.StoryOfCamelot.web.service.DataProvider;
@@ -31,6 +30,8 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMar
 
 import java.io.InputStream;
 import java.util.ArrayList;
+
+import static com.wildtigerrr.StoryOfCamelot.web.BotConfig.*;
 
 @Service
 public class MoveCommandHandler extends TextMessageHandler {
@@ -170,8 +171,8 @@ public class MoveCommandHandler extends TextMessageHandler {
         experienceService.addExperience(
                 player,
                 Stats.ENDURANCE,
-                Integer.parseInt(action.additionalValue) * BotConfig.EXPERIENCE_MOVEMENT_MULTIPLIER,
-                true
+                Integer.parseInt(action.additionalValue) * EXPERIENCE_MOVEMENT_MULTIPLIER,
+                EXPERIENCE__SEND_MOVEMENT
         );
         playerService.update(player);
         cacheService.add(CacheType.PLAYER_STATE, playerState.stop());

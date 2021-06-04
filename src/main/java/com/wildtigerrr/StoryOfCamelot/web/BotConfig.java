@@ -21,5 +21,12 @@ public class BotConfig {
 
     public final static float EXPERIENCE_MOVEMENT_MULTIPLIER = 1.5F; // Per second
     public final static float EXPERIENCE_TRADE_MULTIPLIER = 0.5F; // Per copper coin
+    public final static float EXPERIENCE_DAMAGE_DEALT_MULTIPLIER = 0.1F; // Per 1 hp
+    public final static float EXPERIENCE_DAMAGE_RECEIVED_MULTIPLIER = 0.1F; // Per 1 hp
+
+    public final static boolean EXPERIENCE__SEND_MOVEMENT = true;
+    public final static boolean EXPERIENCE__SEND_TRADE = true;
+    public final static boolean EXPERIENCE__SEND_DAMAGE_DEALT = true;
+    public final static boolean EXPERIENCE__SEND_DAMAGE_RECEIVED = true;
 
 }

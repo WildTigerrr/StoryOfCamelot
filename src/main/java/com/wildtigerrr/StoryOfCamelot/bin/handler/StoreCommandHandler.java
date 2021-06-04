@@ -12,7 +12,6 @@ import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.Item;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.Store;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.enums.Stats;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.service.template.*;
-import com.wildtigerrr.StoryOfCamelot.web.BotConfig;
 import com.wildtigerrr.StoryOfCamelot.web.bot.update.ParsedCommand;
 import com.wildtigerrr.StoryOfCamelot.web.service.ResponseManager;
 import com.wildtigerrr.StoryOfCamelot.web.service.message.IncomingMessage;
@@ -25,6 +24,8 @@ import org.springframework.stereotype.Service;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
+
+import static com.wildtigerrr.StoryOfCamelot.web.BotConfig.*;
 
 @Service
 @Log4j2
@@ -158,8 +159,8 @@ public class StoreCommandHandler extends TextMessageHandler {
         experienceService.addExperience(
                 message.getPlayer(),
                 Stats.CHARISMA,
-                item.getPrice() * BotConfig.EXPERIENCE_TRADE_MULTIPLIER,
-                true
+                item.getPrice() * EXPERIENCE_TRADE_MULTIPLIER,
+                EXPERIENCE__SEND_TRADE
         );
         messages.sendAnswer(message.getQueryId(), "Осталось: " + MoneyCalculation.moneyOf(message.getPlayer(), translation));
     }
@@ -173,8 +174,8 @@ public class StoreCommandHandler extends TextMessageHandler {
         experienceService.addExperience(
                 message.getPlayer(),
                 Stats.CHARISMA,
-                item.getSalePrice() * BotConfig.EXPERIENCE_TRADE_MULTIPLIER,
-                true
+                item.getSalePrice() * EXPERIENCE_TRADE_MULTIPLIER,
+                EXPERIENCE__SEND_TRADE
         );
         sendStoreSellWindow(message, command.paramByNum(1), command.intByNum(2));
     }

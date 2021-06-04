@@ -40,6 +40,7 @@ public class Mob extends SimpleObject implements Fighter {
     private NameTranslation name;
     private Integer level;
     private Integer damage;
+    @Transient
     private Integer hitpoints;
     private Integer hitpointsMax;
     private Integer defence;

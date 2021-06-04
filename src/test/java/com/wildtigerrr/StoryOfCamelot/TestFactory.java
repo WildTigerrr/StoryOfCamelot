@@ -4,10 +4,11 @@ import com.wildtigerrr.StoryOfCamelot.bin.enums.Language;
 import com.wildtigerrr.StoryOfCamelot.bin.enums.NameTranslation;
 import com.wildtigerrr.StoryOfCamelot.bin.enums.templates.LocationTemplate;
 import com.wildtigerrr.StoryOfCamelot.bin.enums.templates.MobTemplate;
-import com.wildtigerrr.StoryOfCamelot.database.jpa.dataaccessobject.LocationDao;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.Location;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.Mob;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.Player;
+import com.wildtigerrr.StoryOfCamelot.database.jpa.service.template.LocationService;
+import com.wildtigerrr.StoryOfCamelot.database.jpa.service.template.MobService;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.service.template.PlayerService;
 import com.wildtigerrr.StoryOfCamelot.database.redis.schema.PlayerState;
 import com.wildtigerrr.StoryOfCamelot.web.service.CacheProvider;
@@ -26,7 +27,10 @@ public class TestFactory {
     private PlayerService playerService;
 
     @Autowired
-    private LocationDao locationDao;
+    private LocationService locationService;
+
+    @Autowired
+    private MobService mobService;
 
     @Autowired
     private CacheProvider cacheService;
@@ -52,7 +56,7 @@ public class TestFactory {
 
     public Location createLocation(LocationTemplate template) {
         Location initial = new Location(template);
-        return locationDao.save(initial);
+        return locationService.create(initial);
     }
 
     public void initCache(Player player) {
@@ -69,24 +73,18 @@ public class TestFactory {
         return createNameTranslation("Test Name");
     }
 
-    public static Mob createMob(String name) {
-        NameTranslation nameTranslation = createNameTranslation(name);
-
+    public Mob createMob(String name) {
         MobTemplate mobTemplate = mock(MobTemplate.class);
         when(mobTemplate.name()).thenReturn(name);
-        when(mobTemplate.getName()).thenReturn(nameTranslation);
+        when(mobTemplate.getName()).thenReturn(NameTranslation.MOB_FLYING_SWORD);
         when(mobTemplate.getLevel()).thenReturn(1);
-        when(mobTemplate.getDamage()).thenReturn(1);
-        when(mobTemplate.getHitpoints()).thenReturn(1);
-        when(mobTemplate.getDefence()).thenReturn(1);
-        when(mobTemplate.getAgility()).thenReturn(1);
+        when(mobTemplate.getDamage()).thenReturn(10);
+        when(mobTemplate.getHitpoints()).thenReturn(10);
+        when(mobTemplate.getDefence()).thenReturn(10);
+        when(mobTemplate.getAgility()).thenReturn(10);
         when(mobTemplate.getFileLink()).thenReturn(null);
 
-        return new Mob(mobTemplate);
-    }
-
-    public static Mob createMob() {
-        return createMob("Test Mob");
+        return mobService.create(new Mob(mobTemplate));
     }
 
     public static Location createLocationMock(String name) {

@@ -14,6 +14,7 @@ import lombok.Setter;
 import org.springframework.data.redis.core.RedisHash;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
 @RedisHash("PlayerState")
 @Getter
@@ -78,6 +79,19 @@ public class PlayerState implements Serializable, CacheTypeObject {
 
     public boolean hasEnemy() {
         return status == CharacterStatus.HAS_ENEMY;
+    }
+
+    public PlayerState initBattleLog(String initialLog) {
+        if (getEnemy() == null) return this;
+        this.lastBattle = new BattleLog(
+                getId(),
+                getEnemy().getId(),
+                getEnemy().getType(),
+                false,
+                false,
+                new ArrayList<>() {{add(initialLog);}}
+        );
+        return this;
     }
 
     public PlayerState ban() {
