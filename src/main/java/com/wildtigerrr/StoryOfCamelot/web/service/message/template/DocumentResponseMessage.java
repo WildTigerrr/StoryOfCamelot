@@ -6,6 +6,7 @@ import com.wildtigerrr.StoryOfCamelot.web.service.message.ResponseMessage;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NonNull;
+import org.telegram.telegrambots.meta.api.objects.InputFile;
 
 import java.io.File;
 
@@ -37,6 +38,10 @@ public class DocumentResponseMessage implements ResponseMessage {
     @Override
     public boolean isApplyMarkup() {
         return false;
+    }
+
+    public InputFile getInputFile() {
+        return new InputFile(getFile());
     }
 
 }

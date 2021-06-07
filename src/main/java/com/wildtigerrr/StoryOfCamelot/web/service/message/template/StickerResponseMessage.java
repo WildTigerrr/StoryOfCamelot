@@ -6,6 +6,7 @@ import com.wildtigerrr.StoryOfCamelot.web.service.message.ResponseMessage;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NonNull;
+import org.telegram.telegrambots.meta.api.objects.InputFile;
 
 import java.io.File;
 import java.io.InputStream;
@@ -41,6 +42,17 @@ public class StickerResponseMessage implements ResponseMessage {
     @Override
     public boolean isApplyMarkup() {
         return false;
+    }
+
+    public InputFile getInputFile() {
+        if (getFile() != null) {
+            return new InputFile(getFile());
+        } else if (getInputStream() != null) {
+            return new InputFile(getInputStream(), getFileName());
+        } else if (getFileId() != null) {
+            return new InputFile(getFileId());
+        }
+        return new InputFile();
     }
 
 }

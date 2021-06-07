@@ -132,71 +132,64 @@ public class TelegramResponseManager implements ResponseManager, Runnable {
 
 
     private void proceedMessageSend(TextResponseMessage messageTemplate) {
-        SendMessage message = new SendMessage()
-                .enableMarkdown(messageTemplate.isApplyMarkup())
-                .setChatId(messageTemplate.getType() == ResponseType.POST_TO_ADMIN_CHANNEL
+        SendMessage message = SendMessage.builder()
+                .chatId(messageTemplate.getType() == ResponseType.POST_TO_ADMIN_CHANNEL
                         ? BotConfig.ADMIN_CHANNEL_ID : messageTemplate.getTargetId())
-                .setText(messageTemplate.getText())
-                .setReplyMarkup(messageTemplate.getKeyboard());
+                .text(messageTemplate.getText())
+                .replyMarkup(messageTemplate.getKeyboard()).build();
+        message.enableMarkdown(messageTemplate.isApplyMarkup());
         if (messageTemplate.isDisableNotification()) message.disableNotification();
         execute(message);
     }
     private void proceedImageSend(ImageResponseMessage messageTemplate) {
-        SendPhoto newMessage = new SendPhoto()
-                .setCaption(messageTemplate.getCaption())
-                .setChatId(messageTemplate.getTargetId())
-                .setReplyMarkup(messageTemplate.getKeyboard());
-        if (messageTemplate.getFile() != null) {
-            newMessage.setPhoto(messageTemplate.getFile());
-        } else if (messageTemplate.getFileStream() != null) {
-            newMessage.setPhoto(messageTemplate.getFileName(), messageTemplate.getFileStream());
-        } else if (messageTemplate.getFileId() != null) {
-            newMessage.setPhoto(messageTemplate.getFileId());
-        }
+        SendPhoto newMessage = SendPhoto.builder()
+                .caption(messageTemplate.getCaption())
+                .chatId(messageTemplate.getTargetId())
+                .replyMarkup(messageTemplate.getKeyboard())
+                .photo(messageTemplate.getInputFile())
+                .build();
         if (messageTemplate.isDisableNotification()) newMessage.disableNotification();
         execute(newMessage);
     }
     private void proceedDocumentSend(DocumentResponseMessage messageTemplate) {
-        SendDocument sendMessage = new SendDocument()
-                .setDocument(messageTemplate.getFile())
-                .setChatId(messageTemplate.getTargetId());
+        SendDocument sendMessage = SendDocument.builder()
+                .document(messageTemplate.getInputFile())
+                .chatId(messageTemplate.getTargetId())
+                .build();
         if (messageTemplate.isDisableNotification()) sendMessage.disableNotification();
         execute(sendMessage);
     }
     private void proceedStickerSend(StickerResponseMessage messageTemplate) {
-        SendSticker newMessage = new SendSticker()
-                .setChatId(messageTemplate.getTargetId());
-        if (messageTemplate.getFile() != null) {
-            newMessage.setSticker(messageTemplate.getFile());
-        } else if (messageTemplate.getInputStream() != null) {
-            newMessage.setSticker(messageTemplate.getFileName(), messageTemplate.getInputStream());
-        } else if (messageTemplate.getFileId() != null) {
-            newMessage.setSticker(messageTemplate.getFileId());
-        }
+        SendSticker newMessage = SendSticker.builder()
+                .chatId(messageTemplate.getTargetId())
+                .sticker(messageTemplate.getInputFile())
+                .build();
         if (messageTemplate.isDisableNotification()) newMessage.disableNotification();
         execute(newMessage);
     }
     private void proceedMessageEdit(EditResponseMessage messageTemplate) {
-        EditMessageText messageEdit = new EditMessageText()
-                .setMessageId(messageTemplate.getMessageId())
-                .setChatId(messageTemplate.getTargetId())
-                .setText(messageTemplate.getText())
-                .enableMarkdown(messageTemplate.isApplyMarkup())
-                .setReplyMarkup(messageTemplate.getKeyboard());
+        EditMessageText messageEdit = EditMessageText.builder()
+                .messageId(messageTemplate.getMessageId())
+                .chatId(messageTemplate.getTargetId())
+                .text(messageTemplate.getText())
+                .replyMarkup(messageTemplate.getKeyboard()).build();
+        messageEdit.enableMarkdown(messageTemplate.isApplyMarkup());
         execute(messageEdit);
     }
     private void proceedAnswerCallback(String queryId, String text,Boolean isAlert) {
-        AnswerCallbackQuery answerCallbackQuery = new AnswerCallbackQuery()
-                .setCallbackQueryId(queryId)
-                .setShowAlert(isAlert)
-                .setText(text);
+        AnswerCallbackQuery answerCallbackQuery = AnswerCallbackQuery.builder()
+                .callbackQueryId(queryId)
+                .showAlert(isAlert)
+                .text(text)
+                .build();
         execute(answerCallbackQuery);
     }
 
     private void proceedDiceSend(DiceResponseMessage messageTemplate) {
-        SendDice newMessage = new SendDice()
-                .setEmoji(messageTemplate.getEmoji())
-                .setChatId(messageTemplate.getTargetId());
+        SendDice newMessage = SendDice.builder()
+                .emoji(messageTemplate.getEmoji())
+                .chatId(messageTemplate.getTargetId())
+                .build();
         Message response = execute(newMessage);
         DiceIncomingMessage message = messageTemplate.getIncomingMessage();
         message.setResponse(response.getDice().getValue());

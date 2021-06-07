@@ -10,7 +10,7 @@ import org.telegram.telegrambots.meta.api.objects.User;
 public class TestUpdateUser {
 
     @Builder.Default
-    private final Integer id = 1;
+    private final Long id = 1L;
     @Builder.Default
     private String firstName = "UserFirstName";
     @Builder.Default
@@ -21,9 +21,15 @@ public class TestUpdateUser {
     private String userName = "UserName";
     @Builder.Default
     private String languageCode = Language.getDefaultLocale().getLanguage();
+    @Builder.Default
+    private Boolean canJoinGroups = false;
+    @Builder.Default
+    private Boolean canReadAllGroupMessages = false;
+    @Builder.Default
+    private Boolean supportInlineQueries = false;
 
     public User get() {
-        return new User(id, firstName, isBot, lastName, userName, languageCode);
+        return new User(id, firstName, isBot, lastName, userName, languageCode, canJoinGroups, canReadAllGroupMessages, supportInlineQueries);
     }
 
 }

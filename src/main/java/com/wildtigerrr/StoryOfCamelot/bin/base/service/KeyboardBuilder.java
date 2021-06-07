@@ -1,6 +1,5 @@
 package com.wildtigerrr.StoryOfCamelot.bin.base.service;
 
-import com.wildtigerrr.StoryOfCamelot.bin.service.StringUtils;
 import com.wildtigerrr.StoryOfCamelot.exception.InvalidKeyboardTypeException;
 import io.netty.util.internal.StringUtil;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
@@ -61,7 +60,7 @@ public class KeyboardBuilder<T extends ReplyKeyboard> {
     }
 
     public KeyboardBuilder<T> addButton(String text, String callbackData) {
-        return addButton(new InlineKeyboardButton().setText(text).setCallbackData(callbackData));
+        return addButton(InlineKeyboardButton.builder().text(text).callbackData(callbackData).build());
     }
 
     public KeyboardBuilder<T> addButton(String buttonText) {
@@ -125,22 +124,13 @@ public class KeyboardBuilder<T extends ReplyKeyboard> {
 
     private void addPaginationRow() {
         if (page > 1) {
-            addButton(new InlineKeyboardButton()
-                    .setText("<")
-                    .setCallbackData(pageCommandStart + (page - 1) + pageCommandEnd)
-            );
+            addButton("<", pageCommandStart + (page - 1) + pageCommandEnd);
         }
         if (!StringUtil.isNullOrEmpty(separatorValue)) {
-            addButton(new InlineKeyboardButton()
-                    .setText(separatorValue)
-                    .setCallbackData("/ignore")
-            );
+            addButton(separatorValue, "/ignore");
         }
         if (hasNext) {
-            addButton(new InlineKeyboardButton()
-                    .setText(">")
-                    .setCallbackData(pageCommandStart + (page + 1) + pageCommandEnd)
-            );
+            addButton(">", pageCommandStart + (page + 1) + pageCommandEnd);
         }
     }
 

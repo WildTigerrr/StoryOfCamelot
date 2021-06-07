@@ -9,6 +9,7 @@ import com.wildtigerrr.StoryOfCamelot.web.service.message.ResponseMessage;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NonNull;
+import org.telegram.telegrambots.meta.api.objects.InputFile;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ForceReplyKeyboard;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboard;
 
@@ -56,6 +57,17 @@ public class ImageResponseMessage implements ResponseMessage {
     @Override
     public boolean isApplyMarkup() {
         return false;
+    }
+
+    public InputFile getInputFile() {
+        if (getFile() != null) {
+            return new InputFile(getFile());
+        } else if (getFileStream() != null) {
+            return new InputFile(getFileStream(), getFileName());
+        } else if (getFileId() != null) {
+            return new InputFile(getFileId());
+        }
+        return new InputFile();
     }
 
     public static class ImageResponseMessageBuilder {

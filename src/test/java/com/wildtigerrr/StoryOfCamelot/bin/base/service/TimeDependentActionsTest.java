@@ -60,6 +60,7 @@ class TimeDependentActionsTest extends ServiceBaseTest {
     }
 
     @Test
+    @DirtiesContext(methodMode = DirtiesContext.MethodMode.BEFORE_METHOD)
     void whenAddActionShouldStartCheckingAndContinueRegenTest() throws InterruptedException {
         // Given
         Location initial = new Location(LocationTemplate.TRADING_SQUARE);

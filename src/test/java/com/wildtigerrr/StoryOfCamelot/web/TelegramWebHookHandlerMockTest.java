@@ -36,7 +36,7 @@ class TelegramWebHookHandlerMockTest extends ServiceBaseTest {
 
     @Test
     void whenNewMessageShouldPassToHandlerTest() {
-        ReflectionTestUtils.setField(user, "id", 1);
+        ReflectionTestUtils.setField(user, "id", 1L);
         ReflectionTestUtils.setField(message, "from", user);
         ReflectionTestUtils.setField(chat, "id", 2L);
         ReflectionTestUtils.setField(message, "chat", chat);

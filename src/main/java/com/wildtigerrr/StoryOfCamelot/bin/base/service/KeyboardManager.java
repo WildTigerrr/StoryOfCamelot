@@ -28,11 +28,7 @@ public class KeyboardManager {
         KeyboardBuilder<InlineKeyboardMarkup> builder = new KeyboardBuilder<>(KeyboardBuilder.Type.INLINE, buttonsLine);
         for (Stats stat : Stats.values()) {
             for (String val : statMilestones) {
-                builder.addButton(
-                        new InlineKeyboardButton()
-                                .setText(stat.emoji() + "+" + val)
-                                .setCallbackData("/up " + stat.getCharacter().toLowerCase() + " " + val)
-                );
+                builder.addButton(stat.emoji() + "+" + val, "/up " + stat.getCharacter().toLowerCase() + " " + val);
             }
         }
         return builder.build();
@@ -58,11 +54,7 @@ public class KeyboardManager {
     public static InlineKeyboardMarkup getKeyboardForLanguageSelect() {
         KeyboardBuilder<InlineKeyboardMarkup> builder = new KeyboardBuilder<>(KeyboardBuilder.Type.INLINE, 2);
         for (Language lang : Language.values()) {
-            builder.addButton(
-                    new InlineKeyboardButton()
-                            .setText(lang.getName())
-                            .setCallbackData("/lang " + lang.ordinal())
-            );
+            builder.addButton(lang.getName(), "/lang " + lang.ordinal());
         }
         return builder.build();
     }
@@ -70,11 +62,7 @@ public class KeyboardManager {
     public static InlineKeyboardMarkup getKeyboardForLocations(ArrayList<Location> nearLocations, Language lang) {
         KeyboardBuilder<InlineKeyboardMarkup> builder = new KeyboardBuilder<>(KeyboardBuilder.Type.INLINE, 2);
         for (Location loc : nearLocations) {
-            builder.addButton(
-                    new InlineKeyboardButton()
-                            .setText(loc.getName(lang))
-                            .setCallbackData("/move " + loc.getId())
-            );
+            builder.addButton(loc.getName(lang), "/move " + loc.getId());
         }
         return builder.build();
     }
@@ -113,17 +101,11 @@ public class KeyboardManager {
         String unequip = translation.getMessage("player.backpack.item-unequip", backpack.getPlayer());
         for (int i = pageSize * (page - 1); i < Math.min(pageSize * page, items.size()); i++) {
             item = items.get(i);
-            builder.addButton(new InlineKeyboardButton()
-                    .setText(item.backpackInfo(translation))
-                    .setCallbackData("/backpack " + page + " item_info " + item.getId())
-            );
+            builder.addButton(item.backpackInfo(translation), "/backpack " + page + " item_info " + item.getId());
             if (item.getItem().isEquippable()) {
-                builder.addButton(new InlineKeyboardButton()
-                        .setText(item.isEquipped() ? unequip : equip)
-                        .setCallbackData(item.isEquipped()
-                                ? "/backpack " + page + " item_unequip " + item.getId()
-                                : "/backpack " + page + " item_equip " + item.getId())
-                );
+                builder.addButton(item.isEquipped() ? unequip : equip, item.isEquipped()
+                        ? "/backpack " + page + " item_unequip " + item.getId()
+                        : "/backpack " + page + " item_equip " + item.getId());
             }
             builder.nextRow();
         }
@@ -141,10 +123,10 @@ public class KeyboardManager {
         BackpackItem item;
         for (int i = pageSize * (page - 1); i < Math.min(pageSize * page, items.size()); i++) {
             item = items.get(i);
-            builder.addButton(new InlineKeyboardButton()
-                    .setText("Sell " + item.backpackInfo(translation) + (item.isEquipped() ? " (Equipped)" : "") +
+            builder.addButton(InlineKeyboardButton.builder()
+                    .text("Sell " + item.backpackInfo(translation) + (item.isEquipped() ? " (Equipped)" : "") +
                             MoneyCalculation.moneyOf(item.getSalePrice(), backpack.getPlayer().getLanguage(), translation))
-                    .setCallbackData("/store " + store.getId() + " " + page + " item_sell " + item.getId())
+                    .callbackData("/store " + store.getId() + " " + page + " item_sell " + item.getId()).build()
             ).nextRow();
         }
         return builder.addPaginationRow("/store " + store.getId() + " ", " page_sell", page, items.size() > pageSize * page)
@@ -160,19 +142,16 @@ public class KeyboardManager {
         Item item;
         for (int i = pageSize * (page - 1); i < Math.min(pageSize * page, items.size()); i++) {
             item = items.get(i);
-            builder.addButton(new InlineKeyboardButton()
-                    .setText(item.getName(lang))
-                    .setCallbackData("/store " + store.getId() + " " + page + " item_info " + item.getId())
-            ).addButton(new InlineKeyboardButton()
-                    .setText(MoneyCalculation.moneyOf(item.getPrice(), lang, translation))
-                    .setCallbackData("/store " + store.getId() + " " + page + " item_buy " + item.getId())
+            builder.addButton(
+                    item.getName(lang), "/store " + store.getId() + " " + page + " item_info " + item.getId()
+            ).addButton(
+                    MoneyCalculation.moneyOf(item.getPrice(), lang, translation),
+                    "/store " + store.getId() + " " + page + " item_buy " + item.getId()
             ).nextRow();
         }
         return builder.addPaginationRow("/store " + store.getId() + " ", " page", page,
                 page + " / " + ((int) Math.ceil(((double) items.size()) / pageSize)), items.size() > pageSize * page)
-                .addButton(new InlineKeyboardButton()
-                        .setText("Продажа")
-                        .setCallbackData("/store " + store.getId() + " 1 page_sell"))
+                .addButton("Продажа", "/store " + store.getId() + " 1 page_sell")
                 .build();
     }
 
