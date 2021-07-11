@@ -5,11 +5,9 @@ import com.wildtigerrr.StoryOfCamelot.bin.base.service.ActionHandler;
 import com.wildtigerrr.StoryOfCamelot.bin.base.service.BattleHandler;
 import com.wildtigerrr.StoryOfCamelot.bin.base.service.DropCalculator;
 import com.wildtigerrr.StoryOfCamelot.bin.base.service.KeyboardManager;
-import com.wildtigerrr.StoryOfCamelot.bin.enums.EnemyType;
-import com.wildtigerrr.StoryOfCamelot.bin.enums.RandomDistribution;
-import com.wildtigerrr.StoryOfCamelot.bin.enums.ReplyButton;
-import com.wildtigerrr.StoryOfCamelot.bin.enums.Skill;
+import com.wildtigerrr.StoryOfCamelot.bin.enums.*;
 import com.wildtigerrr.StoryOfCamelot.bin.service.ListUtils;
+import com.wildtigerrr.StoryOfCamelot.bin.service.PlayerAction;
 import com.wildtigerrr.StoryOfCamelot.bin.translation.TranslationManager;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.*;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.service.template.*;
@@ -122,12 +120,14 @@ public class FightCommandHandler extends TextMessageHandler {
         if (battleLog.isWin() && battleLog.getEnemyType() == EnemyType.MOB) {
             applyDrop(battleLog);
             state.finishBattle();
+            message.addAction(PlayerActionType.KILLED, state.getEnemy().getId());
             cacheService.add(CacheType.PLAYER_STATE, state.getId(), state);
             actionHandler.sendAvailableActions(message.getPlayer());
         } else if (battleLog.getBattleFinished()) {
             messages.sendMessage(TextResponseMessage.builder().by(message)
                     .text(translation.getMessage("battle.death", message)).build()
             );
+            message.addAction(PlayerActionType.DEATH, state.getEnemy().getId());
             cacheService.add(CacheType.PLAYER_STATE, state.getId(), state);
         } else {
             cacheService.add(CacheType.PLAYER_STATE, state.getId(), state);

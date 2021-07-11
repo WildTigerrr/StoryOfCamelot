@@ -5,6 +5,7 @@ import com.wildtigerrr.StoryOfCamelot.bin.base.service.KeyboardManager;
 import com.wildtigerrr.StoryOfCamelot.bin.base.service.MoneyCalculation;
 import com.wildtigerrr.StoryOfCamelot.bin.base.service.player.ExperienceService;
 import com.wildtigerrr.StoryOfCamelot.bin.enums.Language;
+import com.wildtigerrr.StoryOfCamelot.bin.enums.PlayerActionType;
 import com.wildtigerrr.StoryOfCamelot.bin.translation.TranslationManager;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.Backpack;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.BackpackItem;
@@ -162,6 +163,7 @@ public class StoreCommandHandler extends TextMessageHandler {
                 item.getPrice() * EXPERIENCE_TRADE_MULTIPLIER,
                 EXPERIENCE__SEND_TRADE
         );
+        message.addAction(PlayerActionType.ITEM_BOUGHT, String.valueOf(item.getPrice()));
         messages.sendAnswer(message.getQueryId(), "Осталось: " + MoneyCalculation.moneyOf(message.getPlayer(), translation));
     }
 
@@ -171,6 +173,7 @@ public class StoreCommandHandler extends TextMessageHandler {
         Backpack backpack = backpackService.findMainByPlayerId(message.getPlayer().getId());
         BackpackItem item = backpack.getItemByBackpackItemId(command.paramByNum(4));
         sellItem(item);
+        message.addAction(PlayerActionType.ITEM_SOLD, String.valueOf(item.getSalePrice()));
         experienceService.addExperience(
                 message.getPlayer(),
                 Stats.CHARISMA,

@@ -1,6 +1,8 @@
 package com.wildtigerrr.StoryOfCamelot.web.service.message;
 
 import com.wildtigerrr.StoryOfCamelot.bin.enums.Command;
+import com.wildtigerrr.StoryOfCamelot.bin.enums.PlayerActionType;
+import com.wildtigerrr.StoryOfCamelot.bin.service.PlayerAction;
 import com.wildtigerrr.StoryOfCamelot.database.jpa.schema.Player;
 import com.wildtigerrr.StoryOfCamelot.web.bot.update.Author;
 import com.wildtigerrr.StoryOfCamelot.web.bot.update.MessageType;
@@ -12,6 +14,9 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
 import org.telegram.telegrambots.meta.api.objects.Update;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Log4j2
@@ -29,6 +34,8 @@ public class IncomingMessage {
 
     private Player player;
     private Command command;
+
+    private final List<PlayerAction> actions;
 
     public static IncomingMessage from(Update update) {
         MessageType type = IncomingMessageUtils.defineUpdateType(update);
@@ -57,6 +64,7 @@ public class IncomingMessage {
         this.chatId = isQuery ? update.getCallbackQuery().getMessage().getChatId() : update.getMessage().getChatId();
         this.messageId = isQuery ? update.getCallbackQuery().getMessage().getMessageId() : update.getMessage().getMessageId();
         this.queryId = isQuery ? update.getCallbackQuery().getId() : null;
+        actions = new ArrayList<>();
     }
 
     public void logFinish() {
@@ -82,6 +90,10 @@ public class IncomingMessage {
     public void setPlayer(Player player) {
         this.player = player;
         this.author.setId(player.getId());
+    }
+
+    public void addAction(PlayerActionType actionType, String value) {
+        actions.add(new PlayerAction(actionType, value));
     }
 
     public Command getCommand() {
