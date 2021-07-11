@@ -16,6 +16,8 @@ public class PostProcessingHandler extends CommandHandler {
 
     @Override
     public void process(IncomingMessage message) {
+        log.debug("Post-processing");
+        log.debug(message.getActions());
         message.getActions().stream().peek(log::debug);
     }
 
