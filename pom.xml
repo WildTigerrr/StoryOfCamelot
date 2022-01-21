@@ -27,7 +27,7 @@
         <vdurmont.version>5.1.1</vdurmont.version>
         <lmax.version>3.4.2</lmax.version>
         <jedis.version>3.6.0</jedis.version>
-        <h2.version>1.4.200</h2.version>
+        <h2.version>2.1.210</h2.version>
         <jupiter.version>5.7.0</jupiter.version>
         <mockito.version>3.10.0</mockito.version>
         <jetbrains.annotations.version>21.0.1</jetbrains.annotations.version>
