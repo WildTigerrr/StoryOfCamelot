@@ -23,7 +23,7 @@
         <lombok.version>1.18.20</lombok.version>
 
         <hibernate.version>5.5.0.Final</hibernate.version>
-        <amazons3.version>1.11.538</amazons3.version>
+        <amazons3.version>1.12.261</amazons3.version>
         <vdurmont.version>5.1.1</vdurmont.version>
         <lmax.version>3.4.2</lmax.version>
         <jedis.version>3.6.0</jedis.version>
